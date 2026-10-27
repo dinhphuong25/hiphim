@@ -1,0 +1,45 @@
+{
+  "siteName": "Hi Phim",
+  "siteDescription": "Hi Phim - Nền tảng xem phim trực tuyến hàng đầu với hơn 50.000+ tựa phim điện ảnh, phim bộ, anime vietsub chất lượng cao.",
+  "contactTelegram": "https://t.me/hiphim_support",
+  "contactEmail": "contact@hiphim.one",
+  "announcement": {
+    "enabled": false,
+    "text": "Chào mừng bạn đến với Hi Phim! Chúc bạn có những phút giây xem phim thư giãn tuyệt vời.",
+    "link": "",
+    "type": "success"
+  },
+  "featuredSlugs": [
+    "nguoi-nhen-khoi-dau-moi",
+    "godzilla-x-kong-de-che-moi",
+    "deadpool-va-wolverine",
+    "quat-mo-trung-ma",
+    "arcane-lien-minh-huyen-thoai-phan-2",
+    "nu-hoang-nuoc-mat",
+    "avatar-lua-va-tro-tan"
+  ],
+  "autoPinNewMovies": true,
+  "autoPinLimit": 5,
+  "maintenance": {
+    "enabled": false,
+    "reason": "Hệ thống đang được nâng cấp định kỳ để cải thiện tốc độ và dịch vụ.",
+    "estimatedEndTime": "2026-10-10T18:09:25.967Z"
+  },
+  "player": {
+    "defaultMode": "m3u8",
+    "autoplay": true,
+    "defaultVolume": 1
+  },
+  "customFooterText": "Hi Phim — Nền tảng xem phim miễn phí.",
+  "ads": {
+    "enabled": true,
+    "targetUrl": "https://154.82.109.157/2138063.html",
+    "popupImage": "/ads/popup.jpg",
+    "bottomBannerImage": "/ads/banner-bottom.gif",
+    "showPopup": true,
+    "showBottomBanner": true,
+    "tvcEnabled": true,
+    "tvcVideoUrl": "https://bf.333xbet.com/18881999/video9922.mp4",
+    "tvcSkipAfterSeconds": 5
+  }
+}

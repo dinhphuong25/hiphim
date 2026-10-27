@@ -1,0 +1,5154 @@
+[
+  {
+    "id": "user_1789457808393_ny6zq4",
+    "name": "mê fim",
+    "role": "vip",
+    "email": "rongngodong34@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": "tt37884717",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Đầu Xuân Tươi Sáng",
+        "slug": "dau-xuan-tuoi-sang",
+        "tmdb": {
+          "id": "299952",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260826/dau-xuan-tuoi-sang-thumb.webp",
+        "watchedAt": 1789457827911,
+        "poster_url": "https://phimimg.com/uploads/movies/20260826/dau-xuan-tuoi-sang-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Tập 04",
+        "episodeSlug": "tap-04",
+        "origin_name": "The Early Spring",
+        "serverIndex": 1,
+        "episodeIndex": 3,
+        "episode_current": "Tập 04"
+      }
+    ],
+    "createdAt": "2026-09-15T07:36:48.393Z",
+    "favorites": [],
+    "updatedAt": "2026-09-15T08:23:50.742Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-09-15T07:42:45.925Z",
+    "passwordHash": "635dfc582c11be2347e67b2625813d1d:15f0bfadd61cfdc15b6346896139a1a2b3994d6694f1ba227740027bf6390e70"
+  },
+  {
+    "id": "user_1791154114201_nsv9md",
+    "name": "Khang Viet",
+    "email": "khangviet009@gmail.com",
+    "avatar": "",
+    "history": [],
+    "createdAt": "2026-10-04T22:48:34.201Z",
+    "favorites": [],
+    "updatedAt": "2026-10-04T22:48:34.201Z",
+    "isVerified": true,
+    "passwordHash": "dfc450da6c6b827728f8e48f071a7e4a:a97f4fe55b82ae99b971fd7ab6647ceae783338aa0925d0e2ff118becae4367e"
+  },
+  {
+    "id": "user_1789828821671_inf1xs",
+    "name": "Pmt209",
+    "email": "kakaphu209@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": "tt37884717",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Đầu Xuân Tươi Sáng",
+        "slug": "dau-xuan-tuoi-sang",
+        "tmdb": {
+          "id": "299952",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 2656,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260826/dau-xuan-tuoi-sang-thumb.webp",
+        "watchedAt": 1789829049519,
+        "poster_url": "https://phimimg.com/uploads/movies/20260826/dau-xuan-tuoi-sang-poster.webp",
+        "currentTime": 391,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "The Early Spring",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      }
+    ],
+    "createdAt": "2026-09-19T14:40:21.671Z",
+    "favorites": [],
+    "updatedAt": "2026-09-19T14:44:10.753Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-09-19T14:41:59.336Z",
+    "passwordHash": "c650b4e3ba20d09da81d0565f9a42d7b:19bcd49f4f6e0f8d28c4d98fb3487e72df6581289a12f8ba09c05a3ca9b03179"
+  },
+  {
+    "id": "user_1789838815915_0h0a1j",
+    "name": "jimmylee",
+    "email": "lytongdieu1@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": "tt5478592",
+          "vote_count": 41,
+          "vote_average": 8.1
+        },
+        "name": "Bốn Chàng Quý Tử",
+        "slug": "bon-chang-quy-tu",
+        "tmdb": {
+          "id": "83199",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 3,
+          "vote_average": 7.7
+        },
+        "year": 2009,
+        "quality": "FHD",
+        "duration": 3811,
+        "thumb_url": "https://phimimg.com/upload/vod/20250705-1/14febdc1fdca1b8edb22e444db643287.jpg",
+        "watchedAt": 1789839365139,
+        "poster_url": "https://phimimg.com/upload/vod/20250705-1/10308b2cee3ef3d388f8b931d36dbefd.jpg",
+        "currentTime": 2749,
+        "episodeName": "Tập 42",
+        "episodeSlug": "tap-42",
+        "origin_name": "The Sons Of Sol Pharmacy House",
+        "serverIndex": 0,
+        "episodeIndex": 41,
+        "episode_current": "Tập 42"
+      }
+    ],
+    "createdAt": "2026-09-19T17:26:55.915Z",
+    "favorites": [],
+    "updatedAt": "2026-09-19T17:36:04.496Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-09-19T17:36:00.554Z",
+    "passwordHash": "eee475c4d8f40f69785e2e2711778a04:426558e67b162e2df8a4aa742378dce61fc9291e51d80ab0a8cbef3fc215cdd5"
+  },
+  {
+    "id": "user_1789993218170_8pplhl",
+    "name": "vietcon",
+    "email": "hoanganhviet30081997@gmail.com",
+    "avatar": "",
+    "history": [],
+    "createdAt": "2026-09-21T12:20:18.170Z",
+    "favorites": [],
+    "updatedAt": "2026-10-02T05:59:36.978Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-02T05:59:36.758Z",
+    "passwordHash": "55c485ab2d07439d4a18b0083e0abfef:8f74e75f21e6b4e8c33a7c480698115c0068ee9d521b4f02205c766d51e6cb5d"
+  },
+  {
+    "id": "user_1791156093896_kotjjx",
+    "name": "Nguyen van beo",
+    "email": "vanbeo6424@gmail.com",
+    "avatar": "",
+    "history": [],
+    "createdAt": "2026-10-04T23:21:33.896Z",
+    "favorites": [],
+    "updatedAt": "2026-10-04T23:23:45.724Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-04T23:23:44.747Z",
+    "passwordHash": "133df3cc76cefb358744b72d6c2cb08b:75d84560e6010f687a10047ab74fbbb6b4f29aaff8e6273ca0343088c849f030"
+  },
+  {
+    "id": "user_1791926068825_phisyf",
+    "name": "Cao Việt Nhật",
+    "email": "vietnhat2701nn@gmail.com",
+    "avatar": "",
+    "history": [],
+    "createdAt": "2026-10-13T21:14:28.825Z",
+    "favorites": [],
+    "updatedAt": "2026-10-13T21:14:28.825Z",
+    "isVerified": true,
+    "passwordHash": "60e76a4c1e550e78e86d57a1d417e6a5:e98f2d4f89aafe1403259258632479b17ae437923fa500c3954e66d4525e519c"
+  },
+  {
+    "id": "user_1791802891119_inyahl",
+    "name": "hiiikkkhh",
+    "email": "bphan508@gmail.com",
+    "avatar": "",
+    "history": [],
+    "createdAt": "2026-10-12T11:01:31.119Z",
+    "favorites": [],
+    "updatedAt": "2026-10-12T13:18:05.686Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-12T13:18:05.457Z",
+    "passwordHash": "5815450a5dc1b33745f2d7b81f5c002e:fecff75f823008654098d10d0c0c09876411f595061772442d72ce35f910bd18"
+  },
+  {
+    "id": "user_1791616463191_9pvjbm",
+    "name": "Jaimay",
+    "email": "fudakan@gmail.com",
+    "avatar": "",
+    "history": [],
+    "createdAt": "2026-10-10T07:14:23.191Z",
+    "favorites": [],
+    "updatedAt": "2026-10-15T14:40:47.065Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-15T14:40:45.628Z",
+    "passwordHash": "3e5ea378d314bdd3ab51132f35d0d62d:3572fa9611aac5ed0e6aaf465284f6bd504bd953ad8a6c4182c70233af041ca6"
+  },
+  {
+    "id": "user_1791186211278_mridwb",
+    "name": "Mai Duy Lưu",
+    "email": "duyluuvn@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "_id": "16837163fee34175358a47e0b51485ff",
+        "imdb": {
+          "id": "tt9742794",
+          "vote_count": 34780,
+          "vote_average": 6.4
+        },
+        "lang": "Vietsub + Thuyết Minh",
+        "name": "Siêu Trộm",
+        "slug": "sieu-trom-2021",
+        "time": "114 phút",
+        "tmdb": {
+          "id": "630004",
+          "type": "movie",
+          "season": null,
+          "vote_count": 1085,
+          "vote_average": 6.8
+        },
+        "type": "single",
+        "view": 164,
+        "year": 2021,
+        "actor": [
+          "Freddie Highmore",
+          "Astrid Bergès-Frisbey",
+          "Jose Coronado",
+          "Liam Cunningham",
+          "Sam Riley",
+          "Luis Tosar",
+          "Emilio Gutiérrez Caba",
+          "Axel Stein",
+          "Daniel Holguín",
+          "Famke Janssen",
+          "James Giblin",
+          "Frank Feys",
+          "Fernando Martín",
+          "Vicente Gil",
+          "Bill Dixon",
+          "Reg Wilson",
+          "Julius Cotter"
+        ],
+        "notify": "",
+        "status": "completed",
+        "content": "<p>Ngân hàng Tây Ban Nha là một nơi bất khả xâm phạm, không một tên trộm nào có thể bước vào. Được xem như một nơi bí ẩn bậc nhất trên thế giới, ngân hàng này không có bản thiết kế, không dữ liệu lưu lại và không một ai biết đến cấu trúc sắp đặt bên trong chiếc két sắt hơn trăm năm tuổi. Thử thách này đã khơi dậy sự tò mò của Thom – một kỹ sư thiên tài quyết định thử đột nhập vào sâu bên trong nơi này và lật mở bí ẩn của chiếc két sắt.</p>",
+        "country": [
+          {
+            "id": "92f688188aa938a03a61a786d6616dcb",
+            "name": "Pháp",
+            "slug": "phap"
+          },
+          {
+            "id": "8a40abac202ab3659bb98f71f05458d1",
+            "name": "Tây Ban Nha",
+            "slug": "tay-ban-nha"
+          }
+        ],
+        "created": {
+          "time": "2023-11-19T22:04:07.000Z"
+        },
+        "quality": "FHD",
+        "category": [
+          {
+            "id": "37a7b38b6184a5ebd3c43015aa20709d",
+            "name": "Chính Kịch",
+            "slug": "chinh-kich"
+          },
+          {
+            "id": "9822be111d2ccc29c7172c78b8af8ff5",
+            "name": "Hành Động",
+            "slug": "hanh-dong"
+          },
+          {
+            "id": "a7b065b92ad356387ef2e075dee66529",
+            "name": "Tâm Lý",
+            "slug": "tam-ly"
+          },
+          {
+            "id": "66c78b23908113d478d8d85390a244b4",
+            "name": "Phiêu Lưu",
+            "slug": "phieu-luu"
+          }
+        ],
+        "chieurap": false,
+        "director": [
+          "Jaume Balagueró"
+        ],
+        "duration": 7114,
+        "episodes": [
+          {
+            "is_ai": false,
+            "server_data": [
+              {
+                "name": "Full",
+                "slug": "full",
+                "filename": "Siêu Trộm - The Vault (Way Down) - 2021 - FHD - Vietsub - Full",
+                "link_m3u8": "https://s6.kkphimplayer6.com/20250701/X4IGVaGm/index.m3u8",
+                "link_embed": "https://player.phimapi.com/player/?url=https://s6.kkphimplayer6.com/20250701/X4IGVaGm/index.m3u8"
+              }
+            ],
+            "server_name": "Vietsub"
+          },
+          {
+            "is_ai": false,
+            "server_data": [
+              {
+                "name": "Full",
+                "slug": "full",
+                "filename": "Siêu Trộm - The Vault (Way Down) - 2021 - FHD - Thuyết Minh - Full",
+                "link_m3u8": "https://s6.kkphimplayer6.com/20250701/1pWpnciD/index.m3u8",
+                "link_embed": "https://player.phimapi.com/player/?url=https://s6.kkphimplayer6.com/20250701/1pWpnciD/index.m3u8"
+              }
+            ],
+            "server_name": "Thuyết Minh"
+          }
+        ],
+        "lang_key": [
+          "vs",
+          "tm"
+        ],
+        "modified": {
+          "time": "2025-07-01T13:13:35.000Z"
+        },
+        "showtimes": "",
+        "thumb_url": "https://phimimg.com/upload/vod/20250701-1/2bf4fecfa86230c7712b4e69ef2fff13.jpg",
+        "watchedAt": 1791303154236,
+        "poster_url": "https://phimimg.com/upload/vod/20250701-1/3d513026a5e7bbc432c2547d5d911b14.jpg",
+        "currentTime": 3213,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "The Vault (Way Down)",
+        "trailer_url": "https://www.youtube.com/watch?v=dj5xakfaKw8&pp=ygUjdGhlIHZhdWx0ICh3YXkgZG93bikgKDIwMjEpIHRyYWlsZXI%3D",
+        "is_copyright": false,
+        "is_published": true,
+        "sub_docquyen": false,
+        "episode_total": 1,
+        "lastWatchedAt": 1791303154236,
+        "episode_current": "Full",
+        "lastEpisodeName": "Full",
+        "lastEpisodeSlug": "full",
+        "progressSeconds": 3213,
+        "alternative_names": [
+          "地窖奇劫",
+          "Countdown in Madrid",
+          "Way down",
+          "گاو صندوق",
+          "مخزن",
+          "گاوصندوق",
+          "القبو",
+          "Way Down"
+        ]
+      }
+    ],
+    "createdAt": "2026-10-05T07:43:31.278Z",
+    "favorites": [],
+    "updatedAt": "2026-10-16T11:20:39.658Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-16T11:20:39.005Z",
+    "passwordHash": "1d536ff6a30b3333076a27b0aa6fe3f0:6015c40ee3d22e05fd441f6db0979ee9bc1a6205d089927540ec35ef70dffebe"
+  },
+  {
+    "id": "user_1790091292843_hr4v8a",
+    "name": "Hoangeagle",
+    "email": "hoangeagle2001@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": "tt1267297",
+          "vote_count": 171224,
+          "vote_average": 6
+        },
+        "name": "Hercules: Cuộc Chiến Thành Thrace / Huyền Thoại Hercules",
+        "slug": "hercules-cuoc-chien-thanh-thrace-huyen-thoai-hercules",
+        "tmdb": {
+          "id": "184315",
+          "type": "movie",
+          "season": null,
+          "vote_count": 4433,
+          "vote_average": 5.8
+        },
+        "year": 2014,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260911/hercules-cuoc-chien-thanh-thrace-huyen-thoai-hercules-thumb.webp",
+        "watchedAt": 1790091355376,
+        "poster_url": "https://phimimg.com/uploads/movies/20260911/hercules-cuoc-chien-thanh-thrace-huyen-thoai-hercules-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Hercules",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      }
+    ],
+    "createdAt": "2026-09-22T15:34:52.843Z",
+    "favorites": [],
+    "updatedAt": "2026-09-23T10:50:59.859Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-09-23T10:50:58.816Z",
+    "passwordHash": "4f9b675303843147cdd02a72c4ceb0d7:3ea458abac07f7dc59238a58003909bae93f4baa6ab4b9a925c69221eb1158d9"
+  },
+  {
+    "id": "user_1791216947368_wxr3nx",
+    "name": "XunBack1208",
+    "email": "nxbvn57@gmail.com",
+    "avatar": "",
+    "history": [],
+    "createdAt": "2026-10-05T16:15:47.368Z",
+    "favorites": [],
+    "updatedAt": "2026-10-05T16:15:47.368Z",
+    "isVerified": true,
+    "passwordHash": "331a1323d3049472c8ca93dcc330075c:60e5ca02a8ac3451cb1e72f8933be93e9a925bc70814226e57825f7f88d076a6"
+  },
+  {
+    "id": "user_1789613299198_e28yhc",
+    "name": "Phuc Pham",
+    "email": "ph.phuc35@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": "tt37260466",
+          "vote_count": 1511,
+          "vote_average": 6.3
+        },
+        "name": "Luật Sư Phường Seocho",
+        "slug": "luat-su-phuong-seocho",
+        "tmdb": {
+          "id": "273418",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 36,
+          "vote_average": 7.7
+        },
+        "year": 2025,
+        "quality": "FHD",
+        "duration": 4900,
+        "thumb_url": "https://phimimg.com/upload/vod/20250706-1/50ee8e5f860954232514ab58f0a4a79d.jpg",
+        "watchedAt": 1792139303950,
+        "poster_url": "https://phimimg.com/upload/vod/20250706-1/25d37f86d24cd7a0dbe466dc857476d3.jpg",
+        "currentTime": 1175,
+        "episodeName": "Tập 06",
+        "episodeSlug": "tap-06",
+        "origin_name": "Law And The City",
+        "serverIndex": 0,
+        "episodeIndex": 5,
+        "episode_current": "Tập 06"
+      },
+      {
+        "imdb": {
+          "id": "tt42963873",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Đầu Bếp Siêu Đẳng",
+        "slug": "dau-bep-sieu-dang",
+        "tmdb": {
+          "id": "308403",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 1445,
+        "thumb_url": "https://phimimg.com/upload/vod/20260706-1/b2bd6336d4e6266a9d3ac3b01c2f7cc6.jpg",
+        "watchedAt": 1792128914511,
+        "poster_url": "https://phimimg.com/upload/vod/20260706-1/13d679c94a90467a85b46f88da920fef.jpg",
+        "currentTime": 686,
+        "episodeName": "Tập 03",
+        "episodeSlug": "tap-03",
+        "origin_name": "Iron Wok Jan!",
+        "serverIndex": 0,
+        "episodeIndex": 2,
+        "episode_current": "Tập 03"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Gia Đình Là Số 1 (Phần 1)",
+        "slug": "gia-dinh-la-so-1-phan-1",
+        "tmdb": {
+          "id": null,
+          "type": null,
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2006,
+        "quality": "FHD",
+        "duration": 1850,
+        "thumb_url": "https://phimimg.com/upload/vod/20240829-1/9fe9305c3a109dc753232de1bbb9608e.jpg",
+        "watchedAt": 1792076147854,
+        "poster_url": "https://phimimg.com/upload/vod/20240829-1/815c35609e9a55bc8ee72e04ea68983b.jpg",
+        "currentTime": 1658,
+        "episodeName": "Tập 066",
+        "episodeSlug": "tap-066",
+        "origin_name": "High Kick (Season 1)",
+        "serverIndex": 0,
+        "episodeIndex": 65,
+        "episode_current": "Tập 066"
+      },
+      {
+        "imdb": {
+          "id": "tt43616775",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Sát Thủ Nội Trợ (Vợ Tôi Là Sát Thủ)",
+        "slug": "sat-thu-noi-tro-vo-toi-la-sat-thu",
+        "tmdb": {
+          "id": "294095",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 2,
+          "vote_average": 10
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 4037,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260802/sat-thu-noi-tro-thumb.webp",
+        "watchedAt": 1791990603727,
+        "poster_url": "https://phimimg.com/uploads/movies/20260802/sat-thu-noi-tro-poster.webp",
+        "currentTime": 2061,
+        "episodeName": "Tập 10",
+        "episodeSlug": "tap-10",
+        "origin_name": "A Bona Fide Killer",
+        "serverIndex": 0,
+        "episodeIndex": 9,
+        "episode_current": "Tập 10"
+      },
+      {
+        "name": "Trạng Sư Tống Thế Kiệt (Phần 1)",
+        "slug": "trang-su-tong-the-kiet-phan-1",
+        "year": 2025,
+        "quality": "HD",
+        "duration": 0,
+        "thumb_url": "https://img.nguonc.com/images/img-3b10ff9c520250d41d659e04648324a1eca7a223ba663337c21f259410fbc447.jpg",
+        "watchedAt": 1791989765005,
+        "poster_url": "https://img.nguonc.com/images/img-fa6a5cd0022d5a66db382c6dcf124dd63604c2a57226fea2104367656308fc7e.jpg",
+        "currentTime": 0,
+        "episodeName": "Tập 1",
+        "episodeSlug": "tap-1",
+        "origin_name": "Justice Sung I",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 1"
+      },
+      {
+        "imdb": {
+          "id": "tt33348127",
+          "vote_count": 638,
+          "vote_average": 6.4
+        },
+        "name": "Tầm Tần Ký",
+        "slug": "tam-tan-ky-2025",
+        "tmdb": {
+          "id": "650524",
+          "type": "movie",
+          "season": null,
+          "vote_count": 26,
+          "vote_average": 6
+        },
+        "year": 2025,
+        "quality": "FHD",
+        "duration": 6456,
+        "thumb_url": "https://phimimg.com/upload/vod/20260224-1/4ea4fdf8207637bc536915f13b873475.jpg",
+        "watchedAt": 1791967425732,
+        "poster_url": "https://phimimg.com/upload/vod/20260224-1/5cc9d98eda5f989e06eb0fe1f6a2f64c.jpg",
+        "currentTime": 0,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Back To The Past",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt17069148",
+          "vote_count": 15593,
+          "vote_average": 7.5
+        },
+        "name": "Sát Thủ Về Vườn",
+        "slug": "sat-thu-ve-vuon",
+        "tmdb": {
+          "id": "207332",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 328,
+          "vote_average": 8.1
+        },
+        "year": 2025,
+        "quality": "FHD",
+        "duration": 1535,
+        "thumb_url": "https://phimimg.com/upload/vod/20250112-1/fbf0edd755fb8be213f1d59ab1497202.jpg",
+        "watchedAt": 1791387437322,
+        "poster_url": "https://phimimg.com/upload/vod/20250112-1/19e480c57fc804cdcebfb39f409ffa31.jpg",
+        "currentTime": 17,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Sakamoto Days",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt0088109",
+          "vote_count": 1673,
+          "vote_average": 7.5
+        },
+        "name": "Thám Tử Sherlock Hound (Meitantei Holmes)",
+        "slug": "tham-tu-sherlock-hound-meitantei-holmes",
+        "tmdb": {
+          "id": "21296",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 60,
+          "vote_average": 7
+        },
+        "year": 1984,
+        "quality": "FHD",
+        "duration": 1492,
+        "thumb_url": "https://phimimg.com/upload/vod/20251026-1/bf64f2815f53328c619663b4ed29eb78.jpg",
+        "watchedAt": 1791337798851,
+        "poster_url": "https://phimimg.com/upload/vod/20251026-1/9c41d01b2e46512441b5926bc9555d14.jpg",
+        "currentTime": 165,
+        "episodeName": "Tập 15",
+        "episodeSlug": "tap-15",
+        "origin_name": "Sherlock Hound",
+        "serverIndex": 0,
+        "episodeIndex": 14,
+        "episode_current": "Tập 15"
+      },
+      {
+        "imdb": {
+          "id": "tt26427249",
+          "vote_count": 592,
+          "vote_average": 6.1
+        },
+        "name": "Nhà Bà Nữ",
+        "slug": "nha-ba-nu",
+        "tmdb": {
+          "id": "1056126",
+          "type": "movie",
+          "season": null,
+          "vote_count": 5,
+          "vote_average": 6
+        },
+        "year": 2023,
+        "quality": "HD",
+        "duration": 5962,
+        "thumb_url": "https://phimimg.com/upload/vod/20230922-1/d2cfd0e655a35fd296702ab53226061e.jpg",
+        "watchedAt": 1790601844335,
+        "poster_url": "https://phimimg.com/upload/vod/20230922-1/8e7ee122a3ca993f858a005ab9b8211d.jpg",
+        "currentTime": 0,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "The House Of No Man",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt1147521",
+          "vote_count": 893,
+          "vote_average": 7
+        },
+        "name": "Doraemon: Nobita và Mê Cung Thiếc",
+        "slug": "doraemon-nobita-va-me-cung-thiec",
+        "tmdb": {
+          "id": "161822",
+          "type": "movie",
+          "season": null,
+          "vote_count": 42,
+          "vote_average": 7.1
+        },
+        "year": 1993,
+        "quality": "FHD",
+        "duration": 6039,
+        "thumb_url": "https://phimimg.com/upload/vod/20250521-1/7460d3da1db05f1bb0e9052b6ea88c37.jpg",
+        "watchedAt": 1789968848515,
+        "poster_url": "https://phimimg.com/upload/vod/20250521-1/a8cf6f67a982cb577331561b4feb4a44.jpg",
+        "currentTime": 1020,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Doraemon: Nobita and the Tin Labyrinth",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      }
+    ],
+    "createdAt": "2026-09-17T02:48:19.198Z",
+    "favorites": [],
+    "updatedAt": "2026-10-16T09:11:32.852Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-16T09:11:32.641Z",
+    "passwordHash": "8a233288aa8c7ea05639406e33098b05:0bbbf19c0fd6d7ac52925777d47e6f70eb4b735df01601b56182bff615beba69"
+  },
+  {
+    "id": "user_1791372629878_wn98c1",
+    "name": "Trần Phương",
+    "email": "phuongtran2008pt@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": "tt43736405",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Yêu một người khác / Yêu Một Người Khác Không Phải Em",
+        "slug": "yeu-mot-nguoi-khac-yeu-mot-nguoi-khac-khong-phai-em",
+        "tmdb": {
+          "id": "314939",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 3911,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260914/yeu-mot-nguoi-khac-yeu-mot-nguoi-khac-khong-phai-em-thumb.webp",
+        "watchedAt": 1791799286047,
+        "poster_url": "https://phimimg.com/uploads/movies/20260914/yeu-mot-nguoi-khac-yeu-mot-nguoi-khac-khong-phai-em-poster.webp",
+        "currentTime": 224,
+        "episodeName": "Tập 07",
+        "episodeSlug": "tap-07",
+        "origin_name": "A Love Other Than Yours",
+        "serverIndex": 0,
+        "episodeIndex": 6,
+        "episode_current": "Tập 07"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Thời Gian Gọi Tên Em",
+        "slug": "thoi-gian-goi-ten-em",
+        "tmdb": {
+          "id": null,
+          "type": null,
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2023,
+        "quality": "HD",
+        "duration": 4570,
+        "thumb_url": "https://phimimg.com/upload/vod/20230914-1/fdd380b247a3e0999a8b1e838bf567e0.jpg",
+        "watchedAt": 1791731227868,
+        "poster_url": "https://phimimg.com/upload/vod/20230914-1/3a1d694b792f07299da78f86ce606bb3.jpg",
+        "currentTime": 614,
+        "episodeName": "Tập 12",
+        "episodeSlug": "tap-12",
+        "origin_name": "A Time Called You",
+        "serverIndex": 0,
+        "episodeIndex": 11,
+        "episode_current": "Tập 12"
+      },
+      {
+        "name": "Bác Sĩ X (Phần 1)",
+        "slug": "bac-si-x-phan-1",
+        "year": 2026,
+        "quality": "HD",
+        "duration": 0,
+        "thumb_url": "https://img.nguonc.com/images/img-6469792bc53b11484e4fcb70e4881234a45e3a177ae4cbcbf0cfb16a3fa3e735.png",
+        "watchedAt": 1791595215431,
+        "poster_url": "https://img.nguonc.com/images/img-51c7ef015eae5869ad0bcdd2665b06d94a0e37893b90f17369ecb1095e18f35b.png",
+        "currentTime": 0,
+        "episodeName": "Tập 1",
+        "episodeSlug": "tap-1",
+        "origin_name": "Doctor X: Mafia in White (Season 1)",
+        "serverIndex": 1,
+        "episodeIndex": 0,
+        "episode_current": "Tập 1"
+      },
+      {
+        "imdb": {
+          "id": "tt15548198",
+          "vote_count": 655,
+          "vote_average": 7.7
+        },
+        "name": "Những Quý Cô Say Xỉn (Phần 1)",
+        "slug": "nhung-quy-co-say-xin-phan-1",
+        "tmdb": {
+          "id": "133670",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 35,
+          "vote_average": 8.1
+        },
+        "year": 2021,
+        "quality": "FHD",
+        "duration": 2111,
+        "thumb_url": "https://phimimg.com/upload/vod/20260703-1/2dace24a552ed7d8ac2f559a75ec3965.jpg",
+        "watchedAt": 1791461116719,
+        "poster_url": "https://phimimg.com/upload/vod/20260703-1/02339672c8b39a4955d71b0e7e9be113.jpg",
+        "currentTime": 1627,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Work Later, Drink Now (Season 1)",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt33292030",
+          "vote_count": 15,
+          "vote_average": 0
+        },
+        "name": "Chú Chó Biết Tuốt",
+        "slug": "chu-cho-biet-tuot",
+        "tmdb": {
+          "id": "260835",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 6,
+          "vote_average": 7.8
+        },
+        "year": 2024,
+        "quality": "FHD",
+        "duration": 3127,
+        "thumb_url": "https://phimimg.com/upload/vod/20240925-1/3d3c0f012a1f386a0a26bd5a1f481676.jpg",
+        "watchedAt": 1791441202704,
+        "poster_url": "https://phimimg.com/upload/vod/20240925-1/5386894a695d5a2045c1c9501fd62ef9.jpg",
+        "currentTime": 0,
+        "episodeName": "Tập 12",
+        "episodeSlug": "tap-12",
+        "origin_name": "Dog Knows Everything",
+        "serverIndex": 0,
+        "episodeIndex": 11,
+        "episode_current": "Tập 12"
+      }
+    ],
+    "createdAt": "2026-10-07T11:30:29.878Z",
+    "favorites": [],
+    "updatedAt": "2026-10-12T10:01:26.573Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-12T10:01:17.728Z",
+    "passwordHash": "005ab0fab2f59357519063996839c2e4:4a1524233c83eae719a12c7219e4274f21caf2885987478b87d82e706edfe6f6"
+  },
+  {
+    "id": "user_1791283293163_u60eld",
+    "name": "Faker",
+    "email": "vophiduong1706@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": "tt41791573",
+          "vote_count": 351,
+          "vote_average": 8.6
+        },
+        "name": "Thư Tình Gửi Ngoại",
+        "slug": "thu-tinh-gui-ngoai",
+        "tmdb": {
+          "id": "1671548",
+          "type": "movie",
+          "season": null,
+          "vote_count": 63,
+          "vote_average": 8.9
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260913/thu-tinh-gui-ngoai-thumb.webp",
+        "watchedAt": 1791283363704,
+        "poster_url": "https://phimimg.com/uploads/movies/20260913/thu-tinh-gui-ngoai-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Dear You",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Em và Trịnh",
+        "slug": "em-va-trinh",
+        "tmdb": {
+          "id": null,
+          "type": null,
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2022,
+        "quality": "HD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/upload/vod/20230925-1/07699d3afce57f47c1a1db39b70342df.jpg",
+        "watchedAt": 1791283345846,
+        "poster_url": "https://phimimg.com/upload/vod/20230925-1/eef793ff5cae00020556442ef6970703.jpg",
+        "currentTime": 0,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Em and Trinh",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "name": "Người Nhện: Khởi Đầu Mới",
+        "slug": "nguoi-nhen-khoi-dau-moi",
+        "year": 2026,
+        "quality": "HD",
+        "duration": 0,
+        "thumb_url": "https://img.nguonc.com/images/img-0b0064ab929d8744f86de0c0e4872e65906b1a638851c2ed8a40ce3ed8c3fac4.png",
+        "watchedAt": 1791283311839,
+        "poster_url": "https://img.nguonc.com/images/img-5834c4502d53669cae734c1fe2d4cff22dd96a100b6c2cbd1072eb06a6fa8d41.png",
+        "currentTime": 0,
+        "episodeName": "Tập Full",
+        "episodeSlug": "tap-full",
+        "origin_name": "Spider-Man: Brand New Day",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập Full"
+      }
+    ],
+    "createdAt": "2026-10-06T10:41:33.163Z",
+    "favorites": [],
+    "updatedAt": "2026-10-06T10:42:55.271Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-06T10:42:55.045Z",
+    "passwordHash": "0b4a693e93f2db9abf217776c283519c:956a823241424f515fcb4c8d1f6ad5918b71c88544b29d8fc25bd665bc70bf32"
+  },
+  {
+    "id": "user_1791282144549_q2vxvl",
+    "name": "KQDesigner",
+    "email": "kqdesign.freelancer@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": "tt9633264",
+          "vote_count": 242,
+          "vote_average": 5.8
+        },
+        "name": "Cua Lại Vợ Bầu",
+        "slug": "cua-lai-vo-bau",
+        "tmdb": {
+          "id": "597515",
+          "type": "movie",
+          "season": null,
+          "vote_count": 3,
+          "vote_average": 7.3
+        },
+        "year": 2019,
+        "quality": "FHD",
+        "duration": 6181,
+        "thumb_url": "https://phimimg.com/upload/vod/20250520-1/eb5d90244ac35946afb00a1b40c6cc3a.jpg",
+        "watchedAt": 1791651440190,
+        "poster_url": "https://phimimg.com/upload/vod/20250520-1/4d97490e2f1fe6650cbb0e4a82267d82.jpg",
+        "currentTime": 5562,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Win My Baby Back",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt22084616",
+          "vote_count": 183571,
+          "vote_average": 8.1
+        },
+        "name": "Người Nhện: Khởi Đầu Mới",
+        "slug": "nguoi-nhen-khoi-dau-moi",
+        "tmdb": {
+          "id": "969681",
+          "type": "movie",
+          "season": null,
+          "vote_count": 2198,
+          "vote_average": 7.9
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 8730,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260827/nguoi-nhen-khoi-dau-moi-thumb.webp",
+        "watchedAt": 1791648538342,
+        "poster_url": "https://phimimg.com/uploads/movies/20260827/nguoi-nhen-khoi-dau-moi-poster.webp",
+        "currentTime": 7573,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Spider-Man: Brand New Day",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      }
+    ],
+    "createdAt": "2026-10-06T10:22:24.549Z",
+    "favorites": [],
+    "updatedAt": "2026-10-10T16:57:19.811Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-10T16:57:19.257Z",
+    "passwordHash": "2b43a0dcb50b255070cecb3bf660f74b:4875f6beb0b04993fbffd0b5f5f63adc8bd8d3debdd5a364095bbcf2b1caa5a5"
+  },
+  {
+    "id": "user_1791298406567_pc888r",
+    "name": "VINH",
+    "email": "quyvinh171201@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": "tt2469954",
+          "vote_count": 157,
+          "vote_average": 8
+        },
+        "name": "Thần Thám Địch Nhân Kiệt (Phần 4)",
+        "slug": "than-tham-dich-nhan-kiet-phan-4",
+        "tmdb": {
+          "id": "44277",
+          "type": "tv",
+          "season": 4,
+          "vote_count": 18,
+          "vote_average": 9
+        },
+        "year": 2010,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20261006/than-tham-dich-nhan-kiet-phan-4-thumb.webp",
+        "watchedAt": 1791298432858,
+        "poster_url": "https://phimimg.com/uploads/movies/20261006/than-tham-dich-nhan-kiet-phan-4-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Amazing Detective Di Renjie (Season 4)",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      }
+    ],
+    "createdAt": "2026-10-06T14:53:26.567Z",
+    "favorites": [],
+    "updatedAt": "2026-10-06T14:56:26.846Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-06T14:56:26.619Z",
+    "passwordHash": "9081d0ff4f139b9ba1f6a2e27cbc46f4:454e29fbded1122e9e3ad048836aa397f326833cc1f7f0e13ffe891dd1e69dd1"
+  },
+  {
+    "id": "user_1791287126217_yju394",
+    "name": "Tuấn",
+    "email": "royvirgo209@gmail.com",
+    "avatar": "",
+    "history": [],
+    "createdAt": "2026-10-06T11:45:26.217Z",
+    "favorites": [],
+    "updatedAt": "2026-10-11T03:36:07.472Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-11T03:36:07.254Z",
+    "passwordHash": "2108b40e801b67e257957f11019a3dd6:6514924fce19e7a738d1969c017a868112a2211316fd8d7940765bec6d6693c2"
+  },
+  {
+    "id": "user_1791615439092_xui68s",
+    "name": "4626488",
+    "email": "meovjppr0gunny@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Thiếp Vốn Chỉ Là Cỏ Rác",
+        "slug": "thiep-von-chi-la-co-rac",
+        "tmdb": {
+          "id": "335218",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 510,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260920/thiep-von-chi-la-co-rac-thumb.webp",
+        "watchedAt": 1791882658005,
+        "poster_url": "https://phimimg.com/uploads/movies/20260920/thiep-von-chi-la-co-rac-poster.webp",
+        "currentTime": 136,
+        "episodeName": "Tập 19",
+        "episodeSlug": "tap-19",
+        "origin_name": "Revenge From A Wife",
+        "serverIndex": 0,
+        "episodeIndex": 18,
+        "episode_current": "Tập 19"
+      }
+    ],
+    "createdAt": "2026-10-10T06:57:19.092Z",
+    "favorites": [],
+    "updatedAt": "2026-10-13T09:10:59.773Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-12T16:25:25.843Z",
+    "passwordHash": "49675a57efd07e963246061e8f3c87a4:40e984e71c3aa6b165fec84a13c20af57200bd2121e504ac40b8fa99415065a6"
+  },
+  {
+    "id": "user_1791046001772_1w571n",
+    "name": "minhduc",
+    "email": "mducd2004@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": "tt14688458",
+          "vote_count": 214043,
+          "vote_average": 8.1
+        },
+        "name": "Hầm SILO (Phần 1)",
+        "slug": "ham-silo-phan-1",
+        "tmdb": {
+          "id": "125988",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 2173,
+          "vote_average": 8.2
+        },
+        "year": 2023,
+        "quality": "FHD",
+        "duration": 2736,
+        "thumb_url": "https://phimimg.com/upload/vod/20260704-1/b3ee63c76418eb123e49e040c2ef70dc.jpg",
+        "watchedAt": 1791135417894,
+        "poster_url": "https://phimimg.com/upload/vod/20260704-1/52845d44789dddbdfbd6bb5142668c6d.jpg",
+        "currentTime": 1205,
+        "episodeName": "Tập 05",
+        "episodeSlug": "tap-05",
+        "origin_name": "Silo (Season 1)",
+        "serverIndex": 0,
+        "episodeIndex": 4,
+        "episode_current": "Tập 05"
+      },
+      {
+        "imdb": {
+          "id": "tt41605854",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "The Odyssey",
+        "slug": "the-odyssey",
+        "tmdb": {
+          "id": "1698863",
+          "type": "movie",
+          "season": null,
+          "vote_count": 379,
+          "vote_average": 4.1
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 5193,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260829/the-odyssey-thumb.webp",
+        "watchedAt": 1791135296015,
+        "poster_url": "https://phimimg.com/uploads/movies/20260829/the-odyssey-poster.webp",
+        "currentTime": 333,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "The Odyssey",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt33764258",
+          "vote_count": 377702,
+          "vote_average": 8.5
+        },
+        "name": "Sử Thi Odyssey",
+        "slug": "su-thi-odyssey",
+        "tmdb": {
+          "id": "1368337",
+          "type": "movie",
+          "season": null,
+          "vote_count": 3252,
+          "vote_average": 8
+        },
+        "year": 2026,
+        "quality": "CAM",
+        "duration": 9965,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260829/su-thi-odyssey-thumb.webp",
+        "watchedAt": 1791135206318,
+        "poster_url": "https://phimimg.com/uploads/movies/20260829/su-thi-odyssey-poster.webp",
+        "currentTime": 251,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "The Odyssey",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt3687398",
+          "vote_count": 6134,
+          "vote_average": 4.7
+        },
+        "name": "Kẻ Trốn Chạy",
+        "slug": "ke-tron-chay",
+        "tmdb": {
+          "id": "277546",
+          "type": "movie",
+          "season": null,
+          "vote_count": 196,
+          "vote_average": 4.9
+        },
+        "year": 2015,
+        "quality": "FHD",
+        "duration": 5438,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260904/ke-tron-chay-thumb.webp",
+        "watchedAt": 1791135023608,
+        "poster_url": "https://phimimg.com/uploads/movies/20260904/ke-tron-chay-poster.webp",
+        "currentTime": 231,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "The Runner",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Bốn Bàn Tay, Hai Bản Sonata",
+        "slug": "bon-ban-tay-hai-ban-sonata",
+        "tmdb": {
+          "id": "305644",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 3734,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260829/bon-ban-tay-hai-ban-sonata-thumb.webp",
+        "watchedAt": 1791133594804,
+        "poster_url": "https://phimimg.com/uploads/movies/20260829/bon-ban-tay-hai-ban-sonata-poster.webp",
+        "currentTime": 2088,
+        "episodeName": "Tập 11",
+        "episodeSlug": "tap-11",
+        "origin_name": "Four Hands, Two Sonatas",
+        "serverIndex": 0,
+        "episodeIndex": 10,
+        "episode_current": "Tập 11"
+      },
+      {
+        "imdb": {
+          "id": "tt42206645",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Chủ Tịch Tập Sự",
+        "slug": "chu-tich-tap-su",
+        "tmdb": {
+          "id": "299365",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 10,
+          "vote_average": 7.4
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 3895,
+        "thumb_url": "https://phimimg.com/upload/vod/20260531-1/8a6d8d1d15ce5d216a24d63ff0572a7c.jpg",
+        "watchedAt": 1791047075633,
+        "poster_url": "https://phimimg.com/upload/vod/20260531-1/33c234df337af20625ef6b255580cbae.jpg",
+        "currentTime": 123,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Reborn Rookie",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt2906216",
+          "vote_count": 270852,
+          "vote_average": 7.2
+        },
+        "name": "Ngục Tối & Rồng: Danh Dự Của Kẻ Trộm",
+        "slug": "nguc-toi-rong-danh-du-cua-ke-trom",
+        "tmdb": {
+          "id": "493529",
+          "type": "movie",
+          "season": null,
+          "vote_count": 4712,
+          "vote_average": 7.4
+        },
+        "year": 2023,
+        "quality": "FHD",
+        "duration": 8150,
+        "thumb_url": "https://phimimg.com/upload/vod/20250525-1/d20bbb6764c4eda6707266b36e5531ee.jpg",
+        "watchedAt": 1791046743000,
+        "poster_url": "https://phimimg.com/upload/vod/20250525-1/fce65ad33119c5ee679f7a1b98984281.jpg",
+        "currentTime": 570,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Dungeons & Dragons: Honor Among Thieves",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt0138524",
+          "vote_count": 104684,
+          "vote_average": 6.3
+        },
+        "name": "Hợp Đồng Hôn Nhân",
+        "slug": "hop-dong-hon-nhan",
+        "tmdb": {
+          "id": "11775",
+          "type": "movie",
+          "season": null,
+          "vote_count": 1715,
+          "vote_average": 6
+        },
+        "year": 2003,
+        "quality": "FHD",
+        "duration": 6003,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260921/hop-dong-hon-nhan-thumb.webp",
+        "watchedAt": 1791046222615,
+        "poster_url": "https://phimimg.com/uploads/movies/20260921/hop-dong-hon-nhan-poster.webp",
+        "currentTime": 184,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Intolerable Cruelty",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      }
+    ],
+    "createdAt": "2026-10-03T16:46:41.772Z",
+    "favorites": [],
+    "updatedAt": "2026-10-16T05:16:31.001Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-16T05:16:30.779Z",
+    "passwordHash": "5ec3119d090ed65372856b1de73b728c:c34492d490b6a9c465c934df4c67b7af3553fb431b63f6288633853ce78c7a1d"
+  },
+  {
+    "id": "user_1791452415676_kvuuf7",
+    "name": "trần thế vinh",
+    "email": "ttvinh130612@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": "tt32820897",
+          "vote_count": 64082,
+          "vote_average": 8.4
+        },
+        "name": "Thanh Gươm Diệt Quỷ: Vô Hạn Thành",
+        "slug": "thanh-guom-diet-quy-vo-han-thanh",
+        "tmdb": {
+          "id": "1311031",
+          "type": "movie",
+          "season": null,
+          "vote_count": 886,
+          "vote_average": 7.7
+        },
+        "year": 2025,
+        "quality": "FHD",
+        "duration": 9313,
+        "thumb_url": "https://phimimg.com/upload/vod/20250722-1/16ea0557ca40cd54a3d25c6750a65c0b.jpg",
+        "watchedAt": 1791523240390,
+        "poster_url": "https://phimimg.com/upload/vod/20250722-1/66ee196318069c6ede9450a5f76a4648.jpg",
+        "currentTime": 8380,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Demon Slayer: Kimetsu no Yaiba Infinity Castle",
+        "serverIndex": 1,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      }
+    ],
+    "createdAt": "2026-10-08T09:40:15.676Z",
+    "favorites": [],
+    "updatedAt": "2026-10-09T05:20:40.791Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-09T05:19:30.573Z",
+    "passwordHash": "fef573deee06c8dacf2aae1361b0ac2f:04b697adc20a88007f22013cec8b5ce4c7753407717faed4637369e091ee4d53"
+  },
+  {
+    "id": "user_1791205717939_tme2ot",
+    "name": "Danh",
+    "email": "contimbanggia11@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": "tt37357034",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Mị Ảnh Thần Bộ (Phần 1)",
+        "slug": "mi-anh-than-bo-phan-1",
+        "tmdb": {
+          "id": "290699",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 2596,
+        "thumb_url": "https://phimimg.com/uploads/movies/20261002/mi-anh-than-bo-thumb.webp",
+        "watchedAt": 1791472448002,
+        "poster_url": "https://phimimg.com/uploads/movies/20261002/mi-anh-than-bo-poster.webp",
+        "currentTime": 2335,
+        "episodeName": "Tập 08",
+        "episodeSlug": "tap-08",
+        "origin_name": "Shadow Punisher (Season 1)",
+        "serverIndex": 0,
+        "episodeIndex": 7,
+        "episode_current": "Tập 08"
+      }
+    ],
+    "createdAt": "2026-10-05T13:08:37.939Z",
+    "favorites": [],
+    "updatedAt": "2026-10-08T15:14:09.668Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-08T15:14:07.511Z",
+    "passwordHash": "79b8f75905b7d462ec2d0fd6479a46ec:9db80e5c9298e0e46588d54dda8c686549bf5f7bebe223c16e0b105534565826"
+  },
+  {
+    "id": "user_1791567091015_okp175",
+    "name": "khang",
+    "email": "hckct12345@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": "tt32890033",
+          "vote_count": 6852,
+          "vote_average": 6.6
+        },
+        "name": "Minions & Quái Vật",
+        "slug": "minions-quai-vat",
+        "tmdb": {
+          "id": "1315772",
+          "type": "movie",
+          "season": null,
+          "vote_count": 294,
+          "vote_average": 6.5
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 5589,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260811/minions-quai-vat-thumb.webp",
+        "watchedAt": 1791738321128,
+        "poster_url": "https://phimimg.com/uploads/movies/20260811/minions-quai-vat-poster.webp",
+        "currentTime": 1638,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Minions & Monsters",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      }
+    ],
+    "createdAt": "2026-10-09T17:31:31.015Z",
+    "favorites": [],
+    "updatedAt": "2026-10-11T17:05:21.326Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-11T17:05:03.420Z",
+    "passwordHash": "ea64c777922bb39e3c4e37b1e55cea4c:62bcbf49e5028135ca6d661bd8af534d895a54be62dc92013c3504acfa33b03a"
+  },
+  {
+    "id": "user_1791299161778_824oyu",
+    "name": "Khang Nguyen",
+    "email": "giakhangcute10@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Ma Xó",
+        "slug": "ma-xo",
+        "tmdb": {
+          "id": "1671716",
+          "type": "movie",
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 6149,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260924/ma-xo-thumb.webp",
+        "watchedAt": 1791897779494,
+        "poster_url": "https://phimimg.com/uploads/movies/20260924/ma-xo-poster.webp",
+        "currentTime": 2562,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Maxo: Forbidden Ritual",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt42969298",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Ushiro no Shoumen Kamui-san",
+        "slug": "ushiro-no-shoumen-kamui-san",
+        "tmdb": {
+          "id": "325052",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 2,
+          "vote_average": 9
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 750,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260829/ushiro-no-shoumen-kamui-san-thumb.webp",
+        "watchedAt": 1791857510161,
+        "poster_url": "https://phimimg.com/uploads/movies/20260829/ushiro-no-shoumen-kamui-san-poster.webp",
+        "currentTime": 665,
+        "episodeName": "Tập 02",
+        "episodeSlug": "tap-02",
+        "origin_name": "KAMUI: He's Behind You",
+        "serverIndex": 0,
+        "episodeIndex": 1,
+        "episode_current": "Tập 02"
+      },
+      {
+        "imdb": {
+          "id": "tt0131179",
+          "vote_count": 18146,
+          "vote_average": 8.5
+        },
+        "name": "Thám Tử Lừng Danh Conan",
+        "slug": "tham-tu-lung-danh-conan",
+        "tmdb": {
+          "id": "30983",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 764,
+          "vote_average": 8
+        },
+        "year": 1996,
+        "quality": "FHD",
+        "duration": 1510,
+        "thumb_url": "https://phimimg.com/upload/vod/20240310-1/2a39971cc29c2802259b918eb437a45b.jpg",
+        "watchedAt": 1791857283707,
+        "poster_url": "https://phimimg.com/upload/vod/20240310-1/025424cf62248b9a7b54279ef5416e26.jpg",
+        "currentTime": 301,
+        "episodeName": "Tập 1029",
+        "episodeSlug": "tap-1029",
+        "origin_name": "Detective Conan",
+        "serverIndex": 0,
+        "episodeIndex": 1012,
+        "episode_current": "Tập 1029"
+      }
+    ],
+    "createdAt": "2026-10-06T15:06:01.778Z",
+    "favorites": [],
+    "updatedAt": "2026-10-15T04:00:45.178Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-15T04:00:44.486Z",
+    "passwordHash": "a445f97316d8bd7c1fd043cb913fa838:71606afc2e2156bc3856f4baab19840342a21924e0073dbab26a6f39e3d21faf"
+  },
+  {
+    "id": "user_1791895411106_3ps2at",
+    "name": "hung cuong",
+    "email": "hunggcuongg1302@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Gia Đình Là Số 1 (Phần 2)",
+        "slug": "gia-dinh-la-so-1-phan-2",
+        "tmdb": {
+          "id": null,
+          "type": null,
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2009,
+        "quality": "FHD",
+        "duration": 1597,
+        "thumb_url": "https://phimimg.com/upload/vod/20240829-1/e82c52723a69fe65ec3ba8cb43a932e8.jpg",
+        "watchedAt": 1792064552057,
+        "poster_url": "https://phimimg.com/upload/vod/20240829-1/c925028c9c3d0e90c44c90891989e369.jpg",
+        "currentTime": 189,
+        "episodeName": "Tập 002",
+        "episodeSlug": "tap-002",
+        "origin_name": "High Kick (Season 2)",
+        "serverIndex": 0,
+        "episodeIndex": 1,
+        "episode_current": "Tập 002"
+      },
+      {
+        "imdb": {
+          "id": "tt0388629",
+          "vote_count": 350970,
+          "vote_average": 9
+        },
+        "name": "Đảo Hải Tặc",
+        "slug": "dao-hai-tac",
+        "tmdb": {
+          "id": "37854",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 5482,
+          "vote_average": 8.8
+        },
+        "year": 1999,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/upload/vod/20240310-1/d61250d0c1670917fd783a1b48cbb29c.jpg",
+        "watchedAt": 1791986377172,
+        "poster_url": "https://phimimg.com/upload/vod/20240310-1/31e6c244a0673838a46732d3b4f0b190.jpg",
+        "currentTime": 11,
+        "episodeName": "Tập 852",
+        "episodeSlug": "tap-852",
+        "origin_name": "One Piece",
+        "serverIndex": 0,
+        "episodeIndex": 851,
+        "episode_current": "Tập 852"
+      }
+    ],
+    "createdAt": "2026-10-13T12:43:31.106Z",
+    "favorites": [
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Gia Đình Là Số 1 (Phần 2)",
+        "slug": "gia-dinh-la-so-1-phan-2",
+        "tmdb": {
+          "id": null,
+          "type": null,
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2009,
+        "addedAt": 1791895577393,
+        "quality": "FHD",
+        "thumb_url": "https://i0.wp.com/phimimg.com/upload/vod/20240829-1/c925028c9c3d0e90c44c90891989e369.jpg?strip=all&w=360&quality=75",
+        "poster_url": "https://phimimg.com/upload/vod/20240829-1/c925028c9c3d0e90c44c90891989e369.jpg",
+        "origin_name": "High Kick (Season 2)",
+        "episode_current": "Hoàn Tất (126/126)"
+      },
+      {
+        "imdb": {
+          "id": "tt0388629",
+          "vote_count": 350970,
+          "vote_average": 9
+        },
+        "name": "Đảo Hải Tặc",
+        "slug": "dao-hai-tac",
+        "tmdb": {
+          "id": "37854",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 5482,
+          "vote_average": 8.8
+        },
+        "year": 1999,
+        "addedAt": 1791895514926,
+        "quality": "FHD",
+        "thumb_url": "https://i0.wp.com/phimimg.com/upload/vod/20240310-1/d61250d0c1670917fd783a1b48cbb29c.jpg?strip=all&w=1920&quality=85",
+        "poster_url": "https://phimimg.com/upload/vod/20240310-1/31e6c244a0673838a46732d3b4f0b190.jpg",
+        "origin_name": "One Piece",
+        "episode_current": "Tập 1180"
+      }
+    ],
+    "updatedAt": "2026-10-15T11:41:49.154Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-15T11:41:46.435Z",
+    "passwordHash": "3448bd6df1956dff00b0743991eca14d:f3fa19e7b9039e9b8c3e2e352e638dc4731286bd7a9576fbaa5a112c956f5ba8"
+  },
+  {
+    "id": "user_1791656241318_1urvn3",
+    "name": "nam",
+    "email": "nvn200627@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": "tt10676052",
+          "vote_count": 258601,
+          "vote_average": 6.8
+        },
+        "name": "Bộ Tứ Siêu Đẳng: Bước Đi Đầu Tiên",
+        "slug": "bo-tu-sieu-dang-buoc-di-dau-tien",
+        "tmdb": {
+          "id": "617126",
+          "type": "movie",
+          "season": null,
+          "vote_count": 3472,
+          "vote_average": 7
+        },
+        "year": 2025,
+        "quality": "FHD",
+        "duration": 6977,
+        "thumb_url": "https://phimimg.com/upload/vod/20250731-1/a5c1095978758ea02214ac005cecb377.jpg",
+        "watchedAt": 1791912771104,
+        "poster_url": "https://phimimg.com/upload/vod/20250731-1/7aed471679716567816ac015ad586391.jpg",
+        "currentTime": 400,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "The Fantastic 4: First Steps",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt7441658",
+          "vote_count": 47506,
+          "vote_average": 8.2
+        },
+        "name": "Thế Giới Phép Thuật (Phần 2)",
+        "slug": "the-gioi-phep-thuat-phan-2",
+        "tmdb": {
+          "id": "73223",
+          "type": "tv",
+          "season": 2,
+          "vote_count": 2207,
+          "vote_average": 8.5
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 1460,
+        "thumb_url": "https://phimimg.com/uploads/movies/20261004/the-gioi-phep-thuat-phan-2-thumb.webp",
+        "watchedAt": 1791911857977,
+        "poster_url": "https://phimimg.com/uploads/movies/20261004/the-gioi-phep-thuat-phan-2-poster.webp",
+        "currentTime": 1312,
+        "episodeName": "Tập 02",
+        "episodeSlug": "tap-02",
+        "origin_name": "Black Clover (Season 2)",
+        "serverIndex": 0,
+        "episodeIndex": 1,
+        "episode_current": "Tập 02"
+      }
+    ],
+    "createdAt": "2026-10-10T18:17:21.318Z",
+    "favorites": [],
+    "updatedAt": "2026-10-15T08:28:50.600Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-15T08:28:50.384Z",
+    "passwordHash": "fdf4c9c2aaca4a0dbd0cbd882836ad33:ff9ee8da5faa5f4b4b06a232f5e74cc7d5c5481b1fc712a4e03bb19b2b32c187"
+  },
+  {
+    "id": "user_1791470803809_wgx2n7",
+    "name": "Đô",
+    "email": "do0945131710@gmail.com",
+    "avatar": "",
+    "history": [],
+    "createdAt": "2026-10-08T14:46:43.809Z",
+    "favorites": [],
+    "updatedAt": "2026-10-08T14:47:41.905Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-08T14:47:41.681Z",
+    "passwordHash": "5acc810965d5103c3b37ab8bdcdb58ea:17d2af7fa87c1e58313a73206c24de37d8339fd8fcc7a8b00848d7080cbb3e15"
+  },
+  {
+    "id": "user_1791735282668_3p7wxs",
+    "name": "Phan Trần Bảo Văn",
+    "email": "kennyalex212@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Paris Rực Lửa",
+        "slug": "paris-ruc-lua",
+        "tmdb": {
+          "id": null,
+          "type": null,
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2010,
+        "quality": "HD",
+        "duration": 5122,
+        "thumb_url": "https://phimimg.com/upload/vod/20231030-1/5d50e5bd839b8f0c36366702dd12316c.jpg",
+        "watchedAt": 1791990399448,
+        "poster_url": "https://phimimg.com/upload/vod/20231030-1/6faf844fdefdb78512b48313a8a7523b.jpg",
+        "currentTime": 446,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "From Paris with Love",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt4574334",
+          "vote_count": 1691532,
+          "vote_average": 8.6
+        },
+        "name": "Cậu Bé Mất Tích (Phần 1)",
+        "slug": "cau-be-mat-tich-phan-1",
+        "tmdb": {
+          "id": "66732",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 21399,
+          "vote_average": 8.6
+        },
+        "year": 2016,
+        "quality": "FHD",
+        "duration": 2997,
+        "thumb_url": "https://phimimg.com/upload/vod/20241219-1/96e77c1c955be8c5d163a70525b823d5.jpg",
+        "watchedAt": 1791740181954,
+        "poster_url": "https://phimimg.com/upload/vod/20251127-1/4e76c982472d25b28d2b8b0a177f79d7.jpg",
+        "currentTime": 221,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Stranger Things (Season 1)",
+        "serverIndex": 1,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt1591095",
+          "vote_count": 365703,
+          "vote_average": 6.8
+        },
+        "name": "Quỷ Quyệt",
+        "slug": "quy-quyet",
+        "tmdb": {
+          "id": "49018",
+          "type": "movie",
+          "season": null,
+          "vote_count": 7368,
+          "vote_average": 6.9
+        },
+        "year": 2011,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/upload/vod/20250731-1/e753d27a7578d8e7cc0d7da1c3af9846.jpg",
+        "watchedAt": 1791735692451,
+        "poster_url": "https://phimimg.com/upload/vod/20250731-1/7805a656c8b6bdeee32ab9c2eccf77fb.jpg",
+        "currentTime": 0,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Insidious",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "name": "Final Fantasy VII: Hành Trình Của Những Đứa Trẻ",
+        "slug": "final-fantasy-vii-hanh-trinh-cua-nhung-dua-tre",
+        "year": 2023,
+        "quality": "HD",
+        "duration": 0,
+        "thumb_url": "https://img.nguonc.com/images/img-4372c53477a8b1d49ed4d88e8357d8fb29f178ad35397817e87b20d4bee69e51.jpg",
+        "watchedAt": 1791735569872,
+        "poster_url": "https://img.nguonc.com/images/img-8ba7f54003ffcfc0d9ac093fa1e6d1d308858ade89327bb49ecccbe98012302c.jpg",
+        "currentTime": 0,
+        "episodeName": "Tập Full",
+        "episodeSlug": "tap-full",
+        "origin_name": "Final Fantasy VII: Advent Children",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập Full"
+      },
+      {
+        "imdb": {
+          "id": "tt0385700",
+          "vote_count": 59568,
+          "vote_average": 7.1
+        },
+        "name": "Final Fantasy VII: Cuộc Hành Trình Của Những Đứa Trẻ",
+        "slug": "final-fantasy-vii-cuoc-hanh-trinh-cua-nhung-dua-tre",
+        "tmdb": {
+          "id": "647",
+          "type": "movie",
+          "season": null,
+          "vote_count": 1260,
+          "vote_average": 7.2
+        },
+        "year": 2005,
+        "quality": "FHD",
+        "duration": 7624,
+        "thumb_url": "https://phimimg.com/upload/vod/20250723-1/e6b75e1af23faca4295cefb4798348bc.jpg",
+        "watchedAt": 1791735553581,
+        "poster_url": "https://phimimg.com/upload/vod/20250723-1/9fb5a693dc158c01ea4b21ffe07813d6.jpg",
+        "currentTime": 121,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Final Fantasy VII: Advent Children",
+        "serverIndex": 1,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      }
+    ],
+    "createdAt": "2026-10-11T16:14:42.668Z",
+    "favorites": [],
+    "updatedAt": "2026-10-14T15:06:39.995Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-14T15:06:37.320Z",
+    "passwordHash": "3f14064b1d2a1542edcf829435a7b5e1:d226155ae4610c46e9586c9fd18ebcf76bfed9fc1bc6162dfbd01f493a624dd3"
+  },
+  {
+    "id": "user_1791570158734_3mtr9n",
+    "name": "Bùi Hoàng Tùng",
+    "email": "buihoangtung4605@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": "tt22084616",
+          "vote_count": 183571,
+          "vote_average": 8.1
+        },
+        "name": "Người Nhện: Khởi Đầu Mới",
+        "slug": "nguoi-nhen-khoi-dau-moi",
+        "tmdb": {
+          "id": "969681",
+          "type": "movie",
+          "season": null,
+          "vote_count": 2198,
+          "vote_average": 7.9
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 8730,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260827/nguoi-nhen-khoi-dau-moi-thumb.webp",
+        "watchedAt": 1791596579485,
+        "poster_url": "https://phimimg.com/uploads/movies/20260827/nguoi-nhen-khoi-dau-moi-poster.webp",
+        "currentTime": 133,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Spider-Man: Brand New Day",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt27668559",
+          "vote_count": 25869,
+          "vote_average": 8.2
+        },
+        "name": "Nữ Hoàng Nước Mắt",
+        "slug": "nu-hoang-nuoc-mat",
+        "tmdb": {
+          "id": "215720",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 501,
+          "vote_average": 8.4
+        },
+        "year": 2024,
+        "quality": "FHD",
+        "duration": 6595,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260723/nu-hoang-nuoc-mat-thumb.webp",
+        "watchedAt": 1791570277859,
+        "poster_url": "https://phimimg.com/uploads/movies/20260723/nu-hoang-nuoc-mat-poster.webp",
+        "currentTime": 2918,
+        "episodeName": "Tập 16",
+        "episodeSlug": "tap-16",
+        "origin_name": "Queen Of Tears",
+        "serverIndex": 0,
+        "episodeIndex": 15,
+        "episode_current": "Tập 16"
+      }
+    ],
+    "createdAt": "2026-10-09T18:22:38.734Z",
+    "favorites": [],
+    "updatedAt": "2026-10-10T02:50:19.831Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-10T02:50:19.600Z",
+    "passwordHash": "9ed324413cb37e2581703c03c35bf595:2f1377f9afa17712c4c3088a1096e83c3e775322ce93f4aed0927645e94015da"
+  },
+  {
+    "id": "user_1791355185106_6jqg4t",
+    "name": "Anh Phong",
+    "email": "anhphongphoto@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Phong Hoa Lệnh (Phần 1)",
+        "slug": "phong-hoa-lenh-phan-1",
+        "tmdb": {
+          "id": "336030",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 1213,
+        "thumb_url": "",
+        "watchedAt": 1792104674175,
+        "poster_url": "https://phimimg.com/uploads/movies/20260930/phong-hoa-lenh-poster.webp",
+        "currentTime": 556,
+        "episodeName": "Tập 12",
+        "episodeSlug": "tap-12",
+        "origin_name": "Love Legend (Season 1)",
+        "serverIndex": 1,
+        "episodeIndex": 11,
+        "episode_current": "Tập 12"
+      },
+      {
+        "imdb": {
+          "id": "tt37357034",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Mị Ảnh Thần Bộ (Phần 1)",
+        "slug": "mi-anh-than-bo-phan-1",
+        "tmdb": {
+          "id": "290699",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 2950,
+        "thumb_url": "https://phimimg.com/uploads/movies/20261002/mi-anh-than-bo-thumb.webp",
+        "watchedAt": 1791640152139,
+        "poster_url": "https://phimimg.com/uploads/movies/20261002/mi-anh-than-bo-poster.webp",
+        "currentTime": 1865,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Shadow Punisher (Season 1)",
+        "serverIndex": 1,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Sở Ly",
+        "slug": "so-ly",
+        "tmdb": {
+          "id": "296018",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 761,
+        "thumb_url": "https://phimimg.com/uploads/movies/20261008/so-ly-thumb.webp",
+        "watchedAt": 1791629987776,
+        "poster_url": "https://phimimg.com/uploads/movies/20261008/so-ly-poster.webp",
+        "currentTime": 485,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Reunion Across Time",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt27369017",
+          "vote_count": 4367,
+          "vote_average": 6.9
+        },
+        "name": "Hope: Vùng Tử Địa",
+        "slug": "hope-vung-tu-dia",
+        "tmdb": {
+          "id": "1058424",
+          "type": "movie",
+          "season": null,
+          "vote_count": 75,
+          "vote_average": 7.4
+        },
+        "year": 2026,
+        "quality": "CAM",
+        "duration": 9070,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260919/hope-vung-tu-dia-thumb.webp",
+        "watchedAt": 1791629548975,
+        "poster_url": "https://phimimg.com/uploads/movies/20260919/hope-vung-tu-dia-poster.webp",
+        "currentTime": 587,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Hope",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt36758489",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Tôi Không Phải Là Đại Sư (Phần 1)",
+        "slug": "toi-khong-phai-la-dai-su-phan-1",
+        "tmdb": {
+          "id": "289078",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 2779,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260924/toi-khong-phai-la-dai-su-thumb.webp",
+        "watchedAt": 1791629433645,
+        "poster_url": "https://phimimg.com/uploads/movies/20260924/toi-khong-phai-la-dai-su-poster.webp",
+        "currentTime": 2500,
+        "episodeName": "Tập 24",
+        "episodeSlug": "tap-24",
+        "origin_name": "A Prophet (Season 1)",
+        "serverIndex": 1,
+        "episodeIndex": 23,
+        "episode_current": "Tập 24"
+      }
+    ],
+    "createdAt": "2026-10-07T06:39:45.107Z",
+    "favorites": [],
+    "updatedAt": "2026-10-16T10:22:10.924Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-16T10:21:39.479Z",
+    "passwordHash": "99c23d257112db82888bcd536a8ba892:f76ef5bacf80b7dee60d2092174da9450f85e249451cc3288c25992ee2e1f9f7"
+  },
+  {
+    "id": "user_1791857987939_hub85q",
+    "name": "Zhenglunn",
+    "email": "lecongly161@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Phí Phông: Quỷ Máu Rừng Thiêng",
+        "slug": "phi-phong-quy-mau-rung-thieng",
+        "tmdb": {
+          "id": "1667685",
+          "type": "movie",
+          "season": null,
+          "vote_count": 2,
+          "vote_average": 7.5
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 7271,
+        "thumb_url": "https://phimimg.com/upload/vod/20260620-1/f9f017b676af1005b05491f5a520cc7f.jpg",
+        "watchedAt": 1791877212916,
+        "poster_url": "https://phimimg.com/upload/vod/20260620-1/3ed9a180dfc699fbc0502962e67d86b7.jpg",
+        "currentTime": 6544,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Phi Phong: The Blood Demon",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt36958999",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Tạm Biệt Gohan",
+        "slug": "tam-biet-gohan",
+        "tmdb": {
+          "id": "1319522",
+          "type": "movie",
+          "season": null,
+          "vote_count": 10,
+          "vote_average": 7.1
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 8465,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260827/tam-biet-gohan-thumb.webp",
+        "watchedAt": 1791861911017,
+        "poster_url": "https://phimimg.com/uploads/movies/20260827/tam-biet-gohan-poster.webp",
+        "currentTime": 821,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Gohan",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      }
+    ],
+    "createdAt": "2026-10-13T02:19:47.939Z",
+    "favorites": [],
+    "updatedAt": "2026-10-13T07:42:30.012Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-13T07:42:29.349Z",
+    "passwordHash": "1b789133b5311163374b3b8dccddc9dd:54cf45d36403d784ae941832b10aaa460e3379ea8afacd80227661692af53987"
+  },
+  {
+    "id": "user_1791546947315_kq7gf7",
+    "name": "Bùi ngọc huyền",
+    "email": "ngochuyenbui911@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Thanh Gươm Diệt Quỷ (Phần 5) (Đại Trụ Đặc Huấn)",
+        "slug": "thanh-guom-diet-quy-phan-5-dai-tru-dac-huan",
+        "tmdb": {
+          "id": null,
+          "type": null,
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2024,
+        "quality": "FHD",
+        "duration": 1455,
+        "thumb_url": "https://phimimg.com/upload/vod/20240514-1/067d03e151d819be3d3d60f2b1eaea42.jpg",
+        "watchedAt": 1791963109977,
+        "poster_url": "https://phimimg.com/upload/vod/20250427-1/f6a0dabb17cd90e280bf8543b9089d8f.jpg",
+        "currentTime": 389,
+        "episodeName": "Tập 04",
+        "episodeSlug": "tap-04",
+        "origin_name": "Demon Slayer (Season 5) (Hashira Training Arc)",
+        "serverIndex": 1,
+        "episodeIndex": 3,
+        "episode_current": "Tập 04"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Thanh Gươm Diệt Quỷ (Phần 4) (Làng Thợ Rèn)",
+        "slug": "thanh-guom-diet-quy-phan-4-lang-tho-ren",
+        "tmdb": {
+          "id": null,
+          "type": null,
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2023,
+        "quality": "FHD",
+        "duration": 3154,
+        "thumb_url": "https://phimimg.com/upload/vod/20240308-1/a0f9644299d8322f495e5fda38098f39.jpg",
+        "watchedAt": 1791957423658,
+        "poster_url": "https://phimimg.com/upload/vod/20250427-1/c1ed81199e77a349d236c842953c9c6a.jpg",
+        "currentTime": 2115,
+        "episodeName": "Tập 11",
+        "episodeSlug": "tap-11",
+        "origin_name": "Demon Slayer (Season 4) (Swordsmith Village Arc)",
+        "serverIndex": 0,
+        "episodeIndex": 10,
+        "episode_current": "Hoàn Tất (11/11)"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Thanh Gươm Diệt Quỷ (Phần 3) (Kỹ Viện Trấn)",
+        "slug": "thanh-guom-diet-quy-phan-3-ky-vien-tran",
+        "tmdb": {
+          "id": null,
+          "type": null,
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2021,
+        "quality": "FHD",
+        "duration": 1976,
+        "thumb_url": "https://phimimg.com/upload/vod/20240302-1/495167573eb3f65d09652933e64327c0.jpg",
+        "watchedAt": 1791804581764,
+        "poster_url": "https://phimimg.com/upload/vod/20250427-1/ba01d82e006a7d9c2fb3aca49a0a8b1e.jpg",
+        "currentTime": 1775,
+        "episodeName": "Tập 11",
+        "episodeSlug": "tap-11",
+        "origin_name": "Demon Slayer (Season 3) (Entertainment District Arc)",
+        "serverIndex": 0,
+        "episodeIndex": 10,
+        "episode_current": "Hoàn Tất (11/11)"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Thanh Gươm Diệt Quỷ (Phần 2) (Chuyến Tàu Vô Tận)",
+        "slug": "thanh-guom-diet-quy-phan-2-chuyen-tau-vo-tan",
+        "tmdb": {
+          "id": null,
+          "type": null,
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2021,
+        "quality": "FHD",
+        "duration": 1621,
+        "thumb_url": "https://phimimg.com/upload/vod/20240709-1/e79b6aaa75300e7424ca41500980cbe2.jpg",
+        "watchedAt": 1791649382719,
+        "poster_url": "https://phimimg.com/upload/vod/20250427-1/d58646e693f31b0775f0fec0b3ea9461.jpg",
+        "currentTime": 6,
+        "episodeName": "Tập 07",
+        "episodeSlug": "tap-07",
+        "origin_name": "Demon Slayer (Season 2) (Mugen Train Arc)",
+        "serverIndex": 1,
+        "episodeIndex": 6,
+        "episode_current": "Hoàn Tất (7/7)"
+      },
+      {
+        "imdb": {
+          "id": "tt9335498",
+          "vote_count": 226593,
+          "vote_average": 8.6
+        },
+        "name": "Thanh Gươm Diệt Quỷ (Phần 1) (Kamado Tanjiro Lập Chí)",
+        "slug": "thanh-guom-diet-quy-phan-1-kamado-tanjiro-lap-chi",
+        "tmdb": {
+          "id": "85937",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 7312,
+          "vote_average": 8.6
+        },
+        "year": 2019,
+        "quality": "FHD",
+        "duration": 1451,
+        "thumb_url": "https://phimimg.com/upload/vod/20250427-1/d48a9b5c9d1537f698035f1f2df90209.jpg",
+        "watchedAt": 1791637581048,
+        "poster_url": "https://phimimg.com/upload/vod/20250427-1/a9d8a556f8cb1873f1a40e1d97db255e.jpg",
+        "currentTime": 1305,
+        "episodeName": "Tập 26",
+        "episodeSlug": "tap-26",
+        "origin_name": "Demon Slayer (Season 1) (Tanjiro Kamado, Unwavering Resolve Arc)",
+        "serverIndex": 1,
+        "episodeIndex": 25,
+        "episode_current": "Tập 26"
+      }
+    ],
+    "createdAt": "2026-10-09T11:55:47.315Z",
+    "favorites": [],
+    "updatedAt": "2026-10-14T07:31:51.272Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-14T07:31:30.523Z",
+    "passwordHash": "a0f0364c06344806f3c009ac32b8a94d:1dbc48bb6a127a1e1251494ce760edf5b0d0aae5baf5babcd4e90a5c53385098"
+  },
+  {
+    "id": "user_1789440835602_n4jt67",
+    "name": "Phuong",
+    "email": "dinhphuongkim2k5@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": "tt39047437",
+          "vote_count": 10,
+          "vote_average": 8
+        },
+        "name": "Meitantei Precure!",
+        "slug": "meitantei-precure",
+        "tmdb": {
+          "id": "306721",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 5,
+          "vote_average": 6.8
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/upload/vod/20260607-1/9369fb0b1a0db1c015470c105d065ba0.jpg",
+        "watchedAt": 1789440964547,
+        "poster_url": "https://phimimg.com/upload/vod/20260607-1/0d46f3ca0500b986fda2df9d94ab9efa.jpg",
+        "currentTime": 0,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Star Detective Precure!",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt0090094",
+          "vote_count": 21913,
+          "vote_average": 5.9
+        },
+        "name": "Quái Vật Kem",
+        "slug": "quai-vat-kem",
+        "tmdb": {
+          "id": "18502",
+          "type": "movie",
+          "season": null,
+          "vote_count": 546,
+          "vote_average": 6
+        },
+        "year": 1985,
+        "quality": "FHD",
+        "duration": 5191,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260914/quai-vat-kem-thumb.webp",
+        "watchedAt": 1789440950424,
+        "poster_url": "https://phimimg.com/uploads/movies/20260914/quai-vat-kem-poster.webp",
+        "currentTime": 6,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "The Stuff",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      }
+    ],
+    "isLocked": false,
+    "banReason": "",
+    "createdAt": "2026-09-15T02:53:55.602Z",
+    "favorites": [],
+    "updatedAt": "2026-09-15T03:03:00.004Z",
+    "isVerified": true,
+    "bannedUntil": 0,
+    "lastActiveAt": "2026-09-15T03:02:59.998Z",
+    "passwordHash": "617f461d004bbe0ffdb7a6f6bcf538a2:79aa9857b07655b625629b2868876d7c369f27ab38c1188da6d53daeca6440d8"
+  },
+  {
+    "id": "user_1789991574433_8aqgdy",
+    "name": "lemon",
+    "email": "baongan.nguyen2300@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": "tt0092906",
+          "vote_count": 14122,
+          "vote_average": 6.3
+        },
+        "name": "Ma Búp Bê",
+        "slug": "ma-bup-be-1986",
+        "tmdb": {
+          "id": "24341",
+          "type": "movie",
+          "season": null,
+          "vote_count": 380,
+          "vote_average": 6.4
+        },
+        "year": 1987,
+        "quality": "FHD",
+        "duration": 4686,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260930/ma-bup-be-1986-thumb.webp",
+        "watchedAt": 1791713542295,
+        "poster_url": "https://phimimg.com/uploads/movies/20260930/ma-bup-be-1986-poster.webp",
+        "currentTime": 4210,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Dolls",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt32500958",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Lan Hương Như Cố",
+        "slug": "lan-huong-nhu-co",
+        "tmdb": {
+          "id": "282326",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 1,
+          "vote_average": 9
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 2760,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260912/lan-huong-nhu-co-thumb.webp",
+        "watchedAt": 1791712469683,
+        "poster_url": "https://phimimg.com/uploads/movies/20260912/lan-huong-nhu-co-poster.webp",
+        "currentTime": 2489,
+        "episodeName": "Tập 46",
+        "episodeSlug": "tap-46",
+        "origin_name": "Against The Current",
+        "serverIndex": 0,
+        "episodeIndex": 45,
+        "episode_current": "Tập 46"
+      },
+      {
+        "imdb": {
+          "id": "tt32792277",
+          "vote_count": 292,
+          "vote_average": 8.4
+        },
+        "name": "Trảm Thần: Phàm Trần Thần Vực (Phần 2)",
+        "slug": "tram-than-pham-tran-than-vuc-phan-2",
+        "tmdb": {
+          "id": "259231",
+          "type": "tv",
+          "season": 2,
+          "vote_count": 16,
+          "vote_average": 8.3
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 1658,
+        "thumb_url": "https://phimimg.com/upload/vod/20260627-1/4c213d3213bfbfff8254a2bace26b730.jpg",
+        "watchedAt": 1790561520626,
+        "poster_url": "https://phimimg.com/upload/vod/20260627-1/84241482e7ba7ceb6139e4c6df6c5163.jpg",
+        "currentTime": 6,
+        "episodeName": "Tập 12",
+        "episodeSlug": "tap-12",
+        "origin_name": "Slay The Gods (Season 2)",
+        "serverIndex": 0,
+        "episodeIndex": 11,
+        "episode_current": "Tập 12"
+      },
+      {
+        "imdb": {
+          "id": "tt17050076",
+          "vote_count": 892,
+          "vote_average": 8.4
+        },
+        "name": "Thôn Phệ Tinh Không",
+        "slug": "thon-phe-tinh-khong",
+        "tmdb": {
+          "id": "101172",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 33,
+          "vote_average": 8.5
+        },
+        "year": 2020,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/upload/vod/20240821-1/22c49ba9590b0e5f3d126696c0bfbecf.jpg",
+        "watchedAt": 1789991580180,
+        "poster_url": "https://phimimg.com/upload/vod/20240821-1/a651652396e9f53c09cd88d28700d5c4.jpg",
+        "currentTime": 0,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Swallowed Star",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      }
+    ],
+    "createdAt": "2026-09-21T11:52:54.433Z",
+    "favorites": [
+      {
+        "imdb": {
+          "id": "tt32792277",
+          "vote_count": 292,
+          "vote_average": 8.4
+        },
+        "name": "Trảm Thần: Phàm Trần Thần Vực (Phần 2)",
+        "slug": "tram-than-pham-tran-than-vuc-phan-2",
+        "tmdb": {
+          "id": "259231",
+          "type": "tv",
+          "season": 2,
+          "vote_count": 16,
+          "vote_average": 8.3
+        },
+        "year": 2026,
+        "addedAt": 1790002390257,
+        "quality": "FHD",
+        "thumb_url": "https://phimimg.com/upload/vod/20260627-1/4c213d3213bfbfff8254a2bace26b730.jpg",
+        "poster_url": "https://phimimg.com/upload/vod/20260627-1/84241482e7ba7ceb6139e4c6df6c5163.jpg",
+        "origin_name": "Slay The Gods (Season 2)",
+        "episode_current": "Hoàn Tất (15/15)"
+      }
+    ],
+    "updatedAt": "2026-10-11T10:13:37.954Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-11T10:13:37.723Z",
+    "passwordHash": "31acd2255fbfcd55187bf8979c95040a:644f094ed635cc72ff7c5dae204174ad895c1c06eb5cbd3ec5cd5f2db3540a9a"
+  },
+  {
+    "id": "user_1789879830829_e6yj4s",
+    "name": "LQTrung",
+    "email": "luutrung686@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": "tt1954347",
+          "vote_count": 66277,
+          "vote_average": 7.6
+        },
+        "name": "Cổng Thời Gian (Phần 1)",
+        "slug": "cong-thoi-gian-phan-1",
+        "tmdb": {
+          "id": "43020",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 969,
+          "vote_average": 7.5
+        },
+        "year": 2012,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260918/cong-thoi-gian-phan-1-thumb.webp",
+        "watchedAt": 1789880175918,
+        "poster_url": "https://phimimg.com/uploads/movies/20260918/cong-thoi-gian-phan-1-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Continuum (Season 1)",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt26545992",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Lực lượng Lanterns (Phần 1)",
+        "slug": "luc-luong-lanterns-phan-1",
+        "tmdb": {
+          "id": "95350",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 18,
+          "vote_average": 6.9
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 3418,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260817/luc-luong-lanterns-phan-1-thumb.webp",
+        "watchedAt": 1789880172839,
+        "poster_url": "https://phimimg.com/uploads/movies/20260817/luc-luong-lanterns-phan-1-poster.webp",
+        "currentTime": 2468,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Lanterns (Season 1)",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt2637276",
+          "vote_count": 258061,
+          "vote_average": 6.3
+        },
+        "name": "Chú Gấu Ted 2",
+        "slug": "chu-gau-ted-2",
+        "tmdb": {
+          "id": "214756",
+          "type": "movie",
+          "season": null,
+          "vote_count": 8035,
+          "vote_average": 6.3
+        },
+        "year": 2015,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/upload/vod/20250712-1/4beacda2a7743195dc74e1e76ee0f724.jpg",
+        "watchedAt": 1789880122798,
+        "poster_url": "https://phimimg.com/upload/vod/20250712-1/8cd0164a105071abb4aa7ff0d2f05203.jpg",
+        "currentTime": 0,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Ted 2",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt14452776",
+          "vote_count": 304651,
+          "vote_average": 8.5
+        },
+        "name": "Góc Bếp Kỳ Tài (Phần 4)",
+        "slug": "goc-bep-ky-tai-phan-4",
+        "tmdb": {
+          "id": "136315",
+          "type": "tv",
+          "season": 4,
+          "vote_count": 1790,
+          "vote_average": 8.1
+        },
+        "year": 2025,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/upload/vod/20250704-1/a02fcc3134778b8955666a8b4661c9b3.jpg",
+        "watchedAt": 1789880114469,
+        "poster_url": "https://phimimg.com/upload/vod/20250704-1/7c5f01873001239b27ce9656027fa45d.jpg",
+        "currentTime": 0,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "The Bear (Season 4)",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt27165187",
+          "vote_count": 39062,
+          "vote_average": 6.5
+        },
+        "name": "Ngày Tàn Của Phố Oak",
+        "slug": "ngay-tan-cua-pho-oak",
+        "tmdb": {
+          "id": "1101383",
+          "type": "movie",
+          "season": null,
+          "vote_count": 492,
+          "vote_average": 6.4
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260914/ngay-tan-cua-pho-oak-thumb.webp",
+        "watchedAt": 1789880113052,
+        "poster_url": "https://phimimg.com/uploads/movies/20260914/ngay-tan-cua-pho-oak-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "The End of Oak Street",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt7235466",
+          "vote_count": 62295,
+          "vote_average": 7.9
+        },
+        "name": "Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 9",
+        "slug": "cuoc-goi-khan-cap-9-1-1-phan-9",
+        "tmdb": {
+          "id": "75219",
+          "type": "tv",
+          "season": 9,
+          "vote_count": 2827,
+          "vote_average": 8.2
+        },
+        "year": 2025,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260815/cuoc-goi-khan-cap-9-1-1-phan-9-thumb.webp",
+        "watchedAt": 1789880109369,
+        "poster_url": "https://phimimg.com/uploads/movies/20260815/cuoc-goi-khan-cap-9-1-1-phan-9-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "9-1-1 (Season 9)",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt27486290",
+          "vote_count": 6215,
+          "vote_average": 5.8
+        },
+        "name": "Cậu Bé Mất Tích: Chuyện Năm 85 (Phần 2)",
+        "slug": "cau-be-mat-tich-chuyen-nam-85-phan-2",
+        "tmdb": {
+          "id": "224263",
+          "type": "tv",
+          "season": 2,
+          "vote_count": 108,
+          "vote_average": 7.6
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260917/cau-be-mat-tich-chuyen-nam-85-phan-2-thumb.webp",
+        "watchedAt": 1789880103433,
+        "poster_url": "https://phimimg.com/uploads/movies/20260917/cau-be-mat-tich-chuyen-nam-85-phan-2-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Stranger Things: Tales From '85 (Season 2)",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt0081114",
+          "vote_count": 21434,
+          "vote_average": 6.3
+        },
+        "name": "Tên Điên Giết Người",
+        "slug": "ten-dien-giet-nguoi",
+        "tmdb": {
+          "id": "27346",
+          "type": "movie",
+          "season": null,
+          "vote_count": 511,
+          "vote_average": 6.4
+        },
+        "year": 1980,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260918/ten-dien-giet-nguoi-thumb.webp",
+        "watchedAt": 1789880093640,
+        "poster_url": "https://phimimg.com/uploads/movies/20260918/ten-dien-giet-nguoi-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Maniac",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt0133751",
+          "vote_count": 146576,
+          "vote_average": 6.6
+        },
+        "name": "Ký Sinh Trùng Ngoài Hành Tinh",
+        "slug": "ky-sinh-trung-ngoai-hanh-tinh",
+        "tmdb": {
+          "id": "9276",
+          "type": "movie",
+          "season": null,
+          "vote_count": 2319,
+          "vote_average": 6.6
+        },
+        "year": 1998,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/upload/vod/20231106-1/b2125bc43bcc09c05a02e87de18cca9d.jpg",
+        "watchedAt": 1789880092700,
+        "poster_url": "https://phimimg.com/upload/vod/20231106-1/522a75174b760b2cd90ddfea1340a0be.jpg",
+        "currentTime": 0,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "The Faculty",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt36982718",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Bay Vào Trái Tim Anh / Bay Vào Tim Anh",
+        "slug": "bay-vao-trai-tim-anh-bay-vao-tim-anh",
+        "tmdb": {
+          "id": "286988",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 1,
+          "vote_average": 8
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260831/bay-vao-trai-tim-anh-thumb.webp",
+        "watchedAt": 1789880084204,
+        "poster_url": "https://phimimg.com/uploads/movies/20260831/bay-vao-trai-tim-anh-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Blossom Through The Cloud",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt26450613",
+          "vote_count": 9128,
+          "vote_average": 8
+        },
+        "name": "Cửa Hàng Sát Thủ (Phần 2)",
+        "slug": "cua-hang-sat-thu-phan-2",
+        "tmdb": {
+          "id": "215072",
+          "type": "tv",
+          "season": 2,
+          "vote_count": 179,
+          "vote_average": 8.3
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 3538,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260722/cua-hang-sat-thu-phan-2-thumb-2.webp",
+        "watchedAt": 1789880038173,
+        "poster_url": "https://phimimg.com/uploads/movies/20260722/cua-hang-sat-thu-phan-2-poster-2.webp",
+        "currentTime": 2849,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "A Shop for Killers (Season 2)",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt9077194",
+          "vote_count": 564,
+          "vote_average": 6.5
+        },
+        "name": "Đảo ấu trùng (Phần 2)",
+        "slug": "dao-au-trung-phan-2",
+        "tmdb": {
+          "id": "83248",
+          "type": "tv",
+          "season": 2,
+          "vote_count": 17,
+          "vote_average": 7.1
+        },
+        "year": 2019,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260818/dao-au-trung-phan-2-thumb.webp",
+        "watchedAt": 1789879920604,
+        "poster_url": "https://phimimg.com/uploads/movies/20260818/dao-au-trung-phan-2-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Larva Island (Season 2)",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt24082562",
+          "vote_count": 1169,
+          "vote_average": 7.3
+        },
+        "name": "Mở Khóa Sếp Tổng",
+        "slug": "mo-khoa-sep-tong",
+        "tmdb": {
+          "id": "155459",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 39,
+          "vote_average": 7.4
+        },
+        "year": 2022,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260821/mo-khoa-sep-tong-thumb.webp",
+        "watchedAt": 1789879912602,
+        "poster_url": "https://phimimg.com/uploads/movies/20260821/mo-khoa-sep-tong-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Unlock My Boss",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt25900250",
+          "vote_count": 1125,
+          "vote_average": 7.7
+        },
+        "name": "Thanh Xuân Nguyệt Đàm",
+        "slug": "thanh-xuan-nguyet-dam",
+        "tmdb": {
+          "id": "154889",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 31,
+          "vote_average": 6.5
+        },
+        "year": 2023,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/upload/vod/20250621-1/bf3a717854a4ff6a074cabddda1fe438.jpg",
+        "watchedAt": 1789879905320,
+        "poster_url": "https://phimimg.com/upload/vod/20250621-1/260c81b959663c488b8efd5ed424b5a9.jpg",
+        "currentTime": 0,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Our Blooming Youth",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt19800744",
+          "vote_count": 500,
+          "vote_average": 7.1
+        },
+        "name": "Lớp Học Tình Yêu (Phần 3)",
+        "slug": "lop-hoc-tinh-yeu-phan-3",
+        "tmdb": {
+          "id": "201859",
+          "type": "tv",
+          "season": 3,
+          "vote_count": 26,
+          "vote_average": 7.1
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/upload/vod/20260604-1/2353791bb14f17a7f695106b9c7c6852.jpg",
+        "watchedAt": 1789879900261,
+        "poster_url": "https://phimimg.com/upload/vod/20260604-1/4e28f3a3299759d4bf98c97b154a46cc.jpg",
+        "currentTime": 0,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Love Class (Season 3)",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt36808372",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Cá Mập: Cơn Bão",
+        "slug": "ca-map-con-bao",
+        "tmdb": {
+          "id": "212957",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 17,
+          "vote_average": 7.4
+        },
+        "year": 2025,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/upload/vod/20250516-1/573f2ef62b3ee2fa4fcd5f68f350f78f.jpg",
+        "watchedAt": 1789879898217,
+        "poster_url": "https://phimimg.com/upload/vod/20250516-1/9b78cc6a0d6205f2b5f156a4976c63f3.jpg",
+        "currentTime": 0,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Shark: The Storm",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt43736405",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Yêu một người khác / Yêu Một Người Khác Không Phải Em",
+        "slug": "yeu-mot-nguoi-khac-yeu-mot-nguoi-khac-khong-phai-em",
+        "tmdb": {
+          "id": "314939",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260914/yeu-mot-nguoi-khac-yeu-mot-nguoi-khac-khong-phai-em-thumb.webp",
+        "watchedAt": 1789879896862,
+        "poster_url": "https://phimimg.com/uploads/movies/20260914/yeu-mot-nguoi-khac-yeu-mot-nguoi-khac-khong-phai-em-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "A Love Other Than Yours",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt0475711",
+          "vote_count": 3513,
+          "vote_average": 7.2
+        },
+        "name": "Chuyện Tình Buồn",
+        "slug": "chuyen-tinh-buon",
+        "tmdb": {
+          "id": "18422",
+          "type": "movie",
+          "season": null,
+          "vote_count": 71,
+          "vote_average": 6.6
+        },
+        "year": 2005,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260915/chuyen-tinh-buon-thumb.webp",
+        "watchedAt": 1789879894057,
+        "poster_url": "https://phimimg.com/uploads/movies/20260915/chuyen-tinh-buon-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Sad Movie",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt1565032",
+          "vote_count": 413,
+          "vote_average": 6.6
+        },
+        "name": "Vươn Tới Thiên Đàng",
+        "slug": "vuon-toi-thien-dang",
+        "tmdb": {
+          "id": "73092",
+          "type": "movie",
+          "season": null,
+          "vote_count": 11,
+          "vote_average": 5.6
+        },
+        "year": 2009,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260915/vuon-toi-thien-dang-thumb.webp",
+        "watchedAt": 1789879892869,
+        "poster_url": "https://phimimg.com/uploads/movies/20260915/vuon-toi-thien-dang-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Closer To Heaven",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt43616775",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Sát Thủ Nội Trợ (Vợ Tôi Là Sát Thủ)",
+        "slug": "sat-thu-noi-tro-vo-toi-la-sat-thu",
+        "tmdb": {
+          "id": "294095",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 2,
+          "vote_average": 10
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 4591,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260802/sat-thu-noi-tro-thumb.webp",
+        "watchedAt": 1789879890561,
+        "poster_url": "https://phimimg.com/uploads/movies/20260802/sat-thu-noi-tro-poster.webp",
+        "currentTime": 3718,
+        "episodeName": "Tập 14",
+        "episodeSlug": "tap-14",
+        "origin_name": "A Bona Fide Killer",
+        "serverIndex": 0,
+        "episodeIndex": 13,
+        "episode_current": "Tập 14"
+      },
+      {
+        "imdb": {
+          "id": "tt0150090",
+          "vote_count": 90,
+          "vote_average": 5.5
+        },
+        "name": "Con Trai Của Tướng Quân 3",
+        "slug": "con-trai-cua-tuong-quan-3",
+        "tmdb": {
+          "id": "265791",
+          "type": "movie",
+          "season": null,
+          "vote_count": 8,
+          "vote_average": 6.6
+        },
+        "year": 1992,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260915/con-trai-cua-tuong-quan-3-thumb.webp",
+        "watchedAt": 1789879839609,
+        "poster_url": "https://phimimg.com/uploads/movies/20260915/con-trai-cua-tuong-quan-3-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "General's Son 3",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt6286344",
+          "vote_count": 55,
+          "vote_average": 7.9
+        },
+        "name": "Nữ Hoàng Tháng 5",
+        "slug": "nu-hoang-thang-5",
+        "tmdb": {
+          "id": "53727",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 3,
+          "vote_average": 7.3
+        },
+        "year": 2012,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260906/nu-hoang-thang-5-thumb.webp",
+        "watchedAt": 1789879836957,
+        "poster_url": "https://phimimg.com/uploads/movies/20260906/nu-hoang-thang-5-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "May Queen",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      }
+    ],
+    "createdAt": "2026-09-20T04:50:30.829Z",
+    "favorites": [],
+    "updatedAt": "2026-09-20T04:56:21.086Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-09-20T04:56:21.079Z",
+    "passwordHash": "888efe62d5209d2bea9462fcd6967c49:cd875bf20e7e6a8d1d340a3520156dcd0aead9456e5d2b31fd16c1ab87630fde"
+  },
+  {
+    "id": "user_1789412553841_bzuki7",
+    "name": "Kim Đình Phương",
+    "email": "kimdinhphuong205@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Bẫy Tiền",
+        "slug": "bay-tien",
+        "tmdb": {
+          "id": "1566663",
+          "type": "movie",
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 6560,
+        "thumb_url": "https://phimimg.com/upload/vod/20260517-1/7a0d249bec11d0aa1bc7cc6a9879377c.jpg",
+        "watchedAt": 1792111209329,
+        "poster_url": "https://phimimg.com/upload/vod/20260517-1/443e6005dd8c84e9a9fefedf4d3a1c65.jpg",
+        "currentTime": 565,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "The Fatal Dealz",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt27369017",
+          "vote_count": 4367,
+          "vote_average": 6.9
+        },
+        "name": "Vùng Tử Địa",
+        "slug": "vung-tu-dia",
+        "tmdb": {
+          "id": "1058424",
+          "type": "movie",
+          "season": null,
+          "vote_count": 75,
+          "vote_average": 7.4
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 9451,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260919/hope-vung-tu-dia-thumb.webp",
+        "watchedAt": 1791941836200,
+        "poster_url": "https://phimimg.com/uploads/movies/20260919/hope-vung-tu-dia-poster.webp",
+        "currentTime": 2100,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Hope",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Anh Hùng",
+        "slug": "anh-hung-2026",
+        "tmdb": {
+          "id": "1641479",
+          "type": "movie",
+          "season": null,
+          "vote_count": 2,
+          "vote_average": 7.5
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 7372,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260821/anh-hung-2026-thumb.webp",
+        "watchedAt": 1791938178848,
+        "poster_url": "https://phimimg.com/uploads/movies/20260821/anh-hung-2026-poster.webp",
+        "currentTime": 494,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Mr. Hero",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt22084616",
+          "vote_count": 183571,
+          "vote_average": 8.1
+        },
+        "name": "Người Nhện: Khởi Đầu Mới",
+        "slug": "nguoi-nhen-khoi-dau-moi",
+        "tmdb": {
+          "id": "969681",
+          "type": "movie",
+          "season": null,
+          "vote_count": 2198,
+          "vote_average": 7.9
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 8730,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260827/nguoi-nhen-khoi-dau-moi-thumb.webp",
+        "watchedAt": 1791938072111,
+        "poster_url": "https://phimimg.com/uploads/movies/20260827/nguoi-nhen-khoi-dau-moi-poster.webp",
+        "currentTime": 3428,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Spider-Man: Brand New Day",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Phế Hậu Vào Lãnh Cung Bận Làm Ruộng (Phần 1)",
+        "slug": "phe-hau-vao-lanh-cung-ban-lam-ruong-phan-1",
+        "tmdb": {
+          "id": "336811",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 938,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260930/phe-hau-vao-lanh-cung-ban-lam-ruong-thumb.webp",
+        "watchedAt": 1791903156021,
+        "poster_url": "https://phimimg.com/uploads/movies/20260930/phe-hau-vao-lanh-cung-ban-lam-ruong-poster.webp",
+        "currentTime": 185,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Farm Busily In The Cold Palace (Season 1)",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 23"
+      },
+      {
+        "imdb": {
+          "id": "tt14539740",
+          "vote_count": 135918,
+          "vote_average": 6
+        },
+        "name": "Godzilla x Kong: Đế Chế Mới",
+        "slug": "godzilla-x-kong-de-che-moi",
+        "tmdb": {
+          "id": "823464",
+          "type": "movie",
+          "season": null,
+          "vote_count": 4720,
+          "vote_average": 7.1
+        },
+        "year": 2024,
+        "quality": "FHD",
+        "duration": 6962,
+        "thumb_url": "https://phimimg.com/upload/vod/20260123-1/1af53d596206473c3d00570b13b59cd3.jpg",
+        "watchedAt": 1791902898308,
+        "poster_url": "https://phimimg.com/upload/vod/20260123-1/3e7865eff885f7595c67baee6bbb7189.jpg",
+        "currentTime": 1896,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Godzilla x Kong: The New Empire",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "rating": 7.4
+        },
+        "name": "Già Thiên",
+        "slug": "gia-thien",
+        "tmdb": {
+          "vote_average": 8.9
+        },
+        "year": 2023,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/upload/vod/20240411-1/bbf5847cc8ae2ce6528d5b51ef6f877a.jpg",
+        "watchedAt": 1791902397504,
+        "poster_url": "https://phimimg.com/upload/vod/20240411-1/0a4084fdfad19ecab9f1f53d629bf422.jpg",
+        "currentTime": 0,
+        "episodeName": "Tập 1",
+        "episodeSlug": "tap-1",
+        "origin_name": "Shrouding The Heavens",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 185"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Giác Quan Thứ Sáu: Mặt Trái",
+        "slug": "giac-quan-thu-sau-mat-trai",
+        "tmdb": {
+          "id": "334553",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 4418,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260917/giac-quan-thu-sau-mat-trai-thumb.webp",
+        "watchedAt": 1791902341070,
+        "poster_url": "https://phimimg.com/uploads/movies/20260917/giac-quan-thu-sau-mat-trai-poster.webp",
+        "currentTime": 424,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Sixth Sense: B-Side",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 4"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Căn Nhà Không Mái Che",
+        "slug": "can-nha-khong-mai-che",
+        "tmdb": {
+          "id": "337958",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 2999,
+        "thumb_url": "https://phimimg.com/uploads/movies/20261013/can-nha-khong-mai-che-thumb.webp",
+        "watchedAt": 1791895874589,
+        "poster_url": "https://phimimg.com/uploads/movies/20261013/can-nha-khong-mai-che-poster.webp",
+        "currentTime": 2698,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "The House Without A Roof",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 1"
+      },
+      {
+        "imdb": {
+          "id": "tt31049299",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Bản Năng Thú",
+        "slug": "ban-nang-thu",
+        "tmdb": {
+          "id": "1236045",
+          "type": "movie",
+          "season": null,
+          "vote_count": 51,
+          "vote_average": 6.9
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 6521,
+        "thumb_url": "https://phimimg.com/uploads/movies/20261010/ban-nang-thu-thumb.webp",
+        "watchedAt": 1791859533032,
+        "poster_url": "https://phimimg.com/uploads/movies/20261010/ban-nang-thu-poster.webp",
+        "currentTime": 2232,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Animals",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt13196080",
+          "vote_count": 34917,
+          "vote_average": 7.7
+        },
+        "name": "Tokyo Revengers: Cuộc chiến của ba Titan",
+        "slug": "tokyo-revengers-cuoc-chien-cua-ba-titan",
+        "tmdb": {
+          "id": "105009",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 1361,
+          "vote_average": 8.4
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20261013/tokyo-revengers-cuoc-chien-cua-ba-titan-thumb.webp",
+        "watchedAt": 1791859514610,
+        "poster_url": "https://phimimg.com/uploads/movies/20261013/tokyo-revengers-cuoc-chien-cua-ba-titan-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Tokyo Revengers: War of the Three Titan Arc",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt17050076",
+          "vote_count": 892,
+          "vote_average": 8.4
+        },
+        "name": "Thôn Phệ Tinh Không",
+        "slug": "thon-phe-tinh-khong",
+        "tmdb": {
+          "id": "101172",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 33,
+          "vote_average": 8.5
+        },
+        "year": 2020,
+        "quality": "FHD",
+        "duration": 1183,
+        "thumb_url": "https://phimimg.com/upload/vod/20240821-1/22c49ba9590b0e5f3d126696c0bfbecf.jpg",
+        "watchedAt": 1791840781522,
+        "poster_url": "https://phimimg.com/upload/vod/20240821-1/a651652396e9f53c09cd88d28700d5c4.jpg",
+        "currentTime": 105,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Swallowed Star",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Phí Phông: Quỷ Máu Rừng Thiêng",
+        "slug": "phi-phong-quy-mau-rung-thieng",
+        "tmdb": {
+          "id": "1667685",
+          "type": "movie",
+          "season": null,
+          "vote_count": 2,
+          "vote_average": 7.5
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 7271,
+        "thumb_url": "https://phimimg.com/upload/vod/20260620-1/f9f017b676af1005b05491f5a520cc7f.jpg",
+        "watchedAt": 1791785177425,
+        "poster_url": "https://phimimg.com/upload/vod/20260620-1/3ed9a180dfc699fbc0502962e67d86b7.jpg",
+        "currentTime": 2464,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Phi Phong: The Blood Demon",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt1365519",
+          "vote_count": 241327,
+          "vote_average": 6.3
+        },
+        "name": "Tomb Raider: Huyền Thoại Bắt Đầu",
+        "slug": "tomb-raider-huyen-thoai-bat-dau",
+        "tmdb": {
+          "id": "338970",
+          "type": "movie",
+          "season": null,
+          "vote_count": 8399,
+          "vote_average": 6.4
+        },
+        "year": 2018,
+        "quality": "FHD",
+        "duration": 7100,
+        "thumb_url": "https://phimimg.com/upload/vod/20251002-1/ca0166b6277df0b90d90fb515d4f44a8.jpg",
+        "watchedAt": 1791769997663,
+        "poster_url": "https://phimimg.com/upload/vod/20251002-1/4a17777db8336a77babdbe6a63558ae4.jpg",
+        "currentTime": 568,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Tomb Raider",
+        "serverIndex": 1,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt11126994",
+          "vote_count": 441347,
+          "vote_average": 9
+        },
+        "name": "Arcane: Liên Minh Huyền Thoại (Phần 2)",
+        "slug": "arcane-lien-minh-huyen-thoai-phan-2",
+        "tmdb": {
+          "id": "94605",
+          "type": "tv",
+          "season": 2,
+          "vote_count": 5989,
+          "vote_average": 8.8
+        },
+        "year": 2024,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/upload/vod/20241109-1/f252bd1b3bcf79a53d1ecf097a6bbee7.jpg",
+        "watchedAt": 1791658918143,
+        "poster_url": "https://phimimg.com/upload/vod/20241109-1/a35018e1760e3901fdd614464e724e7e.jpg",
+        "currentTime": 340,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Arcane (Season 2)",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt34882755",
+          "vote_count": 10,
+          "vote_average": 0
+        },
+        "name": "Vạn Giới Độc Tôn",
+        "slug": "van-gioi-doc-ton",
+        "tmdb": {
+          "id": "122612",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 4,
+          "vote_average": 9.5
+        },
+        "year": 2021,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/upload/vod/20250308-1/4b81238b9844aa16e3f7e9ee8afdbc94.jpg",
+        "watchedAt": 1791658831013,
+        "poster_url": "https://phimimg.com/upload/vod/20250308-1/25c9c7486b5de820475bd8fe0ccb316e.jpg",
+        "currentTime": 0,
+        "episodeName": "Tập 01-03",
+        "episodeSlug": "tap-01-03",
+        "origin_name": "Ten Thousand Worlds",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01-03"
+      },
+      {
+        "imdb": {
+          "id": "tt39313238",
+          "vote_count": 8,
+          "vote_average": 0
+        },
+        "name": "Nhà Ba Tôi Một Phòng",
+        "slug": "nha-ba-toi-mot-phong",
+        "tmdb": {
+          "id": "1607159",
+          "type": "movie",
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/upload/vod/20260507-1/2b161d7705add929b9c9f3bed848f9e2.jpg",
+        "watchedAt": 1791572053690,
+        "poster_url": "https://phimimg.com/upload/vod/20260507-1/d67e0e2903442bb3f3b70eb8c1efc900.jpg",
+        "currentTime": 0,
+        "episodeName": "Tập 1",
+        "origin_name": "Nhà Ba Tôi Một Phòng",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Trailer"
+      },
+      {
+        "imdb": {
+          "id": "tt27497430",
+          "vote_count": 378,
+          "vote_average": 8.4
+        },
+        "name": "Thương Nguyên Đồ",
+        "slug": "thuong-nguyen-do",
+        "tmdb": {
+          "id": "229192",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 18,
+          "vote_average": 9.2
+        },
+        "year": 2023,
+        "quality": "FHD",
+        "duration": 1466,
+        "thumb_url": "https://phimimg.com/upload/vod/20250530-1/9c37d265d1409b9652a7a7afeb35fd6f.jpg",
+        "watchedAt": 1791571908568,
+        "poster_url": "https://phimimg.com/upload/vod/20250530-1/435941e1bbd5462ab142b2d1d03b608e.jpg",
+        "currentTime": 614,
+        "episodeName": "Tập 97",
+        "episodeSlug": "tap-97",
+        "origin_name": "The Demon Hunter",
+        "serverIndex": 0,
+        "episodeIndex": 96,
+        "episode_current": "Tập 97"
+      },
+      {
+        "imdb": {
+          "id": "tt38080076",
+          "vote_count": 175,
+          "vote_average": 0
+        },
+        "name": "Mayumi",
+        "slug": "mayumi",
+        "tmdb": {
+          "id": "1545953",
+          "type": "movie",
+          "season": null,
+          "vote_count": 6,
+          "vote_average": 6.7
+        },
+        "year": 2025,
+        "quality": "FHD",
+        "duration": 4236,
+        "thumb_url": "https://phimimg.com/upload/vod/20251020-1/ad4eaf7724a59a21850e525fc0f30622.jpg",
+        "watchedAt": 1791571864142,
+        "poster_url": "https://phimimg.com/upload/vod/20251020-1/af6eb108901d9d2e7baefaee381c7058.jpg",
+        "currentTime": 3499,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Mayumi",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Mùa Hè Năm Ấy",
+        "slug": "mua-he-nam-ay-2026",
+        "tmdb": {
+          "id": "331035",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 3346,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260808/mua-he-nam-ay-2026-thumb.webp",
+        "watchedAt": 1791551085590,
+        "poster_url": "https://phimimg.com/uploads/movies/20260808/mua-he-nam-ay-2026-poster.webp",
+        "currentTime": 3009,
+        "episodeName": "Tập 27",
+        "episodeSlug": "tap-27",
+        "origin_name": "That Summer",
+        "serverIndex": 0,
+        "episodeIndex": 26,
+        "episode_current": "Tập 27"
+      },
+      {
+        "imdb": {
+          "id": "tt35934755",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Below: Ác Mộng Đại Dương",
+        "slug": "below-ac-mong-dai-duong",
+        "tmdb": {
+          "id": "285322",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 13,
+          "vote_average": 6.8
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20261009/below-ac-mong-dai-duong-thumb.webp",
+        "watchedAt": 1791514553241,
+        "poster_url": "https://phimimg.com/uploads/movies/20261009/below-ac-mong-dai-duong-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Below",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt43650300",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Xin Chào, Tôi Là Một Phù Thủy, Và Người Tôi Thầm Yêu Muốn Tôi Pha Chế Một Loại Thuốc Tình Yêu!",
+        "slug": "xin-chao-toi-la-mot-phu-thuy-va-nguoi-toi-tham-yeu-muon-toi-pha-che-mot-loai-thuoc-tinh-yeu",
+        "tmdb": {
+          "id": "313068",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 1,
+          "vote_average": 6
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20261006/xin-chao-toi-la-mot-phu-thuy-va-nguoi-toi-tham-yeu-muon-toi-pha-che-mot-loai-thuoc-tinh-yeu-thumb.webp",
+        "watchedAt": 1791306244889,
+        "poster_url": "https://phimimg.com/uploads/movies/20261006/xin-chao-toi-la-mot-phu-thuy-va-nguoi-toi-tham-yeu-muon-toi-pha-che-mot-loai-thuoc-tinh-yeu-poster.webp",
+        "currentTime": 248,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Hello, I Am A Witch And My Crush Wants Me To Make A Love Potion!",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Phá Đám: Sinh Nhật Mẹ",
+        "slug": "pha-dam-sinh-nhat-me",
+        "tmdb": {
+          "id": "1518519",
+          "type": "movie",
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2025,
+        "quality": "FHD",
+        "duration": 5280,
+        "thumb_url": "https://phimimg.com/upload/vod/20260517-1/ad67ffa5d2d07e1566bb07f27bdeb123.jpg",
+        "watchedAt": 1791305454850,
+        "poster_url": "https://phimimg.com/upload/vod/20260517-1/cf6c033ac490be0f8414ce3abadf4246.jpg",
+        "currentTime": 984,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Spoiled: Mom's Birthday Party",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt3566834",
+          "vote_count": 153774,
+          "vote_average": 5.6
+        },
+        "name": "Một Bộ Phim Minecraft",
+        "slug": "mot-bo-phim-minecraft",
+        "tmdb": {
+          "id": "950387",
+          "type": "movie",
+          "season": null,
+          "vote_count": 3077,
+          "vote_average": 6.3
+        },
+        "year": 2025,
+        "quality": "FHD",
+        "duration": 6110,
+        "thumb_url": "https://phimimg.com/upload/vod/20250513-1/7c40c5e1c5f88fdff52d54b03d084497.jpg",
+        "watchedAt": 1791152559624,
+        "poster_url": "https://phimimg.com/upload/vod/20250508-1/d43ada4cb5f9a1dbdb9d614406726a53.jpg",
+        "currentTime": 1347,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "A Minecraft Movie",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt36034547",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Cậu Và Tớ Là Hai Thái Cực Đối Lập (Seihantai na Kimi to Boku) (Phần 2)",
+        "slug": "cau-va-to-la-hai-thai-cuc-doi-lap-seihantai-na-kimi-to-boku-phan-2",
+        "tmdb": {
+          "id": "278043",
+          "type": "tv",
+          "season": 2,
+          "vote_count": 68,
+          "vote_average": 8.4
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 1462,
+        "thumb_url": "https://phimimg.com/upload/vod/20260706-1/825b10536abaa977ea710bf4cbd4a7e4.jpg",
+        "watchedAt": 1791152531504,
+        "poster_url": "https://phimimg.com/upload/vod/20260706-1/a7325eb2658ffe5ad2d8a782910f5542.jpg",
+        "currentTime": 16,
+        "episodeName": "Tập 07",
+        "episodeSlug": "tap-07",
+        "origin_name": "You and I Are Polar Opposites (Season 2)",
+        "serverIndex": 0,
+        "episodeIndex": 6,
+        "episode_current": "Tập 07"
+      },
+      {
+        "imdb": {
+          "id": "tt37853455",
+          "vote_count": 6744,
+          "vote_average": 6.3
+        },
+        "name": "Một Đêm Duy Nhất",
+        "slug": "mot-dem-duy-nhat",
+        "tmdb": {
+          "id": "1433367",
+          "type": "movie",
+          "season": null,
+          "vote_count": 122,
+          "vote_average": 6.6
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 6196,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260914/mot-dem-duy-nhat-thumb.webp",
+        "watchedAt": 1791100017929,
+        "poster_url": "https://phimimg.com/uploads/movies/20260914/mot-dem-duy-nhat-poster.webp",
+        "currentTime": 2376,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "One Night Only",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt12057106",
+          "vote_count": 11028,
+          "vote_average": 7.4
+        },
+        "name": "Tòa Tháp Thần Linh (Phần 2)",
+        "slug": "toa-thap-than-linh-phan-2",
+        "tmdb": {
+          "id": "97860",
+          "type": "tv",
+          "season": 2,
+          "vote_count": 533,
+          "vote_average": 8.1
+        },
+        "year": 2024,
+        "quality": "FHD",
+        "duration": 1435,
+        "thumb_url": "https://phimimg.com/uploads/movies/20261004/toa-thap-than-linh-phan-2-thumb.webp",
+        "watchedAt": 1791098735106,
+        "poster_url": "https://phimimg.com/uploads/movies/20261004/toa-thap-than-linh-phan-2-poster.webp",
+        "currentTime": 346,
+        "episodeName": "Tập 10",
+        "episodeSlug": "tap-10",
+        "origin_name": "Tower Of God (Season 2)",
+        "serverIndex": 0,
+        "episodeIndex": 9,
+        "episode_current": "Tập 10"
+      },
+      {
+        "imdb": {
+          "id": "tt43738050",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Giàu Nứt Vách, Nghèo Mạt Rệp",
+        "slug": "giau-nut-vach-ngheo-mat-rep",
+        "tmdb": {
+          "id": "1763619",
+          "type": "movie",
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20261002/giau-nut-vach-ngheo-mat-rep-thumb.webp",
+        "watchedAt": 1791098503123,
+        "poster_url": "https://phimimg.com/uploads/movies/20261002/giau-nut-vach-ngheo-mat-rep-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Crazy Rich, Incredibly Broke",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt37511036",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Tay Đấm Cuồng Nộ Đánh Cược Danh Dự",
+        "slug": "tay-dam-cuong-no-danh-cuoc-danh-du",
+        "tmdb": {
+          "id": "1510055",
+          "type": "movie",
+          "season": null,
+          "vote_count": 2,
+          "vote_average": 7.5
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "",
+        "watchedAt": 1791098500099,
+        "poster_url": "https://phimimg.com/uploads/movies/20261002/tay-dam-cuong-no-danh-cuoc-danh-du-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "The Furious: Pertaruhan Maruah",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt1959563",
+          "vote_count": 262241,
+          "vote_average": 6.9
+        },
+        "name": "Vệ Sĩ Sát Thủ",
+        "slug": "ve-si-sat-thu",
+        "tmdb": {
+          "id": "390043",
+          "type": "movie",
+          "season": null,
+          "vote_count": 6845,
+          "vote_average": 6.9
+        },
+        "year": 2017,
+        "quality": "FHD",
+        "duration": 7127,
+        "thumb_url": "https://phimimg.com/uploads/movies/20261004/ve-si-sat-thu-thumb.webp",
+        "watchedAt": 1791096134630,
+        "poster_url": "https://phimimg.com/uploads/movies/20261004/ve-si-sat-thu-poster.webp",
+        "currentTime": 2318,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "The Hitman's Bodyguard",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt12057106",
+          "vote_count": 11028,
+          "vote_average": 7.4
+        },
+        "name": "Tòa Tháp Thần Linh (Phần 1)",
+        "slug": "toa-thap-than-linh-phan-1",
+        "tmdb": {
+          "id": "97860",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 533,
+          "vote_average": 8.1
+        },
+        "year": 2020,
+        "quality": "FHD",
+        "duration": 1464,
+        "thumb_url": "https://phimimg.com/uploads/movies/20261004/toa-thap-than-linh-phan-1-thumb.webp",
+        "watchedAt": 1791086273680,
+        "poster_url": "https://phimimg.com/uploads/movies/20261004/toa-thap-than-linh-phan-1-poster.webp",
+        "currentTime": 321,
+        "episodeName": "Tập 02",
+        "episodeSlug": "tap-02",
+        "origin_name": "Tower Of God (Season 1)",
+        "serverIndex": 0,
+        "episodeIndex": 1,
+        "episode_current": "Tập 02"
+      },
+      {
+        "imdb": {
+          "rating": 3.6
+        },
+        "name": "Song Hỷ Lâm Nguy",
+        "slug": "song-hy-lam-nguy",
+        "tmdb": {
+          "id": "1653337",
+          "type": "movie",
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 6811,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260920/song-hy-lam-nguy-thumb.webp",
+        "watchedAt": 1791054001088,
+        "poster_url": "https://phimimg.com/uploads/movies/20260920/song-hy-lam-nguy-poster.webp",
+        "currentTime": 4833,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Double Couple Trouble",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt29614148",
+          "vote_count": 560,
+          "vote_average": 7.1
+        },
+        "name": "Nhà Mai Táng (Phần 4)",
+        "slug": "nha-mai-tang-phan-4",
+        "tmdb": {
+          "id": "237964",
+          "type": "tv",
+          "season": 4,
+          "vote_count": 42,
+          "vote_average": 7.2
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260809/nha-mai-tang-phan-4-thumb.webp",
+        "watchedAt": 1791047022154,
+        "poster_url": "https://phimimg.com/uploads/movies/20260809/nha-mai-tang-phan-4-poster.webp",
+        "currentTime": 474,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Death Inc. (Season 4)",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt32338669",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Tàu Buôn Người",
+        "slug": "tau-buon-nguoi",
+        "tmdb": {
+          "id": "1288445",
+          "type": "movie",
+          "season": null,
+          "vote_count": 23,
+          "vote_average": 7.3
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260821/tau-buon-nguoi-thumb.webp",
+        "watchedAt": 1791042201920,
+        "poster_url": "https://phimimg.com/uploads/movies/20260821/tau-buon-nguoi-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Mutiny",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt43380212",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Chuyện Ma Giảng Đường 4",
+        "slug": "chuyen-ma-giang-duong-4",
+        "tmdb": {
+          "id": "1610936",
+          "type": "movie",
+          "season": null,
+          "vote_count": 2,
+          "vote_average": 5.5
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 7838,
+        "thumb_url": "https://phimimg.com/uploads/movies/20261002/chuyen-ma-giang-duong-4-thumb.webp",
+        "watchedAt": 1791036997876,
+        "poster_url": "https://phimimg.com/uploads/movies/20261002/chuyen-ma-giang-duong-4-poster.webp",
+        "currentTime": 6964,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Haunted Universities 4",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt11051974",
+          "vote_count": 1949,
+          "vote_average": 7.3
+        },
+        "name": "Thanh Âm Trong Mắt Em",
+        "slug": "thanh-am-trong-mat-em",
+        "tmdb": {
+          "id": "730154",
+          "type": "movie",
+          "season": null,
+          "vote_count": 516,
+          "vote_average": 8.5
+        },
+        "year": 2020,
+        "quality": "FHD",
+        "duration": 7408,
+        "thumb_url": "https://phimimg.com/upload/vod/20231130-1/3f091051b361668db0fc41b5b16c3572.jpg",
+        "watchedAt": 1790927567560,
+        "poster_url": "https://phimimg.com/upload/vod/20231130-1/03c8816901569100cce9a7bb2a9a6707.jpg",
+        "currentTime": 704,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Your Eyes Tell",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt33071426",
+          "vote_count": 26572,
+          "vote_average": 7.5
+        },
+        "name": "Cú Sốc",
+        "slug": "cu-soc",
+        "tmdb": {
+          "id": "1325734",
+          "type": "movie",
+          "season": null,
+          "vote_count": 1135,
+          "vote_average": 6.9
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 6369,
+        "thumb_url": "https://phimimg.com/upload/vod/20260505-1/8d2f42eb4d2a2db443d7ad863d83ba51.jpg",
+        "watchedAt": 1790927072333,
+        "poster_url": "https://phimimg.com/upload/vod/20260505-1/aa5419bddec64990d591f77262fc2e42.jpg",
+        "currentTime": 610,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "The Drama",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt0076162",
+          "vote_count": 40515,
+          "vote_average": 7.2
+        },
+        "name": "Hausu: Ngôi Nhà Ma Quái",
+        "slug": "hausu-ngoi-nha-ma-quai",
+        "tmdb": {
+          "id": "25623",
+          "type": "movie",
+          "season": null,
+          "vote_count": 835,
+          "vote_average": 7.3
+        },
+        "year": 1977,
+        "quality": "FHD",
+        "duration": 5308,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260930/hausu-ngoi-nha-ma-quai-thumb.webp",
+        "watchedAt": 1790922398321,
+        "poster_url": "https://phimimg.com/uploads/movies/20260930/hausu-ngoi-nha-ma-quai-poster.webp",
+        "currentTime": 861,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "House",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Hẹn Em Ngày Nhật Thực",
+        "slug": "hen-em-ngay-nhat-thuc",
+        "tmdb": {
+          "id": "1635425",
+          "type": "movie",
+          "season": null,
+          "vote_count": 2,
+          "vote_average": 7
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 7181,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260910/hen-em-ngay-nhat-thuc-thumb.webp",
+        "watchedAt": 1790579688598,
+        "poster_url": "https://phimimg.com/uploads/movies/20260910/hen-em-ngay-nhat-thuc-poster.webp",
+        "currentTime": 725,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Meet Me at the Eclipse",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Bố Già",
+        "slug": "bo-gia-2021",
+        "tmdb": {
+          "id": null,
+          "type": null,
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2021,
+        "quality": "FHD",
+        "duration": 7710,
+        "thumb_url": "https://phimimg.com/upload/vod/20250119-1/f42aefe12ee48db50ee7c465efb85798.jpg",
+        "watchedAt": 1790359760399,
+        "poster_url": "https://phimimg.com/upload/vod/20250119-1/78ea9e50373b3ac2e51a8fa6b147984f.jpg",
+        "currentTime": 1137,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Dad, I'm Sorry",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt38201958",
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Doraemon: Nobita và Lâu Đài Dưới Đáy Biển (Phiên Bản Mới)",
+        "slug": "doraemon-nobita-va-lau-dai-duoi-day-bien-phien-ban-moi",
+        "tmdb": {
+          "id": "1542261",
+          "type": "movie",
+          "season": null,
+          "vote_count": 10,
+          "vote_average": 7.3
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 6142,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260829/doraemon-nobita-va-lau-dai-duoi-day-bien-phien-ban-moi-thumb.webp",
+        "watchedAt": 1790359665301,
+        "poster_url": "https://phimimg.com/uploads/movies/20260829/doraemon-nobita-va-lau-dai-duoi-day-bien-phien-ban-moi-poster.webp",
+        "currentTime": 3505,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Doraemon the Movie: New Nobita and the Castle of the Undersea Devil",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Ma Xó",
+        "slug": "ma-xo",
+        "tmdb": {
+          "id": "1671716",
+          "type": "movie",
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 6149,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260924/ma-xo-thumb.webp",
+        "watchedAt": 1790359641263,
+        "poster_url": "https://phimimg.com/uploads/movies/20260924/ma-xo-poster.webp",
+        "currentTime": 4237,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Maxo: Forbidden Ritual",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt30293074",
+          "vote_count": 6266,
+          "vote_average": 0
+        },
+        "name": "Tiếng Yêu Này, Anh Dịch Được Không?",
+        "slug": "tieng-yeu-nay-anh-dich-duoc-khong",
+        "tmdb": {
+          "id": "229891",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 139,
+          "vote_average": 8.4
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/upload/vod/20260116-1/92ad3288f61736574a2a2dd3c4ee5df1.jpg",
+        "watchedAt": 1790270821301,
+        "poster_url": "https://phimimg.com/upload/vod/20260116-1/8b1201713adc08736e33e45ab1c1f2e4.jpg",
+        "currentTime": 417,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Can This Love Be Translated?",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      },
+      {
+        "imdb": {
+          "id": "tt27369017",
+          "vote_count": 4367,
+          "vote_average": 6.9
+        },
+        "name": "Hope: Vùng Tử Địa",
+        "slug": "hope-vung-tu-dia",
+        "tmdb": {
+          "id": "1058424",
+          "type": "movie",
+          "season": null,
+          "vote_count": 75,
+          "vote_average": 7.4
+        },
+        "year": 2026,
+        "quality": "CAM",
+        "duration": 9070,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260919/hope-vung-tu-dia-thumb.webp",
+        "watchedAt": 1790201174674,
+        "poster_url": "https://phimimg.com/uploads/movies/20260919/hope-vung-tu-dia-poster.webp",
+        "currentTime": 6169,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Hope",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "rating": 6.5
+        },
+        "name": "Ngày Tàn Của Phố Oak",
+        "slug": "ngay-tan-cua-pho-oak",
+        "tmdb": {
+          "vote_average": 6.4
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 6014,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260914/ngay-tan-cua-pho-oak-thumb.webp",
+        "watchedAt": 1790201164151,
+        "poster_url": "https://phimimg.com/uploads/movies/20260914/ngay-tan-cua-pho-oak-poster.webp",
+        "currentTime": 4856,
+        "episodeName": "Tập FULL",
+        "episodeSlug": "tap-full",
+        "origin_name": "The End of Oak Street",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Giáo Dục Giới Tính (Phần 1)",
+        "slug": "giao-duc-gioi-tinh-phan-1",
+        "tmdb": {
+          "id": null,
+          "type": null,
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2019,
+        "quality": "HD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/upload/vod/20231001-1/b105adc166464822c3a8c9b036da5f4e.jpg",
+        "watchedAt": 1790197215363,
+        "poster_url": "https://phimimg.com/upload/vod/20231001-1/832903c98dbd5c3534dd0ae08abe2f8c.jpg",
+        "currentTime": 658,
+        "episodeName": "Tập 1",
+        "episodeSlug": "tap-1",
+        "origin_name": "Sex Education (Season 1)",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Hoàn Tất (8/8)"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Phù Sa",
+        "slug": "phu-sa",
+        "tmdb": {
+          "id": "331575",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 1735,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260819/phu-sa-thumb.webp",
+        "watchedAt": 1790197147718,
+        "poster_url": "https://i.ex-cdn.com/danviet.vn/files/content/2026/08/13/final--poster-phu-sa-1012.jpg",
+        "currentTime": 883,
+        "episodeName": "Tập 03",
+        "episodeSlug": "tap-03",
+        "origin_name": "Phu Sa",
+        "serverIndex": 0,
+        "episodeIndex": 2,
+        "episode_current": "Tập 34"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Giáo Dục Giới Tính (Phần 4)",
+        "slug": "giao-duc-gioi-tinh-phan-4",
+        "tmdb": {
+          "id": null,
+          "type": null,
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2023,
+        "quality": "HD",
+        "duration": 3131,
+        "thumb_url": "https://phimimg.com/upload/vod/20231001-1/05b379ce80226b001f2dc7adcc51381b.jpg",
+        "watchedAt": 1790079920261,
+        "poster_url": "https://phimimg.com/upload/vod/20231001-1/59d1c1192669c6bc1decd3b759115a30.jpg",
+        "currentTime": 1960,
+        "episodeName": "Tập 3",
+        "episodeSlug": "tap-3",
+        "origin_name": "Sex Education (Season 4)",
+        "serverIndex": 0,
+        "episodeIndex": 2,
+        "episode_current": "Hoàn Tất (8/8)"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Hiện Trường Săn Án",
+        "slug": "hien-truong-san-an",
+        "tmdb": {
+          "id": "305992",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 1095,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260909/hien-truong-san-an-thumb.webp",
+        "watchedAt": 1790057497063,
+        "poster_url": "https://phimimg.com/uploads/movies/20260909/hien-truong-san-an-poster.webp",
+        "currentTime": 500,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Fragments Of Truth",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 16"
+      },
+      {
+        "imdb": {
+          "id": "tt11034066",
+          "vote_count": 3317,
+          "vote_average": 7.6
+        },
+        "name": "Vào Ma Giới Rồi Đấy! Iruma-kun (Phần 4)",
+        "slug": "vao-ma-gioi-roi-day-irumakun-phan-4",
+        "tmdb": {
+          "id": "91801",
+          "type": "tv",
+          "season": 4,
+          "vote_count": 291,
+          "vote_average": 8.2
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 1530,
+        "thumb_url": "https://phimimg.com/upload/vod/20260407-1/d12a54fa0682e1b66ab4c1b0f147b0ab.jpg",
+        "watchedAt": 1789903109900,
+        "poster_url": "https://phimimg.com/upload/vod/20260407-1/c4b0b33444924bf81ca7bfe6081e4ef7.jpg",
+        "currentTime": 978,
+        "episodeName": "Tập 01",
+        "episodeSlug": "tap-01",
+        "origin_name": "Welcome To Demon School! Iruma-kun (Season 4)",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Tập 01"
+      }
+    ],
+    "createdAt": "2026-09-14T19:02:33.841Z",
+    "favorites": [
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Phí Phông: Quỷ Máu Rừng Thiêng",
+        "slug": "phi-phong-quy-mau-rung-thieng",
+        "tmdb": {
+          "id": "1667685",
+          "type": "movie",
+          "season": null,
+          "vote_count": 2,
+          "vote_average": 7.5
+        },
+        "year": 2026,
+        "addedAt": 1791599748709,
+        "quality": "FHD",
+        "thumb_url": "https://phimimg.com/upload/vod/20260620-1/f9f017b676af1005b05491f5a520cc7f.jpg",
+        "poster_url": "https://phimimg.com/upload/vod/20260620-1/3ed9a180dfc699fbc0502962e67d86b7.jpg",
+        "origin_name": "Phi Phong: The Blood Demon",
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "rating": 3.6
+        },
+        "name": "Song Hỷ Lâm Nguy",
+        "slug": "song-hy-lam-nguy",
+        "tmdb": {
+          "id": "1653337",
+          "type": "movie",
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "addedAt": 1790670929027,
+        "quality": "FHD",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260920/song-hy-lam-nguy-thumb.webp",
+        "poster_url": "https://phimimg.com/uploads/movies/20260920/song-hy-lam-nguy-poster.webp",
+        "origin_name": "Double Couple Trouble",
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt33071426",
+          "vote_count": 26572,
+          "vote_average": 7.5
+        },
+        "name": "Cú Sốc",
+        "slug": "cu-soc",
+        "tmdb": {
+          "id": "1325734",
+          "type": "movie",
+          "season": null,
+          "vote_count": 1135,
+          "vote_average": 6.9
+        },
+        "year": 2026,
+        "addedAt": 1790389192583,
+        "quality": "FHD",
+        "thumb_url": "https://phimimg.com/upload/vod/20260505-1/8d2f42eb4d2a2db443d7ad863d83ba51.jpg",
+        "poster_url": "https://phimimg.com/upload/vod/20260505-1/aa5419bddec64990d591f77262fc2e42.jpg",
+        "origin_name": "The Drama",
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt3566834",
+          "vote_count": 153774,
+          "vote_average": 5.6
+        },
+        "name": "Một Bộ Phim Minecraft",
+        "slug": "mot-bo-phim-minecraft",
+        "tmdb": {
+          "id": "950387",
+          "type": "movie",
+          "season": null,
+          "vote_count": 3077,
+          "vote_average": 6.3
+        },
+        "year": 2025,
+        "addedAt": 1790344115092,
+        "quality": "FHD",
+        "thumb_url": "https://phimimg.com/upload/vod/20250513-1/7c40c5e1c5f88fdff52d54b03d084497.jpg",
+        "poster_url": "https://phimimg.com/upload/vod/20250508-1/d43ada4cb5f9a1dbdb9d614406726a53.jpg",
+        "origin_name": "A Minecraft Movie",
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Mùa Hè Năm Ấy",
+        "slug": "mua-he-nam-ay-2026",
+        "tmdb": {
+          "id": "331035",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "addedAt": 1790186928459,
+        "quality": "FHD",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260808/mua-he-nam-ay-2026-thumb.webp",
+        "poster_url": "https://phimimg.com/uploads/movies/20260808/mua-he-nam-ay-2026-poster.webp",
+        "origin_name": "That Summer",
+        "episode_current": "Tập 27"
+      },
+      {
+        "imdb": {
+          "rating": 6
+        },
+        "name": "Godzilla x Kong: Đế Chế Mới",
+        "slug": "godzilla-x-kong-de-che-moi",
+        "tmdb": {
+          "vote_average": 7.1
+        },
+        "year": 2024,
+        "addedAt": 1789879005235,
+        "quality": "FHD",
+        "thumb_url": "https://phimimg.com/upload/vod/20260123-1/1af53d596206473c3d00570b13b59cd3.jpg",
+        "poster_url": "https://phimimg.com/upload/vod/20260123-1/3e7865eff885f7595c67baee6bbb7189.jpg",
+        "origin_name": "Godzilla x Kong: The New Empire",
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt41791573",
+          "vote_count": 351,
+          "vote_average": 8.6
+        },
+        "name": "Thư Tình Gửi Ngoại",
+        "slug": "thu-tinh-gui-ngoai",
+        "tmdb": {
+          "id": "1671548",
+          "type": "movie",
+          "season": null,
+          "vote_count": 63,
+          "vote_average": 8.9
+        },
+        "year": 2026,
+        "addedAt": 1789639823146,
+        "quality": "FHD",
+        "thumb_url": "https://i0.wp.com/phimimg.com/uploads/movies/20260913/thu-tinh-gui-ngoai-poster.webp?strip=all&w=360&quality=75",
+        "poster_url": "uploads/movies/20260913/thu-tinh-gui-ngoai-poster.webp",
+        "origin_name": "Dear You",
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt39313238",
+          "vote_count": 8,
+          "vote_average": 0
+        },
+        "name": "Nhà Ba Tôi Một Phòng",
+        "slug": "nha-ba-toi-mot-phong",
+        "tmdb": {
+          "id": "1607159",
+          "type": "movie",
+          "season": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "addedAt": 1789621891416,
+        "quality": "FHD",
+        "thumb_url": "https://phimimg.com/upload/vod/20260507-1/2b161d7705add929b9c9f3bed848f9e2.jpg",
+        "poster_url": "https://phimimg.com/upload/vod/20260507-1/d67e0e2903442bb3f3b70eb8c1efc900.jpg",
+        "origin_name": "Nhà Ba Tôi Một Phòng",
+        "episode_current": "Trailer"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Phù Sa",
+        "slug": "phu-sa",
+        "tmdb": {
+          "id": "331575",
+          "type": "tv",
+          "season": 1,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "year": 2026,
+        "addedAt": 1789441117864,
+        "quality": "FHD",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260819/phu-sa-thumb.webp",
+        "poster_url": "https://i.ex-cdn.com/danviet.vn/files/content/2026/08/13/final--poster-phu-sa-1012.jpg",
+        "origin_name": "Phu Sa",
+        "episode_current": "Tập 34"
+      },
+      {
+        "imdb": {
+          "id": "tt38934731",
+          "vote_count": 5,
+          "vote_average": 0
+        },
+        "name": "Mùi Phở",
+        "slug": "mui-pho",
+        "tmdb": {
+          "id": "1573869",
+          "type": "movie",
+          "season": null,
+          "vote_count": 1,
+          "vote_average": 5
+        },
+        "year": 2026,
+        "addedAt": 1789415658713,
+        "quality": "FHD",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260902/mui-pho-thumb.webp",
+        "poster_url": "https://phimimg.com/uploads/movies/20260902/mui-pho-poster.webp",
+        "origin_name": "The Scent Of Pho",
+        "episode_current": "Full"
+      }
+    ],
+    "updatedAt": "2026-10-16T04:24:24.440Z",
+    "isVerified": true,
+    "lastActiveAt": "2026-10-16T04:24:21.972Z",
+    "passwordHash": "5c3dd514ad2dbbe87f2336abda829da1:462c449fed6134202ea7e243c25b86c05a357b78400c72b5689d8fc3c6721438"
+  },
+  {
+    "id": "user_1789412635516_3wh0qf",
+    "name": "Phương",
+    "email": "kimdinhphuong257@gmail.com",
+    "avatar": "",
+    "history": [
+      {
+        "imdb": {
+          "id": "tt27165187",
+          "vote_count": 39062,
+          "vote_average": 6.5
+        },
+        "name": "Ngày Tàn Của Phố Oak",
+        "slug": "ngay-tan-cua-pho-oak",
+        "tmdb": {
+          "id": "1101383",
+          "type": "movie",
+          "season": null,
+          "vote_count": 492,
+          "vote_average": 6.4
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260914/ngay-tan-cua-pho-oak-thumb.webp",
+        "watchedAt": 1789434070747,
+        "poster_url": "https://phimimg.com/uploads/movies/20260914/ngay-tan-cua-pho-oak-poster.webp",
+        "currentTime": 407,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "The End of Oak Street",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Hẹn Em Ngày Nhật Thực",
+        "slug": "hen-em-ngay-nhat-thuc",
+        "tmdb": {
+          "id": "1635425",
+          "type": "movie",
+          "season": null,
+          "vote_count": 2,
+          "vote_average": 7
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260910/hen-em-ngay-nhat-thuc-thumb.webp",
+        "watchedAt": 1789433597911,
+        "poster_url": "https://phimimg.com/uploads/movies/20260910/hen-em-ngay-nhat-thuc-poster.webp",
+        "currentTime": 224,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Meet Me at the Eclipse",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt41791573",
+          "vote_count": 351,
+          "vote_average": 8.6
+        },
+        "name": "Thư Tình Gửi Ngoại",
+        "slug": "thu-tinh-gui-ngoai",
+        "tmdb": {
+          "id": "1671548",
+          "type": "movie",
+          "season": null,
+          "vote_count": 63,
+          "vote_average": 8.9
+        },
+        "year": 2026,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/uploads/movies/20260913/thu-tinh-gui-ngoai-thumb.webp",
+        "watchedAt": 1789432761441,
+        "poster_url": "https://phimimg.com/uploads/movies/20260913/thu-tinh-gui-ngoai-poster.webp",
+        "currentTime": 0,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Dear You",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt27802490",
+          "vote_count": 28229,
+          "vote_average": 6.9
+        },
+        "name": "Quật Mộ Trùng Ma",
+        "slug": "quat-mo-trung-ma",
+        "tmdb": {
+          "id": "838209",
+          "type": "movie",
+          "season": null,
+          "vote_count": 730,
+          "vote_average": 7.6
+        },
+        "year": 2024,
+        "quality": "FHD",
+        "duration": 8061,
+        "thumb_url": "https://phimimg.com/upload/vod/20250530-1/fdf11774cff47f0ffc9c2dbe2e02d0ca.jpg",
+        "watchedAt": 1789414620067,
+        "poster_url": "https://phimimg.com/upload/vod/20250530-1/759df554cc21bf9d6805966dc3fe2b67.jpg",
+        "currentTime": 1380,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Exhuma",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      },
+      {
+        "imdb": {
+          "id": "tt6263850",
+          "vote_count": 565006,
+          "vote_average": 7.5
+        },
+        "name": "Deadpool Và Wolverine",
+        "slug": "deadpool-va-wolverine",
+        "tmdb": {
+          "id": "533535",
+          "type": "movie",
+          "season": null,
+          "vote_count": 8868,
+          "vote_average": 7.6
+        },
+        "year": 2024,
+        "quality": "FHD",
+        "duration": 0,
+        "thumb_url": "https://phimimg.com/upload/vod/20250821-1/1ec414f82adc729512410edd1b083996.jpg",
+        "watchedAt": 1789413485100,
+        "poster_url": "https://phimimg.com/upload/vod/20250821-1/45b6b9aad03ae0aa2aceb5d73419831a.jpg",
+        "currentTime": 160,
+        "episodeName": "Full",
+        "episodeSlug": "full",
+        "origin_name": "Deadpool & Wolverine",
+        "serverIndex": 0,
+        "episodeIndex": 0,
+        "episode_current": "Full"
+      }
+    ],
+    "isLocked": false,
+    "banReason": "",
+    "createdAt": "2026-09-14T19:03:55.516Z",
+    "favorites": [
+      {
+        "imdb": {
+          "id": null,
+          "vote_count": 0,
+          "vote_average": 0
+        },
+        "name": "Hẹn Em Ngày Nhật Thực",
+        "slug": "hen-em-ngay-nhat-thuc",
+        "tmdb": {
+          "id": "1635425",
+          "type": "movie",
+          "season": null,
+          "vote_count": 2,
+          "vote_average": 7
+        },
+        "year": 2026,
+        "addedAt": 1789414642161,
+        "quality": "FHD",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260910/hen-em-ngay-nhat-thuc-thumb.webp",
+        "poster_url": "https://phimimg.com/uploads/movies/20260910/hen-em-ngay-nhat-thuc-poster.webp",
+        "origin_name": "Meet Me at the Eclipse",
+        "episode_current": "Full"
+      }
+    ],
+    "updatedAt": "2026-09-15T03:15:16.238Z",
+    "isVerified": true,
+    "bannedUntil": 0,
+    "lastActiveAt": "2026-09-15T03:15:16.233Z",
+    "passwordHash": "224abbd28d000e88ebb5414a4a12403f:dbaf188ada85dc6df39cc12806b83be4fa7dd163330dda63d1df9306438a61e7"
+  }
+]

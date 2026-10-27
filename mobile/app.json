@@ -1,0 +1,95 @@
+{
+  "expo": {
+    "name": "Hi Phim",
+    "slug": "hiphim-mobile",
+    "owner": "dinhphuongkim",
+    "version": "1.0.0",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "scheme": "hiphim",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#050807",
+    "ios": {
+      "userInterfaceStyle": "dark",
+      "backgroundColor": "#050807",
+      "supportsTablet": true,
+      "bundleIdentifier": "app.horizon8414.bear6238",
+      "buildNumber": "1",
+      "infoPlist": {
+        "CFBundleDisplayName": "Hi Phim",
+        "CFBundleDevelopmentRegion": "vi",
+        "UIBackgroundModes": [
+          "audio"
+        ],
+        "UIViewControllerBasedStatusBarAppearance": false,
+        "ITSAppUsesNonExemptEncryption": false,
+        "UIStatusBarStyle": "UIStatusBarStyleLightContent",
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        },
+        "LSApplicationQueriesSchemes": [
+          "https",
+          "http"
+        ],
+        "UISupportedInterfaceOrientations": [
+          "UIInterfaceOrientationPortrait",
+          "UIInterfaceOrientationLandscapeLeft",
+          "UIInterfaceOrientationLandscapeRight"
+        ],
+        "UISupportedInterfaceOrientations~ipad": [
+          "UIInterfaceOrientationPortrait",
+          "UIInterfaceOrientationPortraitUpsideDown",
+          "UIInterfaceOrientationLandscapeLeft",
+          "UIInterfaceOrientationLandscapeRight"
+        ]
+      }
+    },
+    "android": {
+      "userInterfaceStyle": "dark",
+      "backgroundColor": "#050807",
+      "package": "com.dinhphuongkim.hiphim",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#050807"
+      },
+      "permissions": [
+        "INTERNET",
+        "ACCESS_NETWORK_STATE"
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-video",
+        {
+          "supportsBackgroundPlayback": true,
+          "supportsPictureInPicture": true
+        }
+      ],
+      "expo-asset",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#050807",
+          "dark": {
+            "image": "./assets/splash.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#050807"
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "61a900dd-dbc9-4d22-9733-dd6cc8253f6d"
+      }
+    }
+  }
+}

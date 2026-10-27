@@ -1,0 +1,18 @@
+[
+  {
+    "id": "sys_welcome_2026",
+    "title": "Chào mừng bạn ghé thăm!",
+    "content": "Chúc bạn có những giây phút xem phim thư giãn tuyệt vời với hơn 50.000+ tựa phim bom tấn và tập mới cập nhật liên tục hoàn toàn miễn phí.",
+    "type": "success",
+    "createdAt": 1791341099231,
+    "author": "Ban Quản Trị"
+  },
+  {
+    "id": "sys_feature_report_2026",
+    "title": "Tính năng Báo lỗi tập phim",
+    "content": "Nếu bạn gặp sự cố khi xem phim (video đứng hình, mất tiếng, lệch sub), hãy bấm nút 'Báo lỗi tập' để đội ngũ kỹ thuật khắc phục ngay nhé.",
+    "type": "info",
+    "createdAt": 1791495899231,
+    "author": "Ban Quản Trị"
+  }
+]
