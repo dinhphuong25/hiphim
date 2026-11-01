@@ -346,7 +346,7 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
 
         {/* Hero Foreground Container */}
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 md:px-8 pt-3 sm:pt-5 pb-6 sm:pb-8 md:pb-10">
-          {/* Top Bar: Back Button & Mobile Quick Actions */}
+          {/* Top Bar: Back Button */}
           <div className="flex items-center justify-between mb-4 sm:mb-6 md:mb-8">
             <button
               type="button"
@@ -357,42 +357,10 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
               <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
               <span>Quay lại</span>
             </button>
-
-            {/* Floating Share & Favorite Icons (Top-Right) */}
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleShare}
-                className={cn(
-                  "w-9 h-9 sm:w-10 sm:h-10 rounded-full backdrop-blur-md border flex items-center justify-center transition-all cursor-pointer shadow-lg active:scale-90",
-                  shareCopied
-                    ? "bg-brand-green/20 border-brand-green/50 text-brand-green"
-                    : "bg-black/55 hover:bg-white/10 border-white/15 hover:border-brand-green/40 text-white hover:text-brand-green"
-                )}
-                aria-label="Chia sẻ phim"
-                title="Chia sẻ phim"
-              >
-                {shareCopied ? <Check className="w-4 h-4 stroke-[2.8]" /> : <Share2 className="w-4 h-4" />}
-              </button>
-              <button
-                type="button"
-                onClick={handleToggleFav}
-                className={cn(
-                  "w-9 h-9 sm:w-10 sm:h-10 rounded-full backdrop-blur-md border flex items-center justify-center transition-all cursor-pointer shadow-lg active:scale-90",
-                  isFav
-                    ? "bg-rose-500/20 border-rose-500/50 text-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.3)]"
-                    : "bg-black/55 hover:bg-white/10 border-white/15 hover:border-rose-400/50 text-white hover:text-rose-400"
-                )}
-                aria-label="Yêu thích"
-                title={isFav ? "Bỏ yêu thích" : "Lưu vào yêu thích"}
-              >
-                <Heart className={cn("w-4 h-4", isFav && "fill-rose-500 text-rose-500")} />
-              </button>
-            </div>
           </div>
 
           {/* 2-Column Hero Grid: Vertical Poster (Left) + Identity & Actions (Right) */}
-          <div className="flex flex-col sm:flex-row items-start gap-5 sm:gap-7 md:gap-8 lg:gap-10">
+          <div className="flex flex-col sm:flex-row sm:items-end gap-5 sm:gap-7 md:gap-8 lg:gap-10">
             {/* LEFT COLUMN: 2:3 Cinema Poster Card */}
             <div className="relative mx-auto sm:mx-0 w-[145px] xs:w-[160px] sm:w-[190px] md:w-[220px] lg:w-[245px] shrink-0 group">
               <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden bg-[#0D1411] border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.85)] ring-1 ring-white/5">
@@ -528,31 +496,76 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
                 </div>
               )}
 
-              {/* COMPACT ACTION BAR (Netflix / Rophim Style — Never Stretched Full-Width on Desktop) */}
-              <div className="pt-2 sm:pt-3 flex flex-wrap items-center justify-center sm:justify-start gap-2.5 sm:gap-3">
-                {/* Primary Watch CTA */}
-                <Link
-                  href={primaryWatchHref}
-                  className="w-full sm:w-auto sm:min-w-[200px] px-6 sm:px-7 py-3 sm:py-3.5 rounded-xl bg-gradient-to-r from-[#20D66B] to-[#10B981] hover:brightness-110 active:scale-[0.98] text-[#050807] font-black text-xs sm:text-sm flex items-center justify-center gap-2.5 shadow-[0_8px_28px_rgba(32,214,107,0.35)] transition-all cursor-pointer uppercase tracking-wide"
-                >
-                  <Play className="w-4 h-4 sm:w-4.5 sm:h-4.5 fill-current text-[#050807] shrink-0" />
-                  <span>
-                    {resumeWatchInfo
-                      ? `TIẾP TỤC XEM (${formatEpName(resumeWatchInfo.label)})`
-                      : `XEM PHIM ${movie.episode_current ? `(${movie.episode_current})` : "NGAY"}`}
-                  </span>
-                </Link>
-
-                {/* Smooth Scroll to Episode List Button (when episodes exist) */}
-                {episodeList.length > 1 && (
-                  <a
-                    href="#episode-section"
-                    className="hidden md:inline-flex px-4 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.1] border border-white/10 hover:border-brand-green/35 text-xs sm:text-sm font-semibold text-white/80 hover:text-brand-green items-center gap-2 transition-all"
+              {/* BOTTOM ACTION BAR: Watch CTA (Left) + Favorite & Share Pinned to Bottom-Right Corner */}
+              <div className="pt-2 sm:pt-3 w-full flex items-center justify-between gap-2.5 sm:gap-4">
+                {/* Left Cluster: Primary Watch CTA & Episode Jump */}
+                <div className="flex items-center gap-2.5 flex-1 sm:flex-initial min-w-0">
+                  <Link
+                    href={primaryWatchHref}
+                    className="flex-1 sm:flex-initial sm:min-w-[200px] px-5 sm:px-7 py-3 sm:py-3.5 rounded-xl bg-gradient-to-r from-[#20D66B] to-[#10B981] hover:brightness-110 active:scale-[0.98] text-[#050807] font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-[0_8px_28px_rgba(32,214,107,0.35)] transition-all cursor-pointer uppercase tracking-wide truncate"
                   >
-                    <ListVideo className="w-4 h-4" />
-                    <span>Chọn Tập ({episodeList.length})</span>
-                  </a>
-                )}
+                    <Play className="w-4 h-4 sm:w-4.5 sm:h-4.5 fill-current text-[#050807] shrink-0" />
+                    <span className="truncate">
+                      {resumeWatchInfo
+                        ? `TIẾP TỤC XEM (${formatEpName(resumeWatchInfo.label)})`
+                        : `XEM PHIM ${movie.episode_current ? `(${movie.episode_current})` : "NGAY"}`}
+                    </span>
+                  </Link>
+
+                  {episodeList.length > 1 && (
+                    <a
+                      href="#episode-section"
+                      className="hidden md:inline-flex px-4 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.1] border border-white/10 hover:border-brand-green/35 text-xs sm:text-sm font-semibold text-white/80 hover:text-brand-green items-center gap-2 transition-all shrink-0"
+                    >
+                      <ListVideo className="w-4 h-4" />
+                      <span>Chọn Tập ({episodeList.length})</span>
+                    </a>
+                  )}
+                </div>
+
+                {/* Far Bottom-Right Corner Cluster: Favorite & Share */}
+                <div className="flex items-center gap-2 sm:gap-2.5 shrink-0 ml-auto">
+                  <button
+                    type="button"
+                    onClick={handleToggleFav}
+                    className={cn(
+                      "px-3.5 sm:px-4 py-3 sm:py-3.5 rounded-xl backdrop-blur-md border text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 shadow-lg",
+                      isFav
+                        ? "bg-rose-500/15 border-rose-500/40 text-rose-400 shadow-[0_0_20px_rgba(244,63,94,0.25)]"
+                        : "bg-black/55 hover:bg-white/[0.1] border-white/15 text-white hover:border-rose-400/40 hover:text-rose-400"
+                    )}
+                    aria-label={isFav ? "Bỏ yêu thích" : "Yêu thích"}
+                    title={isFav ? "Bỏ yêu thích" : "Lưu vào yêu thích"}
+                  >
+                    <Heart
+                      className={cn(
+                        "w-4 h-4 transition-colors shrink-0",
+                        isFav ? "fill-rose-500 text-rose-500" : "text-white/85"
+                      )}
+                    />
+                    <span className="hidden xs:inline">{isFav ? "Đã Thích" : "Yêu Thích"}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleShare}
+                    className={cn(
+                      "px-3.5 sm:px-4 py-3 sm:py-3.5 rounded-xl backdrop-blur-md border text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 shadow-lg",
+                      shareCopied
+                        ? "bg-brand-green/15 border-brand-green/40 text-brand-green"
+                        : "bg-black/55 hover:bg-white/[0.1] border-white/15 text-white hover:border-brand-green/40 hover:text-brand-green"
+                    )}
+                    aria-label="Chia sẻ phim"
+                    title="Chia sẻ phim"
+                  >
+                    {shareCopied ? (
+                      <Check className="w-4 h-4 text-brand-green stroke-[2.8] shrink-0" />
+                    ) : (
+                      <Share2 className="w-4 h-4 text-white/85 shrink-0" />
+                    )}
+                    <span className="hidden xs:inline">{shareCopied ? "Đã Chép" : "Chia Sẻ"}</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
