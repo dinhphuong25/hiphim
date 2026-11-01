@@ -21,7 +21,7 @@ import {
   Users,
   Check,
   Star,
-  Sparkles,
+  FileText,
   Search,
   ListVideo,
 } from "lucide-react";
@@ -377,13 +377,6 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
                 {/* Subtle bottom gradient inside poster */}
                 <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none" />
 
-                {/* Poster Top-Left Quality Badge */}
-                {movie.quality && (
-                  <span className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md text-[10px] font-mono font-extrabold uppercase bg-black/75 backdrop-blur-md text-brand-green border border-brand-green/40 shadow-md">
-                    {movie.quality}
-                  </span>
-                )}
-
                 {/* Poster Bottom Episode Status Badge */}
                 {movie.episode_current && (
                   <div className="absolute bottom-2.5 inset-x-2.5 flex justify-center">
@@ -395,40 +388,8 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
               </div>
             </div>
 
-            {/* RIGHT COLUMN: Movie Title, Metadata Badges, Genre Pills & Compact Actions */}
-            <div className="flex-1 min-w-0 w-full flex flex-col justify-end text-center sm:text-left space-y-3.5 sm:space-y-4 md:pt-2">
-              {/* Top Meta Badges Row */}
-              <div className="flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 flex-wrap">
-                {ratingScore && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-extrabold bg-amber-500/15 text-amber-400 border border-amber-500/30 shadow-xs">
-                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                    <span>{ratingScore}</span>
-                  </span>
-                )}
-                {movie.quality && (
-                  <span className="px-2.5 py-1 rounded-lg text-xs font-mono font-extrabold uppercase bg-brand-green/15 text-brand-green border border-brand-green/35">
-                    {movie.quality}
-                  </span>
-                )}
-                {movie.lang && (
-                  <span className="px-2.5 py-1 rounded-lg text-xs font-bold uppercase bg-white/[0.07] text-white/90 border border-white/15">
-                    {movie.lang}
-                  </span>
-                )}
-                {movie.year && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-white/[0.05] text-white/80 border border-white/10">
-                    <Calendar className="w-3 h-3 text-white/50" />
-                    <span>{movie.year}</span>
-                  </span>
-                )}
-                {movie.time && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-white/[0.05] text-white/80 border border-white/10">
-                    <Clock className="w-3 h-3 text-white/50" />
-                    <span>{movie.time}</span>
-                  </span>
-                )}
-              </div>
-
+            {/* RIGHT COLUMN: Movie Title, Subtitle & Bottom Action Bar */}
+            <div className="flex-1 min-w-0 w-full flex flex-col justify-end text-center sm:text-left space-y-4 sm:space-y-5 md:pt-2">
               {/* Primary Title + Smart Subtitle (Origin Name & Alternate "/" Titles) */}
               <div className="space-y-1.5">
                 <h1
@@ -456,45 +417,6 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
                   </div>
                 )}
               </div>
-
-              {/* Clickable Category / Genre Pills */}
-              {categories.length > 0 && (
-                <div className="flex items-center justify-center sm:justify-start gap-1.5 flex-wrap pt-0.5">
-                  {categories.map((cat, idx) => (
-                    <Link
-                      key={cat.slug || idx}
-                      href={`/?category=${cat.slug}`}
-                      className="px-2.5 py-1 rounded-full bg-white/[0.04] hover:bg-brand-green/15 hover:border-brand-green/40 hover:text-brand-green border border-white/10 text-[11.5px] font-medium text-white/75 transition-all"
-                    >
-                      {cat.name}
-                    </Link>
-                  ))}
-                </div>
-              )}
-
-              {/* Quick Director / Country Summary Line on Desktop */}
-              {(countries.length > 0 || directorsList.length > 0) && (
-                <div className="hidden sm:flex items-center gap-4 text-xs text-white/60 pt-0.5 flex-wrap">
-                  {countries.length > 0 && (
-                    <div className="flex items-center gap-1.5">
-                      <Globe className="w-3.5 h-3.5 text-brand-green/80" />
-                      <span className="text-white/45">Quốc gia:</span>
-                      <span className="text-white/85 font-semibold">
-                        {countries.map((c) => c.name).join(", ")}
-                      </span>
-                    </div>
-                  )}
-                  {directorsList.length > 0 && (
-                    <div className="flex items-center gap-1.5">
-                      <Clapperboard className="w-3.5 h-3.5 text-brand-green/80" />
-                      <span className="text-white/45">Đạo diễn:</span>
-                      <span className="text-white/85 font-semibold line-clamp-1 max-w-[260px]">
-                        {directorsList.join(", ")}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              )}
 
               {/* BOTTOM ACTION BAR: Watch CTA (Left) + Favorite & Share Pinned to Bottom-Right Corner */}
               <div className="pt-2 sm:pt-3 w-full flex items-center justify-between gap-2.5 sm:gap-4">
@@ -583,7 +505,7 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
             {cleanContent && (
               <section className="rounded-2xl bg-white/[0.025] border border-white/[0.08] p-4 sm:p-6 space-y-2.5">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-brand-green" />
+                  <FileText className="w-4 h-4 text-brand-green stroke-[2.3]" />
                   <h2 className="text-sm sm:text-base font-bold text-white tracking-wide uppercase">
                     Nội Dung Phim
                   </h2>
