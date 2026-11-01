@@ -1581,40 +1581,58 @@ function SidebarContent({
 
             {/* Main Content Body */}
             <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1">
-              {/* CATEGORIES GRID */}
+              {/* CATEGORIES GRID - Upgraded large cards with icon badges & rich typography */}
               {activeModal === "categories" && (
                 <div ref={categoriesScrollRef}>
                   {displayedCategories.length > 0 ? (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-3.5 pb-8">
+                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3.5 sm:gap-4.5 pb-10">
                       {displayedCategories.map((cat, idx) => {
                         const active = currentCategory === cat.slug;
+                        const emoji = getCategoryEmoji(cat.slug) || "🎬";
                         return (
                           <button
                             key={`${cat.slug}-${idx}`}
                             type="button"
                             onClick={(e) => handleSelectCategory(cat.slug, e)}
                             className={cn(
-                              "group relative flex items-center justify-between h-13 sm:h-14 px-3.5 sm:px-4 rounded-2xl border text-left transition-all duration-200 active:scale-95 min-w-0 cursor-pointer shadow-sm",
+                              "group relative flex items-center justify-between min-h-[66px] sm:min-h-[74px] p-3.5 sm:p-4 rounded-2xl border text-left transition-all duration-200 active:scale-95 min-w-0 cursor-pointer shadow-sm hover:-translate-y-0.5",
                               active
-                                ? "bg-brand-green/15 text-brand-green border-brand-green/60 font-black shadow-[0_0_16px_rgba(32,214,107,0.2)]"
-                                : "bg-white/[0.04] hover:bg-white/[0.08] border-white/[0.08] hover:border-brand-green/30 text-white font-bold"
+                                ? "bg-brand-green/[0.14] text-brand-green border-brand-green/60 font-black shadow-[0_0_24px_rgba(32,214,107,0.22)] ring-1 ring-brand-green/30"
+                                : "bg-white/[0.04] hover:bg-white/[0.08] border-white/[0.08] hover:border-brand-green/40 hover:shadow-[0_8px_20px_rgba(0,0,0,0.4),0_0_12px_rgba(32,214,107,0.12)] text-white"
                             )}
                           >
-                            <div className="flex items-center gap-2.5 min-w-0 truncate">
-                              <span
+                            <div className="flex items-center gap-3 sm:gap-3.5 min-w-0 flex-1">
+                              {/* Large Emoji / Icon Badge */}
+                              <div
                                 className={cn(
-                                  "w-2 h-2 rounded-full shrink-0 transition-all",
+                                  "w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center text-lg sm:text-xl shrink-0 transition-all duration-200 shadow-sm",
                                   active
-                                    ? "bg-brand-green scale-125 shadow-[0_0_8px_rgba(32,214,107,0.8)]"
-                                    : "bg-brand-green/70 group-hover:bg-brand-green group-hover:scale-110"
+                                    ? "bg-brand-green/20 border border-brand-green/40 text-brand-green scale-105"
+                                    : "bg-white/[0.06] group-hover:bg-brand-green/15 border border-white/10 group-hover:border-brand-green/35 group-hover:scale-105"
                                 )}
-                              />
-                              <span className={cn("text-xs sm:text-sm font-bold truncate", active ? "text-brand-green font-extrabold" : "text-white")}>
-                                {cat.name}
-                              </span>
+                              >
+                                {emoji}
+                              </div>
+
+                              <div className="min-w-0 flex-1">
+                                <span
+                                  className={cn(
+                                    "text-sm sm:text-base font-extrabold tracking-tight truncate block group-hover:text-brand-green transition-colors",
+                                    active ? "text-brand-green font-black" : "text-white"
+                                  )}
+                                >
+                                  {cat.name}
+                                </span>
+                                <span className="text-[11px] font-semibold text-white/40 block truncate mt-0.5">
+                                  Thể loại phim
+                                </span>
+                              </div>
                             </div>
+
                             {active && (
-                              <Check className="w-4 h-4 text-brand-green stroke-[3] shrink-0 ml-1.5" />
+                              <div className="w-6 h-6 rounded-full bg-brand-green/20 border border-brand-green/50 flex items-center justify-center shrink-0 ml-2 shadow-[0_0_10px_rgba(32,214,107,0.3)]">
+                                <Check className="w-3.5 h-3.5 text-brand-green stroke-[3]" />
+                              </div>
                             )}
                           </button>
                         );
@@ -1628,11 +1646,11 @@ function SidebarContent({
                 </div>
               )}
 
-              {/* COUNTRIES GRID */}
+              {/* COUNTRIES GRID - Upgraded large cards with HD flag badges & rich typography */}
               {activeModal === "countries" && (
                 <div ref={countriesScrollRef}>
                   {displayedCountries.length > 0 ? (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-3.5 pb-8">
+                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3.5 sm:gap-4.5 pb-10">
                       {displayedCountries.map((c) => {
                         const active = currentCountry === c.slug;
                         const code = c.code || getCountryCode(c.slug) || getCountryCode(c.name);
@@ -1642,32 +1660,56 @@ function SidebarContent({
                             type="button"
                             onClick={(e) => handleSelectCountry(c.slug, e)}
                             className={cn(
-                              "group relative flex items-center gap-3 h-13 sm:h-14 px-3.5 sm:px-4 rounded-2xl border text-left transition-all duration-200 active:scale-95 min-w-0 cursor-pointer shadow-sm",
+                              "group relative flex items-center justify-between min-h-[66px] sm:min-h-[74px] p-3.5 sm:p-4 rounded-2xl border text-left transition-all duration-200 active:scale-95 min-w-0 cursor-pointer shadow-sm hover:-translate-y-0.5",
                               active
-                                ? "bg-brand-green/15 text-brand-green border-brand-green/60 font-black shadow-[0_0_16px_rgba(32,214,107,0.2)]"
-                                : "bg-white/[0.04] hover:bg-white/[0.08] border-white/[0.08] hover:border-brand-green/30 text-white font-bold"
+                                ? "bg-brand-green/[0.14] text-brand-green border-brand-green/60 font-black shadow-[0_0_24px_rgba(32,214,107,0.22)] ring-1 ring-brand-green/30"
+                                : "bg-white/[0.04] hover:bg-white/[0.08] border-white/[0.08] hover:border-brand-green/40 hover:shadow-[0_8px_20px_rgba(0,0,0,0.4),0_0_12px_rgba(32,214,107,0.12)] text-white"
                             )}
                           >
-                            <div className="w-7 h-[19px] rounded overflow-hidden border border-white/20 shrink-0 bg-black/40 flex items-center justify-center">
-                              {(!code || code === "WW") ? (
-                                <Globe className="w-3.5 h-3.5 text-brand-green" />
-                              ) : (
-                                <img
-                                  src={`https://flagcdn.com/w80/${code.toLowerCase()}.png`}
-                                  alt={c.name}
-                                  loading="lazy"
-                                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-200"
-                                  onError={(e) => {
-                                    e.currentTarget.style.display = "none";
-                                  }}
-                                />
-                              )}
+                            <div className="flex items-center gap-3 sm:gap-3.5 min-w-0 flex-1">
+                              {/* Large HD Flag Badge */}
+                              <div
+                                className={cn(
+                                  "w-11 h-7 sm:w-12 sm:h-8 rounded-lg overflow-hidden border border-white/20 shadow-md shrink-0 bg-black/40 flex items-center justify-center transition-all duration-200",
+                                  active
+                                    ? "border-brand-green/50 scale-105 shadow-[0_0_12px_rgba(32,214,107,0.3)]"
+                                    : "group-hover:scale-105 group-hover:border-brand-green/40"
+                                )}
+                              >
+                                {(!code || code === "WW") ? (
+                                  <Globe className="w-5 h-5 text-brand-green" />
+                                ) : (
+                                  <img
+                                    src={`https://flagcdn.com/w160/${code.toLowerCase()}.png`}
+                                    alt={c.name}
+                                    loading="lazy"
+                                    className="w-full h-full object-cover transition-transform duration-200"
+                                    onError={(e) => {
+                                      e.currentTarget.style.display = "none";
+                                    }}
+                                  />
+                                )}
+                              </div>
+
+                              <div className="min-w-0 flex-1">
+                                <span
+                                  className={cn(
+                                    "text-sm sm:text-base font-extrabold tracking-tight truncate block group-hover:text-brand-green transition-colors",
+                                    active ? "text-brand-green font-black" : "text-white"
+                                  )}
+                                >
+                                  {c.name}
+                                </span>
+                                <span className="text-[11px] font-semibold text-white/40 block truncate mt-0.5">
+                                  Điện ảnh {c.name}
+                                </span>
+                              </div>
                             </div>
-                            <span className={cn("text-xs sm:text-sm font-bold truncate flex-1", active ? "text-brand-green font-extrabold" : "text-white")}>
-                              {c.name}
-                            </span>
+
                             {active && (
-                              <Check className="w-4 h-4 text-brand-green stroke-[3] shrink-0 ml-auto" />
+                              <div className="w-6 h-6 rounded-full bg-brand-green/20 border border-brand-green/50 flex items-center justify-center shrink-0 ml-2 shadow-[0_0_10px_rgba(32,214,107,0.3)]">
+                                <Check className="w-3.5 h-3.5 text-brand-green stroke-[3]" />
+                              </div>
                             )}
                           </button>
                         );
@@ -1681,11 +1723,11 @@ function SidebarContent({
                 </div>
               )}
 
-              {/* YEARS GRID */}
+              {/* YEARS GRID - Upgraded large cards with decade tags & bold numbers */}
               {activeModal === "years" && (
                 <div ref={yearsScrollRef}>
                   {displayedYears.length > 0 ? (
-                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2.5 sm:gap-3 pb-8">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3 sm:gap-4 pb-10">
                       {displayedYears.map((y) => {
                         const active = currentYear === String(y);
                         const isLatest = y >= currentYearNum - 1;
@@ -1695,22 +1737,33 @@ function SidebarContent({
                             type="button"
                             onClick={(e) => handleSelectYear(y, e)}
                             className={cn(
-                              "group relative h-12 sm:h-13 px-2 rounded-2xl border text-center transition-all duration-200 active:scale-95 min-w-0 flex items-center justify-center cursor-pointer shadow-sm",
+                              "group relative h-16 sm:h-18 px-3 sm:px-4 rounded-2xl border text-center transition-all duration-200 active:scale-95 min-w-0 flex flex-col items-center justify-center cursor-pointer shadow-sm hover:-translate-y-0.5",
                               active
-                                ? "bg-brand-green/15 text-brand-green border-brand-green/60 font-black shadow-[0_0_16px_rgba(32,214,107,0.2)]"
-                                : "bg-white/[0.04] hover:bg-white/[0.08] border-white/[0.08] hover:border-brand-green/30 text-white font-bold"
+                                ? "bg-brand-green/[0.14] text-brand-green border-brand-green/60 font-black shadow-[0_0_24px_rgba(32,214,107,0.22)] ring-1 ring-brand-green/30"
+                                : "bg-white/[0.04] hover:bg-white/[0.08] border-white/[0.08] hover:border-brand-green/40 hover:shadow-[0_8px_20px_rgba(0,0,0,0.4),0_0_12px_rgba(32,214,107,0.12)] text-white"
                             )}
                           >
                             {isLatest && !active && (
-                              <span className="absolute top-1 right-1.5 text-[8.5px] font-black text-brand-green uppercase tracking-tighter">
+                              <span className="absolute top-1.5 right-2 px-1.5 py-0.5 rounded-full text-[9px] font-black text-brand-green bg-brand-green/15 border border-brand-green/35 uppercase tracking-tighter">
                                 MỚI
                               </span>
                             )}
-                            <span className={cn("text-sm sm:text-base tracking-tight", active ? "font-black text-brand-green" : "font-bold text-white")}>
+                            <span
+                              className={cn(
+                                "text-base sm:text-xl font-mono tracking-tight transition-colors",
+                                active ? "font-black text-brand-green scale-105" : "font-extrabold text-white group-hover:text-brand-green"
+                              )}
+                            >
                               {y}
                             </span>
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-white/40 mt-0.5">
+                              {y >= 2020 ? "Thập niên 20" : y >= 2010 ? "Thập niên 10" : y >= 2000 ? "Thập niên 00" : "Kinh điển"}
+                            </span>
+
                             {active && (
-                              <Check className="w-3.5 h-3.5 text-brand-green stroke-[3] shrink-0 absolute right-2" />
+                              <div className="absolute top-1.5 left-2 w-4 h-4 rounded-full bg-brand-green/20 flex items-center justify-center shadow-[0_0_6px_rgba(32,214,107,0.4)]">
+                                <Check className="w-2.5 h-2.5 text-brand-green stroke-[3]" />
+                              </div>
                             )}
                           </button>
                         );
