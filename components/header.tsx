@@ -133,7 +133,7 @@ function HeaderComponent({}: HeaderProps) {
           )}
         >
           {/* Left Group: Mobile Back Button (< Quay lại) or Menu Button [⊞ Menu] + Desktop Brand Logo */}
-          <div className="flex items-center gap-2 sm:gap-2.5 pointer-events-auto shrink min-w-0">
+          <div className="flex items-center gap-2 sm:gap-2.5 pointer-events-auto shrink-0 lg:flex-1 lg:justify-start min-w-0">
             {hasFilters ? (
               <button
                 type="button"
@@ -192,7 +192,7 @@ function HeaderComponent({}: HeaderProps) {
             )}
 
             {/* Desktop: Wide Search Bar */}
-            <div className="hidden lg:flex items-center flex-1 max-w-sm mr-4">
+            <div className="hidden lg:flex items-center w-full max-w-[280px] xl:max-w-[320px]">
               <button
                 type="button"
                 onClick={() => setShowSearchOverlay(true)}
@@ -212,29 +212,27 @@ function HeaderComponent({}: HeaderProps) {
             </div>
           </div>
 
-          {/* Center Group on Mobile: Brand Logo & Movie Name (Hidden when hasFilters on mobile to match Screenshot 2) */}
-          {!hasFilters && (
-            <div className="lg:hidden flex items-center justify-center min-w-0 flex-1 px-1.5 overflow-hidden text-center">
-              <Link
-                href="/"
-                className="flex items-center gap-1.5 select-none hover:opacity-85 active:scale-95 transition-all max-w-full truncate"
-                aria-label="Về trang chủ Hi Phim"
-              >
-                <BrandLogo size="sm" showSlogan={false} />
-                {activeMovieName && (
-                  <>
-                    <span className="text-white/20 select-none font-light shrink-0">|</span>
-                    <span className="text-white/90 font-bold truncate text-[11.5px] max-w-[105px] xs:max-w-[150px]">
-                      {activeMovieName}
-                    </span>
-                  </>
-                )}
-              </Link>
-            </div>
-          )}
+                    {/* Center Group: Brand Logo & Movie Name (Always Centered in Header on Desktop & Mobile) */}
+          <div className="flex items-center justify-center min-w-0 px-2 overflow-hidden text-center shrink-0">
+            <Link
+              href="/"
+              className="flex items-center gap-1.5 select-none hover:opacity-85 active:scale-95 transition-all max-w-full truncate"
+              aria-label="Về trang chủ Hi Phim"
+            >
+              <BrandLogo size="md" showSlogan={false} />
+              {activeMovieName && (
+                <>
+                  <span className="text-white/20 select-none font-light shrink-0">|</span>
+                  <span className="text-white/90 font-bold truncate text-[11.5px] lg:text-[13px] max-w-[105px] xs:max-w-[150px] lg:max-w-[200px]">
+                    {activeMovieName}
+                  </span>
+                </>
+              )}
+            </Link>
+          </div>
 
           {/* Right Action Cluster: Search bar + Desktop User Profile / Login */}
-          <div className="flex items-center gap-2 sm:gap-2.5 pointer-events-auto shrink-0">
+          <div className="flex items-center gap-2 sm:gap-2.5 pointer-events-auto shrink-0 lg:flex-1 lg:justify-end">
             {/* Search Trigger Button - Full Pill matching mobile app */}
             <button
               onClick={() => setShowSearchOverlay(true)}
