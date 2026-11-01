@@ -131,7 +131,7 @@ function HeaderComponent({}: HeaderProps) {
           className={cn(
             "w-full max-w-[1700px] mx-auto flex items-center justify-between min-w-0 pointer-events-auto transition-all duration-300",
             // Mobile: floating rounded pill bar matching mobile app screenshot
-            "h-[52px] px-2.5 sm:px-3 rounded-full bg-[#080A09]/92 backdrop-blur-2xl border border-white/10 shadow-[0_8px_28px_rgba(0,0,0,0.75)]",
+            "h-[52px] px-2.5 sm:px-3 rounded-full bg-[#121518] border border-white/15 shadow-[0_8px_28px_rgba(0,0,0,0.85)]",
             // Desktop: standard container
             "lg:h-full lg:px-6 lg:px-8 lg:rounded-none lg:bg-transparent lg:border-none lg:shadow-none lg:backdrop-blur-none"
           )}
@@ -144,7 +144,7 @@ function HeaderComponent({}: HeaderProps) {
                 onClick={handleBack}
                 aria-label="Quay lại"
                 title="Quay lại"
-                className="lg:hidden relative flex items-center gap-1.5 h-[38px] px-3.5 rounded-full bg-white/[0.06] hover:bg-white/[0.1] border border-white/10 hover:border-brand-green/40 shadow-[0_2px_10px_rgba(0,0,0,0.5)] active:scale-95 transition-all duration-200 cursor-pointer group shrink-0 select-none touch-manipulation"
+                className="lg:hidden relative flex items-center gap-1.5 h-[38px] px-3.5 rounded-full bg-[#1E2228] hover:bg-[#262B33] border border-white/15 hover:border-brand-green/50 shadow-[0_2px_10px_rgba(0,0,0,0.5)] active:scale-95 transition-all duration-200 cursor-pointer group shrink-0 select-none touch-manipulation"
               >
                 <ChevronLeft className="w-4 h-4 text-brand-green stroke-[2.4] shrink-0" />
                 <span className="text-[13px] font-extrabold text-white tracking-wide leading-none select-none">
@@ -168,8 +168,8 @@ function HeaderComponent({}: HeaderProps) {
                   "lg:hidden relative flex items-center gap-1.5 h-[38px] px-3.5 rounded-full border transition-all duration-200 cursor-pointer group shrink-0 select-none touch-manipulation overflow-hidden",
                   // Active / Open State vs Default State
                   isMenuOpen
-                    ? "bg-brand-green/15 border-brand-green/50"
-                    : "bg-white/[0.06] hover:bg-white/[0.1] border-white/10 hover:border-brand-green/40 shadow-[0_2px_10px_rgba(0,0,0,0.5)]",
+                    ? "bg-[#1B2A22] border-brand-green"
+                    : "bg-[#1E2228] hover:bg-[#262B33] border border-white/15 hover:border-brand-green/50 shadow-[0_2px_10px_rgba(0,0,0,0.5)]",
                   "active:scale-95"
                 )}
               >
@@ -236,7 +236,7 @@ function HeaderComponent({}: HeaderProps) {
               className={cn(
                 "relative flex items-center justify-between transition-all duration-300 cursor-pointer group shadow-[0_4px_24px_rgba(0,0,0,0.7)] active:scale-95 shrink-0 overflow-hidden",
                 // Mobile: pill matching app
-                "h-[38px] px-3.5 rounded-full bg-white/[0.06] border border-white/10 hover:border-brand-green/40 backdrop-blur-xl text-white",
+                "h-[38px] px-3.5 rounded-full bg-[#1E2228] hover:bg-[#262B33] border border-white/15 hover:border-brand-green/50 text-white",
                 // Desktop: standard input look
                 "lg:h-10 lg:pl-2 lg:pr-2.5 lg:w-52 lg:bg-[#111714] lg:hover:bg-[#151D19] lg:border-white/10 lg:hover:border-brand-green/50"
               )}

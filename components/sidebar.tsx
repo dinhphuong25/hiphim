@@ -586,7 +586,7 @@ function SidebarContent({
           WebkitTransform: isMovieDetailPage && isDetailNavCollapsed ? "translate3d(0, 100%, 0)" : "translate3d(0, 0, 0)",
         }}
       >
-        <div className="w-full max-w-lg mx-auto h-[56px] flex items-center justify-between px-2 rounded-full bg-[#080A09]/92 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.85)] pointer-events-auto">
+        <div className="w-full max-w-lg mx-auto h-[56px] flex items-center justify-between px-2 rounded-full bg-[#121518] border border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.9)] pointer-events-auto">
           {/* Tab 1: Trang Chủ */}
           {(() => {
             const active = currentActiveTab === "/";
@@ -599,7 +599,7 @@ function SidebarContent({
                 aria-label="Trang Chủ"
               >
                 {active ? (
-                  <div className="w-[88%] h-[44px] rounded-full bg-brand-green/15 flex flex-col items-center justify-center gap-0.5 relative transition-colors duration-150">
+                  <div className="w-[88%] h-[44px] rounded-full bg-[#1B2A22] border border-brand-green/35 flex flex-col items-center justify-center gap-0.5 relative transition-colors duration-150">
                     <SidebarAnimatedIcon type="home" size={20} className="text-brand-green" isActive={true} />
                     <span className="text-[10px] font-bold text-brand-green tracking-tight leading-none">
                       Trang chủ
@@ -629,7 +629,7 @@ function SidebarContent({
                 aria-label="Lịch Sử Xem"
               >
                 {active ? (
-                  <div className="w-[88%] h-[44px] rounded-full bg-brand-green/15 flex flex-col items-center justify-center gap-0.5 relative transition-colors duration-150">
+                  <div className="w-[88%] h-[44px] rounded-full bg-[#1B2A22] border border-brand-green/35 flex flex-col items-center justify-center gap-0.5 relative transition-colors duration-150">
                     <SidebarAnimatedIcon type="history" size={20} className="text-brand-green" isActive={true} />
                     <span className="text-[10px] font-bold text-brand-green tracking-tight leading-none">
                       Lịch sử
@@ -659,7 +659,7 @@ function SidebarContent({
                 aria-label="Yêu Thích"
               >
                 {active ? (
-                  <div className="w-[88%] h-[44px] rounded-full bg-brand-green/15 flex flex-col items-center justify-center gap-0.5 relative transition-colors duration-150">
+                  <div className="w-[88%] h-[44px] rounded-full bg-[#1B2A22] border border-brand-green/35 flex flex-col items-center justify-center gap-0.5 relative transition-colors duration-150">
                     <SidebarAnimatedIcon type="heart" size={20} className="text-brand-green" isActive={true} />
                     <span className="text-[10px] font-bold text-brand-green tracking-tight leading-none">
                       Yêu thích
@@ -697,7 +697,7 @@ function SidebarContent({
                 aria-label="Tài Khoản"
               >
                 {active ? (
-                  <div className="w-[88%] h-[44px] rounded-full bg-brand-green/15 flex flex-col items-center justify-center gap-0.5 relative transition-colors duration-150">
+                  <div className="w-[88%] h-[44px] rounded-full bg-[#1B2A22] border border-brand-green/35 flex flex-col items-center justify-center gap-0.5 relative transition-colors duration-150">
                     {user?.avatar ? (
                       <div className="w-[19px] h-[19px] rounded-full overflow-hidden shrink-0 border border-brand-green relative">
                         <Image src={user.avatar} alt="" fill unoptimized className="object-cover" sizes="19px" />
@@ -768,8 +768,8 @@ function SidebarContent({
             "lg:hidden fixed z-[141] transition-all duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)]",
             "flex items-center gap-1.5 active:scale-95 cursor-pointer touch-manipulation select-none",
             isDetailNavCollapsed
-              ? "bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] right-3.5 px-3 py-2 rounded-2xl bg-[#080A09]/95 backdrop-blur-xl border border-white/15 text-white shadow-[0_8px_24px_rgba(0,0,0,0.75)] hover:border-brand-green/40 hover:text-brand-green"
-              : "bottom-[calc(72px+env(safe-area-inset-bottom,0px))] right-3.5 px-2.5 py-1.5 rounded-xl bg-[#080A09]/95 backdrop-blur-xl border border-white/15 text-white/80 shadow-[0_4px_16px_rgba(0,0,0,0.65)] hover:text-white"
+              ? "bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] right-3.5 px-3 py-2 rounded-2xl bg-[#121518] border border-white/15 text-white shadow-[0_8px_24px_rgba(0,0,0,0.85)] hover:border-brand-green/40 hover:text-brand-green"
+              : "bottom-[calc(72px+env(safe-area-inset-bottom,0px))] right-3.5 px-2.5 py-1.5 rounded-xl bg-[#121518] border border-white/15 text-white/85 shadow-[0_4px_16px_rgba(0,0,0,0.8)] hover:text-white"
           )}
           aria-label={isDetailNavCollapsed ? "Mở thanh điều hướng" : "Thu gọn thanh điều hướng"}
           title={isDetailNavCollapsed ? "Mở menu điều hướng" : "Thu gọn menu điều hướng"}
@@ -799,7 +799,7 @@ function SidebarContent({
       {/* Mobile Account Floating Sheet */}
       {isAccountOpen && (
         <div
-          className="lg:hidden fixed left-1/2 -translate-x-1/2 z-[130] w-[calc(100%-24px)] max-w-[390px] max-h-[calc(100dvh-5.5rem)] overflow-y-auto overscroll-contain bg-[#0A0D0C]/95 backdrop-blur-2xl border border-white/15 rounded-3xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.85)] animate-in fade-in slide-in-from-bottom-5 duration-200 pointer-events-auto select-none"
+          className="lg:hidden fixed left-1/2 -translate-x-1/2 z-[130] w-[calc(100%-24px)] max-w-[390px] max-h-[calc(100dvh-5.5rem)] overflow-y-auto overscroll-contain bg-[#121518] border border-white/15 rounded-3xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.85)] animate-in fade-in slide-in-from-bottom-5 duration-200 pointer-events-auto select-none"
           style={{ bottom: "max(4.75rem, calc(env(safe-area-inset-bottom, 0px) + 4.5rem))" }}
           onClick={(e) => e.stopPropagation()}
         >
