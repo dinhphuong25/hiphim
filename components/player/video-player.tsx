@@ -585,6 +585,7 @@ export default function VideoPlayer({
       } else {
         autoplayRef.current = false;
         isUserPausedRef.current = true;
+      try { if (videoRef.current) onProgressRef.current?.(videoRef.current.currentTime, videoRef.current.duration || 0); } catch {}
         videoRef.current.pause();
       }
     } catch (err: any) {
@@ -1256,7 +1257,7 @@ export default function VideoPlayer({
     video.setAttribute('x5-playsinline', 'true');
     video.setAttribute('x5-video-player-type', 'h5-page');
     video.playsInline = true;
-    try { video.crossOrigin = "anonymous"; } catch (e) {}
+
 
     // Helper for fast, non-blocking playback start - Always keep sound unmuted when allowed
     const playWithAutoplayFallback = () => {
@@ -1461,10 +1462,10 @@ export default function VideoPlayer({
           autoStartLoad: true,
           startPosition: targetStartPosition,
           
-          backBufferLength: 30, // Giữ 30s đệm cũ để tua lùi tức thì mượt mà không cần tải lại
-          maxBufferLength: isMobile ? 45 : 75, // Tăng bộ đệm xem phim mượt mà liên tục, triệt tiêu đứng hình do mạng
-          maxMaxBufferLength: isMobile ? 90 : 150,
-          maxBufferSize: isMobile ? 64 * 1024 * 1024 : 128 * 1024 * 1024,
+          backBufferLength: isMobile ? 15 : 30,
+          maxBufferLength: isMobile ? 30 : 60,
+          maxMaxBufferLength: isMobile ? 60 : 120,
+          maxBufferSize: isMobile ? 32 * 1024 * 1024 : 80 * 1024 * 1024,
           maxBufferHole: 0.5, // Nhảy ngay qua khe hở timestamp gián đoạn (0.5s) thay vì chờ 8.5s
           highBufferWatchdogPeriod: 2,
           nudgeOffset: 0.1,
@@ -1474,7 +1475,7 @@ export default function VideoPlayer({
           capLevelToPlayerSize: true,
           testBandwidth: false,
           
-          abrEwmaDefaultEstimate: 5_000_000, // 5 Mbps khởi động ngay chất lượng 1080p Full HD siêu nét
+          abrEwmaDefaultEstimate: isMobile ? 1_800_000 : 3_500_000, // Tải cực nhanh phân đoạn đầu tiên, phát ngay không chờ đợi
           abrBandWidthFactor: 0.85,
           abrBandWidthUpFactor: 0.75,
           
@@ -1751,7 +1752,7 @@ export default function VideoPlayer({
 
 
       // Throttle UI currentTime state updates to ~250ms to save CPU & avoid frame drops on mobile
-      if (!isSeekingRef.current && (now - lastTimeUpdateRef.current >= 250 || video.ended)) {
+      if (!isSeekingRef.current && (now - lastTimeUpdateRef.current >= (showControls ? 250 : 1000) || video.ended)) {
         lastTimeUpdateRef.current = now;
         setCurrentTime(cur);
       }
@@ -1763,7 +1764,7 @@ export default function VideoPlayer({
         }
       }
       const currentSecond = Math.floor(cur);
-      if (currentSecond !== lastProgressSecondRef.current) { 
+      if (currentSecond !== lastProgressSecondRef.current && (currentSecond % 5 === 0 || lastProgressSecondRef.current === -1)) { 
         lastProgressSecondRef.current = currentSecond; 
         onProgressRef.current?.(cur, video.duration || 0); 
       }
@@ -1959,6 +1960,7 @@ export default function VideoPlayer({
       setIsPlaying(false);
       autoplayRef.current = false;
       isUserPausedRef.current = true;
+      try { if (videoRef.current) onProgressRef.current?.(videoRef.current.currentTime, videoRef.current.duration || 0); } catch {}
       hideLoading();
       try {
         if ('mediaSession' in navigator) {
@@ -2440,7 +2442,7 @@ export default function VideoPlayer({
             } catch {}
           }
         }} 
-        crossOrigin="anonymous"
+
         controls={false}
         controlsList="nodownload noplaybackrate nofullscreen noremoteplayback"
         disableRemotePlayback

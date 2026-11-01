@@ -1043,7 +1043,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
       if (durInt > 0) {
         lastSavedDurationRef.current = durInt;
       }
-      if (nowInt > 5 && Math.abs(nowInt - lastSavedProgressRef.current) >= 5) {
+      if (nowInt > 5 && Math.abs(nowInt - lastSavedProgressRef.current) >= 10) {
         lastSavedProgressRef.current = nowInt;
         localStorage.setItem(key, String(nowInt));
         

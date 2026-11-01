@@ -419,15 +419,15 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
               </div>
 
               {/* BOTTOM ACTION BAR: Watch CTA (Left) + Favorite & Share Pinned to Bottom-Right Corner */}
-              <div className="pt-2 sm:pt-3 w-full flex items-center justify-between gap-2.5 sm:gap-4">
+              <div className="pt-2 sm:pt-3 w-full flex items-center justify-between gap-2 sm:gap-4">
                 {/* Left Cluster: Primary Watch CTA & Episode Jump */}
-                <div className="flex items-center gap-2.5 flex-1 sm:flex-initial min-w-0">
+                <div className="flex items-center gap-2 sm:gap-2.5 flex-1 sm:flex-initial min-w-0">
                   <Link
                     href={primaryWatchHref}
-                    className="flex-1 sm:flex-initial sm:min-w-[200px] px-5 sm:px-7 py-3 sm:py-3.5 rounded-xl bg-gradient-to-r from-[#20D66B] to-[#10B981] hover:brightness-110 active:scale-[0.98] text-[#050807] font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-[0_8px_28px_rgba(32,214,107,0.35)] transition-all cursor-pointer uppercase tracking-wide truncate"
+                    className="flex-1 sm:flex-initial sm:min-w-[200px] h-11 sm:h-12 px-3.5 sm:px-7 rounded-xl bg-gradient-to-r from-[#20D66B] to-[#10B981] hover:brightness-110 active:scale-[0.98] text-[#050807] font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-[0_8px_28px_rgba(32,214,107,0.35)] transition-all cursor-pointer uppercase tracking-wide whitespace-nowrap"
                   >
                     <Play className="w-4 h-4 sm:w-4.5 sm:h-4.5 fill-current text-[#050807] shrink-0" />
-                    <span className="truncate">
+                    <span className="whitespace-nowrap">
                       {resumeWatchInfo
                         ? `TIẾP TỤC XEM (${formatEpName(resumeWatchInfo.label)})`
                         : `XEM PHIM ${movie.episode_current ? `(${movie.episode_current})` : "NGAY"}`}
@@ -445,13 +445,13 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
                   )}
                 </div>
 
-                {/* Far Bottom-Right Corner Cluster: Favorite & Share */}
-                <div className="flex items-center gap-2 sm:gap-2.5 shrink-0 ml-auto">
+                {/* Far Bottom-Right Corner Cluster: Favorite & Share (Icon-only on mobile, full text on sm+) */}
+                <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0 ml-auto">
                   <button
                     type="button"
                     onClick={handleToggleFav}
                     className={cn(
-                      "px-3.5 sm:px-4 py-3 sm:py-3.5 rounded-xl backdrop-blur-md border text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 shadow-lg",
+                      "h-11 sm:h-12 px-3 sm:px-4 rounded-xl backdrop-blur-md border text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer active:scale-95 shadow-lg shrink-0",
                       isFav
                         ? "bg-rose-500/15 border-rose-500/40 text-rose-400 shadow-[0_0_20px_rgba(244,63,94,0.25)]"
                         : "bg-black/55 hover:bg-white/[0.1] border-white/15 text-white hover:border-rose-400/40 hover:text-rose-400"
@@ -465,14 +465,14 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
                         isFav ? "fill-rose-500 text-rose-500" : "text-white/85"
                       )}
                     />
-                    <span className="hidden xs:inline">{isFav ? "Đã Thích" : "Yêu Thích"}</span>
+                    <span className="hidden sm:inline">{isFav ? "Đã Thích" : "Yêu Thích"}</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={handleShare}
                     className={cn(
-                      "px-3.5 sm:px-4 py-3 sm:py-3.5 rounded-xl backdrop-blur-md border text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 shadow-lg",
+                      "h-11 sm:h-12 px-3 sm:px-4 rounded-xl backdrop-blur-md border text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer active:scale-95 shadow-lg shrink-0",
                       shareCopied
                         ? "bg-brand-green/15 border-brand-green/40 text-brand-green"
                         : "bg-black/55 hover:bg-white/[0.1] border-white/15 text-white hover:border-brand-green/40 hover:text-brand-green"
@@ -485,7 +485,7 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
                     ) : (
                       <Share2 className="w-4 h-4 text-white/85 shrink-0" />
                     )}
-                    <span className="hidden xs:inline">{shareCopied ? "Đã Chép" : "Chia Sẻ"}</span>
+                    <span className="hidden sm:inline">{shareCopied ? "Đã Chép" : "Chia Sẻ"}</span>
                   </button>
                 </div>
               </div>
