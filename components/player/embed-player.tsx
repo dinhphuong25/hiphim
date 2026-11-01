@@ -169,27 +169,22 @@ const EmbedPlayer = ({
         className="w-full h-full absolute inset-0 rounded-2xl border-0 z-10"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
         allowFullScreen
-        title="Hi Phim VIP Video Player"
+        title="Hi Phim Video Player"
         onLoad={() => setIsLoading(false)}
         onError={() => setHasError(true)}
       />
 
-      {/* Top Header Bar with Cinema VIP Badge & Hi Phim Watermark */}
+      {/* Top Header Bar with Cinema Watermark & Film Details */}
       <div
         className={cn(
           "absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-3.5 sm:px-5 pt-3 sm:pt-4 pb-8 bg-gradient-to-b from-black/90 via-black/40 to-transparent transition-opacity duration-300 pointer-events-none select-none",
           showControls && !isLoading ? "opacity-100" : "opacity-0"
         )}
       >
-        {/* Left Cluster: VIP Badge & Film Details */}
+        {/* Left Cluster: Film Details */}
         <div className="flex items-center gap-2 pointer-events-auto">
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0b130e]/85 backdrop-blur-md text-brand-green border border-brand-green/35 text-[11px] font-extrabold uppercase tracking-wider shadow-[0_0_15px_rgba(32,214,107,0.25)]">
-            <Zap className="w-3.5 h-3.5 fill-current animate-pulse text-brand-green" />
-            <span>MÁY CHỦ {cleanServerLabel}</span>
-          </div>
-
           {movieName && (
-            <span className="text-white/80 text-xs font-bold line-clamp-1 hidden md:inline-block drop-shadow-md">
+            <span className="text-white/90 text-xs sm:text-sm font-bold line-clamp-1 drop-shadow-md">
               {movieName} {episodeName ? `• ${episodeName}` : ""}
             </span>
           )}
@@ -206,7 +201,7 @@ const EmbedPlayer = ({
           <button
             onClick={handleReload}
             className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-black/60 hover:bg-black/90 hover:text-brand-green backdrop-blur-md text-white/80 border border-white/10 transition-all cursor-pointer shadow-lg active:scale-95"
-            title="Tải lại luồng phát VIP"
+            title="Tải lại luồng phát"
             aria-label="Tải lại luồng phát"
           >
             <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -233,34 +228,17 @@ const EmbedPlayer = ({
           showControls && !isLoading ? "opacity-100" : "opacity-0"
         )}
       >
-        {/* Left Cluster: Live Server Indicator + Switch Server Button */}
-        <div className="flex items-center gap-2 sm:gap-3 pointer-events-auto">
+        {/* Left Cluster: Live Stream Indicator */}
+        <div className="flex items-center gap-2 pointer-events-auto">
           <div className="flex items-center gap-2 text-xs bg-black/55 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-green opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-green"></span>
             </span>
-            <span className="font-extrabold text-brand-green text-[11px] sm:text-xs tracking-wider uppercase">
-              VIP PRO
-            </span>
-            <span className="text-white/30">•</span>
             <span className="text-white/90 font-mono font-bold text-[11px] sm:text-xs">
               1080p FHD
             </span>
           </div>
-
-          {/* Switch to Default HLS server if alternative exists */}
-          {hasAlternativeServer && onSwitchToM3u8 && (
-            <button
-              type="button"
-              onClick={onSwitchToM3u8}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-brand-green/20 text-white/90 hover:text-brand-green text-[11px] font-bold border border-white/15 hover:border-brand-green/35 transition-all cursor-pointer shadow-sm active:scale-95"
-              title="Đổi sang Máy chủ Mặc định (HLS Siêu Nhanh)"
-            >
-              <Play className="w-3 h-3 fill-current text-brand-green" />
-              <span>Đổi sang Mặc định</span>
-            </button>
-          )}
         </div>
 
         {/* Right Cluster: Next Episode + Fullscreen */}
@@ -318,10 +296,10 @@ const EmbedPlayer = ({
         <div className="relative z-10 flex flex-col items-center justify-center p-6 text-center max-w-sm">
           <Loader2 className="w-11 h-11 sm:w-12 sm:h-12 text-brand-green animate-spin mb-4" />
           <h3 className="text-white font-extrabold text-sm sm:text-base tracking-wide mb-1">
-            Đang kết nối Máy chủ VIP...
+            Đang tải luồng phát...
           </h3>
           <p className="text-white/60 text-xs leading-relaxed animate-pulse">
-            Đang tối ưu luồng phát Full HD chất lượng cao
+            Đang tối ưu độ phân giải Full HD chất lượng cao
           </p>
         </div>
       </div>
@@ -333,7 +311,7 @@ const EmbedPlayer = ({
             <AlertTriangle className="w-6 h-6" />
           </div>
           <h3 className="text-white font-bold text-sm sm:text-base mb-1.5">
-            Không thể tải luồng phát Máy chủ VIP
+            Không thể tải luồng phát video
           </h3>
           <p className="text-white/70 text-xs sm:text-sm mb-5 max-w-sm leading-relaxed">
             Nguồn phát dự phòng tạm thời gián đoạn. Bạn có thể thử kết nối lại hoặc chuyển về Máy chủ Mặc định.

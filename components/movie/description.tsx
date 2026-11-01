@@ -77,16 +77,6 @@ function resolveInitialWatchState(
   let resolvedEpisode = 0;
   let resolvedTime = 0;
 
-  // Always prioritize VIP server by default if available
-  if (Array.isArray(serverData) && serverData.length > 0) {
-    const vipIdx = serverData.findIndex((s: any) =>
-      (s?.server_name || "").toLowerCase().includes("vip")
-    );
-    if (vipIdx !== -1) {
-      resolvedServer = vipIdx;
-    }
-  }
-
   if (typeof window !== "undefined" && slug && Array.isArray(serverData) && serverData.length > 0) {
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -94,18 +84,11 @@ function resolveInitialWatchState(
       const svParam = urlParams.get("sv") || urlParams.get("server");
       const tParam = urlParams.get("t") || urlParams.get("time");
 
-      // 1. Resolve Server: if explicit sv query param exists, respect it; otherwise keep VIP default
+      // 1. Resolve Server: if explicit sv query param exists, respect it; otherwise Server 0 is Default
       if (svParam !== null) {
         const parsedSv = parseInt(svParam, 10);
         if (!isNaN(parsedSv) && parsedSv >= 0 && parsedSv < serverData.length) {
           resolvedServer = parsedSv;
-        }
-      } else {
-        const vipIdx = serverData.findIndex((s: any) =>
-          (s?.server_name || "").toLowerCase().includes("vip")
-        );
-        if (vipIdx !== -1) {
-          resolvedServer = vipIdx;
         }
       }
 
@@ -310,10 +293,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
   }, [rawServerData]);
 
   const defaultMode: 'm3u8' | 'embed' = useMemo(() => {
-    const vipIdx = serverData.findIndex((s: any) =>
-      (s?.server_name || "").toLowerCase().includes("vip")
-    );
-    const activeServer = vipIdx !== -1 ? serverData[vipIdx] : serverData[0];
+    const activeServer = serverData[0];
     const firstEp = activeServer?.server_data?.[0];
     if (firstEp && !firstEp.link_m3u8 && firstEp.link_embed) {
       return 'embed';
@@ -1245,7 +1225,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
       const currentEpisode = currentServerData[currentEpisodeIndex.server]?.server_data?.[currentEpisodeIndex.episode];
       if (currentEpisode?.link_embed) setCurrentEpisodeUrl(currentEpisode.link_embed);
     }
-    toast.info("Đã chuyển sang Máy chủ Dự phòng (VIP Embed)");
+    toast.info("Đã chuyển sang Máy chủ Dự phòng");
   }, [currentEpisodeIndex, currentServerData]);
 
   const handleEnded = useCallback(() => {
@@ -1433,7 +1413,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
                       movieName={movie.name}
                       episodeName={activeEpObj?.name}
                       serverName={
-                        currentServerData?.[currentEpisodeIndex?.server || 0]?.server_name || "Máy chủ VIP"
+                        currentServerData?.[currentEpisodeIndex?.server || 0]?.server_name || "Máy chủ Mặc định"
                       }
                       hasAlternativeServer={Boolean(playableM3u8Url) || (currentServerData && currentServerData.length > 1)}
                       onSwitchToM3u8={handleSwitchToM3u8}

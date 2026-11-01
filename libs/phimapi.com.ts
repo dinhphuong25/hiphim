@@ -105,7 +105,7 @@ export default class PhimApi {
           const nEpisodes = fbData.movie?.episodes || [];
           if (Array.isArray(nEpisodes) && nEpisodes.length > 0) {
             const nguoncServers: MovieEpisode[] = nEpisodes.map((s: any, idx: number) => ({
-              server_name: `VIP${idx > 0 ? ` ${idx + 1}` : ""}`,
+              server_name: `Dự Phòng${idx > 0 ? ` ${idx + 1}` : ""}`,
               server_data: (s.items || []).map((it: any) => ({
                 name: it.name?.startsWith("Tập") ? it.name : (it.name?.toLowerCase() === "full" ? "Full" : `Tập ${it.name}`),
                 slug: it.slug,
@@ -114,8 +114,8 @@ export default class PhimApi {
                 link_m3u8: "",
               })),
             }));
-            // Always set VIP server as the primary default source
-            allServers = [...nguoncServers, ...allServers];
+            // Keep primary stream as default source, and NguonC as backup
+            allServers = [...allServers, ...nguoncServers];
           }
         }
       } catch (backupErr) {
@@ -145,7 +145,7 @@ export default class PhimApi {
                   const nEpisodes = nFilmData.movie?.episodes || [];
                   if (nEpisodes.length > 0) {
                     const nguoncServers: MovieEpisode[] = nEpisodes.map((s: any, idx: number) => ({
-                      server_name: `VIP${idx > 0 ? ` ${idx + 1}` : ""}`,
+                      server_name: `Mặc định${idx > 0 ? ` ${idx + 1}` : ""}`,
                       server_data: (s.items || []).map((it: any) => ({
                         name: it.name?.startsWith("Tập") ? it.name : `Tập ${it.name}`,
                         slug: it.slug,
@@ -197,7 +197,7 @@ export default class PhimApi {
             lang: fbMovie.language || "Vietsub",
           };
           const mappedServer: MovieEpisode[] = (fbMovie.episodes || []).map((s: any, idx: number) => ({
-            server_name: `VIP${idx > 0 ? ` ${idx + 1}` : ""}`,
+            server_name: `Mặc định${idx > 0 ? ` ${idx + 1}` : ""}`,
             server_data: (s.items || []).map((it: any) => ({
               name: it.name?.startsWith("Tập") ? it.name : `Tập ${it.name}`,
               slug: it.slug,

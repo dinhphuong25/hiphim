@@ -175,101 +175,49 @@ export default function Episode({
             Máy chủ phát
           </h4>
 
-          {/* Grid of Server Buttons */}
+          {/* Grid of Server Buttons (1 Button Per Unique Server Source) */}
           <div className="grid grid-cols-2 gap-2.5">
-            {serverData.flatMap((server, index) => {
+            {serverData.map((server, index) => {
               const ep = server.server_data?.[currentEpisodeIndex] || server.server_data?.[0];
               const hasM3u8 = Boolean(ep?.link_m3u8 && ep.link_m3u8.trim() !== "");
-              const hasEmbed = Boolean(ep?.link_embed && ep.link_embed.trim() !== "");
-              const cleanServerName = (server.server_name || "Vietsub")
-                .replace(/^Dự Phòng\s*\((.*)\)$/i, "$1")
-                .trim();
-              const isAnyVipAvailable = serverData.some((s) =>
-                (s?.server_name || "").toLowerCase().includes("vip")
+              const preferredMode = hasM3u8 ? "m3u8" : "embed";
+              const isSelected = currentServerIndex === index;
+              const serverLabel = server.server_name || (index === 0 ? "Vietsub" : "Dự Phòng");
+              const isDefaultServer = index === 0;
+
+              return (
+                <button
+                  key={`server-${index}`}
+                  onClick={() => {
+                    onPlayerModeChange(preferredMode);
+                    handleServerChange(index, preferredMode);
+                  }}
+                  className={cn(
+                    "w-full py-2.5 px-2 flex flex-col items-center justify-center gap-0.5 rounded-xl transition-all border cursor-pointer active:scale-95",
+                    serverData.length === 1 && "col-span-2",
+                    isSelected
+                      ? "bg-brand-green/[0.12] text-brand-green border-brand-green/35 shadow-[0_0_12px_rgba(32,214,107,0.15)]"
+                      : "bg-white/[0.04] text-white/90 border-white/[0.08] hover:bg-white/[0.08] hover:border-white/15 hover:text-white"
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "text-[13.5px] leading-tight truncate max-w-full px-1",
+                      isSelected ? "text-brand-green font-black" : "text-white font-bold"
+                    )}
+                  >
+                    {serverLabel}
+                  </span>
+                  <span
+                    className={cn(
+                      "text-[10px] uppercase font-extrabold tracking-wider",
+                      isSelected ? "text-brand-green/80" : "text-white/60"
+                    )}
+                  >
+                    {isDefaultServer ? "Mặc định" : "Dự phòng"}
+                  </span>
+                </button>
               );
-              const isVipServer = cleanServerName.toLowerCase().includes("vip");
-
-              const buttons = [];
-
-              if (hasM3u8 || !hasEmbed) {
-                buttons.push(
-                  <button
-                    key={`${index}-m3u8`}
-                    onClick={() => {
-                      onPlayerModeChange("m3u8");
-                      handleServerChange(index, "m3u8");
-                    }}
-                    className={cn(
-                      "w-full py-2.5 px-2 flex flex-col items-center justify-center gap-0.5 rounded-xl transition-all border cursor-pointer",
-                      currentServerIndex === index && playerMode === "m3u8"
-                        ? "bg-brand-green/[0.12] text-brand-green border-brand-green/35 shadow-[0_0_12px_rgba(32,214,107,0.15)]"
-                        : "bg-white/[0.04] text-white/90 border-white/[0.08] hover:bg-white/[0.08] hover:border-white/15 hover:text-white"
-                    )}
-                  >
-                    <span
-                      className={cn(
-                        "text-[13.5px] leading-tight",
-                        currentServerIndex === index && playerMode === "m3u8"
-                          ? "text-brand-green font-black"
-                          : "text-white font-bold"
-                      )}
-                    >
-                      {cleanServerName}
-                    </span>
-                    <span
-                      className={cn(
-                        "text-[10px] uppercase font-extrabold tracking-wider",
-                        currentServerIndex === index && playerMode === "m3u8"
-                          ? "text-brand-green/80"
-                          : "text-white/60"
-                      )}
-                    >
-                      {isAnyVipAvailable ? (isVipServer ? "Mặc định" : "Dự phòng") : "Mặc định"}
-                    </span>
-                  </button>
-                );
-              }
-
-              if (hasEmbed || !hasM3u8) {
-                buttons.push(
-                  <button
-                    key={`${index}-embed`}
-                    onClick={() => {
-                      onPlayerModeChange("embed");
-                      handleServerChange(index, "embed");
-                    }}
-                    className={cn(
-                      "w-full py-2.5 px-2 flex flex-col items-center justify-center gap-0.5 rounded-xl transition-all border cursor-pointer",
-                      currentServerIndex === index && playerMode === "embed"
-                        ? "bg-brand-green/[0.12] text-brand-green border-brand-green/35 shadow-[0_0_12px_rgba(32,214,107,0.15)]"
-                        : "bg-white/[0.04] text-white/90 border-white/[0.08] hover:bg-white/[0.08] hover:border-white/15 hover:text-white"
-                    )}
-                  >
-                    <span
-                      className={cn(
-                        "text-[13.5px] leading-tight",
-                        currentServerIndex === index && playerMode === "embed"
-                          ? "text-brand-green font-black"
-                          : "text-white font-bold"
-                      )}
-                    >
-                      {cleanServerName}
-                    </span>
-                    <span
-                      className={cn(
-                        "text-[10px] uppercase font-extrabold tracking-wider",
-                        currentServerIndex === index && playerMode === "embed"
-                          ? "text-brand-green/80"
-                          : "text-white/60"
-                      )}
-                    >
-                      {isVipServer ? "Mặc định" : "Dự phòng"}
-                    </span>
-                  </button>
-                );
-              }
-
-              return buttons;
             })}
           </div>
         </div>
