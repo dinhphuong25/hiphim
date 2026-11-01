@@ -91,15 +91,14 @@ function FooterComponent({ customFooterText }: FooterProps = {}) {
         {/* Divider */}
         <div className="h-px bg-white/10 my-2.5 sm:my-3" />
 
-        {/* Bottom Row: Copyright & Founder Info */}
-        <div className="text-center space-y-0.5">
+        {/* Bottom Row: Copyright & Organization Info */}
+        <div className="text-center space-y-1">
+          <p className="text-[11px] sm:text-[11.5px] text-white/65 font-normal">
+            Dự án thuộc hệ sinh thái <span className="text-brand-green font-semibold">Hi Tech</span> — Được quản lý và vận hành bởi <span className="text-brand-green font-semibold">Hi Tech</span>.
+          </p>
           <p className="text-[11.5px] sm:text-[12px] text-white/85 font-medium">
             © 2026 Hi Phim. Toàn quyền được bảo lưu.
           </p>
-          {/* Tạm ẩn người thành lập và phát triển */}
-          {/* <p className="text-[11px] sm:text-[11.5px] text-white/50 font-normal">
-            Được thành lập và phát triển bởi <span className="text-brand-green font-medium">Kim Đình Phương</span>.
-          </p> */}
         </div>
       </div>
 
