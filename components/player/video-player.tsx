@@ -270,7 +270,7 @@ export default function VideoPlayer({
           }
 
           // Kích hoạt khiên che quảng cáo nếu Admin bật
-          const isShieldActive = ads.enabled !== false && ads.adShieldEnabled === true;
+          const isShieldActive = ads.adShieldEnabled === true;
           setIsAdShieldSystemEnabled(isShieldActive);
           if (isShieldActive) {
             const systemMode = (ads.adShieldMode as 'auto' | 'always') || 'auto';

@@ -87,7 +87,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
     tvcSkipAfterSeconds: 5,
     adShieldEnabled: false,
     adShieldMode: "auto",
-    adDisclaimerEnabled: false,
+    adDisclaimerEnabled: true,
   },
 };
 
@@ -125,11 +125,12 @@ function mergeWithDefaults(parsed: any): SiteConfig {
         ...DEFAULT_SITE_CONFIG.ads,
         adShieldEnabled: Boolean(rawAds.adShieldEnabled),
         adShieldMode: rawAds.adShieldMode || "auto",
-        adDisclaimerEnabled: Boolean(rawAds.adDisclaimerEnabled),
+        adDisclaimerEnabled: rawAds.adDisclaimerEnabled !== false,
       }
     : {
         ...DEFAULT_SITE_CONFIG.ads,
         ...rawAds,
+        adDisclaimerEnabled: rawAds.adDisclaimerEnabled !== false,
       };
 
   return {

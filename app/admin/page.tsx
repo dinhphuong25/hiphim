@@ -2869,7 +2869,7 @@ export default function AdminDashboardPage() {
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={config?.ads?.adDisclaimerEnabled ?? false}
+                          checked={config?.ads?.adDisclaimerEnabled !== false}
                           onChange={(e) => handleToggleAdOption("adDisclaimerEnabled", e.target.checked, "Dòng Lưu Ý Miễn Trừ Quảng Cáo")}
                           className="sr-only peer"
                         />
@@ -2886,11 +2886,11 @@ export default function AdminDashboardPage() {
                   <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[11px]">
                     <span className="text-white/40">Trạng thái:</span>
                     <span className={`font-bold px-2 py-0.5 rounded-full text-[10px] ${
-                      config?.ads?.adDisclaimerEnabled
+                      config?.ads?.adDisclaimerEnabled !== false
                         ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
                         : "bg-white/5 text-white/40 border border-white/10"
                     }`}>
-                      {config?.ads?.adDisclaimerEnabled ? "Đang Hiện Lưu Ý" : "Đang Ẩn"}
+                      {config?.ads?.adDisclaimerEnabled !== false ? "Đang Hiện Lưu Ý" : "Đang Ẩn"}
                     </span>
                   </div>
                 </div>

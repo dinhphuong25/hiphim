@@ -43,6 +43,6 @@
     "tvcSkipAfterSeconds": 5,
     "adShieldEnabled": false,
     "adShieldMode": "auto",
-    "adDisclaimerEnabled": false
+    "adDisclaimerEnabled": true
   }
 }
