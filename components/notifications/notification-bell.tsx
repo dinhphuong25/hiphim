@@ -71,11 +71,11 @@ function formatRelativeTime(timestamp: number) {
 
 const DEFAULT_FALLBACK_NOTIFICATIONS: SystemNotificationItem[] = [
   {
-    id: "sys_welcome_2026",
-    title: "Chào mừng bạn ghé thăm Hi Phim!",
-    content: "Chúc bạn có những giây phút xem phim thư giãn tuyệt vời với hơn 50.000+ tựa phim bom tấn và tập mới cập nhật liên tục hoàn toàn miễn phí.",
-    type: "success",
-    createdAt: Date.now() - 3600000 * 24 * 2,
+    id: "sys_update_v2026_release",
+    title: "Bản cập nhật mới đã phát hành",
+    content: "Bản cập nhật mới đã phát hành với giao diện mới và cải thiện server tốc độ cao, mượt mà hơn. Chúc mọi người xem phim vui vẻ. Thân chào!",
+    type: "update",
+    createdAt: 1793545700000,
     author: "Ban Quản Trị",
   },
   {
@@ -83,7 +83,15 @@ const DEFAULT_FALLBACK_NOTIFICATIONS: SystemNotificationItem[] = [
     title: "Tính năng Báo lỗi tập phim",
     content: "Nếu bạn gặp sự cố khi xem phim (video đứng hình, mất tiếng, lệch sub), hãy bấm nút 'Báo lỗi tập' để đội ngũ kỹ thuật khắc phục ngay nhé.",
     type: "info",
-    createdAt: Date.now() - 3600000 * 5,
+    createdAt: 1791495899231,
+    author: "Ban Quản Trị",
+  },
+  {
+    id: "sys_welcome_2026",
+    title: "Chào mừng bạn ghé thăm!",
+    content: "Chúc bạn có những giây phút xem phim thư giãn tuyệt vời với hơn 50.000+ tựa phim bom tấn và tập mới cập nhật liên tục hoàn toàn miễn phí.",
+    type: "success",
+    createdAt: 1791341099231,
     author: "Ban Quản Trị",
   },
 ];
@@ -724,14 +732,22 @@ export default function NotificationBell({ className }: { className?: string }) 
                             <span
                               className={cn(
                                 "text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 font-mono",
-                                item.type === "success"
+                                item.type === "update"
+                                  ? "bg-brand-green/20 text-brand-green border border-brand-green/40 shadow-[0_0_10px_rgba(32,214,107,0.25)]"
+                                  : item.type === "success"
                                   ? "bg-brand-green/15 text-brand-green border border-brand-green/30"
                                   : item.type === "warning"
                                   ? "bg-amber-400/15 text-amber-300 border border-amber-400/30"
                                   : "bg-blue-400/15 text-blue-300 border border-blue-400/30"
                               )}
                             >
-                              {item.type === "success" ? "Chào Mừng" : item.type === "warning" ? "Cảnh Báo" : "Hệ Thống"}
+                              {item.type === "update"
+                                ? "Cập Nhật"
+                                : item.type === "success"
+                                ? "Chào Mừng"
+                                : item.type === "warning"
+                                ? "Cảnh Báo"
+                                : "Hệ Thống"}
                             </span>
 
                             <div className="flex items-center gap-2">

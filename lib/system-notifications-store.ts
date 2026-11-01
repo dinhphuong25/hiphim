@@ -18,11 +18,11 @@ const NOTIFICATIONS_FILE_PATH = path.join(process.cwd(), "data", "system-notific
 
 const DEFAULT_NOTIFICATIONS: SystemNotification[] = [
   {
-    id: "sys_welcome_2026",
-    title: "Chào mừng bạn ghé thăm!",
-    content: "Chúc bạn có những giây phút xem phim thư giãn tuyệt vời với hơn 50.000+ tựa phim bom tấn và tập mới cập nhật liên tục hoàn toàn miễn phí.",
-    type: "success",
-    createdAt: Date.now() - 3600000 * 24 * 2, // 2 days ago
+    id: "sys_update_v2026_release",
+    title: "Bản cập nhật mới đã phát hành",
+    content: "Bản cập nhật mới đã phát hành với giao diện mới và cải thiện server tốc độ cao, mượt mà hơn. Chúc mọi người xem phim vui vẻ. Thân chào!",
+    type: "update",
+    createdAt: 1793545700000,
     author: "Ban Quản Trị",
   },
   {
@@ -30,7 +30,15 @@ const DEFAULT_NOTIFICATIONS: SystemNotification[] = [
     title: "Tính năng Báo lỗi tập phim",
     content: "Nếu bạn gặp sự cố khi xem phim (video đứng hình, mất tiếng, lệch sub), hãy bấm nút 'Báo lỗi tập' để đội ngũ kỹ thuật khắc phục ngay nhé.",
     type: "info",
-    createdAt: Date.now() - 3600000 * 5, // 5 hours ago
+    createdAt: 1791495899231,
+    author: "Ban Quản Trị",
+  },
+  {
+    id: "sys_welcome_2026",
+    title: "Chào mừng bạn ghé thăm!",
+    content: "Chúc bạn có những giây phút xem phim thư giãn tuyệt vời với hơn 50.000+ tựa phim bom tấn và tập mới cập nhật liên tục hoàn toàn miễn phí.",
+    type: "success",
+    createdAt: 1791341099231,
     author: "Ban Quản Trị",
   },
 ];
