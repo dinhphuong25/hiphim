@@ -124,7 +124,7 @@ function HeaderComponent({}: HeaderProps) {
           // Mobile: floating wrapper with safe-area padding
           "left-0 right-0 pt-2 pt-[max(0.5rem,env(safe-area-inset-top))] px-3 pb-1",
           // Desktop: docked top bar
-          "lg:p-0 lg:left-[225px] lg:right-0 lg:h-16 lg:bg-cinema-sub lg:border-b lg:border-white/10 lg:shadow-none"
+          "lg:p-0 lg:left-[248px] lg:right-0 lg:h-16 lg:bg-cinema-sub lg:border-b lg:border-white/10 lg:shadow-none"
         )}
       >
         <div

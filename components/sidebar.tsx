@@ -1059,10 +1059,12 @@ function SidebarContent({
       {/* Desktop & Mobile Sidebar Container */}
       <aside
         className={cn(
-          "fixed top-0 left-0 bottom-0 bg-cinema-sub border-r border-white/10 text-cinema-text flex flex-col transition-transform duration-300 ease-out select-none will-change-transform",
-          "w-[280px] lg:w-[225px]",
-          // Mobile state
-          isMobileOpen ? "translate-x-0 z-[130]" : "-translate-x-full lg:translate-x-0 z-[100]"
+          "fixed text-cinema-text flex flex-col select-none will-change-transform transition-all duration-300 ease-out",
+          // Mobile state: full height slide drawer
+          "top-0 left-0 bottom-0 w-[280px] bg-cinema-sub border-r border-white/10 rounded-none shadow-none",
+          isMobileOpen ? "translate-x-0 z-[130]" : "-translate-x-full lg:translate-x-0 z-[100]",
+          // Desktop state: floating island card matching bento / cut-out style (rounded corners, detached borders)
+          "lg:top-3 lg:bottom-3 lg:left-3 lg:w-[225px] lg:rounded-2xl lg:border lg:border-white/10 lg:bg-cinema-sub lg:shadow-[0_12px_40px_rgba(0,0,0,0.65)] lg:overflow-hidden"
         )}
       >
         {/* Sidebar Header / Brand Name (Mobile Drawer Only) */}
@@ -1087,7 +1089,7 @@ function SidebarContent({
         </div>
 
         {/* Scrollable Navigation Body - Balanced spacing to fit frame seamlessly and prevent cutoff */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 lg:p-2 lg:pt-3 lg:pb-2 space-y-2.5 lg:space-y-0.5 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 lg:px-2.5 lg:pt-3.5 lg:pb-3 space-y-2.5 lg:space-y-0.5 custom-scrollbar">
           
           {/* Main Nav Section */}
           <div className="space-y-1 lg:space-y-1">
