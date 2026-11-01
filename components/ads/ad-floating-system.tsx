@@ -179,7 +179,7 @@ export function AdFloatingSystemComponent() {
 
       {/* 2. QUẢNG CÁO CỐ ĐỊNH DƯỚI CHÂN MÀN HÌNH (Sticky Bottom Banner) */}
       {showBottomBanner && adConfig.showBottomBanner && adConfig.bottomBannerImage && (
-        <div className="fixed bottom-[60px] lg:bottom-0 left-0 right-0 lg:pl-[248px] z-[110] pointer-events-none select-none animate-in slide-in-from-bottom-3 duration-300">
+        <div className="fixed bottom-[60px] lg:bottom-0 left-0 right-0 lg:pl-[252px] z-[110] pointer-events-none select-none animate-in slide-in-from-bottom-3 duration-300">
           <div className="relative mx-auto w-full max-w-[760px] px-2 sm:px-4 pb-1 sm:pb-2 pointer-events-auto">
             <div className="relative rounded-xl overflow-hidden bg-[#0a0f0d]/95 border border-white/15 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.7)] p-1 sm:p-1.5 flex items-center justify-center">
               {/* Nút tắt QC [x] phong cách chuẩn web xem phim */}

@@ -109,16 +109,13 @@ function SidebarMainNavItem({
       onMouseLeave={() => setIsHovered(false)}
       onTouchStart={onPrefetch}
       className={cn(
-        "relative flex items-center gap-3 lg:gap-2 px-3 lg:px-2 py-2 lg:py-1.5 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-colors duration-150 group overflow-hidden",
+        "relative flex items-center gap-3 lg:gap-2.5 px-3 lg:px-2.5 py-2 lg:py-2 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-all duration-150 group overflow-hidden border",
         active
-          ? "bg-brand-green/12 text-brand-green font-semibold"
-          : "text-white/60 hover:text-white hover:bg-white/5"
+          ? "bg-brand-green/15 text-brand-green border-brand-green/30 shadow-[0_0_12px_rgba(32,214,107,0.15)] font-semibold"
+          : "text-white/65 hover:text-white hover:bg-white/[0.06] border-transparent"
       )}
       aria-current={active ? "page" : undefined}
     >
-      {active && (
-        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 lg:h-3.5 bg-brand-green rounded-r-full" />
-      )}
       <SidebarAnimatedIcon
         type={item.iconType}
         isHovered={isHovered}
@@ -152,16 +149,13 @@ function SidebarPersonalNavItem({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={cn(
-        "w-full relative flex items-center gap-3 lg:gap-2 px-3 lg:px-2 py-2 lg:py-1.5 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-all duration-150 group overflow-hidden text-left cursor-pointer",
+        "w-full relative flex items-center gap-3 lg:gap-2.5 px-3 lg:px-2.5 py-2 lg:py-2 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-all duration-150 group overflow-hidden text-left cursor-pointer border",
         active
-          ? "bg-brand-green/12 text-brand-green font-semibold"
-          : "text-white/60 hover:text-white hover:bg-white/5"
+          ? "bg-brand-green/15 text-brand-green border-brand-green/30 shadow-[0_0_12px_rgba(32,214,107,0.15)] font-semibold"
+          : "text-white/65 hover:text-white hover:bg-white/[0.06] border-transparent"
       )}
       aria-current={active ? "page" : undefined}
     >
-      {active && (
-        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 lg:h-3.5 bg-brand-green rounded-r-full" />
-      )}
       <SidebarAnimatedIcon
         type={item.iconType}
         isHovered={isHovered}
@@ -1064,11 +1058,11 @@ function SidebarContent({
           "top-0 left-0 bottom-0 w-[280px] bg-cinema-sub border-r border-white/10 rounded-none shadow-none",
           isMobileOpen ? "translate-x-0 z-[130]" : "-translate-x-full lg:translate-x-0 z-[100]",
           // Desktop state: floating island card matching bento / cut-out style (rounded corners, detached borders)
-          "lg:top-3 lg:bottom-3 lg:left-3 lg:w-[225px] lg:rounded-2xl lg:border lg:border-white/10 lg:bg-cinema-sub lg:shadow-[0_12px_40px_rgba(0,0,0,0.65)] lg:overflow-hidden"
+          "lg:top-3 lg:left-3 lg:w-[230px] lg:h-fit lg:max-h-[calc(100vh-24px)] lg:rounded-2xl lg:border lg:border-white/10 lg:bg-[#0B100E]/95 lg:backdrop-blur-xl lg:shadow-[0_12px_40px_rgba(0,0,0,0.65)] lg:overflow-hidden"
         )}
       >
-        {/* Sidebar Header / Brand Name (Mobile Drawer Only) */}
-        <div className="lg:hidden h-16 px-4 flex items-center justify-between border-b border-white/10 shrink-0">
+        {/* Sidebar Header / Brand Name (Desktop & Mobile) */}
+        <div className="h-14 px-4 flex items-center justify-between border-b border-white/[0.08] shrink-0">
           <Link href="/" className="flex items-center select-none py-1 group" aria-label="Về trang chủ Hi Phim">
             <BrandLogo size="md" />
           </Link>
@@ -1133,15 +1127,12 @@ function SidebarContent({
               onMouseEnter={() => setIsCategoryHovered(true)}
               onMouseLeave={() => setIsCategoryHovered(false)}
               className={cn(
-                "w-full relative flex items-center justify-between px-3 lg:px-2 py-2 lg:py-1.5 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-colors duration-150 group text-left cursor-pointer",
+                "w-full relative flex items-center justify-between px-3 lg:px-2.5 py-2 lg:py-2 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-all duration-150 group text-left cursor-pointer border",
                 currentCategory
-                  ? "bg-brand-green/12 text-brand-green font-semibold"
-                  : "text-white/65 hover:text-white hover:bg-white/5"
+                  ? "bg-brand-green/15 text-brand-green border-brand-green/30 shadow-[0_0_12px_rgba(32,214,107,0.15)] font-semibold"
+                  : "text-white/65 hover:text-white hover:bg-white/[0.06] border-transparent"
               )}
             >
-              {currentCategory && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 lg:h-3.5 bg-brand-green rounded-r-full" />
-              )}
               <div className="flex items-center gap-3 lg:gap-2 min-w-0">
                 <SidebarAnimatedIcon
                   type="layers"
@@ -1181,15 +1172,12 @@ function SidebarContent({
               onMouseEnter={() => setIsCountryHovered(true)}
               onMouseLeave={() => setIsCountryHovered(false)}
               className={cn(
-                "w-full relative flex items-center justify-between px-3 lg:px-2 py-2 lg:py-1.5 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-colors duration-150 group text-left cursor-pointer",
+                "w-full relative flex items-center justify-between px-3 lg:px-2.5 py-2 lg:py-2 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-all duration-150 group text-left cursor-pointer border",
                 currentCountry
-                  ? "bg-brand-green/12 text-brand-green font-semibold"
-                  : "text-white/65 hover:text-white hover:bg-white/5"
+                  ? "bg-brand-green/15 text-brand-green border-brand-green/30 shadow-[0_0_12px_rgba(32,214,107,0.15)] font-semibold"
+                  : "text-white/65 hover:text-white hover:bg-white/[0.06] border-transparent"
               )}
             >
-              {currentCountry && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 lg:h-3.5 bg-brand-green rounded-r-full" />
-              )}
               <div className="flex items-center gap-3 lg:gap-2 min-w-0">
                 <SidebarAnimatedIcon
                   type="globe"
@@ -1229,15 +1217,12 @@ function SidebarContent({
               onMouseEnter={() => setIsYearHovered(true)}
               onMouseLeave={() => setIsYearHovered(false)}
               className={cn(
-                "w-full relative flex items-center justify-between px-3 lg:px-2 py-2 lg:py-1.5 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-colors duration-150 group text-left cursor-pointer",
+                "w-full relative flex items-center justify-between px-3 lg:px-2.5 py-2 lg:py-2 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-all duration-150 group text-left cursor-pointer border",
                 currentYear
-                  ? "bg-brand-green/12 text-brand-green font-semibold"
-                  : "text-white/65 hover:text-white hover:bg-white/5"
+                  ? "bg-brand-green/15 text-brand-green border-brand-green/30 shadow-[0_0_12px_rgba(32,214,107,0.15)] font-semibold"
+                  : "text-white/65 hover:text-white hover:bg-white/[0.06] border-transparent"
               )}
             >
-              {currentYear && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 lg:h-3.5 bg-brand-green rounded-r-full" />
-              )}
               <div className="flex items-center gap-3 lg:gap-2 min-w-0">
                 <SidebarAnimatedIcon
                   type="calendar"

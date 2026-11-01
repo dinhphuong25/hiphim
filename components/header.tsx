@@ -123,8 +123,8 @@ function HeaderComponent({}: HeaderProps) {
           "fixed top-0 z-[90] transition-all duration-300 select-none pointer-events-none lg:pointer-events-auto",
           // Mobile: floating wrapper with safe-area padding
           "left-0 right-0 pt-2 pt-[max(0.5rem,env(safe-area-inset-top))] px-3 pb-1",
-          // Desktop: docked top bar
-          "lg:p-0 lg:left-[248px] lg:right-0 lg:h-16 lg:bg-cinema-sub lg:border-b lg:border-white/10 lg:shadow-none"
+          // Desktop: floating island top bar
+          "lg:top-0 lg:left-[252px] lg:right-0 lg:pt-3 lg:pr-3 lg:pb-0 lg:pl-0 lg:bg-transparent lg:border-none lg:shadow-none"
         )}
       >
         <div
@@ -132,8 +132,8 @@ function HeaderComponent({}: HeaderProps) {
             "w-full max-w-[1700px] mx-auto flex items-center justify-between min-w-0 pointer-events-auto transition-all duration-300",
             // Mobile: floating rounded pill bar matching mobile app screenshot
             "h-[52px] px-2.5 sm:px-3 rounded-full bg-[#121518] border border-white/15 shadow-[0_8px_28px_rgba(0,0,0,0.85)]",
-            // Desktop: standard container
-            "lg:h-full lg:px-6 lg:px-8 lg:rounded-none lg:bg-transparent lg:border-none lg:shadow-none lg:backdrop-blur-none"
+            // Desktop: floating rounded bento card
+            "lg:h-14 lg:px-4 lg:rounded-2xl lg:bg-[#0B100E]/95 lg:backdrop-blur-xl lg:border lg:border-white/10 lg:shadow-[0_10px_35px_rgba(0,0,0,0.6)]"
           )}
         >
           {/* Left Group: Mobile Back Button (< Quay lại) or Menu Button [⊞ Menu] + Desktop Brand Logo */}
@@ -195,15 +195,24 @@ function HeaderComponent({}: HeaderProps) {
               </button>
             )}
 
-            {/* Brand Logo only on Desktop */}
-            <div className="hidden lg:flex items-center">
-              <Link
-                href="/"
-                className="flex items-center select-none group shrink-0 min-w-0"
-                aria-label="Về trang chủ Hi Phim"
+            {/* Desktop: Wide Search Bar */}
+            <div className="hidden lg:flex items-center flex-1 max-w-sm mr-4">
+              <button
+                type="button"
+                onClick={() => setShowSearchOverlay(true)}
+                className="relative flex items-center justify-between h-9 w-full px-3 rounded-xl bg-white/[0.05] hover:bg-white/[0.08] border border-white/10 hover:border-brand-green/40 text-white/70 hover:text-white transition-all duration-200 cursor-pointer shadow-inner group"
+                aria-label="Tìm kiếm phim, diễn viên..."
               >
-                <BrandLogo size="md" />
-              </Link>
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <AnimatedSearchIcon size={16} />
+                  <span className="text-[12.5px] font-medium text-white/50 group-hover:text-white/80">
+                    Tìm kiếm phim, diễn viên...
+                  </span>
+                </div>
+                <kbd className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-brand-green/10 border border-brand-green/30 text-[9.5px] text-brand-green font-mono font-bold uppercase shadow-[0_0_8px_rgba(32,214,107,0.15)] group-hover:bg-brand-green/20 group-hover:border-brand-green/60 transition-all shrink-0">
+                  <span>Ctrl</span>K
+                </kbd>
+              </button>
             </div>
           </div>
 
@@ -233,7 +242,7 @@ function HeaderComponent({}: HeaderProps) {
             {/* Search Trigger Button - Full Pill matching mobile app */}
             <button
               onClick={() => setShowSearchOverlay(true)}
-              className={cn(
+              className={cn("lg:hidden",
                 "relative flex items-center justify-between transition-all duration-300 cursor-pointer group shadow-[0_4px_24px_rgba(0,0,0,0.7)] active:scale-95 shrink-0 overflow-hidden",
                 // Mobile: pill matching app
                 "h-[38px] px-3.5 rounded-full bg-[#1E2228] hover:bg-[#262B33] border border-white/15 hover:border-brand-green/50 text-white",
