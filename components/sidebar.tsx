@@ -1725,28 +1725,21 @@ function SidebarContent({
               )}
             </div>
 
-            {/* Nút scroll tiện ích nổi trong Modal (Floating Scroll FAB) */}
-            <div className="fixed right-5 sm:right-8 bottom-20 sm:bottom-24 z-50 animate-in fade-in zoom-in-95 duration-200 pointer-events-auto">
-              <button
-                type="button"
-                onClick={handleModalScrollToggle}
-                className="group flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-[#050807]/90 hover:bg-black text-brand-green border border-brand-green/40 hover:border-brand-green shadow-[0_4px_25px_rgba(0,0,0,0.8),0_0_15px_rgba(32,214,107,0.25)] backdrop-blur-md transition-all duration-200 active:scale-95 cursor-pointer hover:shadow-[0_0_20px_rgba(32,214,107,0.5)]"
-                title={modalScrolled ? "Cuộn lên đầu trang" : "Cuộn xuống danh sách"}
-                aria-label={modalScrolled ? "Cuộn lên đầu trang" : "Cuộn xuống danh sách"}
-              >
-                {modalScrolled ? (
-                  <>
-                    <ArrowUp className="w-4 h-4 stroke-[2.8] transition-transform group-hover:-translate-y-0.5" />
-                    <span className="text-xs font-bold text-white pr-0.5">Lên đầu</span>
-                  </>
-                ) : (
-                  <>
-                    <ArrowDown className="w-4 h-4 stroke-[2.8] transition-transform group-hover:translate-y-0.5" />
-                    <span className="text-xs font-bold text-white pr-0.5">Cuộn xuống</span>
-                  </>
-                )}
-              </button>
-            </div>
+            {/* Nút scroll tiện ích nổi trong Modal (Floating Scroll FAB) - Chỉ hiện khi đã cuộn qua một đoạn */}
+            {modalScrolled && (
+              <div className="fixed right-4 sm:right-8 bottom-16 sm:bottom-24 z-50 animate-in fade-in zoom-in-95 duration-200 pointer-events-auto">
+                <button
+                  type="button"
+                  onClick={handleModalScrollToggle}
+                  className="group flex items-center gap-1.5 sm:gap-2 p-2.5 sm:px-3.5 sm:py-2.5 rounded-full bg-[#050807]/95 hover:bg-black text-brand-green border border-brand-green/50 hover:border-brand-green shadow-[0_4px_25px_rgba(0,0,0,0.85),0_0_15px_rgba(32,214,107,0.3)] backdrop-blur-md transition-all duration-200 active:scale-95 cursor-pointer hover:shadow-[0_0_20px_rgba(32,214,107,0.5)]"
+                  title="Cuộn lên đầu trang"
+                  aria-label="Cuộn lên đầu trang"
+                >
+                  <ArrowUp className="w-4 h-4 stroke-[2.8] transition-transform group-hover:-translate-y-0.5" />
+                  <span className="hidden sm:inline text-xs font-bold text-white pr-0.5">Lên đầu</span>
+                </button>
+              </div>
+            )}
 
             {/* Bottom Sticky Action Bar */}
             <div className="sticky bottom-0 z-30 bg-[#050807]/95 backdrop-blur-md border-t border-white/10 py-3 sm:py-4 shadow-[0_-4px_25px_rgba(0,0,0,0.8)] pb-[max(1rem,env(safe-area-inset-bottom))]">
@@ -1810,16 +1803,17 @@ function SidebarContent({
                     (activeModal === "countries" && !currentCountry) ||
                     (activeModal === "years" && !currentYear)) && (
                     <span className="truncate text-white/40 text-xs sm:text-sm">
-                      Bấm vào mục bất kỳ để lọc phim tức thì • Hỗ trợ phím ESC để đóng
+                      <span className="hidden sm:inline">Bấm vào mục bất kỳ để lọc phim tức thì • Hỗ trợ phím ESC để đóng</span>
+                      <span className="sm:hidden">Chọn mục để lọc tức thì</span>
                     </span>
                   )}
                 </div>
 
-                <div className="flex items-center gap-3 shrink-0 ml-4">
+                <div className="flex items-center gap-2 sm:gap-3 shrink-0 ml-auto sm:ml-4">
                   <button
                     type="button"
                     onClick={handleModalScrollToggle}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 hover:bg-brand-green/15 text-white/80 hover:text-brand-green border border-white/10 hover:border-brand-green/30 transition-all font-medium text-xs cursor-pointer active:scale-95"
+                    className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 hover:bg-brand-green/15 text-white/80 hover:text-brand-green border border-white/10 hover:border-brand-green/30 transition-all font-medium text-xs cursor-pointer active:scale-95"
                     title={modalScrolled ? "Cuộn lên đầu trang" : "Cuộn xuống danh sách"}
                   >
                     {modalScrolled ? (
@@ -1843,7 +1837,7 @@ function SidebarContent({
                       closeModal();
                       router.push("/");
                     }}
-                    className="text-brand-green hover:underline font-bold shrink-0 text-xs sm:text-sm cursor-pointer"
+                    className="text-brand-green hover:underline font-bold shrink-0 text-xs sm:text-sm cursor-pointer whitespace-nowrap"
                   >
                     Xem tất cả phim
                   </button>
