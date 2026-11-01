@@ -358,18 +358,19 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
               <span>Quay lại</span>
             </button>
 
-            {/* Mobile-only Floating Share & Favorite Icons */}
-            <div className="flex sm:hidden items-center gap-2">
+            {/* Floating Share & Favorite Icons (Top-Right) */}
+            <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={handleShare}
                 className={cn(
-                  "w-9 h-9 rounded-full backdrop-blur-md border flex items-center justify-center transition-all cursor-pointer shadow-lg active:scale-90",
+                  "w-9 h-9 sm:w-10 sm:h-10 rounded-full backdrop-blur-md border flex items-center justify-center transition-all cursor-pointer shadow-lg active:scale-90",
                   shareCopied
                     ? "bg-brand-green/20 border-brand-green/50 text-brand-green"
-                    : "bg-black/55 border-white/15 text-white"
+                    : "bg-black/55 hover:bg-white/10 border-white/15 hover:border-brand-green/40 text-white hover:text-brand-green"
                 )}
                 aria-label="Chia sẻ phim"
+                title="Chia sẻ phim"
               >
                 {shareCopied ? <Check className="w-4 h-4 stroke-[2.8]" /> : <Share2 className="w-4 h-4" />}
               </button>
@@ -377,12 +378,13 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
                 type="button"
                 onClick={handleToggleFav}
                 className={cn(
-                  "w-9 h-9 rounded-full backdrop-blur-md border flex items-center justify-center transition-all cursor-pointer shadow-lg active:scale-90",
+                  "w-9 h-9 sm:w-10 sm:h-10 rounded-full backdrop-blur-md border flex items-center justify-center transition-all cursor-pointer shadow-lg active:scale-90",
                   isFav
-                    ? "bg-rose-500/20 border-rose-500/50 text-rose-500"
-                    : "bg-black/55 border-white/15 text-white"
+                    ? "bg-rose-500/20 border-rose-500/50 text-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.3)]"
+                    : "bg-black/55 hover:bg-white/10 border-white/15 hover:border-rose-400/50 text-white hover:text-rose-400"
                 )}
                 aria-label="Yêu thích"
+                title={isFav ? "Bỏ yêu thích" : "Lưu vào yêu thích"}
               >
                 <Heart className={cn("w-4 h-4", isFav && "fill-rose-500 text-rose-500")} />
               </button>
@@ -540,45 +542,6 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
                       : `XEM PHIM ${movie.episode_current ? `(${movie.episode_current})` : "NGAY"}`}
                   </span>
                 </Link>
-
-                {/* Favorite Button */}
-                <button
-                  type="button"
-                  onClick={handleToggleFav}
-                  className={cn(
-                    "px-4 py-3 sm:py-3.5 rounded-xl backdrop-blur-md border text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95",
-                    isFav
-                      ? "bg-rose-500/15 border-rose-500/40 text-rose-400 shadow-[0_0_20px_rgba(244,63,94,0.2)]"
-                      : "bg-white/[0.06] hover:bg-white/[0.12] border-white/15 text-white hover:border-white/30"
-                  )}
-                >
-                  <Heart
-                    className={cn(
-                      "w-4 h-4 transition-colors",
-                      isFav ? "fill-rose-500 text-rose-500" : "text-white/85"
-                    )}
-                  />
-                  <span>{isFav ? "Đã Yêu Thích" : "Yêu Thích"}</span>
-                </button>
-
-                {/* Share Button */}
-                <button
-                  type="button"
-                  onClick={handleShare}
-                  className={cn(
-                    "px-4 py-3 sm:py-3.5 rounded-xl backdrop-blur-md border text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95",
-                    shareCopied
-                      ? "bg-brand-green/15 border-brand-green/40 text-brand-green"
-                      : "bg-white/[0.06] hover:bg-white/[0.12] border-white/15 text-white hover:border-white/30"
-                  )}
-                >
-                  {shareCopied ? (
-                    <Check className="w-4 h-4 text-brand-green stroke-[2.8]" />
-                  ) : (
-                    <Share2 className="w-4 h-4 text-white/85" />
-                  )}
-                  <span>{shareCopied ? "Đã Chép Link" : "Chia Sẻ"}</span>
-                </button>
 
                 {/* Smooth Scroll to Episode List Button (when episodes exist) */}
                 {episodeList.length > 1 && (
