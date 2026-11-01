@@ -1606,15 +1606,31 @@ export default function VideoPlayer({
           if (data.fatal) {
             switch (data.type) {
               case HLS.ErrorTypes.NETWORK_ERROR:
-                if (retryCountRef.current < 3) {
+                const is404 = (data.response as any)?.code === 404 || (data.response as any)?.status === 404;
+                const isManifestError = data.details === HLS.ErrorDetails.MANIFEST_LOAD_ERROR || data.details === HLS.ErrorDetails.MANIFEST_PARSING_ERROR;
+
+                if (is404 || isManifestError) {
+                  console.error("Fatal HLS manifest error (404/broken):", data);
+                  setIsLoading(false);
+                  setError("Nguồn phát từ máy chủ này tạm thời chưa sẵn sàng hoặc bị gián đoạn. Bạn vui lòng chuyển sang Máy chủ Dự phòng để xem.");
+                  onErrorRef.current?.(data);
+                  break;
+                }
+
+                if (retryCountRef.current < 2) {
                   retryCountRef.current += 1;
-                  console.warn(`HLS Network error, retrying (${retryCountRef.current}/3)...`);
+                  console.warn(`HLS Network error, retrying (${retryCountRef.current}/2)...`);
                   setIsSlowNetwork(true);
                   setTimeout(() => {
-                    if (hlsRef.current) hlsRef.current.startLoad();
+                    if (hlsRef.current) {
+                      hlsRef.current.loadSource(videoUrl);
+                      hlsRef.current.startLoad();
+                    }
                   }, 600 * retryCountRef.current);
                 } else {
-                  setError("Máy chủ đang phản hồi chậm hoặc tạm thời bận. Vui lòng thử lại kết nối.");
+                  setIsLoading(false);
+                  setError("Máy chủ đang phản hồi chậm hoặc tạm thời bận. Vui lòng chuyển sang Máy chủ Dự phòng hoặc thử lại kết nối.");
+                  onErrorRef.current?.(data);
                 }
                 break;
               case HLS.ErrorTypes.MEDIA_ERROR:
@@ -1623,7 +1639,9 @@ export default function VideoPlayer({
                 break;
               default:
                 hls.destroy();
-                setError("Đã có sự cố kết nối tới máy chủ phát video. Vui lòng thử lại.");
+                setIsLoading(false);
+                setError("Đã có sự cố kết nối tới máy chủ phát video. Vui lòng chuyển sang Máy chủ Dự phòng.");
+                onErrorRef.current?.(data);
                 break;
             }
           }
@@ -2766,7 +2784,18 @@ export default function VideoPlayer({
             {error}
           </p>
 
-          <div className="flex items-center justify-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {onSwitchToEmbed && (
+              <Button
+                onClick={onSwitchToEmbed}
+                size="sm"
+                className="bg-brand-green hover:bg-brand-green/90 text-black font-extrabold rounded-xl h-9 px-4 cursor-pointer shadow-[0_0_15px_rgba(32,214,107,0.4)]"
+              >
+                <Play className="w-3.5 h-3.5 fill-current mr-1.5" />
+                Đổi sang Máy chủ Dự phòng
+              </Button>
+            )}
+
             <Button
               onClick={() => {
                 setError(null);

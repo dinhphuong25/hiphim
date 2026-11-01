@@ -93,6 +93,33 @@ export default class PhimApi {
       };
 
       let allServers: MovieEpisode[] = primaryData.episodes || [];
+      // Multi-source stream redundancy: Always query NguonC backup server
+      try {
+        const fbRes = await fetch(`https://phim.nguonc.com/api/film/${slug}`, {
+          headers: { "User-Agent": USER_AGENT, Accept: "application/json" },
+          signal: AbortSignal.timeout(2500),
+          next: { revalidate: 1800 },
+        });
+        if (fbRes.ok) {
+          const fbData = await fbRes.json();
+          const nEpisodes = fbData.movie?.episodes || [];
+          if (Array.isArray(nEpisodes) && nEpisodes.length > 0) {
+            const nguoncServers: MovieEpisode[] = nEpisodes.map((s: any, idx: number) => ({
+              server_name: `Dự Phòng (VIP${idx > 0 ? ` ${idx + 1}` : ""})`,
+              server_data: (s.items || []).map((it: any) => ({
+                name: it.name?.startsWith("Tập") ? it.name : (it.name?.toLowerCase() === "full" ? "Full" : `Tập ${it.name}`),
+                slug: it.slug,
+                filename: it.name,
+                link_embed: it.embed,
+                link_m3u8: "",
+              })),
+            }));
+            allServers = [...allServers, ...nguoncServers];
+          }
+        }
+      } catch (backupErr) {
+        // Non-blocking fallback
+      }
       if (!allServers || allServers.length === 0) {
         try {
           const searchTerm = movie.origin_name || movie.name;
