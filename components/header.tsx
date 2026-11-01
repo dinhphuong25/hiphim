@@ -104,12 +104,8 @@ function HeaderComponent({}: HeaderProps) {
 
   const isMovieDetailPage = pathname.startsWith("/phim/");
 
-  const handleBack = () => {
-    if (typeof window !== "undefined" && window.history.length > 1) {
-      router.back();
-    } else {
-      router.push("/");
-    }
+    const handleBack = () => {
+    router.push("/");
   };
 
   if (pathname === "/tai-app" || isPlayerFullscreen || isMovieDetailPage) {

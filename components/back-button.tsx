@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useLoading } from "@/components/ui/loading-context";
+import { getMovieReferrer } from "@/lib/navigation-history";
 
 export default function BackButton() {
   const router = useRouter();
@@ -11,11 +12,8 @@ export default function BackButton() {
   const handleBack = () => {
     showLoading();
     try {
-      if (typeof window !== "undefined" && window.history.length > 1) {
-        router.back();
-      } else {
-        router.push("/");
-      }
+      const target = getMovieReferrer();
+      router.push(target);
     } finally {
       hideLoading();
     }

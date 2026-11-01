@@ -27,44 +27,32 @@ export default function WatchHeader({
     if (typeof window === "undefined") return;
 
     try {
-      const hasInternalReferrer =
-        Boolean(document.referrer) &&
-        document.referrer.startsWith(window.location.origin) &&
-        !document.referrer.includes("/watch");
-
-      // Only attempt router.back() if user navigated from another page on hiphim.one
-      if (hasInternalReferrer && window.history.length > 1) {
+      // Attempt router.back() to cleanly pop /watch off browser history stack
+      if (window.history.length > 1) {
         const initialHref = window.location.href;
         router.back();
 
-        // Safety timeout: If router.back() did not change page within 250ms
-        // (common on mobile after tab sleep, restored session, or iframe trap)
+        // Safety timeout: If router.back() did not exit /watch within 250ms
         setTimeout(() => {
-          if (window.location.href === initialHref) {
+          if (window.location.pathname.startsWith("/watch")) {
             try {
-              router.push(fallbackUrl);
+              router.replace(fallbackUrl);
             } catch {
-              window.location.href = fallbackUrl;
+              window.location.replace(fallbackUrl);
             }
           }
         }, 250);
-      } else {
-        // Direct navigation to movie detail page or home
-        try {
-          router.push(fallbackUrl);
-        } catch {
-          window.location.href = fallbackUrl;
-        }
+        return;
+      }
 
-        // Hard safety fallback for mobile tab sleep where Next.js router promise hangs
-        setTimeout(() => {
-          if (window.location.pathname.startsWith("/watch")) {
-            window.location.href = fallbackUrl;
-          }
-        }, 300);
+      // If direct landing without history, replace to movie details (so /watch is not queued in history)
+      try {
+        router.replace(fallbackUrl);
+      } catch {
+        window.location.replace(fallbackUrl);
       }
     } catch {
-      window.location.href = fallbackUrl;
+      window.location.replace(fallbackUrl);
     }
   };
 

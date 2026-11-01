@@ -17,6 +17,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { recordMovieReferrer } from "@/lib/navigation-history";
 import {
   normalizeImageUrl,
   getMovieImageCandidates,
@@ -108,7 +109,7 @@ const SearchGridCard = memo(function SearchGridCard({
   return (
     <Link
       href={`/phim/${movie.slug}`}
-      onClick={onClose}
+      onClick={() => { recordMovieReferrer(movie.slug); onClose(); }}
       className={cn(
         "group relative flex flex-col rounded-2xl overflow-hidden bg-[#0c1310] border transition-[transform,border-color] duration-150",
         isSelected
@@ -211,7 +212,7 @@ const SearchListCard = memo(function SearchListCard({
   return (
     <Link
       href={`/phim/${movie.slug}`}
-      onClick={onClose}
+      onClick={() => { recordMovieReferrer(movie.slug); onClose(); }}
       className={cn(
         "flex items-center gap-3.5 sm:gap-4 p-3 sm:p-3.5 rounded-2xl border transition-[transform,border-color] duration-150 group relative bg-[#0c1310]",
         isSelected

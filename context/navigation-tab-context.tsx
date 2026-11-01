@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { recordCatalogUrl } from "@/lib/navigation-history";
 
 interface NavigationTabContextType {
   activeTab: string | null;
@@ -28,6 +29,14 @@ export function NavigationTabProvider({ children }: { children: React.ReactNode 
   useEffect(() => {
     const matched = getTabFromPath(pathname);
     setActiveTab(matched);
+
+    if (typeof window !== "undefined") {
+      const p = pathname || window.location.pathname;
+      const f = window.location.pathname + window.location.search;
+      if (!p.startsWith("/phim/") && !p.startsWith("/watch")) {
+        recordCatalogUrl(f);
+      }
+    }
   }, [pathname]);
 
   const navigateToTab = useCallback(

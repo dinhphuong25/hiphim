@@ -2,9 +2,11 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Film, Home, RefreshCw, Search, ArrowLeft } from "lucide-react";
 import { LoadingWatch } from "@/components/ui/page-loaders";
+import { getMovieReferrer } from "@/lib/navigation-history";
 import {
   fetchMovieClientSide,
   fetchPrimaryPhimApiClient,
@@ -35,6 +37,8 @@ const DynamicDescription = dynamic(
 );
 
 export function TrueNotFoundCard({ onRetry }: { onRetry?: () => void }) {
+  const router = useRouter();
+
   return (
     <div className="min-h-[82vh] w-full flex items-center justify-center bg-[#060908] overflow-hidden relative px-4 pt-8 pb-36 select-none">
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -91,7 +95,7 @@ export function TrueNotFoundCard({ onRetry }: { onRetry?: () => void }) {
 
         <button
           type="button"
-          onClick={() => window.history.back()}
+          onClick={() => router.push(getMovieReferrer())}
           className="mt-7 inline-flex items-center gap-2 text-xs font-semibold text-white/50 hover:text-white transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />

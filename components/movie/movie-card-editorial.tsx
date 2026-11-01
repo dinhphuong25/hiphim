@@ -10,6 +10,7 @@ import { useFavorites } from "@/hooks/useLocalStorage";
 import { useUserAuth } from "@/context/user-auth-context";
 import { useInView } from "react-intersection-observer";
 import { getMovieImageCandidates, STATIC_BLUR_DATA_URL } from "@/lib/image-helper";
+import { recordMovieReferrer } from "@/lib/navigation-history";
 
 export interface MovieCardEditorialProps {
   movie: {
@@ -108,7 +109,14 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
   const timeParam =
     movie.currentTime && movie.currentTime > 5 ? `&t=${Math.floor(movie.currentTime)}` : "";
   const watchHref = `/watch?slug=${movie.slug}${svParam}${epParam}${timeParam}`;
-  const movieHref = isHistoryCard || hasProgress ? watchHref : `/phim/${movie.slug}`;
+  // Only dedicated history cards jump straight into the player; regular catalog cards go to movie detail page
+  const movieHref = isHistoryCard ? watchHref : `/phim/${movie.slug}`;
+
+  const handleCardClick = () => {
+    if (typeof window !== "undefined" && !isHistoryCard) {
+      recordMovieReferrer(movie.slug, window.location.pathname + window.location.search);
+    }
+  };
 
   const rawEpName = (movie.episodeName || "").trim();
   const isFullSingle =
@@ -148,6 +156,7 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
       <div className="relative w-full aspect-[2/3] rounded-xl overflow-hidden bg-cinema-surface border border-white/10 group-hover:border-brand-green/60 transition-[border-color,box-shadow] duration-300 shadow-xl group-hover:shadow-[0_12px_32px_rgba(32,214,107,0.25)]">
         <Link
           href={movieHref}
+          onClick={handleCardClick}
           prefetch={false}
           aria-label={`Xem phim ${movie.name}`}
           className="absolute inset-0 z-0 block"
@@ -286,7 +295,7 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
       {/* Info Under Poster */}
       <div className="mt-2.5 flex flex-col">
         <h3 className="text-xs font-bold text-cinema-text hover:text-brand-green transition-colors line-clamp-1 flex items-center justify-between group/title">
-          <Link href={movieHref} prefetch={false} className="truncate">
+          <Link href={movieHref} onClick={handleCardClick} prefetch={false} className="truncate">
             {movie.name}
           </Link>
           <span className="font-mono text-brand-green opacity-0 group-hover/title:opacity-100 transition-opacity ml-1 shrink-0 text-sm">

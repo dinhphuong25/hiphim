@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { getMovieReferrer, recordMovieReferrer } from "@/lib/navigation-history";
 import {
   Play,
   Heart,
@@ -288,25 +289,29 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
     }
   };
 
-  // Back action
+  // Ensure this movie's referrer is tracked if opened via internal link or browser navigation
+  useEffect(() => {
+    if (typeof window === "undefined" || !movie?.slug) return;
+    try {
+      const existingRef = sessionStorage.getItem(`hiphim_movie_ref_${movie.slug}`);
+      if (!existingRef && document.referrer && document.referrer.includes(window.location.host)) {
+        if (!document.referrer.includes("/watch") && !document.referrer.includes(`/phim/${movie.slug}`)) {
+          const parsed = new URL(document.referrer);
+          recordMovieReferrer(movie.slug, parsed.pathname + parsed.search);
+        }
+      }
+    } catch {}
+  }, [movie?.slug]);
+
+  // Back action: Returns to the exact catalog/browsing page where the user clicked into the movie.
+  // NEVER bounces back to the video watch page (/watch).
   const handleBack = (e?: React.MouseEvent) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
-    if (typeof window !== "undefined") {
-      const historyIdx = window.history.state?.idx;
-      const hasInternalHistory = typeof historyIdx === "number" && historyIdx > 0;
-      const hasInternalReferrer = Boolean(
-        document.referrer && document.referrer.includes(window.location.host)
-      );
-
-      if (hasInternalHistory || hasInternalReferrer) {
-        router.back();
-      } else {
-        router.push("/");
-      }
-    }
+    const target = getMovieReferrer(movie?.slug);
+    router.push(target);
   };
 
   const formatEpName = (name: string) => {
