@@ -1082,13 +1082,13 @@ function SidebarContent({
           "lg:top-3 lg:left-3 lg:w-[230px] lg:h-fit lg:max-h-[calc(100vh-24px)] lg:rounded-2xl lg:border lg:border-white/10 lg:bg-[#0B100E]/95 lg:backdrop-blur-xl lg:shadow-[0_12px_40px_rgba(0,0,0,0.65)] lg:overflow-hidden"
         )}
       >
-        {/* Sidebar Header / Brand Name (Desktop & Mobile) */}
-        <div className="lg:hidden h-14 px-4 flex items-center justify-between border-b border-white/[0.08] shrink-0">
-          <Link href="/" className="flex items-center select-none py-1 group" aria-label="Về trang chủ Hi Phim">
-            <BrandLogo size="md" />
+        {/* Sidebar Header / Brand Logo (Desktop & Mobile) */}
+        <div className="h-[52px] px-3.5 lg:px-3.5 flex items-center justify-between border-b border-white/[0.08] shrink-0 bg-white/[0.01]">
+          <Link href="/" className="flex items-center select-none py-1 group transition-transform active:scale-95" aria-label="Về trang chủ Hi Phim">
+            <BrandLogo size="md" showSlogan={false} />
           </Link>
 
-          {/* Close Button — Mobile */}
+          {/* Close Button — Mobile Only */}
           <button
             type="button"
             onClick={(e) => {
@@ -1097,14 +1097,14 @@ function SidebarContent({
               setIsMobileOpen(false);
             }}
             aria-label="Đóng Menu"
-            className="p-2 rounded-xl text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+            className="lg:hidden p-1.5 rounded-xl text-white/60 hover:text-white hover:bg-white/10 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Scrollable Navigation Body - Balanced spacing to fit frame seamlessly and prevent cutoff */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 lg:px-2.5 lg:pt-3.5 lg:pb-3 space-y-2.5 lg:space-y-0.5 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 lg:px-2.5 lg:pt-2.5 lg:pb-3 space-y-2.5 lg:space-y-0.5 custom-scrollbar">
           
           {/* Main Nav Section */}
           <div className="space-y-1 lg:space-y-1">

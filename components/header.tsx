@@ -244,24 +244,18 @@ function HeaderComponent({}: HeaderProps) {
             </button>
           </div>
 
-          {/* Ô 2: LOGO (Center Logo Bento Island) */}
-          <div className="pointer-events-auto flex items-center h-[50px] px-3 bg-transparent border-none shadow-none transition-all duration-200 group">
-            <Link
-              href="/"
-              className="flex items-center gap-2 select-none hover:opacity-90 active:scale-95 transition-all max-w-full truncate"
-              aria-label="Về trang chủ Hi Phim"
-            >
-              <BrandLogo size="md" showSlogan={false} />
-              {activeMovieName && (
-                <>
-                  <span className="text-white/20 select-none font-light shrink-0">|</span>
-                  <span className="text-white/90 font-bold truncate text-[12.5px] max-w-[150px] xl:max-w-[220px]">
-                    {activeMovieName}
-                  </span>
-                </>
-              )}
-            </Link>
-          </div>
+          {/* Center Info: Hiện tên phim đang phát nếu có (hoặc để trống thoáng mắt) */}
+          {activeMovieName ? (
+            <div className="pointer-events-auto hidden xl:flex items-center gap-2 h-[42px] px-4 rounded-b-xl bg-[#0B100E]/90 backdrop-blur-xl border-x border-b border-white/10 shadow-[0_8px_24px_rgba(0,0,0,0.5)]">
+              <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse shrink-0" />
+              <span className="text-white/50 text-[11px] font-medium shrink-0">Đang phát:</span>
+              <span className="text-white font-bold text-[12px] truncate max-w-[220px]">
+                {activeMovieName}
+              </span>
+            </div>
+          ) : (
+            <div className="hidden lg:block pointer-events-none" />
+          )}
 
           {/* Ô 3: 2 CÁI CÒN LẠI (Notification Bell + User Menu Bento Island) */}
           <div className="pointer-events-auto flex items-center gap-2.5 h-[50px] px-3 rounded-b-2xl bg-[#0B100E]/95 backdrop-blur-xl border-x border-b border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.65)] hover:border-white/15 transition-all duration-200">
