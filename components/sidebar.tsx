@@ -1251,95 +1251,53 @@ function SidebarContent({
               </div>
             </button>
           </div>
+        </div>
 
-          {/* Divider 2 */}
-          <div className="h-[1px] bg-white/5 mx-2 lg:mx-1 my-1.5 lg:my-1.5" />
-
-          {/* Personal Group Section */}
-          <div className="space-y-1 lg:space-y-1">
-            <span className="px-3 lg:px-2 text-[11px] lg:text-[10px] font-extrabold text-white/45 uppercase tracking-wider block mb-1.5 lg:mb-1">
-              CÁ NHÂN
-            </span>
-
-            {NAV_PERSONAL.map((item) => (
-              <SidebarPersonalNavItem
-                key={item.href}
-                item={item}
-                active={currentActiveTab === item.href}
-                onClick={() => {
-                  setIsMobileOpen(false);
-                  navigateToTab(item.href);
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Divider 3 (Temporarily hidden with Download App) */}
-          <div className="hidden h-[1px] bg-white/5 mx-2 lg:mx-1 my-2 lg:my-1.5" />
-
-          {/* Download App Navigation Entry (Temporarily hidden on Desktop & Mobile) */}
-          <div className="hidden pt-1 pb-6 lg:pb-8">
-            <Link
-              href="/tai-app"
-              prefetch={true}
+        {/* ======================================================== */}
+        {/* BOTTOM PERSONAL DOCK: 2 Ô NGANG (LỊCH SỬ & YÊU THÍCH)     */}
+        {/* ======================================================== */}
+        <div className="shrink-0 p-2 lg:p-2 border-t border-white/[0.08] bg-[#080D0B]/90 backdrop-blur-md">
+          <div className="grid grid-cols-2 gap-1.5 lg:gap-1.5">
+            {/* Ô 1: Lịch Sử */}
+            <button
+              type="button"
               onClick={() => {
                 setIsMobileOpen(false);
-                navigateToTab("/tai-app");
+                navigateToTab("/recently");
               }}
-              onMouseEnter={() => setIsAppHovered(true)}
-              onMouseLeave={() => setIsAppHovered(false)}
               className={cn(
-                "w-full relative flex items-center justify-between px-3 lg:px-2 py-2.5 lg:py-2 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-all duration-200 group overflow-hidden border text-left cursor-pointer",
-                "border-brand-green/45 hover:border-brand-green/80 shadow-[0_0_14px_rgba(32,214,107,0.18)] hover:shadow-[0_0_20px_rgba(32,214,107,0.28)]",
-                pathname === "/tai-app"
-                  ? "bg-brand-green/15 text-white border-brand-green/70"
-                  : "bg-brand-green/[0.04] hover:bg-brand-green/[0.08] text-white/80 hover:text-white"
+                "flex items-center justify-center gap-1.5 h-9 lg:h-8.5 px-2 rounded-xl text-xs lg:text-[11.5px] font-bold transition-all border select-none cursor-pointer active:scale-95",
+                currentActiveTab === "/recently"
+                  ? "bg-brand-green/15 text-brand-green border-brand-green/40 shadow-[0_0_12px_rgba(32,214,107,0.2)]"
+                  : "bg-white/[0.04] hover:bg-white/[0.08] text-white/70 hover:text-white border-white/10 hover:border-brand-green/40"
               )}
-              aria-current={pathname === "/tai-app" ? "page" : undefined}
+              aria-label="Lịch sử xem phim"
+              title="Lịch sử xem phim"
             >
-              {pathname === "/tai-app" && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 lg:h-3.5 bg-brand-green rounded-r-full shadow-[0_0_8px_rgba(32,214,107,0.8)]" />
+              <Clock className={cn("w-3.5 h-3.5 shrink-0", currentActiveTab === "/recently" ? "text-brand-green" : "text-white/60")} />
+              <span className="truncate">Lịch sử</span>
+            </button>
+
+            {/* Ô 2: Yêu Thích */}
+            <button
+              type="button"
+              onClick={() => {
+                setIsMobileOpen(false);
+                navigateToTab("/favorites");
+              }}
+              className={cn(
+                "flex items-center justify-center gap-1.5 h-9 lg:h-8.5 px-2 rounded-xl text-xs lg:text-[11.5px] font-bold transition-all border select-none cursor-pointer active:scale-95",
+                currentActiveTab === "/favorites"
+                  ? "bg-brand-green/15 text-brand-green border-brand-green/40 shadow-[0_0_12px_rgba(32,214,107,0.2)]"
+                  : "bg-white/[0.04] hover:bg-white/[0.08] text-white/70 hover:text-white border-white/10 hover:border-brand-green/40"
               )}
-
-              <div className="flex items-center gap-2.5 lg:gap-2 min-w-0">
-                <div
-                  className={cn(
-                    "w-6 h-6 lg:w-5 lg:h-5 rounded-lg flex items-center justify-center transition-colors shrink-0",
-                    pathname === "/tai-app"
-                      ? "bg-brand-green/20 text-brand-green shadow-[0_0_8px_rgba(32,214,107,0.3)]"
-                      : "bg-brand-green/10 text-brand-green group-hover:bg-brand-green/20 border border-brand-green/30 shadow-[0_0_6px_rgba(32,214,107,0.2)]"
-                  )}
-                >
-                  <SidebarAnimatedIcon
-                    type="smartphone"
-                    isHovered={isAppHovered}
-                    isActive={pathname === "/tai-app"}
-                    className="w-3.5 h-3.5 lg:w-3 lg:h-3"
-                  />
-                </div>
-                <div className="flex flex-col min-w-0">
-                  <span className="truncate leading-tight font-semibold text-white group-hover:text-brand-green transition-colors">
-                    Tải App Mobile
-                  </span>
-                  <span className="text-[10px] lg:text-[9px] text-white/40 group-hover:text-white/60 leading-none truncate mt-0.5">
-                    iOS & Android
-                  </span>
-                </div>
-              </div>
-
-              <span
-                className={cn(
-                  "text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border shrink-0 transition-colors ml-1",
-                  pathname === "/tai-app"
-                    ? "bg-brand-green/20 border-brand-green/50 text-brand-green"
-                    : "bg-brand-green/10 border-brand-green/30 text-brand-green group-hover:bg-brand-green/20"
-                )}
-              >
-                IPA/APK
-              </span>
-            </Link>
+              aria-label="Phim yêu thích"
+              title="Phim yêu thích"
+            >
+              <Heart className={cn("w-3.5 h-3.5 shrink-0", currentActiveTab === "/favorites" ? "fill-brand-green text-brand-green" : "text-white/60")} />
+              <span className="truncate">Yêu thích</span>
+            </button>
           </div>
-
         </div>
       </aside>
 
