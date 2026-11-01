@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import {
   Bell,
+  Search,
   CheckCircle2,
   Clock,
   ExternalLink,
@@ -17,11 +19,10 @@ import {
   Shield,
   Megaphone,
   Sparkles,
-  Info,
   Pin,
   LogIn,
+  Play,
   Film,
-  Clapperboard,
 } from "lucide-react";
 import { AnimatedHeaderBellIcon } from "@/components/ui/animated-header-icons";
 import { useUserAuth } from "@/context/user-auth-context";
@@ -71,7 +72,7 @@ function formatRelativeTime(timestamp: number) {
 const DEFAULT_FALLBACK_NOTIFICATIONS: SystemNotificationItem[] = [
   {
     id: "sys_welcome_2026",
-    title: "Chào mừng bạn ghé thăm!",
+    title: "Chào mừng bạn ghé thăm Hi Phim!",
     content: "Chúc bạn có những giây phút xem phim thư giãn tuyệt vời với hơn 50.000+ tựa phim bom tấn và tập mới cập nhật liên tục hoàn toàn miễn phí.",
     type: "success",
     createdAt: Date.now() - 3600000 * 24 * 2,
@@ -90,6 +91,9 @@ const DEFAULT_FALLBACK_NOTIFICATIONS: SystemNotificationItem[] = [
 export default function NotificationBell({ className }: { className?: string }) {
   const { user, openAuthModal } = useUserAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // System broadcast notifications (from Admin, available to all without login)
   const [systemNotifs, setSystemNotifs] = useState<SystemNotificationItem[]>(DEFAULT_FALLBACK_NOTIFICATIONS);
@@ -112,14 +116,16 @@ export default function NotificationBell({ className }: { className?: string }) 
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [readSystemIds, setReadSystemIds] = useState<string[]>([]);
 
-  const containerRef = useRef<HTMLDivElement>(null);
-
   const isSuperAdmin = Boolean(
     user &&
       (user.role === "admin" ||
         user.role === "superadmin" ||
         user.email?.toLowerCase() === "kimdinhphuong205@gmail.com")
   );
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Set default main tab: Admin defaults to reports; regular users and guests default to system notices
   useEffect(() => {
@@ -149,6 +155,39 @@ export default function NotificationBell({ className }: { className?: string }) 
     }
   }, []);
 
+  // Lock root & body scroll when fullscreen notification overlay is open (identical to SearchOverlay)
+  useEffect(() => {
+    if (isOpen) {
+      const html = document.documentElement;
+      const body = document.body;
+      const prevHtmlOverflow = html.style.overflow;
+      const prevBodyOverflow = body.style.overflow;
+
+      html.style.overflow = "hidden";
+      body.style.overflow = "hidden";
+
+      const timer = setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 60);
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          setIsOpen(false);
+        }
+      };
+      window.addEventListener("keydown", handleKeyDown);
+
+      return () => {
+        html.style.overflow = prevHtmlOverflow;
+        body.style.overflow = prevBodyOverflow;
+        window.removeEventListener("keydown", handleKeyDown);
+        clearTimeout(timer);
+      };
+    } else {
+      setSearchQuery("");
+    }
+  }, [isOpen]);
+
   const markAllSystemAsRead = useCallback(() => {
     const allIds = [
       ...systemNotifs.map((n) => n.id),
@@ -166,17 +205,6 @@ export default function NotificationBell({ className }: { className?: string }) 
     });
     toast.success("Đã đánh dấu tất cả thông báo là đã đọc.");
   }, [systemNotifs, announcementBanner]);
-
-  // Close dropdown on outside click
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   // Fetch system broadcast notifications (Public, No Auth Required)
   const fetchSystemNotifications = useCallback(async () => {
@@ -246,7 +274,7 @@ export default function NotificationBell({ className }: { className?: string }) 
     [fetchSystemNotifications, fetchReports]
   );
 
-  // Initial fetch and 5-minute background refresh (protecting Vercel serverless quotas)
+  // Initial fetch and 5-minute background refresh
   useEffect(() => {
     refreshAll(false);
 
@@ -325,7 +353,6 @@ export default function NotificationBell({ className }: { className?: string }) 
         body: JSON.stringify({ id: reportId, status: newStatus }),
       });
 
-      // If PATCH is not accepted or fails, gracefully fallback to POST
       if (res.status === 405 || !res.ok) {
         const fallbackRes = await fetch("/api/report", {
           method: "POST",
@@ -381,14 +408,10 @@ export default function NotificationBell({ className }: { className?: string }) 
   const totalSystemCount = systemNotifs.length + (announcementBanner?.enabled && announcementBanner.text ? 1 : 0);
   const userResolvedCount = user ? reports.filter((r) => r.status === "resolved").length : 0;
 
-  // Unread status check
   const hasUnread = isSuperAdmin
     ? pendingReportsCount > 0
     : totalSystemUnread > 0 || userResolvedCount > 0;
 
-  // Badge count shown on bell icon:
-  // For SuperAdmin: show pendingReportsCount if > 0, else total system count
-  // For Users & Guests: show unread count if unread > 0, else show total active notices count!
   const badgeCount = isSuperAdmin
     ? (pendingReportsCount > 0 ? pendingReportsCount : totalSystemCount)
     : (totalSystemUnread > 0
@@ -416,9 +439,551 @@ export default function NotificationBell({ className }: { className?: string }) 
       : reports
     : reports;
 
+  // Filtered system notifications by search query
+  const filteredSystemNotifs = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return systemNotifs;
+    return systemNotifs.filter(
+      (n) =>
+        n.title.toLowerCase().includes(q) ||
+        n.content.toLowerCase().includes(q) ||
+        (n.author && n.author.toLowerCase().includes(q))
+    );
+  }, [systemNotifs, searchQuery]);
+
+  // Filtered reports by search query
+  const filteredReports = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return displayedReports;
+    return displayedReports.filter(
+      (r) =>
+        r.movieName.toLowerCase().includes(q) ||
+        (r.episodeName && r.episodeName.toLowerCase().includes(q)) ||
+        (r.issueType && r.issueType.toLowerCase().includes(q)) ||
+        (r.serverName && r.serverName.toLowerCase().includes(q)) ||
+        (r.userName && r.userName.toLowerCase().includes(q)) ||
+        (r.userEmail && r.userEmail.toLowerCase().includes(q)) ||
+        (r.description && r.description.toLowerCase().includes(q))
+    );
+  }, [displayedReports, searchQuery]);
+
+  // FULLSCREEN NOTIFICATION OVERLAY (Synchronized 100% with SearchOverlay layout & style)
+  const fullscreenOverlay = (
+    <div className="fixed inset-0 z-[150] overflow-y-auto bg-[#050807] overscroll-contain shadow-none custom-scrollbar select-none animate-in fade-in duration-200">
+      <div className="min-h-full flex flex-col">
+        {/* Sticky Header Container — Solid dark cinema glass matching Search */}
+        <div className="sticky top-0 z-40 bg-[#050807]/95 backdrop-blur-md border-b border-white/5 shadow-[0_4px_25px_rgba(0,0,0,0.8)]">
+          <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-3 sm:pb-4">
+            {/* Top Bar: Icon + Search / Filter Bar + Close Button */}
+            <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-white/10 focus-within:border-white/20 transition-colors relative">
+              <div className="flex items-center gap-2.5 sm:gap-4 flex-1 mr-2 sm:mr-4">
+                <Bell className="w-5 h-5 sm:w-7 sm:h-7 text-brand-green shrink-0 animate-pulse" />
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  aria-label="Tìm kiếm thông báo, tin tức, phim báo lỗi"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Tìm kiếm thông báo, tin tức, phim báo lỗi..."
+                  className="w-full bg-transparent text-lg sm:text-2xl md:text-3xl font-bold text-white placeholder:text-white/30 focus:outline-none font-sans tracking-wide"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    className="p-1 rounded-full text-white/40 hover:text-white transition-colors cursor-pointer"
+                    aria-label="Xóa tìm kiếm"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+                {isLoading && (
+                  <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 text-brand-green animate-spin shrink-0" />
+                )}
+              </div>
+
+              {/* Close Button matching SearchOverlay */}
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                aria-label="Đóng thông báo"
+                className="p-2 sm:p-3 rounded-full bg-white/5 hover:bg-white/15 text-white/70 hover:text-white border border-white/10 transition-all shrink-0 active:scale-95 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Sub-bar: Shortcuts + Unread Status + Action Tabs */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-white/50 mt-2.5 sm:mt-3 px-1">
+              {/* Left Cluster: ESC shortcut & unread count */}
+              <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
+                <span className="hidden sm:inline-flex items-center gap-1.5 font-mono text-white/40">
+                  <kbd className="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 text-white/80 font-semibold text-[11px]">
+                    ESC
+                  </kbd>{" "}
+                  Đóng
+                </span>
+
+                <div className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-full border border-white/5 text-[11px] font-semibold text-white/80">
+                  <span
+                    className={cn(
+                      "w-2 h-2 rounded-full",
+                      hasUnread ? "bg-brand-green animate-ping" : "bg-white/30"
+                    )}
+                  />
+                  <span>{hasUnread ? `${badgeCount} cập nhật mới` : "Tất cả đã đọc"}</span>
+                </div>
+
+                {hasUnread && !isSuperAdmin && (
+                  <button
+                    type="button"
+                    onClick={markAllSystemAsRead}
+                    className="text-[11px] sm:text-xs font-bold text-brand-green hover:underline flex items-center gap-1 cursor-pointer transition-colors"
+                  >
+                    <Check className="w-3.5 h-3.5" />
+                    <span>Đánh dấu đã đọc tất cả</span>
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => refreshAll(false)}
+                  disabled={isLoading}
+                  className="text-[11px] sm:text-xs text-white/60 hover:text-white flex items-center gap-1 transition-colors cursor-pointer"
+                  title="Tải lại thông báo"
+                >
+                  <RefreshCw className={cn("w-3 h-3", isLoading && "animate-spin text-brand-green")} />
+                  <span className="hidden xs:inline">Làm mới</span>
+                </button>
+              </div>
+
+              {/* Right Cluster: Category Tabs */}
+              <div className="flex items-center gap-1 bg-black/40 p-1 rounded-xl border border-white/5 self-start sm:self-auto">
+                <button
+                  type="button"
+                  onClick={() => setMainTab("system")}
+                  className={cn(
+                    "py-1.5 px-3 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                    mainTab === "system"
+                      ? "bg-brand-green text-black shadow-[0_0_12px_rgba(32,214,107,0.3)]"
+                      : "text-white/60 hover:text-white hover:bg-white/5"
+                  )}
+                >
+                  <Megaphone className="w-3.5 h-3.5" />
+                  <span>Từ Admin ({systemNotifs.length})</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setMainTab("reports")}
+                  className={cn(
+                    "py-1.5 px-3 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                    mainTab === "reports"
+                      ? "bg-brand-green text-black shadow-[0_0_12px_rgba(32,214,107,0.3)]"
+                      : "text-white/60 hover:text-white hover:bg-white/5"
+                  )}
+                >
+                  <AlertTriangle className="w-3.5 h-3.5" />
+                  <span>Báo Lỗi Tập</span>
+                  {pendingReportsCount > 0 && (
+                    <span
+                      className={cn(
+                        "text-[10px] px-1.5 py-0.2 rounded-full font-mono font-black",
+                        mainTab === "reports" ? "bg-black/30 text-black" : "bg-amber-400 text-black"
+                      )}
+                    >
+                      {pendingReportsCount}
+                    </span>
+                  )}
+                </button>
+
+                {isSuperAdmin && (
+                  <Link
+                    href="/admin?tab=announcement"
+                    onClick={() => setIsOpen(false)}
+                    className="hidden md:flex items-center gap-1 text-[11px] font-bold text-amber-300 hover:text-amber-200 bg-amber-400/10 border border-amber-400/20 px-2.5 py-1.5 rounded-lg transition-colors ml-1"
+                  >
+                    <Shield className="w-3 h-3" />
+                    <span>Quản Trị</span>
+                  </Link>
+                )}
+              </div>
+            </div>
+
+            {/* Sub-Filter for Admin inside Reports tab */}
+            {isSuperAdmin && mainTab === "reports" && (
+              <div className="flex items-center gap-2 pt-3 px-1 text-xs">
+                <span className="text-white/40 text-[11px]">Trạng thái:</span>
+                <button
+                  type="button"
+                  onClick={() => setAdminReportSubTab("pending")}
+                  className={cn(
+                    "px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer",
+                    adminReportSubTab === "pending"
+                      ? "bg-amber-400/20 text-amber-300 border border-amber-400/35"
+                      : "bg-white/5 text-white/50 hover:text-white"
+                  )}
+                >
+                  Chờ sửa ({reports.filter((r) => r.status === "pending").length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAdminReportSubTab("all")}
+                  className={cn(
+                    "px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer",
+                    adminReportSubTab === "all"
+                      ? "bg-brand-green/20 text-brand-green border border-brand-green/35"
+                      : "bg-white/5 text-white/50 hover:text-white"
+                  )}
+                >
+                  Tất cả báo cáo ({reports.length})
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Body Content Area — Responsive Grid matching SearchOverlay results */}
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1">
+          {/* TAB 1: System Notifications & Admin Broadcasts */}
+          {mainTab === "system" && (
+            <div className="space-y-6">
+              {/* Pinned Announcement Banner if set by Admin */}
+              {announcementBanner?.enabled && Boolean(announcementBanner.text) && (
+                <div className="p-4 sm:p-6 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-[#0e1913] to-[#070d0a] border border-brand-green/40 shadow-[0_0_30px_rgba(32,214,107,0.15)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div className="flex items-start gap-3.5">
+                    <div className="p-2.5 rounded-xl bg-brand-green/20 text-brand-green border border-brand-green/30 shrink-0">
+                      <Sparkles className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-brand-green text-black">
+                          Ghim Nổi Bật
+                        </span>
+                        <span className="text-xs font-semibold text-white/50">Thông điệp từ Ban Quản Trị</span>
+                      </div>
+                      <p className="text-sm sm:text-base font-bold text-white mt-1.5 leading-snug">
+                        {announcementBanner.text}
+                      </p>
+                    </div>
+                  </div>
+                  {announcementBanner.link && (
+                    <Link
+                      href={announcementBanner.link}
+                      onClick={() => setIsOpen(false)}
+                      className="px-4 py-2 rounded-xl bg-brand-green hover:bg-brand-green-hover text-black font-extrabold text-xs flex items-center gap-1.5 cursor-pointer shadow-[0_0_15px_rgba(32,214,107,0.3)] active:scale-95 transition-all shrink-0"
+                    >
+                      <span>Xem ngay</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  )}
+                </div>
+              )}
+
+              {/* Grid of System Notifications */}
+              {filteredSystemNotifs.length === 0 ? (
+                <div className="py-16 text-center text-white/50 flex flex-col items-center justify-center gap-3">
+                  <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-white/30 mb-1">
+                    <Megaphone className="w-8 h-8" />
+                  </div>
+                  <h4 className="text-sm sm:text-base font-bold text-white/80">
+                    {searchQuery ? "Không tìm thấy thông báo nào phù hợp" : "Chưa có thông báo mới"}
+                  </h4>
+                  <p className="text-xs text-white/40 max-w-sm leading-relaxed">
+                    {searchQuery
+                      ? `Thử tìm kiếm với từ khóa khác hoặc xóa bộ lọc.`
+                      : "Khi có thông báo bảo trì, cập nhật tính năng hoặc sự kiện mới, ban quản trị sẽ thông báo tại đây."}
+                  </p>
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery("")}
+                      className="mt-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-semibold text-white transition-all cursor-pointer"
+                    >
+                      Xóa bộ lọc tìm kiếm
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                  {filteredSystemNotifs.map((item) => {
+                    const isUnread = !readSystemIds.includes(item.id);
+                    return (
+                      <div
+                        key={item.id}
+                        className={cn(
+                          "group relative flex flex-col justify-between rounded-2xl p-5 sm:p-6 bg-[#0c1310] border transition-all duration-200 shadow-md",
+                          isUnread
+                            ? "border-brand-green/40 hover:border-brand-green shadow-[0_0_20px_rgba(32,214,107,0.08)] bg-gradient-to-br from-[#0e1713] to-[#0c1310]"
+                            : "border-white/10 hover:border-brand-green/60 hover:bg-[#0f1814]"
+                        )}
+                      >
+                        <div>
+                          {/* Card Top: Badge + Relative Time + Indicator */}
+                          <div className="flex items-center justify-between gap-2 mb-3">
+                            <span
+                              className={cn(
+                                "text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 font-mono",
+                                item.type === "success"
+                                  ? "bg-brand-green/15 text-brand-green border border-brand-green/30"
+                                  : item.type === "warning"
+                                  ? "bg-amber-400/15 text-amber-300 border border-amber-400/30"
+                                  : "bg-blue-400/15 text-blue-300 border border-blue-400/30"
+                              )}
+                            >
+                              {item.type === "success" ? "Chào Mừng" : item.type === "warning" ? "Cảnh Báo" : "Hệ Thống"}
+                            </span>
+
+                            <div className="flex items-center gap-2">
+                              {isUnread && (
+                                <span className="w-2 h-2 rounded-full bg-brand-green animate-ping" title="Chưa đọc" />
+                              )}
+                              <span className="text-[11px] font-mono text-white/40 flex items-center gap-1">
+                                <Clock className="w-3 h-3 text-white/30" />
+                                {formatRelativeTime(item.createdAt)}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Card Title */}
+                          <h4 className="text-base sm:text-lg font-bold text-white group-hover:text-brand-green transition-colors leading-snug">
+                            {item.title}
+                          </h4>
+
+                          {/* Card Content */}
+                          <p className="text-xs sm:text-[13px] text-white/70 leading-relaxed mt-2.5">
+                            {item.content}
+                          </p>
+                        </div>
+
+                        {/* Card Bottom: Author + Link */}
+                        <div className="pt-4 mt-5 border-t border-white/5 flex items-center justify-between gap-2 text-xs">
+                          <span className="text-[11px] text-white/40 flex items-center gap-1">
+                            <Shield className="w-3.5 h-3.5 text-brand-green/70" />
+                            {item.author || "Ban Quản Trị"}
+                          </span>
+
+                          {item.link ? (
+                            <Link
+                              href={item.link}
+                              onClick={() => setIsOpen(false)}
+                              className="inline-flex items-center gap-1 text-xs font-bold text-brand-green hover:underline group-hover:translate-x-0.5 transition-transform"
+                            >
+                              <span>Xem chi tiết</span>
+                              <ExternalLink className="w-3.5 h-3.5" />
+                            </Link>
+                          ) : (
+                            <span className="text-[10px] text-white/30 font-mono">Hi Phim Official</span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 2: Episode Error Reports & Fix Status */}
+          {mainTab === "reports" && (
+            <div className="space-y-6">
+              {/* Not Logged In Prompt */}
+              {!user ? (
+                <div className="max-w-md mx-auto py-12 px-6 text-center text-white/70 flex flex-col items-center justify-center gap-4 bg-[#0c1310] border border-white/10 rounded-2xl shadow-xl">
+                  <div className="w-14 h-14 rounded-2xl bg-brand-green/10 border border-brand-green/30 flex items-center justify-center text-brand-green">
+                    <User className="w-7 h-7" />
+                  </div>
+                  <div>
+                    <h4 className="text-base font-bold text-white mb-1.5">Theo dõi báo lỗi theo tài khoản</h4>
+                    <p className="text-xs text-white/50 leading-relaxed">
+                      Đăng nhập để xem tiến độ và nhận thông báo khi Ban Quản Trị đã khắc phục xong tập phim bạn đã báo lỗi.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsOpen(false);
+                      openAuthModal("login");
+                    }}
+                    className="px-6 py-2.5 rounded-xl bg-brand-green hover:bg-brand-green-hover text-black font-extrabold text-xs flex items-center gap-2 cursor-pointer shadow-[0_0_15px_rgba(32,214,107,0.3)] active:scale-95 transition-all"
+                  >
+                    <LogIn className="w-4 h-4" />
+                    <span>Đăng Nhập Ngay</span>
+                  </button>
+                </div>
+              ) : filteredReports.length === 0 ? (
+                <div className="py-16 text-center text-white/50 flex flex-col items-center justify-center gap-3">
+                  <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-white/30 mb-1">
+                    <CheckCircle2 className="w-8 h-8 text-brand-green/70" />
+                  </div>
+                  <h4 className="text-sm sm:text-base font-bold text-white/80">
+                    {searchQuery
+                      ? "Không tìm thấy báo cáo lỗi phù hợp"
+                      : isSuperAdmin
+                      ? adminReportSubTab === "pending"
+                        ? "Tuyệt vời! Không còn tập nào đang chờ sửa"
+                        : "Chưa có báo cáo lỗi nào trong hệ thống"
+                      : "Bạn chưa gửi báo lỗi tập phim nào"}
+                  </h4>
+                  <p className="text-xs text-white/40 max-w-sm leading-relaxed">
+                    {searchQuery
+                      ? "Thử tìm kiếm với tên phim hoặc tập khác."
+                      : isSuperAdmin
+                      ? "Hệ thống sẽ cập nhật tự động ngay khi có khán giả gửi báo lỗi tập mới."
+                      : "Khi xem phim nếu phát hiện lỗi, hãy bấm nút 'Báo lỗi tập' để admin xử lý ngay nhé."}
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                  {filteredReports.map((report) => {
+                    const isPending = report.status === "pending";
+                    return (
+                      <div
+                        key={report.id}
+                        className={cn(
+                          "group relative flex flex-col justify-between rounded-2xl p-5 sm:p-6 bg-[#0c1310] border transition-all duration-200 shadow-md",
+                          isPending
+                            ? "border-amber-400/30 hover:border-amber-400/60 bg-gradient-to-br from-[#14120a] to-[#0c1310]"
+                            : "border-white/10 hover:border-brand-green/60 opacity-90 hover:opacity-100"
+                        )}
+                      >
+                        <div className="space-y-3">
+                          {/* Status + Server + Time */}
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span
+                                className={cn(
+                                  "text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 font-mono",
+                                  isPending
+                                    ? "bg-amber-400/15 text-amber-300 border border-amber-400/30"
+                                    : "bg-brand-green/15 text-brand-green border border-brand-green/30"
+                                )}
+                              >
+                                {isPending ? (
+                                  <>
+                                    <Clock className="w-3 h-3" />
+                                    Chờ xử lý
+                                  </>
+                                ) : (
+                                  <>
+                                    <Check className="w-3 h-3" />
+                                    Đã sửa xong
+                                  </>
+                                )}
+                              </span>
+
+                              {report.serverName && (
+                                <span className="text-[10px] text-white/50 bg-white/5 px-2 py-0.5 rounded border border-white/5 font-mono">
+                                  {report.serverName}
+                                </span>
+                              )}
+                            </div>
+
+                            <span className="text-[11px] font-mono text-white/40 flex items-center gap-1">
+                              <Clock className="w-3 h-3 text-white/30" />
+                              {formatRelativeTime(report.createdAt)}
+                            </span>
+                          </div>
+
+                          {/* Movie Name & Episode */}
+                          <div>
+                            <div className="flex items-baseline gap-2">
+                              <h4 className="text-base font-bold text-white group-hover:text-brand-green transition-colors line-clamp-1">
+                                {report.movieName}
+                              </h4>
+                              {report.episodeName && (
+                                <span className="text-xs font-black text-brand-green bg-brand-green/10 border border-brand-green/30 px-2 py-0.5 rounded shrink-0">
+                                  {report.episodeName}
+                                </span>
+                              )}
+                            </div>
+
+                            {(report.userName || report.userEmail) && (
+                              <div className="flex items-center gap-1.5 text-xs text-white/50 mt-1">
+                                <User className="w-3.5 h-3.5 text-brand-green shrink-0" />
+                                <span className="font-medium text-white/70 truncate">
+                                  {report.userName || report.userEmail?.split("@")[0]}
+                                </span>
+                                {report.userEmail && (
+                                  <span className="text-white/40 font-mono text-[10px] truncate">
+                                    ({report.userEmail})
+                                  </span>
+                                )}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Issue Note Box */}
+                          <div className="p-3 rounded-xl bg-[#080d0a] border border-white/5 text-xs space-y-1">
+                            <div className="flex items-center gap-1.5 font-bold text-amber-400">
+                              <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                              <span>{report.issueType}</span>
+                            </div>
+                            {report.description && (
+                              <p className="text-white/70 italic leading-relaxed text-[11.5px] line-clamp-3">
+                                &ldquo;{report.description}&rdquo;
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Action Row */}
+                        <div className="pt-3 mt-4 border-t border-white/5 flex items-center justify-between gap-2">
+                          <Link
+                            href={`/watch?slug=${encodeURIComponent(report.movieSlug)}`}
+                            onClick={() => setIsOpen(false)}
+                            className="py-1.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 text-white/90 hover:text-white border border-white/10 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                          >
+                            <Play className="w-3.5 h-3.5 text-brand-green fill-current" />
+                            <span>Xem tập</span>
+                          </Link>
+
+                          {isSuperAdmin ? (
+                            <button
+                              type="button"
+                              onClick={() => handleMarkResolved(report.id, report.status)}
+                              disabled={updatingId === report.id}
+                              className={cn(
+                                "py-1.5 px-3.5 rounded-xl text-xs font-black flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-md",
+                                isPending
+                                  ? "bg-brand-green hover:bg-brand-green-hover text-black shadow-[0_0_15px_rgba(32,214,107,0.35)]"
+                                  : "bg-white/10 hover:bg-white/15 text-white"
+                              )}
+                            >
+                              {updatingId === report.id ? (
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              ) : (
+                                <Check className="w-3.5 h-3.5" />
+                              )}
+                              <span>{isPending ? "Đã sửa" : "Mở lại"}</span>
+                            </button>
+                          ) : !isPending ? (
+                            <span className="text-xs font-semibold text-brand-green flex items-center gap-1">
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>Đã sửa xong</span>
+                            </span>
+                          ) : (
+                            <span className="text-xs font-medium text-amber-300/80 flex items-center gap-1">
+                              <Clock className="w-3.5 h-3.5" />
+                              <span>Đang xử lý</span>
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <div className={cn("relative shrink-0 pointer-events-auto", className)} ref={containerRef}>
-      {/* Bell Trigger Button - Open without needing to login */}
+    <div className={cn("relative shrink-0 pointer-events-auto", className)}>
+      {/* Bell Trigger Button in Header */}
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
@@ -445,7 +1010,7 @@ export default function NotificationBell({ className }: { className?: string }) 
           />
         )}
 
-        {/* Counter Badge with Live Number Effect in Brand Green */}
+        {/* Counter Badge with Live Number Effect */}
         {badgeCount > 0 && (
           <span
             className={cn(
@@ -462,518 +1027,8 @@ export default function NotificationBell({ className }: { className?: string }) 
         )}
       </button>
 
-      {/* Popover Dropdown - Solid Dark Cinema Slate */}
-      {isOpen && (
-        <div
-          className={cn(
-            "absolute top-full mt-2 w-[340px] sm:w-[380px] max-w-[calc(100vw-20px)]",
-            "right-0 lg:-right-36",
-            "bg-[#0d1410] border border-emerald-500/25 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.95),0_0_35px_rgba(32,214,107,0.08)] z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200 text-white flex flex-col select-none"
-          )}
-        >
-          {/* Header */}
-          <div className="p-3 sm:p-3.5 border-b border-white/8 bg-[#090e0b] flex items-center justify-between gap-2 shrink-0">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-7 h-7 rounded-lg bg-brand-green/15 border border-brand-green/30 text-brand-green flex items-center justify-center shrink-0">
-                <Bell className="w-3.5 h-3.5" />
-              </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-1.5">
-                  <h3 className="font-bold text-xs sm:text-sm text-white truncate">Trung Tâm Thông Báo</h3>
-                  {isSuperAdmin && (
-                    <span className="text-[9.5px] px-1.5 py-0.2 rounded-full font-mono font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">
-                      ADMIN
-                    </span>
-                  )}
-                </div>
-                <p className="text-[11px] text-white/50 truncate">
-                  {isSuperAdmin
-                    ? `${pendingReportsCount} tập cần sửa • ${systemNotifs.length} thông báo toàn trang`
-                    : "Thông báo từ Ban Quản Trị & tiến độ phim"}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-1 shrink-0">
-              {hasUnread && !isSuperAdmin && (
-                <button
-                  type="button"
-                  onClick={markAllSystemAsRead}
-                  className="px-2 py-1 rounded-lg text-[10.5px] font-semibold text-brand-green hover:bg-brand-green/10 border border-brand-green/25 transition-colors cursor-pointer flex items-center gap-1"
-                  title="Đánh dấu tất cả đã đọc"
-                >
-                  <Check className="w-3 h-3" />
-                  <span className="hidden sm:inline">Đã đọc</span>
-                </button>
-              )}
-              <button
-                type="button"
-                onClick={() => refreshAll(false)}
-                disabled={isLoading}
-                className="p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-                title="Làm mới"
-              >
-                <RefreshCw className={cn("w-3.5 h-3.5", isLoading && "animate-spin text-brand-green")} />
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsOpen(false)}
-                className="p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-                aria-label="Đóng"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* Main Category Tabs: [📢 Từ Admin] vs [⚠ Báo Lỗi Tập] */}
-          <div className="p-2 bg-[#090f0c] border-b border-white/5 shrink-0">
-            <div className="flex items-center gap-1 bg-[#050806] p-1 rounded-xl border border-white/5">
-              <button
-                type="button"
-                onClick={() => setMainTab("system")}
-                className={cn(
-                  "flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer",
-                  mainTab === "system"
-                    ? "bg-brand-green text-black shadow-[0_0_12px_rgba(32,214,107,0.3)]"
-                    : "text-white/60 hover:text-white hover:bg-white/5"
-                )}
-              >
-                <Megaphone className="w-3.5 h-3.5" />
-                <span>Từ Admin</span>
-                {systemNotifs.length > 0 && (
-                  <span
-                    className={cn(
-                      "text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold",
-                      mainTab === "system" ? "bg-black/25 text-black" : "bg-white/10 text-white/70"
-                    )}
-                  >
-                    {systemNotifs.length + (announcementBanner?.enabled ? 1 : 0)}
-                  </span>
-                )}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setMainTab("reports")}
-                className={cn(
-                  "flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer",
-                  mainTab === "reports"
-                    ? "bg-brand-green text-black shadow-[0_0_12px_rgba(32,214,107,0.3)]"
-                    : "text-white/60 hover:text-white hover:bg-white/5"
-                )}
-              >
-                <AlertTriangle className="w-3.5 h-3.5" />
-                <span>Báo Lỗi Tập</span>
-                {isSuperAdmin && pendingReportsCount > 0 && (
-                  <span
-                    className={cn(
-                      "text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold",
-                      mainTab === "reports" ? "bg-black/25 text-black" : "bg-rose-500/80 text-white"
-                    )}
-                  >
-                    {pendingReportsCount}
-                  </span>
-                )}
-              </button>
-            </div>
-
-            {/* Admin Subtabs when on 'reports' tab */}
-            {isSuperAdmin && mainTab === "reports" && (
-              <div className="flex items-center gap-1.5 pt-2 px-1">
-                <button
-                  type="button"
-                  onClick={() => setAdminReportSubTab("pending")}
-                  className={cn(
-                    "px-2.5 py-1 rounded-md text-[11px] font-bold cursor-pointer transition-colors",
-                    adminReportSubTab === "pending"
-                      ? "bg-amber-400/20 text-amber-300 border border-amber-400/30"
-                      : "text-white/50 hover:text-white hover:bg-white/5"
-                  )}
-                >
-                  Chờ xử lý ({pendingReportsCount})
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setAdminReportSubTab("all")}
-                  className={cn(
-                    "px-2.5 py-1 rounded-md text-[11px] font-bold cursor-pointer transition-colors",
-                    adminReportSubTab === "all"
-                      ? "bg-white/15 text-white border border-white/20"
-                      : "text-white/50 hover:text-white hover:bg-white/5"
-                  )}
-                >
-                  Tất cả ({reports.length})
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Tab 1: System Broadcast Notifications (From Admin - Accessible without login) */}
-          {mainTab === "system" && (
-            <div className="max-h-[380px] overflow-y-auto custom-scrollbar p-2.5 space-y-2.5 bg-[#0d1410]">
-              {/* Personalized Welcome Card (For logged in members only) */}
-              {user && (
-                <div className="p-3 rounded-xl bg-gradient-to-r from-emerald-950/40 via-[#101913] to-[#0c140f] border border-emerald-500/25 space-y-1.5">
-                  <div className="flex items-center justify-between gap-2">
-                    <h4 className="text-xs sm:text-[13px] font-bold text-white leading-snug">
-                      {user.createdAt && Date.now() - new Date(user.createdAt).getTime() < 86400000 * 3
-                        ? `Chào mừng thành viên mới, ${user.name || "bạn"}!`
-                        : `Chào mừng quay trở lại, ${user.name || "bạn"}!`}
-                    </h4>
-                    <span className="text-[10px] font-mono text-white/40 shrink-0">Vừa xong</span>
-                  </div>
-                  <p className="text-[11px] text-white/70 leading-relaxed">
-                    {user.createdAt && Date.now() - new Date(user.createdAt).getTime() < 86400000 * 3
-                      ? "Tài khoản của bạn đã được kích hoạt thành công. Bạn có thể lưu phim yêu thích, xem lịch sử và báo lỗi tập phim bất cứ lúc nào."
-                      : "Hôm nay có nhiều phim bom tấn và tập mới được cập nhật, chúc bạn có những phút giây thư giãn tuyệt vời!"}
-                  </p>
-                </div>
-              )}
-
-              {/* Always Pinned Welcome Notice from Ban Quản Trị */}
-              {systemNotifs.find(
-                (n) => n.id === "sys_welcome_2026" || n.title.toLowerCase().includes("chào mừng")
-              ) && (() => {
-                const welcomeItem = systemNotifs.find(
-                  (n) => n.id === "sys_welcome_2026" || n.title.toLowerCase().includes("chào mừng")
-                )!;
-                return (
-                  <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-950/50 via-[#121c16] to-[#0e1611] border border-brand-green/35 shadow-[0_0_15px_rgba(32,214,107,0.08)] space-y-1.5 group">
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-1.5 min-w-0 flex-wrap">
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-emerald-500/15 text-brand-green border border-emerald-500/25 flex items-center gap-1 shrink-0">
-                          <Shield className="w-2.5 h-2.5" />
-                          {welcomeItem.author || "Ban Quản Trị"}
-                        </span>
-                        <span className="text-[9.5px] px-1.5 py-0.2 rounded font-mono font-bold bg-brand-green/20 text-brand-green border border-brand-green/30 flex items-center gap-1 shrink-0">
-                          <Pin className="w-2.5 h-2.5 rotate-45 text-brand-green" />
-                          ĐÃ GHIM
-                        </span>
-                      </div>
-                      <span className="text-[10px] font-mono text-white/40 shrink-0">
-                        {formatRelativeTime(welcomeItem.createdAt)}
-                      </span>
-                    </div>
-
-                    <h4 className="text-xs sm:text-[13px] font-bold text-white group-hover:text-brand-green transition-colors leading-snug">
-                      {welcomeItem.title}
-                    </h4>
-
-                    <p className="text-[11px] text-white/70 leading-relaxed">
-                      {welcomeItem.content.includes("50.000+") ? (
-                        <>
-                          {welcomeItem.content.split("50.000+")[0]}
-                          <span className="text-brand-green font-bold">50.000+</span>
-                          {welcomeItem.content.split("50.000+")[1]}
-                        </>
-                      ) : (
-                        welcomeItem.content
-                      )}
-                    </p>
-
-                    {welcomeItem.link && (
-                      <div className="pt-1 border-t border-white/5">
-                        <Link
-                          href={welcomeItem.link}
-                          onClick={() => setIsOpen(false)}
-                          className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-green hover:underline"
-                        >
-                          <span>Xem chi tiết</span>
-                          <ExternalLink className="w-3 h-3" />
-                        </Link>
-                      </div>
-                    )}
-                  </div>
-                );
-              })()}
-
-              {/* Active Pinned Announcement Banner if set by Admin */}
-              {announcementBanner?.enabled && announcementBanner.text && (
-                <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-950/60 via-[#101b14] to-[#0c140f] border border-brand-green/40 shadow-[0_0_15px_rgba(32,214,107,0.12)] space-y-1.5">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-brand-green flex items-center gap-1">
-                      <Pin className="w-3 h-3 rotate-45" />
-                      Thông báo ghim toàn trang
-                    </span>
-                    <span className="text-[9.5px] px-1.5 py-0.2 rounded font-mono font-bold bg-brand-green/20 text-brand-green border border-brand-green/30">
-                      QUAN TRỌNG
-                    </span>
-                  </div>
-                  <p className="text-xs text-white leading-relaxed font-medium">
-                    {announcementBanner.text}
-                  </p>
-                  {announcementBanner.link && (
-                    <Link
-                      href={announcementBanner.link}
-                      onClick={() => setIsOpen(false)}
-                      className="inline-flex items-center gap-1 text-[11px] font-bold text-brand-green hover:underline pt-0.5"
-                    >
-                      <span>Xem chi tiết</span>
-                      <ArrowRight className="w-3 h-3" />
-                    </Link>
-                  )}
-                </div>
-              )}
-
-              {/* Broadcast System Notifications List (Excluding Pinned Welcome Notice) */}
-              {systemNotifs.filter(
-                (n) => n.id !== "sys_welcome_2026" && !n.title.toLowerCase().includes("chào mừng")
-              ).length === 0 &&
-              !systemNotifs.find((n) => n.id === "sys_welcome_2026" || n.title.toLowerCase().includes("chào mừng")) &&
-              (!announcementBanner?.enabled || !announcementBanner?.text) ? (
-                <div className="p-8 text-center text-white/50 flex flex-col items-center justify-center gap-2">
-                  <Megaphone className="w-8 h-8 text-white/30 mb-1" />
-                  <p className="text-xs font-semibold text-white/80">Chưa có thông báo mới từ Admin</p>
-                  <p className="text-[11px] text-white/40 max-w-[250px] leading-relaxed">
-                    Khi ban quản trị phát thông báo tin tức hoặc sự kiện, nội dung sẽ xuất hiện ngay tại đây.
-                  </p>
-                </div>
-              ) : (
-                systemNotifs
-                  .filter(
-                    (n) => n.id !== "sys_welcome_2026" && !n.title.toLowerCase().includes("chào mừng")
-                  )
-                  .map((item) => (
-                  <div
-                    key={item.id}
-                    className="p-3 rounded-xl bg-[#121915] hover:bg-[#16211c] border border-white/8 hover:border-brand-green/30 transition-all space-y-1.5 group"
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-1.5 min-w-0">
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-emerald-500/15 text-brand-green border border-emerald-500/25 flex items-center gap-1 shrink-0">
-                          <Shield className="w-2.5 h-2.5" />
-                          {item.author || "Ban Quản Trị"}
-                        </span>
-                      </div>
-                      <span className="text-[10px] font-mono text-white/40 shrink-0">
-                        {formatRelativeTime(item.createdAt)}
-                      </span>
-                    </div>
-
-                    <h4 className="text-xs sm:text-[13px] font-bold text-white group-hover:text-brand-green transition-colors leading-snug">
-                      {item.title}
-                    </h4>
-
-                    <p className="text-[11px] text-white/70 leading-relaxed">
-                      {item.content}
-                    </p>
-
-                    {item.link && (
-                      <div className="pt-1 border-t border-white/5">
-                        <Link
-                          href={item.link}
-                          onClick={() => setIsOpen(false)}
-                          className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-green hover:underline"
-                        >
-                          <span>Xem chi tiết</span>
-                          <ExternalLink className="w-3 h-3" />
-                        </Link>
-                      </div>
-                    )}
-                  </div>
-                ))
-              )}
-            </div>
-          )}
-
-          {/* Tab 2: Episode Error Reports */}
-          {mainTab === "reports" && (
-            <div className="max-h-[380px] overflow-y-auto custom-scrollbar p-2.5 space-y-2 bg-[#0d1410]">
-              {/* Not Logged In Prompt */}
-              {!user ? (
-                <div className="p-6 text-center text-white/70 flex flex-col items-center justify-center gap-3 bg-[#121915] border border-white/8 rounded-xl my-2">
-                  <div className="w-10 h-10 rounded-full bg-brand-green/10 border border-brand-green/30 flex items-center justify-center text-brand-green">
-                    <User className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-white mb-1">Theo dõi báo lỗi theo tài khoản</p>
-                    <p className="text-[11px] text-white/50 leading-relaxed max-w-[260px]">
-                      Đăng nhập để xem tiến độ và nhận thông báo khi Ban Quản Trị đã khắc phục xong tập phim bạn báo lỗi.
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsOpen(false);
-                      openAuthModal("login");
-                    }}
-                    className="px-4 py-2 rounded-xl bg-brand-green hover:bg-brand-green-hover text-black font-extrabold text-xs flex items-center gap-1.5 cursor-pointer shadow-[0_0_15px_rgba(32,214,107,0.3)] active:scale-95 transition-all"
-                  >
-                    <LogIn className="w-3.5 h-3.5" />
-                    <span>Đăng Nhập Ngay</span>
-                  </button>
-                </div>
-              ) : displayedReports.length === 0 ? (
-                <div className="p-8 text-center text-white/50 flex flex-col items-center justify-center gap-2">
-                  <CheckCircle2 className="w-8 h-8 text-brand-green/70 mb-1" />
-                  <p className="text-xs font-semibold text-white/90">
-                    {isSuperAdmin
-                      ? adminReportSubTab === "pending"
-                        ? "Tuyệt vời! Không còn tập nào chờ sửa."
-                        : "Chưa có báo cáo lỗi nào trong hệ thống."
-                      : "Bạn chưa gửi báo lỗi tập phim nào."}
-                  </p>
-                  <p className="text-[11px] text-white/40 max-w-[260px] leading-relaxed">
-                    {isSuperAdmin
-                      ? "Hệ thống sẽ cập nhật tự động khi có thành viên gửi báo cáo lỗi tập mới."
-                      : "Khi xem phim nếu phát hiện lỗi, hãy bấm nút 'Báo lỗi tập' để admin xử lý nhé."}
-                  </p>
-                </div>
-              ) : (
-                displayedReports.map((report) => {
-                  const isPending = report.status === "pending";
-                  return (
-                    <div
-                      key={report.id}
-                      className={cn(
-                        "p-3 rounded-xl border transition-all duration-200 group relative space-y-2",
-                        "bg-[#121915] hover:bg-[#16211c]",
-                        isPending
-                          ? "border-white/10 hover:border-brand-green/35"
-                          : "border-white/5 opacity-80 hover:opacity-100"
-                      )}
-                    >
-                      {/* Top Row: Status badge & timestamp */}
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          <span
-                            className={cn(
-                              "text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1",
-                              isPending
-                                ? "bg-amber-400/15 text-amber-300 border border-amber-400/25"
-                                : "bg-brand-green/15 text-brand-green border border-brand-green/25"
-                            )}
-                          >
-                            {isPending ? (
-                              <>
-                                <Clock className="w-2.5 h-2.5" />
-                                Chờ xử lý
-                              </>
-                            ) : (
-                              <>
-                                <Check className="w-2.5 h-2.5" />
-                                Đã sửa xong
-                              </>
-                            )}
-                          </span>
-
-                          {report.serverName && (
-                            <span className="text-[10px] text-white/50 bg-white/5 px-1.5 py-0.5 rounded border border-white/5 font-mono">
-                              {report.serverName}
-                            </span>
-                          )}
-                        </div>
-
-                        <span className="text-[10.5px] font-mono text-white/40">
-                          {formatRelativeTime(report.createdAt)}
-                        </span>
-                      </div>
-
-                      {/* Movie title & Episode */}
-                      <div className="flex items-baseline gap-1.5">
-                        <h4 className="text-xs sm:text-[13px] font-bold text-white group-hover:text-brand-green transition-colors line-clamp-1">
-                          {report.movieName}
-                        </h4>
-                        {report.episodeName && (
-                          <span className="text-[11px] font-extrabold text-brand-green shrink-0 bg-brand-green/10 border border-brand-green/25 px-1.5 py-0.2 rounded">
-                            {report.episodeName}
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Reporter info */}
-                      {(report.userName || report.userEmail) && (
-                        <div className="flex items-center gap-1.5 text-[11px] text-white/60">
-                          <User className="w-3 h-3 text-brand-green shrink-0" />
-                          <span className="font-medium text-white/80 truncate">
-                            {report.userName || report.userEmail?.split("@")[0]}
-                          </span>
-                          {report.userEmail && (
-                            <span className="text-white/40 font-mono truncate text-[10px]">
-                              ({report.userEmail})
-                            </span>
-                          )}
-                        </div>
-                      )}
-
-                      {/* Issue note box */}
-                      <div className="p-2 rounded-lg bg-[#080d0a] border border-white/6 text-xs">
-                        <div className="flex items-center gap-1.5 text-[11px] font-bold text-amber-400">
-                          <AlertTriangle className="w-3 h-3 shrink-0" />
-                          <span className="truncate">{report.issueType}</span>
-                        </div>
-                        {report.description && (
-                          <p className="text-[11px] text-white/70 mt-1 line-clamp-2 italic leading-relaxed">
-                            &ldquo;{report.description}&rdquo;
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Action buttons */}
-                      <div className="flex items-center justify-between gap-2 pt-1 border-t border-white/5">
-                        <Link
-                          href={`/watch?slug=${encodeURIComponent(report.movieSlug)}`}
-                          onClick={() => setIsOpen(false)}
-                          className="py-1 px-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/80 hover:text-white border border-white/10 text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer"
-                          title="Mở xem tập phim"
-                        >
-                          <ExternalLink className="w-3 h-3 text-brand-green" />
-                          <span>Xem tập</span>
-                        </Link>
-
-                        {/* Admin 1-Click Status Toggle */}
-                        {isSuperAdmin && (
-                          <button
-                            type="button"
-                            onClick={() => handleMarkResolved(report.id, report.status)}
-                            disabled={updatingId === report.id}
-                            className={cn(
-                              "py-1 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer active:scale-95",
-                              isPending
-                                ? "bg-brand-green hover:bg-brand-green-hover text-black shadow-[0_0_12px_rgba(32,214,107,0.3)]"
-                                : "bg-white/10 hover:bg-white/15 text-white/80 hover:text-white"
-                            )}
-                          >
-                            {updatingId === report.id ? (
-                              <Loader2 className="w-3 h-3 animate-spin" />
-                            ) : (
-                              <Check className="w-3 h-3" />
-                            )}
-                            <span>{isPending ? "Đã sửa" : "Mở lại"}</span>
-                          </button>
-                        )}
-
-                        {!isSuperAdmin && !isPending && (
-                          <span className="text-[11px] font-semibold text-brand-green flex items-center gap-1">
-                            <CheckCircle2 className="w-3 h-3" />
-                            Đã khắc phục
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })
-              )}
-            </div>
-          )}
-
-          {/* Footer Navigation */}
-          {isSuperAdmin && (
-            <div className="p-2.5 bg-[#090e0b] border-t border-white/8 shrink-0 flex items-center justify-between text-xs">
-              <span className="text-[11px] text-white/40">Quản trị toàn hệ thống</span>
-              <Link
-                href="/admin?tab=announcement"
-                onClick={() => setIsOpen(false)}
-                className="flex items-center gap-1 text-xs font-bold text-brand-green hover:text-emerald-300 transition-colors group"
-              >
-                <span>Tạo & quản lý thông báo</span>
-                <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-              </Link>
-            </div>
-          )}
-        </div>
-      )}
+      {/* Fullscreen Notification Overlay rendered via React Portal into document.body */}
+      {isOpen && mounted && typeof document !== "undefined" && createPortal(fullscreenOverlay, document.body)}
     </div>
   );
 }
