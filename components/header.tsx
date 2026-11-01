@@ -123,24 +123,19 @@ function HeaderComponent({}: HeaderProps) {
           "lg:top-0 lg:left-[252px] lg:right-0 lg:pt-3 lg:pr-3 lg:pb-0 lg:pl-0 lg:bg-transparent lg:border-none lg:shadow-none"
         )}
       >
-        <div
-          className={cn(
-            "w-full max-w-[1700px] mx-auto flex items-center justify-between min-w-0 pointer-events-auto transition-all duration-300",
-            // Mobile: floating rounded pill bar matching mobile app screenshot
-            "h-[52px] px-2.5 sm:px-3 rounded-full bg-[#121518] border border-white/15 shadow-[0_8px_28px_rgba(0,0,0,0.85)]",
-            // Desktop: floating rounded bento card
-            "lg:h-14 lg:px-4 lg:rounded-2xl lg:bg-[#0B100E]/95 lg:backdrop-blur-xl lg:border lg:border-white/10 lg:shadow-[0_10px_35px_rgba(0,0,0,0.6)]"
-          )}
-        >
-          {/* Left Group: Mobile Back Button (< Quay lại) or Menu Button [⊞ Menu] + Desktop Brand Logo */}
-          <div className="flex items-center gap-2 sm:gap-2.5 pointer-events-auto shrink-0 lg:flex-1 lg:justify-start min-w-0">
+        {/* ======================================================== */}
+        {/* MOBILE HEADER: Single unified floating pill bar          */}
+        {/* ======================================================== */}
+        <div className="lg:hidden w-full flex items-center justify-between min-w-0 pointer-events-auto h-[52px] px-2.5 sm:px-3 rounded-full bg-[#121518] border border-white/15 shadow-[0_8px_28px_rgba(0,0,0,0.85)]">
+          {/* Mobile Left: Back Button or Menu Button */}
+          <div className="flex items-center gap-2 pointer-events-auto shrink-0 min-w-0">
             {hasFilters ? (
               <button
                 type="button"
                 onClick={handleBack}
                 aria-label="Quay lại"
                 title="Quay lại"
-                className="lg:hidden relative flex items-center gap-1.5 h-[38px] px-3.5 rounded-full bg-[#1E2228] hover:bg-[#262B33] border border-white/15 hover:border-brand-green/50 shadow-[0_2px_10px_rgba(0,0,0,0.5)] active:scale-95 transition-all duration-200 cursor-pointer group shrink-0 select-none touch-manipulation"
+                className="relative flex items-center gap-1.5 h-[38px] px-3.5 rounded-full bg-[#1E2228] hover:bg-[#262B33] border border-white/15 hover:border-brand-green/50 shadow-[0_2px_10px_rgba(0,0,0,0.5)] active:scale-95 transition-all duration-200 cursor-pointer group shrink-0 select-none touch-manipulation"
               >
                 <ChevronLeft className="w-4 h-4 text-brand-green stroke-[2.4] shrink-0" />
                 <span className="text-[13px] font-extrabold text-white tracking-wide leading-none select-none">
@@ -161,23 +156,19 @@ function HeaderComponent({}: HeaderProps) {
                 aria-label={isMenuOpen ? "Đóng menu khám phá" : "Mở menu khám phá"}
                 title="Menu khám phá"
                 className={cn(
-                  "lg:hidden relative flex items-center gap-1.5 h-[38px] px-3.5 rounded-full border transition-all duration-200 cursor-pointer group shrink-0 select-none touch-manipulation overflow-hidden",
-                  // Active / Open State vs Default State
+                  "relative flex items-center gap-1.5 h-[38px] px-3.5 rounded-full border transition-all duration-200 cursor-pointer group shrink-0 select-none touch-manipulation overflow-hidden",
                   isMenuOpen
                     ? "bg-[#1B2A22] border-brand-green"
                     : "bg-[#1E2228] hover:bg-[#262B33] border border-white/15 hover:border-brand-green/50 shadow-[0_2px_10px_rgba(0,0,0,0.5)]",
                   "active:scale-95"
                 )}
               >
-                {/* 4-square Grid Icon — Hi Phim Emerald */}
                 <LayoutGrid
                   className={cn(
                     "w-4 h-4 text-brand-green transition-all duration-200 shrink-0",
                     isMenuOpen ? "scale-105" : "group-hover:scale-105"
                   )}
                 />
-
-                {/* Menu Text */}
                 <span
                   className={cn(
                     "text-[13px] tracking-wide leading-none select-none transition-colors",
@@ -190,29 +181,9 @@ function HeaderComponent({}: HeaderProps) {
                 </span>
               </button>
             )}
-
-            {/* Desktop: Wide Search Bar */}
-            <div className="hidden lg:flex items-center w-full max-w-[280px] xl:max-w-[320px]">
-              <button
-                type="button"
-                onClick={() => setShowSearchOverlay(true)}
-                className="relative flex items-center justify-between h-9 w-full px-3 rounded-xl bg-white/[0.05] hover:bg-white/[0.08] border border-white/10 hover:border-brand-green/40 text-white/70 hover:text-white transition-all duration-200 cursor-pointer shadow-inner group"
-                aria-label="Tìm kiếm phim, diễn viên..."
-              >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <AnimatedSearchIcon size={16} />
-                  <span className="text-[12.5px] font-medium text-white/50 group-hover:text-white/80">
-                    Tìm kiếm phim, diễn viên...
-                  </span>
-                </div>
-                <kbd className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-brand-green/10 border border-brand-green/30 text-[9.5px] text-brand-green font-mono font-bold uppercase shadow-[0_0_8px_rgba(32,214,107,0.15)] group-hover:bg-brand-green/20 group-hover:border-brand-green/60 transition-all shrink-0">
-                  <span>Ctrl</span>K
-                </kbd>
-              </button>
-            </div>
           </div>
 
-                    {/* Center Group: Brand Logo & Movie Name (Always Centered in Header on Desktop & Mobile) */}
+          {/* Mobile Center: Brand Logo & Movie Name */}
           <div className="flex items-center justify-center min-w-0 px-2 overflow-hidden text-center shrink-0">
             <Link
               href="/"
@@ -223,7 +194,7 @@ function HeaderComponent({}: HeaderProps) {
               {activeMovieName && (
                 <>
                   <span className="text-white/20 select-none font-light shrink-0">|</span>
-                  <span className="text-white/90 font-bold truncate text-[11.5px] lg:text-[13px] max-w-[105px] xs:max-w-[150px] lg:max-w-[200px]">
+                  <span className="text-white/90 font-bold truncate text-[11.5px] max-w-[105px] xs:max-w-[150px]">
                     {activeMovieName}
                   </span>
                 </>
@@ -231,40 +202,72 @@ function HeaderComponent({}: HeaderProps) {
             </Link>
           </div>
 
-          {/* Right Action Cluster: Search bar + Desktop User Profile / Login */}
-          <div className="flex items-center gap-2 sm:gap-2.5 pointer-events-auto shrink-0 lg:flex-1 lg:justify-end">
-            {/* Search Trigger Button - Full Pill matching mobile app */}
+          {/* Mobile Right: Search & Notification */}
+          <div className="flex items-center gap-2 pointer-events-auto shrink-0">
             <button
               onClick={() => setShowSearchOverlay(true)}
-              className={cn("lg:hidden",
-                "relative flex items-center justify-between transition-all duration-300 cursor-pointer group shadow-[0_4px_24px_rgba(0,0,0,0.7)] active:scale-95 shrink-0 overflow-hidden",
-                // Mobile: pill matching app
-                "h-[38px] px-3.5 rounded-full bg-[#1E2228] hover:bg-[#262B33] border border-white/15 hover:border-brand-green/50 text-white",
-                // Desktop: standard input look
-                "lg:h-10 lg:pl-2 lg:pr-2.5 lg:w-52 lg:bg-[#111714] lg:hover:bg-[#151D19] lg:border-white/10 lg:hover:border-brand-green/50"
-              )}
+              className="relative flex items-center justify-between h-[38px] px-3.5 rounded-full bg-[#1E2228] hover:bg-[#262B33] border border-white/15 hover:border-brand-green/50 text-white transition-all duration-300 cursor-pointer group shadow-[0_4px_24px_rgba(0,0,0,0.7)] active:scale-95 shrink-0 overflow-hidden"
               aria-label="Tìm kiếm phim"
             >
-              {/* Search Pill Content */}
               <div className="flex items-center gap-2 z-10 min-w-0">
                 <AnimatedSearchIcon size={17} />
                 <span className="text-white/60 group-hover:text-white/90 font-medium text-[12.5px] whitespace-nowrap">
                   Tìm kiếm...
                 </span>
               </div>
+            </button>
+            <NotificationBell />
+          </div>
+        </div>
 
-              <kbd className="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-brand-green/10 border border-brand-green/30 text-[9.5px] text-brand-green font-mono font-bold uppercase shadow-[0_0_8px_rgba(32,214,107,0.15)] group-hover:bg-brand-green/20 group-hover:border-brand-green/60 transition-all shrink-0 z-10 ml-2">
-                <span className="text-[9.5px]">Ctrl</span>K
+        {/* ======================================================== */}
+        {/* DESKTOP HEADER: 3 BENTO ISLAND BOXES (3 Ô BO TRÒN RIÊNG) */}
+        {/* ======================================================== */}
+        <div className="hidden lg:flex w-full items-center justify-between pointer-events-none">
+          {/* Ô 1: TÌM KIẾM (Search Bento Island) */}
+          <div className="pointer-events-auto flex items-center h-[46px] px-3.5 rounded-2xl bg-[#0B100E]/95 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.65)] hover:border-brand-green/40 transition-all duration-200 group">
+            <button
+              type="button"
+              onClick={() => setShowSearchOverlay(true)}
+              className="relative flex items-center justify-between h-full w-64 xl:w-72 text-white/70 hover:text-white transition-colors cursor-pointer"
+              aria-label="Tìm kiếm phim, diễn viên..."
+            >
+              <div className="flex items-center gap-2.5 min-w-0">
+                <AnimatedSearchIcon size={16} />
+                <span className="text-[12.5px] font-medium text-white/50 group-hover:text-white/80 select-none truncate">
+                  Tìm kiếm phim, diễn viên...
+                </span>
+              </div>
+              <kbd className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-brand-green/10 border border-brand-green/30 text-[9.5px] text-brand-green font-mono font-bold uppercase shadow-[0_0_8px_rgba(32,214,107,0.15)] group-hover:bg-brand-green/20 group-hover:border-brand-green/60 transition-all shrink-0 ml-2">
+                <span>Ctrl</span>K
               </kbd>
             </button>
+          </div>
 
-            {/* Notification Bell (Episode reports & Admin alerts) */}
+          {/* Ô 2: LOGO (Center Logo Bento Island) */}
+          <div className="pointer-events-auto flex items-center h-[46px] px-5 rounded-2xl bg-[#0B100E]/95 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.65)] hover:border-brand-green/40 transition-all duration-200 group">
+            <Link
+              href="/"
+              className="flex items-center gap-2 select-none hover:opacity-90 active:scale-95 transition-all max-w-full truncate"
+              aria-label="Về trang chủ Hi Phim"
+            >
+              <BrandLogo size="md" showSlogan={false} />
+              {activeMovieName && (
+                <>
+                  <span className="text-white/20 select-none font-light shrink-0">|</span>
+                  <span className="text-white/90 font-bold truncate text-[12.5px] max-w-[150px] xl:max-w-[220px]">
+                    {activeMovieName}
+                  </span>
+                </>
+              )}
+            </Link>
+          </div>
+
+          {/* Ô 3: 2 CÁI CÒN LẠI (Notification Bell + User Menu Bento Island) */}
+          <div className="pointer-events-auto flex items-center gap-2.5 h-[46px] px-3 rounded-2xl bg-[#0B100E]/95 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.65)] hover:border-white/15 transition-all duration-200">
             <NotificationBell />
-
-            {/* User Profile / Admin Control — Hidden on mobile since it's in the bottom nav dock */}
-            <div className="hidden lg:flex items-center shrink-0">
-              <UserMenu />
-            </div>
+            <div className="h-4 w-px bg-white/10 shrink-0" />
+            <UserMenu />
           </div>
         </div>
       </header>
