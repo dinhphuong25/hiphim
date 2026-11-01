@@ -40,7 +40,7 @@ const EmbedPlayer = ({
   onReportError,
   movieName,
   episodeName,
-  serverName = "Máy chủ VIP",
+  serverName = "Máy chủ Dự phòng",
   hasAlternativeServer,
   onSwitchServer,
   hasNextEpisode,

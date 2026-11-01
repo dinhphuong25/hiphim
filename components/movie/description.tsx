@@ -256,13 +256,13 @@ function resolveInitialWatchState(
   let hasM3u8 = Boolean(targetEpisode?.link_m3u8 && targetEpisode.link_m3u8.trim() !== "");
   let hasEmbed = Boolean(targetEpisode?.link_embed && targetEpisode.link_embed.trim() !== "");
 
-  // Fallback ONLY if the current server has no stream at all
-  if (!hasM3u8 && !hasEmbed && Array.isArray(serverData)) {
-    const fallbackIdx = serverData.findIndex((s: any) =>
-      Boolean(s?.server_data?.[resolvedEpisode]?.link_m3u8 || s?.server_data?.[resolvedEpisode]?.link_embed || s?.server_data?.[0]?.link_m3u8 || s?.server_data?.[0]?.link_embed)
+  // Priority: ALWAYS prefer server that has m3u8 (Máy chủ Mặc định)
+  if (!hasM3u8 && Array.isArray(serverData)) {
+    const serverWithM3u8Idx = serverData.findIndex((s: any) =>
+      Boolean(s?.server_data?.[resolvedEpisode]?.link_m3u8 || s?.server_data?.[0]?.link_m3u8)
     );
-    if (fallbackIdx !== -1) {
-      resolvedServer = fallbackIdx;
+    if (serverWithM3u8Idx !== -1) {
+      resolvedServer = serverWithM3u8Idx;
       targetEpisode =
         serverData[resolvedServer]?.server_data?.[resolvedEpisode] ||
         serverData[resolvedServer]?.server_data?.[0];
@@ -287,9 +287,17 @@ function resolveInitialWatchState(
 }
 
 export default function Description({ movie, serverData: rawServerData }: any) {
-  // Retain all available primary and multi-source backup servers
+  // Sanitize serverData: If primary server (index 0) exists and has episodes, remove any extraneous VIP backup servers
   const serverData = useMemo(() => {
-    return Array.isArray(rawServerData) ? rawServerData : [];
+    if (!Array.isArray(rawServerData) || rawServerData.length <= 1) return rawServerData || [];
+    const hasPrimaryEpisodes = Array.isArray(rawServerData[0]?.server_data) && rawServerData[0].server_data.length > 0;
+    if (hasPrimaryEpisodes) {
+      return rawServerData.filter((s: any) => {
+        const name = (s?.server_name || "").toLowerCase();
+        return !name.includes("vip") && !name.includes("nguonc");
+      });
+    }
+    return rawServerData;
   }, [rawServerData]);
 
   const defaultMode: 'm3u8' | 'embed' = useMemo(() => {
