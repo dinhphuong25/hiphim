@@ -37,6 +37,8 @@ import {
   Users,
   Settings,
   ArrowRight,
+  ArrowUp,
+  ArrowDown,
   Smartphone,
   Download,
   AlertTriangle,
@@ -279,6 +281,25 @@ function SidebarContent({
       );
     }
   }, [isExploreOpen]);
+
+  const modalScrollRef = useRef<HTMLDivElement>(null);
+  const [modalScrolled, setModalScrolled] = useState(false);
+
+  useEffect(() => {
+    setModalScrolled(false);
+  }, [activeModal]);
+
+  const handleModalScrollToggle = () => {
+    if (!modalScrollRef.current) return;
+    if (modalScrolled) {
+      modalScrollRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      modalScrollRef.current.scrollTo({
+        top: modalScrollRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  };
 
   // Scroll container refs for selection modals
   const categoriesScrollRef = useRef<HTMLDivElement>(null);
@@ -1328,8 +1349,13 @@ function SidebarContent({
       {/* ======================================================== */}
       {activeModal && (
         <div
+          ref={modalScrollRef}
+          onScroll={(e) => {
+            const target = e.currentTarget;
+            setModalScrolled(target.scrollTop > 180);
+          }}
           className={cn(
-            "fixed inset-0 z-[150] overflow-y-auto bg-[#050807] overscroll-contain shadow-none custom-scrollbar select-none transition-opacity duration-200",
+            "fixed inset-0 z-[150] overflow-y-auto bg-[#050807] overscroll-contain shadow-none modal-scroll custom-scrollbar select-none transition-opacity duration-200",
             isClosing ? "opacity-0 pointer-events-none" : "opacity-100 animate-in fade-in duration-200"
           )}
           onClick={(e) => {
@@ -1699,6 +1725,29 @@ function SidebarContent({
               )}
             </div>
 
+            {/* Nút scroll tiện ích nổi trong Modal (Floating Scroll FAB) */}
+            <div className="fixed right-5 sm:right-8 bottom-20 sm:bottom-24 z-50 animate-in fade-in zoom-in-95 duration-200 pointer-events-auto">
+              <button
+                type="button"
+                onClick={handleModalScrollToggle}
+                className="group flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-[#050807]/90 hover:bg-black text-brand-green border border-brand-green/40 hover:border-brand-green shadow-[0_4px_25px_rgba(0,0,0,0.8),0_0_15px_rgba(32,214,107,0.25)] backdrop-blur-md transition-all duration-200 active:scale-95 cursor-pointer hover:shadow-[0_0_20px_rgba(32,214,107,0.5)]"
+                title={modalScrolled ? "Cuộn lên đầu trang" : "Cuộn xuống danh sách"}
+                aria-label={modalScrolled ? "Cuộn lên đầu trang" : "Cuộn xuống danh sách"}
+              >
+                {modalScrolled ? (
+                  <>
+                    <ArrowUp className="w-4 h-4 stroke-[2.8] transition-transform group-hover:-translate-y-0.5" />
+                    <span className="text-xs font-bold text-white pr-0.5">Lên đầu</span>
+                  </>
+                ) : (
+                  <>
+                    <ArrowDown className="w-4 h-4 stroke-[2.8] transition-transform group-hover:translate-y-0.5" />
+                    <span className="text-xs font-bold text-white pr-0.5">Cuộn xuống</span>
+                  </>
+                )}
+              </button>
+            </div>
+
             {/* Bottom Sticky Action Bar */}
             <div className="sticky bottom-0 z-30 bg-[#050807]/95 backdrop-blur-md border-t border-white/10 py-3 sm:py-4 shadow-[0_-4px_25px_rgba(0,0,0,0.8)] pb-[max(1rem,env(safe-area-inset-bottom))]">
               <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between text-xs sm:text-sm text-white/50">
@@ -1766,18 +1815,39 @@ function SidebarContent({
                   )}
                 </div>
 
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    closeModal();
-                    router.push("/");
-                  }}
-                  className="text-brand-green hover:underline font-bold shrink-0 text-xs sm:text-sm cursor-pointer ml-4"
-                >
-                  Xem tất cả phim
-                </button>
+                <div className="flex items-center gap-3 shrink-0 ml-4">
+                  <button
+                    type="button"
+                    onClick={handleModalScrollToggle}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 hover:bg-brand-green/15 text-white/80 hover:text-brand-green border border-white/10 hover:border-brand-green/30 transition-all font-medium text-xs cursor-pointer active:scale-95"
+                    title={modalScrolled ? "Cuộn lên đầu trang" : "Cuộn xuống danh sách"}
+                  >
+                    {modalScrolled ? (
+                      <>
+                        <ArrowUp className="w-3.5 h-3.5 text-brand-green stroke-[2.5]" />
+                        <span>Lên đầu</span>
+                      </>
+                    ) : (
+                      <>
+                        <ArrowDown className="w-3.5 h-3.5 text-brand-green stroke-[2.5]" />
+                        <span>Cuộn xuống</span>
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      closeModal();
+                      router.push("/");
+                    }}
+                    className="text-brand-green hover:underline font-bold shrink-0 text-xs sm:text-sm cursor-pointer"
+                  >
+                    Xem tất cả phim
+                  </button>
+                </div>
               </div>
             </div>
 

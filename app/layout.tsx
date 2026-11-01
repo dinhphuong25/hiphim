@@ -20,6 +20,7 @@ import { NavigationTabProvider } from "@/context/navigation-tab-context";
 import AuthModal from "@/components/auth/auth-modal";
 import AdFloatingSystem from "@/components/ads/ad-floating-system";
 import PipWrapper from "@/components/player/pip-wrapper";
+import ScrollToTop from "@/components/ui/scroll-to-top";
 
 // Be Vietnam Pro — font hỗ trợ tiếng Việt tốt nhất, sans-serif hiện đại
 const beVietnam = Be_Vietnam_Pro({
@@ -272,6 +273,9 @@ export default function RootLayout({
             },
           }}
         />
+
+        {/* Global Floating Scroll To Top Button */}
+        <ScrollToTop />
       </body>
     </html>
   );

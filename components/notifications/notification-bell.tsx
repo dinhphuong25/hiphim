@@ -469,7 +469,7 @@ export default function NotificationBell({ className }: { className?: string }) 
 
   // FULLSCREEN NOTIFICATION OVERLAY (Synchronized 100% with SearchOverlay layout & style)
   const fullscreenOverlay = (
-    <div className="fixed inset-0 z-[150] overflow-y-auto bg-[#050807] overscroll-contain shadow-none custom-scrollbar select-none animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[150] overflow-y-auto bg-[#050807] overscroll-contain shadow-none modal-scroll custom-scrollbar select-none animate-in fade-in duration-200">
       <div className="min-h-full flex flex-col">
         {/* Sticky Header Container — Solid dark cinema glass matching Search */}
         <div className="sticky top-0 z-40 bg-[#050807]/95 backdrop-blur-md border-b border-white/5 shadow-[0_4px_25px_rgba(0,0,0,0.8)]">
