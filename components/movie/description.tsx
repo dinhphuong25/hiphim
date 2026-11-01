@@ -1205,8 +1205,14 @@ export default function Description({ movie, serverData: rawServerData }: any) {
   const handleSwitchToM3u8 = useCallback(() => {
     setPlayerMode('m3u8');
     if (currentEpisodeIndex && currentServerData) {
-      const currentEpisode = currentServerData[currentEpisodeIndex.server]?.server_data?.[currentEpisodeIndex.episode];
-      if (currentEpisode?.link_m3u8) setCurrentEpisodeUrl(currentEpisode.link_m3u8);
+      let targetServer = currentEpisodeIndex.server;
+      let targetEp = currentServerData[targetServer]?.server_data?.[currentEpisodeIndex.episode];
+      if (!targetEp?.link_m3u8 && currentServerData[0]?.server_data?.[currentEpisodeIndex.episode]?.link_m3u8) {
+        targetServer = 0;
+        targetEp = currentServerData[0]?.server_data?.[currentEpisodeIndex.episode];
+        setCurrentEpisodeIndex({ server: 0, episode: currentEpisodeIndex.episode });
+      }
+      if (targetEp?.link_m3u8) setCurrentEpisodeUrl(targetEp.link_m3u8);
     }
     toast.info("Đã chuyển sang Máy chủ Mặc định (HLS)");
   }, [currentEpisodeIndex, currentServerData]);
@@ -1352,7 +1358,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
                   }
 
                   // Use default Hi Phim <VideoPlayer> UI for BOTH "Mặc định" and "Dự phòng" whenever an m3u8 stream is available
-                  if (playerMode === 'm3u8' && playableM3u8Url) {
+                  if ((playerMode === 'm3u8' || playableM3u8Url) && playableM3u8Url) {
                     return (
                       <SafePlayerErrorBoundary
                         onReset={() => {
@@ -1400,10 +1406,19 @@ export default function Description({ movie, serverData: rawServerData }: any) {
                           ? `https://player.phimapi.com/player/?url=${encodeURIComponent(currentEpisodeUrl)}`
                           : currentEpisodeUrl)
                       }
+                      poster={posterImg}
                       onReportError={() => setShowReportModal(true)}
                       movieName={movie.name}
                       episodeName={activeEpObj?.name}
-                      hasAlternativeServer={false}
+                      serverName={
+                        currentServerData?.[currentEpisodeIndex?.server || 0]?.server_name || "Máy chủ VIP"
+                      }
+                      hasAlternativeServer={Boolean(playableM3u8Url) || (currentServerData && currentServerData.length > 1)}
+                      onSwitchToM3u8={handleSwitchToM3u8}
+                      hasNextEpisode={hasNextEpisode()}
+                      onNextEpisode={handleNextEpisode}
+                      onEnded={handleEnded}
+                      onFullscreenChange={setIsPlayerFullscreen}
                     />
                   );
                 })()}
