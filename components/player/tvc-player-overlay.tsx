@@ -24,8 +24,8 @@ function trackAdEvent(placement: "popup" | "catfish" | "tvc", event: "impression
 }
 
 export default function TVCPlayerOverlay({
-  tvcUrl = "https://bf.333xbet.com/18881999/video9922.mp4",
-  targetUrl = "https://154.82.109.157/2138063.html",
+  tvcUrl = "",
+  targetUrl = "",
   skipAfterSeconds = 5,
   onComplete,
 }: TVCPlayerOverlayProps) {
@@ -38,6 +38,10 @@ export default function TVCPlayerOverlay({
   const [isAutoplayMuted, setIsAutoplayMuted] = useState<boolean>(false);
 
   useEffect(() => {
+    if (!tvcUrl) {
+      onComplete();
+      return;
+    }
     // Safety fallback: Nếu video không load được trong 5s, tự động vào phim chính
     const fallbackTimer = setTimeout(() => {
       if (!hasStarted) {
@@ -46,7 +50,7 @@ export default function TVCPlayerOverlay({
     }, 5000);
 
     return () => clearTimeout(fallbackTimer);
-  }, [hasStarted, onComplete]);
+  }, [tvcUrl, hasStarted, onComplete]);
 
   // Tự động phát video TVC có tiếng
   useEffect(() => {

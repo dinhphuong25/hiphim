@@ -234,13 +234,13 @@ export default function VideoPlayer({
     setIsMounted(true);
   }, []);
 
-  // TVC Pre-Roll Ad State
-  const [showTVC, setShowTVC] = useState<boolean>(true);
-  const showTVCRef = useRef<boolean>(true);
+  // TVC Pre-Roll Ad State (Disabled by default)
+  const [showTVC, setShowTVC] = useState<boolean>(false);
+  const showTVCRef = useRef<boolean>(false);
   const [tvcConfig, setTvcConfig] = useState({
-    enabled: true,
-    videoUrl: "https://bf.333xbet.com/18881999/video9922.mp4",
-    targetUrl: "https://154.82.109.157/2138063.html",
+    enabled: false,
+    videoUrl: "",
+    targetUrl: "",
     skipAfterSeconds: 5,
   });
 
@@ -249,16 +249,24 @@ export default function VideoPlayer({
       .then((data) => {
         if (data?.ads) {
           const ads = data.ads;
-          if (ads.tvcEnabled === false || ads.enabled === false || isVipOrAdmin) {
+          const shouldEnableTvc =
+            ads.enabled === true &&
+            ads.tvcEnabled === true &&
+            Boolean(ads.tvcVideoUrl) &&
+            !isVipOrAdmin;
+
+          if (!shouldEnableTvc) {
             setShowTVC(false);
             showTVCRef.current = false;
           } else {
-            setTvcConfig((prev) => ({
-              ...prev,
-              videoUrl: ads.tvcVideoUrl || prev.videoUrl,
-              targetUrl: ads.targetUrl || prev.targetUrl,
-              skipAfterSeconds: ads.tvcSkipAfterSeconds ?? prev.skipAfterSeconds,
-            }));
+            setTvcConfig({
+              enabled: true,
+              videoUrl: ads.tvcVideoUrl,
+              targetUrl: ads.targetUrl || "",
+              skipAfterSeconds: ads.tvcSkipAfterSeconds ?? 5,
+            });
+            setShowTVC(true);
+            showTVCRef.current = true;
           }
 
           // Kích hoạt khiên che quảng cáo nếu Admin bật
@@ -3444,7 +3452,7 @@ export default function VideoPlayer({
       })()}
 
       {/* Pre-Roll TVC Video Player Overlay */}
-      {showTVC && !isVipOrAdmin && (
+      {showTVC && Boolean(tvcConfig.videoUrl) && !isVipOrAdmin && (
         <TVCPlayerOverlay
           tvcUrl={tvcConfig.videoUrl}
           targetUrl={tvcConfig.targetUrl}

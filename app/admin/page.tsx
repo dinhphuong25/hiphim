@@ -2539,11 +2539,11 @@ export default function AdminDashboardPage() {
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-bold text-white block">Kích hoạt Hệ Thống Quảng Cáo</span>
                     <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${
-                      config?.ads?.enabled !== false
+                      config?.ads?.enabled === true
                         ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                         : "bg-red-500/10 text-red-400 border-red-500/20"
                     }`}>
-                      {config?.ads?.enabled !== false ? "ĐANG BẬT" : "ĐÃ TẮT TOÀN BỘ"}
+                      {config?.ads?.enabled === true ? "ĐANG BẬT" : "ĐÃ TẮT TOÀN BỘ"}
                     </span>
                   </div>
                   <span className="text-xs text-white/40 block">
@@ -2553,7 +2553,7 @@ export default function AdminDashboardPage() {
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={config?.ads?.enabled ?? true}
+                    checked={Boolean(config?.ads?.enabled)}
                     onChange={(e) => handleToggleAdOption("enabled", e.target.checked, "Hệ Thống Quảng Cáo")}
                     className="sr-only peer"
                   />
@@ -2584,7 +2584,7 @@ export default function AdminDashboardPage() {
                       };
                       setConfig(updated);
                     }}
-                    placeholder="https://154.82.109.157/2138063.html"
+                    placeholder="https://..."
                     className="flex-1 bg-black/60 border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-brand-green font-mono"
                   />
                   {config?.ads?.targetUrl && (
@@ -2614,7 +2614,7 @@ export default function AdminDashboardPage() {
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={config?.ads?.showPopup ?? true}
+                          checked={Boolean(config?.ads?.showPopup)}
                           onChange={(e) => handleToggleAdOption("showPopup", e.target.checked, "Popup Giữa Màn Hình")}
                           className="sr-only peer"
                         />
@@ -2670,7 +2670,7 @@ export default function AdminDashboardPage() {
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={config?.ads?.showBottomBanner ?? true}
+                          checked={Boolean(config?.ads?.showBottomBanner)}
                           onChange={(e) => handleToggleAdOption("showBottomBanner", e.target.checked, "Catfish Chân Trang")}
                           className="sr-only peer"
                         />
@@ -2726,7 +2726,7 @@ export default function AdminDashboardPage() {
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={config?.ads?.tvcEnabled ?? true}
+                          checked={Boolean(config?.ads?.tvcEnabled)}
                           onChange={(e) => handleToggleAdOption("tvcEnabled", e.target.checked, "TVC Video")}
                           className="sr-only peer"
                         />
@@ -2752,7 +2752,7 @@ export default function AdminDashboardPage() {
                           };
                           setConfig(updated);
                         }}
-                        placeholder="https://bf.333xbet.com/18881999/video9922.mp4"
+                        placeholder="https://.../tvc.mp4"
                         className="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-brand-green font-mono"
                       />
                     </div>

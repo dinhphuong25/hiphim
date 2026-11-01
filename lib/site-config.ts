@@ -76,14 +76,14 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
   },
   customFooterText: "Hi Phim — Nền tảng xem phim miễn phí.",
   ads: {
-    enabled: true,
-    targetUrl: "https://154.82.109.157/2138063.html",
-    popupImage: "/ads/popup.jpg",
-    bottomBannerImage: "/ads/banner-bottom.gif",
-    showPopup: true,
-    showBottomBanner: true,
-    tvcEnabled: true,
-    tvcVideoUrl: "https://bf.333xbet.com/18881999/video9922.mp4",
+    enabled: false,
+    targetUrl: "",
+    popupImage: "",
+    bottomBannerImage: "",
+    showPopup: false,
+    showBottomBanner: false,
+    tvcEnabled: false,
+    tvcVideoUrl: "",
     tvcSkipAfterSeconds: 5,
     adShieldEnabled: false,
     adShieldMode: "auto",
@@ -102,8 +102,36 @@ declare global {
 
 const CONFIG_MEMORY_TTL = 120_000; // 2 minutes memory cache per Worker isolate
 
+function isLegacyGamblingAdConfig(ads: any): boolean {
+  if (!ads || typeof ads !== "object") return false;
+  const target = String(ads.targetUrl || "");
+  const tvc = String(ads.tvcVideoUrl || "");
+  const popup = String(ads.popupImage || "");
+  const banner = String(ads.bottomBannerImage || "");
+  return (
+    target.includes("154.82.109.157") ||
+    tvc.includes("333xbet") ||
+    tvc.includes("video9922") ||
+    popup === "/ads/popup.jpg" ||
+    banner === "/ads/banner-bottom.gif"
+  );
+}
+
 function mergeWithDefaults(parsed: any): SiteConfig {
   if (!parsed || typeof parsed !== "object") return DEFAULT_SITE_CONFIG;
+  const rawAds = parsed.ads || {};
+  const sanitizedAds = isLegacyGamblingAdConfig(rawAds)
+    ? {
+        ...DEFAULT_SITE_CONFIG.ads,
+        adShieldEnabled: Boolean(rawAds.adShieldEnabled),
+        adShieldMode: rawAds.adShieldMode || "auto",
+        adDisclaimerEnabled: Boolean(rawAds.adDisclaimerEnabled),
+      }
+    : {
+        ...DEFAULT_SITE_CONFIG.ads,
+        ...rawAds,
+      };
+
   return {
     ...DEFAULT_SITE_CONFIG,
     ...parsed,
@@ -119,10 +147,7 @@ function mergeWithDefaults(parsed: any): SiteConfig {
       ...DEFAULT_SITE_CONFIG.player,
       ...(parsed.player || {}),
     },
-    ads: {
-      ...DEFAULT_SITE_CONFIG.ads,
-      ...(parsed.ads || {}),
-    },
+    ads: sanitizedAds,
   };
 }
 

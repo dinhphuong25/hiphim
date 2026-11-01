@@ -16,12 +16,12 @@ interface AdConfig {
 }
 
 const DEFAULT_AD_CONFIG: AdConfig = {
-  enabled: true,
-  targetUrl: "https://154.82.109.157/2138063.html",
-  popupImage: "/ads/popup.jpg",
-  bottomBannerImage: "/ads/banner-bottom.gif",
-  showPopup: true,
-  showBottomBanner: true,
+  enabled: false,
+  targetUrl: "",
+  popupImage: "",
+  bottomBannerImage: "",
+  showPopup: false,
+  showBottomBanner: false,
 };
 
 function trackAdEvent(placement: "popup" | "catfish" | "tvc", event: "impression" | "click") {
@@ -43,7 +43,7 @@ export function AdFloatingSystemComponent() {
   const isVipOrAdmin = user?.role === "vip" || user?.role === "admin" || user?.role === "superadmin";
   const [adConfig, setAdConfig] = useState<AdConfig>(DEFAULT_AD_CONFIG);
   const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [showBottomBanner, setShowBottomBanner] = useState<boolean>(true);
+  const [showBottomBanner, setShowBottomBanner] = useState<boolean>(false);
   const [isMounted, setIsMounted] = useState<boolean>(false);
 
   // Không hiển thị quảng cáo trong trang quản trị hoặc trang bảo trì
@@ -52,51 +52,65 @@ export function AdFloatingSystemComponent() {
 
   useEffect(() => {
     setIsMounted(true);
+    let popupTimer: ReturnType<typeof setTimeout> | null = null;
 
     // Tải cấu hình quảng cáo từ server (dùng chung request deduplication)
     fetchAnnouncementShared()
       .then((data) => {
         if (data?.ads) {
           const ads = data.ads;
+          const isEnabled = ads.enabled === true;
+          const canShowBottom = isEnabled && ads.showBottomBanner === true && Boolean(ads.bottomBannerImage);
+          const canShowPopup = isEnabled && ads.showPopup === true && Boolean(ads.popupImage);
+
           setAdConfig((prev) => ({
             ...prev,
             ...ads,
-            showBottomBanner: ads.showBottomBanner ?? true,
-            showPopup: ads.showPopup ?? true,
+            enabled: isEnabled,
+            showBottomBanner: canShowBottom,
+            showPopup: canShowPopup,
           }));
-          if (ads.enabled !== false && ads.showBottomBanner !== false) {
-            trackAdEvent("catfish", "impression");
+
+          if (canShowBottom) {
+            try {
+              const bottomClosedAt = sessionStorage.getItem("hiphim_ad_bottom_closed");
+              const isBottomClosedRecently =
+                bottomClosedAt && Date.now() - Number(bottomClosedAt) < 5 * 60 * 1000;
+              if (!isBottomClosedRecently) {
+                setShowBottomBanner(true);
+                trackAdEvent("catfish", "impression");
+              }
+            } catch {
+              setShowBottomBanner(true);
+            }
+          } else {
+            setShowBottomBanner(false);
+          }
+
+          if (canShowPopup) {
+            try {
+              const popupClosedAt = sessionStorage.getItem("hiphim_ad_popup_closed");
+              const isPopupExpired =
+                !popupClosedAt || Date.now() - Number(popupClosedAt) > 5 * 60 * 1000;
+              if (isPopupExpired) {
+                popupTimer = setTimeout(() => {
+                  setShowPopup(true);
+                  trackAdEvent("popup", "impression");
+                }, 350);
+              }
+            } catch {
+              setShowPopup(true);
+            }
+          } else {
+            setShowPopup(false);
           }
         }
       })
       .catch(() => {});
 
-    // Kiểm tra xem trong 5 phút qua người dùng đã tắt popup chưa
-    try {
-      const popupClosedAt = sessionStorage.getItem("hiphim_ad_popup_closed");
-      const isPopupExpired =
-        !popupClosedAt || Date.now() - Number(popupClosedAt) > 5 * 60 * 1000;
-      if (isPopupExpired) {
-        // Tự động bật popup sau 350ms khi vừa vào trang
-        const timer = setTimeout(() => {
-          setShowPopup(true);
-          trackAdEvent("popup", "impression");
-        }, 350);
-        return () => clearTimeout(timer);
-      }
-    } catch {
-      setShowPopup(true);
-    }
-
-    // Kiểm tra xem catfish banner có bị đóng trong 5 phút qua không
-    try {
-      const bottomClosedAt = sessionStorage.getItem("hiphim_ad_bottom_closed");
-      if (bottomClosedAt && Date.now() - Number(bottomClosedAt) < 5 * 60 * 1000) {
-        setShowBottomBanner(false);
-      }
-    } catch {
-      // ignore
-    }
+    return () => {
+      if (popupTimer) clearTimeout(popupTimer);
+    };
   }, []);
 
   const handleClosePopup = () => {
@@ -123,7 +137,7 @@ export function AdFloatingSystemComponent() {
   return (
     <>
       {/* 1. POPUP QUẢNG CÁO GIỮA MÀN HÌNH (Center Popup Modal) */}
-      {showPopup && adConfig.showPopup && (
+      {showPopup && adConfig.showPopup && adConfig.popupImage && (
         <div
           role="dialog"
           aria-modal="true"
@@ -146,7 +160,7 @@ export function AdFloatingSystemComponent() {
 
             {/* Ảnh quảng cáo kèm link trỏ */}
             <a
-              href={adConfig.targetUrl}
+              href={adConfig.targetUrl || "#"}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackAdEvent("popup", "click")}
@@ -164,7 +178,7 @@ export function AdFloatingSystemComponent() {
       )}
 
       {/* 2. QUẢNG CÁO CỐ ĐỊNH DƯỚI CHÂN MÀN HÌNH (Sticky Bottom Banner) */}
-      {showBottomBanner && adConfig.showBottomBanner && (
+      {showBottomBanner && adConfig.showBottomBanner && adConfig.bottomBannerImage && (
         <div className="fixed bottom-[60px] lg:bottom-0 left-0 right-0 lg:pl-[225px] z-[110] pointer-events-none select-none animate-in slide-in-from-bottom-3 duration-300">
           <div className="relative mx-auto w-full max-w-[760px] px-2 sm:px-4 pb-1 sm:pb-2 pointer-events-auto">
             <div className="relative rounded-xl overflow-hidden bg-[#0a0f0d]/95 border border-white/15 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.7)] p-1 sm:p-1.5 flex items-center justify-center">
@@ -182,7 +196,7 @@ export function AdFloatingSystemComponent() {
 
               {/* Banner ảnh động kèm link trỏ */}
               <a
-                href={adConfig.targetUrl}
+                href={adConfig.targetUrl || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => trackAdEvent("catfish", "click")}
