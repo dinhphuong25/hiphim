@@ -120,7 +120,7 @@ function HeaderComponent({}: HeaderProps) {
           // Mobile: floating wrapper with safe-area padding
           "left-0 right-0 pt-2 pt-[max(0.5rem,env(safe-area-inset-top))] px-3 pb-1",
           // Desktop: floating island top bar
-          "lg:top-0 lg:left-[252px] lg:right-0 lg:pt-3 lg:pr-3 lg:pb-0 lg:pl-0 lg:bg-transparent lg:border-none lg:shadow-none"
+          "lg:top-0 lg:left-[252px] lg:right-0 lg:pt-0 lg:pr-3 lg:pb-0 lg:pl-0 lg:bg-transparent lg:border-none lg:shadow-none"
         )}
       >
         {/* ======================================================== */}
@@ -225,7 +225,7 @@ function HeaderComponent({}: HeaderProps) {
         {/* ======================================================== */}
         <div className="hidden lg:flex w-full items-center justify-between pointer-events-none">
           {/* Ô 1: TÌM KIẾM (Search Bento Island) */}
-          <div className="pointer-events-auto flex items-center h-[46px] px-3.5 rounded-2xl bg-[#0B100E]/95 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.65)] hover:border-brand-green/40 transition-all duration-200 group">
+          <div className="pointer-events-auto flex items-center h-[50px] px-3.5 rounded-b-2xl bg-[#0B100E]/95 backdrop-blur-xl border-x border-b border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.65)] hover:border-brand-green/40 transition-all duration-200 group">
             <button
               type="button"
               onClick={() => setShowSearchOverlay(true)}
@@ -245,7 +245,7 @@ function HeaderComponent({}: HeaderProps) {
           </div>
 
           {/* Ô 2: LOGO (Center Logo Bento Island) */}
-          <div className="pointer-events-auto flex items-center h-[46px] px-5 rounded-2xl bg-[#0B100E]/95 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.65)] hover:border-brand-green/40 transition-all duration-200 group">
+          <div className="pointer-events-auto flex items-center h-[50px] px-3 bg-transparent border-none shadow-none transition-all duration-200 group">
             <Link
               href="/"
               className="flex items-center gap-2 select-none hover:opacity-90 active:scale-95 transition-all max-w-full truncate"
@@ -264,7 +264,7 @@ function HeaderComponent({}: HeaderProps) {
           </div>
 
           {/* Ô 3: 2 CÁI CÒN LẠI (Notification Bell + User Menu Bento Island) */}
-          <div className="pointer-events-auto flex items-center gap-2.5 h-[46px] px-3 rounded-2xl bg-[#0B100E]/95 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.65)] hover:border-white/15 transition-all duration-200">
+          <div className="pointer-events-auto flex items-center gap-2.5 h-[50px] px-3 rounded-b-2xl bg-[#0B100E]/95 backdrop-blur-xl border-x border-b border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.65)] hover:border-white/15 transition-all duration-200">
             <NotificationBell />
             <div className="h-4 w-px bg-white/10 shrink-0" />
             <UserMenu />
