@@ -9,7 +9,6 @@ import { instantMovieStore } from "@/lib/instant-movie-store";
 import { getCategoryDisplayName } from "@/lib/categories";
 import { getCountryDisplayName } from "@/lib/countries";
 import { cn } from "@/lib/utils";
-import { Compass, ChevronLeft } from "lucide-react";
 
 import InfiniteMovieGrid from "@/components/movie/infinite-movie-grid";
 
@@ -243,18 +242,6 @@ const MovieListClient = ({
   if (loading && movies.length === 0) {
     return (
       <div className="pt-2 sm:pt-4 px-1 sm:px-0 animate-in fade-in duration-200">
-        {/* Status Title Row during skeleton load */}
-        <div className="flex items-center justify-between px-2 sm:px-3 py-2.5 mb-3 sm:mb-4 bg-white/[0.02] rounded-xl border border-white/[0.06]">
-          <div className="flex items-center gap-2 min-w-0">
-            <Compass className="w-4 h-4 sm:w-5 sm:h-5 text-brand-green stroke-[2.4] shrink-0" />
-            <span className="text-xs sm:text-base text-white/55 font-semibold truncate">
-              Khám phá:{" "}
-              <span className="text-white font-black text-sm sm:text-lg">
-                {getPageTitle()}
-              </span>
-            </span>
-          </div>
-        </div>
         <MovieGridSkeleton count={10} />
       </div>
     );
@@ -285,41 +272,6 @@ const MovieListClient = ({
 
       {/* Hidden for accessibility & SEO */}
       <h1 className="sr-only">{getPageTitle()}</h1>
-
-      {/* Result Status Title Row matching native app explore.tsx & Screenshot 2 */}
-      <div className="flex items-center justify-between px-2 sm:px-3 py-2.5 sm:py-3 mb-3 sm:mb-4 bg-white/[0.02] rounded-xl border border-white/[0.06]">
-        <div className="flex items-center gap-2 min-w-0">
-          <Compass className="w-4 h-4 sm:w-5 sm:h-5 text-brand-green stroke-[2.4] shrink-0" />
-          <span className="text-xs sm:text-base text-white/55 font-semibold truncate">
-            Khám phá:{" "}
-            <span className="text-white font-black text-sm sm:text-lg">
-              {getPageTitle()}
-            </span>
-          </span>
-        </div>
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            type="button"
-            onClick={() => {
-              if (typeof window !== "undefined" && window.history.length > 1) {
-                router.back();
-              } else {
-                router.push("/");
-              }
-            }}
-            className="hidden sm:inline-flex lg:hidden items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs font-bold text-white/80 hover:text-white transition-all active:scale-95 cursor-pointer"
-            aria-label="Về trang chủ"
-          >
-            <ChevronLeft className="w-3.5 h-3.5 text-brand-green stroke-[2.5]" />
-            <span>Về trang chủ</span>
-          </button>
-          {totalPages > 1 && (
-            <div className="px-2.5 py-1 sm:py-1.5 rounded-lg bg-white/[0.06] border border-white/10 text-[11px] sm:text-xs font-bold text-white/70">
-              Trang {currentPage}/{totalPages}
-            </div>
-          )}
-        </div>
-      </div>
 
       {/* Infinite scroll grid with smooth fade transitions */}
       <div className={cn("transition-opacity duration-200", isTransitioning ? "opacity-80" : "opacity-100")}>
