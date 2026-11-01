@@ -345,7 +345,6 @@ function SidebarContent({
   // Prefetch mobile bottom nav routes for instant 0ms transition on single tap
   useEffect(() => {
     router.prefetch("/");
-    router.prefetch("/tai-app");
     router.prefetch("/recently");
     router.prefetch("/favorites");
   }, [router]);
@@ -728,8 +727,8 @@ function SidebarContent({
             );
           })()}
 
-          {/* Tab 5: Tải App */}
-          {(() => {
+          {/* Tab 5: Tải App (Temporarily hidden) */}
+          {false && (() => {
             const active = currentActiveTab === "/tai-app";
             return (
               <Link
@@ -1288,11 +1287,11 @@ function SidebarContent({
             ))}
           </div>
 
-          {/* Divider 3 */}
-          <div className="h-[1px] bg-white/5 mx-2 lg:mx-1 my-2 lg:my-1.5" />
+          {/* Divider 3 (Temporarily hidden with Download App) */}
+          <div className="hidden h-[1px] bg-white/5 mx-2 lg:mx-1 my-2 lg:my-1.5" />
 
-          {/* Download App Navigation Entry (Desktop only; on mobile it is in the bottom nav bar) */}
-          <div className="hidden lg:block pt-1 pb-6 lg:pb-8">
+          {/* Download App Navigation Entry (Temporarily hidden on Desktop & Mobile) */}
+          <div className="hidden pt-1 pb-6 lg:pb-8">
             <Link
               href="/tai-app"
               prefetch={true}
