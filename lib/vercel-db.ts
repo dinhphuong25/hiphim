@@ -9,7 +9,7 @@ export function getDatabaseUrl(): string {
   if (primary) return primary;
 
   // Tự động tìm bất kỳ biến môi trường nào chứa chuỗi postgresql://
-  for (const [key, val] of Object.entries(process.env)) {
+  for (const [, val] of Object.entries(process.env)) {
     if (typeof val === "string" && val.trim().startsWith("postgresql://")) {
       return val.trim();
     }
@@ -33,17 +33,23 @@ export function getVercelSql() {
 
 /**
  * Dynamic Proxy for vercelSql so that every SQL query dynamically evaluates neon(getDatabaseUrl())
- * without failing on Worker isolate cold starts.
+ * without failing on Worker isolate cold starts or when DATABASE_URL is absent (D1-only mode).
  */
 export const vercelSql: any = new Proxy(
   function () {},
   {
     apply(_target, thisArg, argArray) {
       const sql = getVercelSql();
+      if (!sql) {
+        return Promise.resolve([]);
+      }
       return Reflect.apply(sql, thisArg, argArray);
     },
     get(_target, prop) {
       const sql = getVercelSql();
+      if (!sql) {
+        return undefined;
+      }
       return Reflect.get(sql, prop);
     },
   }

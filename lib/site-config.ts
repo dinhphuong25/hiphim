@@ -1,4 +1,4 @@
-import { vercelSql } from "@/lib/vercel-db";
+import { vercelSql, getVercelSql } from "@/lib/vercel-db";
 import { getD1Database } from "@/lib/d1-db";
 
 export interface SiteConfig {
@@ -205,10 +205,11 @@ export async function getSiteConfigAsync(forceRefresh = false): Promise<SiteConf
       }
     } catch {}
 
-    // 2. Fallback to Neon PostgreSQL only if D1 is unavailable
-    if (vercelSql) {
+    // 2. Fallback to Neon PostgreSQL only if D1 is unavailable and Postgres URL is configured
+    const sql = getVercelSql();
+    if (sql) {
       try {
-        const rows = await vercelSql`
+        const rows = await sql`
           SELECT data FROM hiphim_site_config WHERE key = 'main' LIMIT 1
         `;
         if (rows && rows.length > 0 && rows[0]?.data) {
@@ -286,13 +287,18 @@ export async function saveSiteConfigAsync(newConfig: Partial<SiteConfig>): Promi
       .catch((err) => console.warn("[D1] Could not persist site config to D1:", err))
   );
 
-  if (vercelSql) {
+  const sql = getVercelSql();
+  if (sql) {
     dbWrites.push(
-      vercelSql`
-        INSERT INTO hiphim_site_config (key, data)
-        VALUES ('main', ${JSON.stringify(updated)}::jsonb)
-        ON CONFLICT (key) DO UPDATE SET data = EXCLUDED.data
-      `.catch((dbErr: any) => console.warn("[DB] Could not persist site config to PostgreSQL:", dbErr))
+      Promise.resolve()
+        .then(() =>
+          sql`
+            INSERT INTO hiphim_site_config (key, data)
+            VALUES ('main', ${JSON.stringify(updated)}::jsonb)
+            ON CONFLICT (key) DO UPDATE SET data = EXCLUDED.data
+          `
+        )
+        .catch((dbErr: any) => console.warn("[DB] Could not persist site config to PostgreSQL:", dbErr))
     );
   }
 
