@@ -184,6 +184,10 @@ export default function Episode({
               const cleanServerName = (server.server_name || "Vietsub")
                 .replace(/^Dự Phòng\s*\((.*)\)$/i, "$1")
                 .trim();
+              const isAnyVipAvailable = serverData.some((s) =>
+                (s?.server_name || "").toLowerCase().includes("vip")
+              );
+              const isVipServer = cleanServerName.toLowerCase().includes("vip");
 
               const buttons = [];
 
@@ -220,7 +224,7 @@ export default function Episode({
                           : "text-white/60"
                       )}
                     >
-                      Mặc định
+                      {isAnyVipAvailable ? (isVipServer ? "Mặc định" : "Dự phòng") : "Mặc định"}
                     </span>
                   </button>
                 );
@@ -259,7 +263,7 @@ export default function Episode({
                           : "text-white/60"
                       )}
                     >
-                      Dự phòng
+                      {isVipServer ? "Mặc định" : "Dự phòng"}
                     </span>
                   </button>
                 );
