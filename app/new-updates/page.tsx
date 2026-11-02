@@ -34,7 +34,7 @@ export default async function NewUpdatesPage({ searchParams }: NewUpdatesProps) 
 
   return (
     <>
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 pt-24 pb-20">
+      <div className="w-full px-3.5 sm:px-6 lg:px-6 xl:px-8 pt-20 pb-20">
         <MovieListClient index={index} initialMovies={initialMovies} />
       </div>
     </>

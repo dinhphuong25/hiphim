@@ -174,7 +174,7 @@ export default async function Home({ searchParams }: HomeProps) {
   return (
     <>
       {hasFilters ? (
-        <main className="max-w-[1600px] mx-auto px-3.5 sm:px-8 lg:px-12 xl:px-16 pb-20 pt-16 sm:pt-24">
+        <main className="w-full px-3.5 sm:px-6 lg:px-6 xl:px-8 pb-20 pt-16 sm:pt-20">
           <MovieListClient
             index={index}
             category={category}

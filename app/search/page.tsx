@@ -77,7 +77,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   return (
     <>
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 pt-24 pb-16">
+      <div className="w-full px-3.5 sm:px-6 lg:px-6 xl:px-8 pt-20 pb-16">
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-12">
           <div className="flex flex-col gap-3">
@@ -114,7 +114,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
         {/* Movie Grid */}
         {movies && movies.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3.5 sm:gap-4 lg:gap-5">
             {movies.map((movie: any, idx: number) => (
               <MovieCardEditorial key={movie.slug} movie={movie} />
             ))}

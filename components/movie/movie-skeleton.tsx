@@ -18,7 +18,7 @@ export const MovieCardSkeleton = memo(function MovieCardSkeleton() {
 
 export function MovieGridSkeleton({ count = 10 }: { count?: number }) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 animate-in fade-in duration-300">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3.5 sm:gap-4 lg:gap-5 animate-in fade-in duration-300">
       {Array.from({ length: count }).map((_, i) => (
         <MovieCardSkeleton key={i} />
       ))}

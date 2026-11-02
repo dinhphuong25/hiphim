@@ -323,7 +323,7 @@ export default function HeroSection({ movies }: HeroSectionProps) {
         </div>
 
         {/* 2. Main Content Container */}
-        <div className="relative z-20 h-full max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 flex flex-col justify-start lg:justify-center pt-20 sm:pt-24 lg:pt-24 pb-2 sm:pb-8 min-h-0 sm:min-h-[inherit]">
+        <div className="relative z-20 h-full w-full px-3.5 sm:px-6 lg:px-6 xl:px-8 flex flex-col justify-start lg:justify-center pt-20 sm:pt-24 lg:pt-24 pb-2 sm:pb-8 min-h-0 sm:min-h-[inherit]">
           <div className="w-full max-w-xl lg:max-w-2xl space-y-3.5 sm:space-y-4 relative z-30">
             
             {/* Top Trending Ribbon Badge */}

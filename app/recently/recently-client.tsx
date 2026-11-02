@@ -123,7 +123,7 @@ export default function RecentlyWatchedClient({}: RecentlyWatchedClientProps) {
   }
 
   return (
-    <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-8 lg:px-12 xl:px-16 pt-6 sm:pt-8 pb-20">
+    <div className="w-full px-3.5 sm:px-6 lg:px-6 xl:px-8 pt-6 sm:pt-8 pb-20">
       {/* Header Bar */}
       {movies.length > 0 && (
         <div className="flex items-center justify-between gap-4 mb-5 pb-3 border-b border-white/[0.08]">
@@ -172,7 +172,7 @@ export default function RecentlyWatchedClient({}: RecentlyWatchedClientProps) {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3.5 sm:gap-4 lg:gap-5">
           {movies.map((movie, i) => (
             <div
               key={movie.slug}

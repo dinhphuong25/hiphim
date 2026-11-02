@@ -1079,7 +1079,7 @@ function SidebarContent({
           "top-0 left-0 bottom-0 w-[280px] bg-cinema-sub border-r border-white/10 rounded-none shadow-none",
           isMobileOpen ? "translate-x-0 z-[130]" : "-translate-x-full lg:translate-x-0 z-[100]",
           // Desktop state: floating island card matching bento / cut-out style (rounded corners, detached borders)
-          "lg:top-3 lg:left-3 lg:w-[230px] lg:h-fit lg:max-h-[calc(100vh-24px)] lg:rounded-2xl lg:border lg:border-white/10 lg:bg-[#0B100E]/95 lg:backdrop-blur-xl lg:shadow-[0_12px_40px_rgba(0,0,0,0.65)] lg:overflow-hidden"
+          "lg:top-3 lg:bottom-3 lg:left-3 lg:w-[230px] lg:h-auto lg:rounded-2xl lg:border lg:border-white/10 lg:bg-[#0B100E]/95 lg:backdrop-blur-xl lg:shadow-[0_12px_40px_rgba(0,0,0,0.65)] lg:overflow-hidden"
         )}
       >
         {/* Sidebar Header / Brand Logo (Desktop & Mobile) */}
@@ -1104,10 +1104,10 @@ function SidebarContent({
         </div>
 
         {/* Scrollable Navigation Body - Balanced spacing to fit frame seamlessly and prevent cutoff */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 lg:px-2.5 lg:pt-1.5 lg:pb-2 space-y-2 lg:space-y-0.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 lg:px-2.5 lg:pt-2 lg:pb-2 space-y-2 lg:space-y-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           
           {/* Main Nav Section (Gỡ chữ Menu Chính theo yêu cầu để hiển thị trọn vẹn ở dưới) */}
-          <div className="space-y-1 lg:space-y-0.5">
+          <div className="space-y-1 lg:space-y-1">
             {NAV_MAIN.map((item) => (
               <SidebarMainNavItem
                 key={item.href}
@@ -1273,8 +1273,8 @@ function SidebarContent({
         {/* ======================================================== */}
         {/* BOTTOM PERSONAL DOCK: 2 Ô NGANG (LỊCH SỬ & YÊU THÍCH)     */}
         {/* ======================================================== */}
-        <div className="shrink-0 p-1.5 lg:p-1.5 border-t border-white/[0.08] bg-[#080D0B]/90 backdrop-blur-md">
-          <div className="grid grid-cols-2 gap-1.5 lg:gap-1.5">
+        <div className="shrink-0 p-2 lg:p-2 border-t border-white/[0.08] bg-[#080D0B]/90 backdrop-blur-md mt-auto">
+          <div className="grid grid-cols-2 gap-2 lg:gap-2">
             {/* Ô 1: Lịch Sử */}
             <button
               type="button"
@@ -1283,7 +1283,7 @@ function SidebarContent({
                 navigateToTab("/recently");
               }}
               className={cn(
-                "flex items-center justify-center gap-1.5 h-8.5 lg:h-8 px-2 rounded-xl text-xs lg:text-[11.5px] font-bold transition-all border select-none cursor-pointer active:scale-95",
+                "flex items-center justify-center gap-1.5 h-9 lg:h-8.5 px-2.5 rounded-xl text-xs lg:text-[11.5px] font-bold transition-all border select-none cursor-pointer active:scale-95",
                 currentActiveTab === "/recently"
                   ? "bg-brand-green/15 text-brand-green border-brand-green/40 shadow-[0_0_12px_rgba(32,214,107,0.2)]"
                   : "bg-white/[0.04] hover:bg-white/[0.08] text-white/70 hover:text-white border-white/10 hover:border-brand-green/40"
@@ -1303,7 +1303,7 @@ function SidebarContent({
                 navigateToTab("/favorites");
               }}
               className={cn(
-                "flex items-center justify-center gap-1.5 h-8.5 lg:h-8 px-2 rounded-xl text-xs lg:text-[11.5px] font-bold transition-all border select-none cursor-pointer active:scale-95",
+                "flex items-center justify-center gap-1.5 h-9 lg:h-8.5 px-2.5 rounded-xl text-xs lg:text-[11.5px] font-bold transition-all border select-none cursor-pointer active:scale-95",
                 currentActiveTab === "/favorites"
                   ? "bg-brand-green/15 text-brand-green border-brand-green/40 shadow-[0_0_12px_rgba(32,214,107,0.2)]"
                   : "bg-white/[0.04] hover:bg-white/[0.08] text-white/70 hover:text-white border-white/10 hover:border-brand-green/40"

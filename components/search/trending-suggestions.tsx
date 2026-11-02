@@ -49,7 +49,7 @@ export default function TrendingSuggestions({
     return (
       <div className="space-y-3">
         <div className="h-4 bg-white/5 rounded-lg w-32 animate-pulse" />
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3.5 sm:gap-4 lg:gap-5">
           {Array(8).fill(0).map((_, i) => (
             <div key={i} className="aspect-[2/3] bg-white/5 rounded-lg animate-pulse" />
           ))}
@@ -97,7 +97,7 @@ export default function TrendingSuggestions({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3.5 sm:gap-4 lg:gap-5">
         {movies.map((movie: any, idx: number) => (
           <div
             key={`${movie.slug}-${idx}`}

@@ -66,7 +66,7 @@ export const MovieSection = memo(function MovieSection({
 
       {/* Variant 2: Featured Focus Layout (1 Large + 4 Small Grid) */}
       {variant === "featured" && filteredMovies.length >= 5 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 items-start">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-3.5 sm:gap-4 lg:gap-5 items-start">
           {/* Big Featured Left Card (Spans 2 cols) */}
           <div className="col-span-2 sm:col-span-2 lg:col-span-2 group relative flex flex-col h-full select-none">
             <Link
@@ -116,7 +116,7 @@ export const MovieSection = memo(function MovieSection({
 
       {/* Variant 3: Standard Editorial Carousel (Default) */}
       {(variant === "carousel" || (variant === "featured" && filteredMovies.length < 5)) && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3.5 sm:gap-4 lg:gap-5">
           {filteredMovies.slice(0, 6).map((movie) => (
             <MovieCardEditorial key={movie.slug} movie={movie} />
           ))}
@@ -125,7 +125,7 @@ export const MovieSection = memo(function MovieSection({
 
       {/* Variant 4: Movie Grid */}
       {variant === "grid" && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3.5 sm:gap-4 lg:gap-5">
           {filteredMovies.slice(0, 12).map((movie) => (
             <MovieCardEditorial key={movie.slug} movie={movie} />
           ))}

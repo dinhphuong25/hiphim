@@ -37,7 +37,7 @@ export function RelatedMovies({ currentMovie, relatedMovies, title = "Phim liên
         <Star className="w-6 h-6 mr-2 text-yellow-500" />
         {title}
       </h2>
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3.5 sm:gap-4 lg:gap-5">
         {relatedMovies.slice(0, 12).map((movie, idx) => (
           <Link
             key={`${movie.slug}-${idx}`}

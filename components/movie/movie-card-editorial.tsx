@@ -294,7 +294,7 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
 
       {/* Info Under Poster */}
       <div className="mt-2.5 flex flex-col">
-        <h3 className="text-xs font-bold text-cinema-text hover:text-brand-green transition-colors line-clamp-1 flex items-center justify-between group/title">
+        <h3 className="text-xs sm:text-[13.5px] font-bold text-cinema-text hover:text-brand-green transition-colors line-clamp-1 flex items-center justify-between group/title">
           <Link href={movieHref} onClick={handleCardClick} prefetch={false} className="truncate">
             {movie.name}
           </Link>
@@ -302,7 +302,7 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
             ›
           </span>
         </h3>
-        <div className="flex items-center justify-between gap-2 text-[11px] font-mono text-cinema-text-dim mt-0.5">
+        <div className="flex items-center justify-between gap-2 text-[11px] sm:text-xs font-mono text-cinema-text-dim mt-0.5">
           <span className="shrink-0">{movie.year || "2026"}</span>
           {movie.origin_name && <span className="truncate font-sans text-right">{movie.origin_name}</span>}
         </div>
