@@ -38,7 +38,6 @@ import {
   Settings,
   ArrowRight,
   ArrowUp,
-  ArrowDown,
   Smartphone,
   Download,
   AlertTriangle,
@@ -1577,7 +1576,7 @@ function SidebarContent({
             </div>
 
             {/* Main Content Body */}
-            <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1">
+            <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-16 sm:pb-24 flex-1">
               {/* CATEGORIES GRID - Upgraded large cards with icon badges & rich typography */}
               {activeModal === "categories" && (
                 <div ref={categoriesScrollRef}>
@@ -1781,7 +1780,7 @@ function SidebarContent({
 
             {/* Nút scroll tiện ích nổi trong Modal (Floating Scroll FAB) - Chỉ hiện khi đã cuộn qua một đoạn */}
             {modalScrolled && (
-              <div className="fixed right-4 sm:right-8 bottom-16 sm:bottom-24 z-50 animate-in fade-in zoom-in-95 duration-200 pointer-events-auto">
+              <div className="fixed right-4 sm:right-8 bottom-6 sm:bottom-8 z-50 animate-in fade-in zoom-in-95 duration-200 pointer-events-auto">
                 <button
                   type="button"
                   onClick={handleModalScrollToggle}
@@ -1794,110 +1793,6 @@ function SidebarContent({
                 </button>
               </div>
             )}
-
-            {/* Bottom Sticky Action Bar */}
-            <div className="sticky bottom-0 z-30 bg-[#050807]/95 backdrop-blur-md border-t border-white/10 py-3 sm:py-4 shadow-[0_-4px_25px_rgba(0,0,0,0.8)] pb-[max(1rem,env(safe-area-inset-bottom))]">
-              <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between text-xs sm:text-sm text-white/50">
-                <div className="flex items-center gap-2 min-w-0">
-                  {activeModal === "categories" && currentCategory && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        startTransition(() => {
-                          router.push("/", { scroll: false });
-                        });
-                        closeModal();
-                      }}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/25 transition-colors font-medium text-xs cursor-pointer"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                      <span>Bỏ chọn ({activeCategoryObj?.name || currentCategory})</span>
-                    </button>
-                  )}
-
-                  {activeModal === "countries" && currentCountry && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        startTransition(() => {
-                          router.push("/", { scroll: false });
-                        });
-                        closeModal();
-                      }}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/25 transition-colors font-medium text-xs cursor-pointer"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                      <span>Bỏ chọn ({activeCountryObj?.name || currentCountry})</span>
-                    </button>
-                  )}
-
-                  {activeModal === "years" && currentYear && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        startTransition(() => {
-                          router.push("/", { scroll: false });
-                        });
-                        closeModal();
-                      }}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/25 transition-colors font-medium text-xs cursor-pointer"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                      <span>Bỏ chọn (Năm {currentYear})</span>
-                    </button>
-                  )}
-
-                  {((activeModal === "categories" && !currentCategory) ||
-                    (activeModal === "countries" && !currentCountry) ||
-                    (activeModal === "years" && !currentYear)) && (
-                    <span className="truncate text-white/40 text-xs sm:text-sm">
-                      <span className="hidden sm:inline">Bấm vào mục bất kỳ để lọc phim tức thì • Hỗ trợ phím ESC để đóng</span>
-                      <span className="sm:hidden">Chọn mục để lọc tức thì</span>
-                    </span>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-2 sm:gap-3 shrink-0 ml-auto sm:ml-4">
-                  <button
-                    type="button"
-                    onClick={handleModalScrollToggle}
-                    className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 hover:bg-brand-green/15 text-white/80 hover:text-brand-green border border-white/10 hover:border-brand-green/30 transition-all font-medium text-xs cursor-pointer active:scale-95"
-                    title={modalScrolled ? "Cuộn lên đầu trang" : "Cuộn xuống danh sách"}
-                  >
-                    {modalScrolled ? (
-                      <>
-                        <ArrowUp className="w-3.5 h-3.5 text-brand-green stroke-[2.5]" />
-                        <span>Lên đầu</span>
-                      </>
-                    ) : (
-                      <>
-                        <ArrowDown className="w-3.5 h-3.5 text-brand-green stroke-[2.5]" />
-                        <span>Cuộn xuống</span>
-                      </>
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      closeModal();
-                      router.push("/");
-                    }}
-                    className="text-brand-green hover:underline font-bold shrink-0 text-xs sm:text-sm cursor-pointer whitespace-nowrap"
-                  >
-                    Xem tất cả phim
-                  </button>
-                </div>
-              </div>
-            </div>
 
           </div>
         </div>
