@@ -1083,8 +1083,8 @@ function SidebarContent({
         )}
       >
         {/* Sidebar Header / Brand Logo (Desktop & Mobile) */}
-        <div className="h-[52px] px-3.5 lg:px-3.5 flex items-center justify-between border-b border-white/[0.08] shrink-0 bg-white/[0.01]">
-          <Link href="/" className="flex items-center select-none py-1 group transition-transform active:scale-95" aria-label="Về trang chủ Hi Phim">
+        <div className="h-[52px] px-3.5 lg:px-4 flex items-center justify-between lg:justify-center border-b border-white/[0.08] shrink-0 bg-white/[0.01]">
+          <Link href="/" className="flex items-center justify-center select-none py-1 group transition-transform active:scale-95" aria-label="Về trang chủ Hi Phim">
             <BrandLogo size="md" showSlogan={false} />
           </Link>
 
