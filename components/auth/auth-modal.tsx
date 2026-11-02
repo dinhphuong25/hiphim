@@ -22,22 +22,26 @@ import { toast } from "sonner";
 import BrandLogo from "@/components/ui/brand-logo";
 import TurnstileWidget from "./turnstile-widget";
 
-// Curated high-res verified posters from blockbuster cinema & popular films (All verified 200 OK)
-const COLLAGE_POSTERS_COL1 = [
-  "https://phimimg.com/uploads/movies/20260723/nu-hoang-nuoc-mat-poster.webp", // Nữ Hoàng Nước Mắt
-  "https://phimimg.com/uploads/movies/20260827/nguoi-nhen-khoi-dau-moi-poster.webp", // Người Nhện
-  "https://phimimg.com/uploads/movies/20261026/quy-bat-hon-poster.webp", // Quỷ Bắt Hồn
-  "https://phimimg.com/uploads/movies/20261030/duoi-day-ho-poster.webp", // Dưới Đáy Hồ
+// Curated high-res verified posters for the left cinema panel
+const CINEMA_POSTERS = [
+  {
+    name: "Người Nhện: Không Còn Nhà",
+    badge: "Bom Tấn Hollywood",
+    url: "https://i0.wp.com/phimimg.com/uploads/movies/20260827/nguoi-nhen-khoi-dau-moi-poster.webp?w=600&strip=all",
+  },
+  {
+    name: "Nữ Hoàng Nước Mắt",
+    badge: "Phim Bộ Hàn Quốc Hot",
+    url: "https://i0.wp.com/phimimg.com/uploads/movies/20260723/nu-hoang-nuoc-mat-poster.webp?w=600&strip=all",
+  },
+  {
+    name: "Quỷ Bắt Hồn",
+    badge: "Chiếu Rạp Kinh Dị",
+    url: "https://i0.wp.com/phimimg.com/uploads/movies/20261026/quy-bat-hon-poster.webp?w=600&strip=all",
+  },
 ];
 
-const COLLAGE_POSTERS_COL2 = [
-  "https://phimimg.com/upload/vod/20260420-1/9d05f830d9ebd8edce49267b7c44f882.jpg", // Godzilla x Kong
-  "https://phimimg.com/upload/vod/20241109-1/a35018e1760e3901fdd614464e724e7e.jpg", // Arcane
-  "https://phimimg.com/uploads/movies/20260829/doraemon-nobita-va-lau-dai-duoi-day-bien-phien-ban-moi-poster.webp", // Doraemon
-  "https://phimimg.com/uploads/movies/20260919/hope-vung-tu-dia-poster.webp", // Hope
-];
-
-const FALLBACK_POSTER = "https://phimimg.com/uploads/movies/20260827/nguoi-nhen-khoi-dau-moi-poster.webp";
+const FALLBACK_POSTER = "https://i0.wp.com/phimimg.com/uploads/movies/20260827/nguoi-nhen-khoi-dau-moi-poster.webp?w=600&strip=all";
 
 // Official Multi-color Google "G" SVG
 function GoogleIcon({ className = "w-5 h-5" }: { className?: string }) {
@@ -86,12 +90,22 @@ export default function AuthModal() {
   const [errorMessage, setErrorMessage] = useState("");
   const [devCodeBanner, setDevCodeBanner] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState("");
+  const [currentPosterIdx, setCurrentPosterIdx] = useState(0);
 
   // OTP Countdown
   const [countdown, setCountdown] = useState(60);
   const [canResend, setCanResend] = useState(false);
 
   const otpInputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-cycle cinema posters smoothly
+  useEffect(() => {
+    if (!isAuthModalOpen) return;
+    const interval = setInterval(() => {
+      setCurrentPosterIdx((prev) => (prev + 1) % CINEMA_POSTERS.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [isAuthModalOpen]);
 
   // Reset states when opened or mode changed
   useEffect(() => {
@@ -233,96 +247,85 @@ export default function AuthModal() {
       <div className="relative w-full max-w-[840px] bg-[#0A0E0C] border border-white/10 rounded-2xl sm:rounded-3xl shadow-[0_25px_80px_rgba(0,0,0,0.95),0_0_50px_rgba(32,214,107,0.12)] overflow-hidden z-10 grid grid-cols-1 md:grid-cols-12 min-h-[520px]">
         
         {/* ======================================================== */}
-        {/* LEFT COLUMN: CINEMATIC POSTER COLLAGE & HI PHIM BRAND    */}
+        {/* LEFT COLUMN: FULL CINEMATIC POSTER & BRAND EXPERIENCE    */}
         {/* ======================================================== */}
-        <div className="relative hidden md:flex md:col-span-5 flex-col justify-between p-5 lg:p-6 overflow-hidden select-none bg-[#070B09] border-r border-white/[0.08]">
+        <div className="relative hidden md:flex md:col-span-5 flex-col justify-between p-6 overflow-hidden select-none bg-[#070B09] border-r border-white/[0.08]">
           
-          {/* Ambient Emerald Aura Glows */}
-          <div className="absolute -left-12 -top-12 w-64 h-64 rounded-full bg-brand-green/25 blur-[100px] pointer-events-none" />
-          <div className="absolute -right-12 -bottom-12 w-64 h-64 rounded-full bg-emerald-500/20 blur-[90px] pointer-events-none" />
-
-          {/* Poster Collage Background (2 Staggered Columns of Real Blockbuster Posters) */}
-          <div className="absolute inset-0 grid grid-cols-2 gap-2.5 p-3 opacity-65 scale-105 pointer-events-none transform -rotate-1">
-            {/* Column 1 */}
-            <div className="flex flex-col gap-2.5 -translate-y-5">
-              {COLLAGE_POSTERS_COL1.map((src, i) => (
-                <div key={i} className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-[#101714] shadow-2xl border border-white/15">
-                  <Image
-                    src={src}
-                    alt=""
-                    fill
-                    sizes="170px"
-                    unoptimized
-                    className="object-cover"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = FALLBACK_POSTER;
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-
-            {/* Column 2 (Offset for dynamic visual rhythm) */}
-            <div className="flex flex-col gap-2.5 translate-y-2">
-              {COLLAGE_POSTERS_COL2.map((src, i) => (
-                <div key={i} className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-[#101714] shadow-2xl border border-white/15">
-                  <Image
-                    src={src}
-                    alt=""
-                    fill
-                    sizes="170px"
-                    unoptimized
-                    className="object-cover"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = FALLBACK_POSTER;
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
+          {/* Main Cinematic Poster Background (Direct CDN image, full bleed) */}
+          <div className="absolute inset-0 z-0 overflow-hidden">
+            <img
+              key={currentPosterIdx}
+              src={CINEMA_POSTERS[currentPosterIdx]?.url || FALLBACK_POSTER}
+              alt={CINEMA_POSTERS[currentPosterIdx]?.name || "Cinema Poster"}
+              className="w-full h-full object-cover object-center scale-105 transition-all duration-700 ease-out animate-in fade-in"
+              loading="eager"
+            />
+            {/* Cinematic Darkness & Vignette Gradients */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0E0C] via-[#0A0E0C]/50 to-black/30 pointer-events-none" />
+            <div className="absolute inset-y-0 right-0 w-28 bg-gradient-to-l from-[#0A0E0C] to-transparent pointer-events-none" />
+            
+            {/* Ambient Emerald Aura Glow */}
+            <div className="absolute -left-12 -top-12 w-64 h-64 rounded-full bg-brand-green/25 blur-[100px] pointer-events-none" />
+            <div className="absolute -right-12 -bottom-12 w-64 h-64 rounded-full bg-emerald-500/20 blur-[90px] pointer-events-none" />
           </div>
 
-          {/* Vignette & Soft Gradient Overlays for readable text and posters integration */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0A0E0C] via-[#0A0E0C]/75 to-[#070B09]/25 pointer-events-none" />
-          <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#0A0E0C] to-transparent pointer-events-none" />
-
-          {/* Top Brand Tag */}
+          {/* Top Floating Badge & Poster Switcher Dots */}
           <div className="relative z-10 flex items-center justify-between">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-brand-green/30 text-brand-green text-[11px] font-bold tracking-wider uppercase shadow-lg">
-              <Sparkles className="w-3 h-3 text-brand-green" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-brand-green/40 text-brand-green text-xs font-bold tracking-wider uppercase shadow-xl">
+              <Sparkles className="w-3.5 h-3.5 text-brand-green" />
               Rạp Chiếu Riêng
             </span>
+            
+            {/* Carousel dots for 3 blockbusters */}
+            <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10">
+              {CINEMA_POSTERS.map((poster, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setCurrentPosterIdx(idx)}
+                  className={cn(
+                    "h-1.5 rounded-full transition-all cursor-pointer",
+                    currentPosterIdx === idx
+                      ? "w-5 bg-brand-green shadow-[0_0_8px_rgba(32,214,107,0.8)]"
+                      : "w-1.5 bg-white/30 hover:bg-white/60"
+                  )}
+                  aria-label={`Xem poster ${poster.name}`}
+                />
+              ))}
+            </div>
           </div>
 
-          {/* Bottom Card: Official Web Brand Logo & Features List */}
-          <div className="relative z-10 flex flex-col gap-2.5 bg-black/65 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.8)]">
-            <div className="flex items-center">
+          {/* Bottom Floating Glassmorphism Info Card */}
+          <div className="relative z-10 flex flex-col gap-2.5 bg-black/75 backdrop-blur-xl p-4 sm:p-4.5 rounded-2xl border border-white/15 shadow-[0_16px_40px_rgba(0,0,0,0.85)]">
+            <div className="flex items-center justify-between">
               <BrandLogo size="md" showSlogan slogan="Điện ảnh không giới hạn" />
+              <span className="text-[10px] font-bold text-brand-green bg-brand-green/10 border border-brand-green/30 px-2 py-0.5 rounded-full">
+                {CINEMA_POSTERS[currentPosterIdx]?.badge || "4K Vietsub"}
+              </span>
             </div>
 
-            <p className="text-xs text-white/75 leading-relaxed font-normal">
-              Đồng bộ tủ phim, nhớ tập đang xem dở và nhận thông báo khi có tập phim mới.
+            <p className="text-xs text-white/80 leading-relaxed font-normal">
+              Đăng nhập để đồng bộ tủ phim, nhớ phút đang xem dở và nhận thông báo khi có tập phim mới.
             </p>
 
-            {/* Premium feature checklist */}
-            <div className="space-y-1.5 pt-2 border-t border-white/10 text-[11px] font-medium text-white/85">
+            <div className="space-y-1.5 pt-2 border-t border-white/10 text-[11px] font-medium text-white/90">
               <div className="flex items-center gap-2">
                 <span className="w-4 h-4 rounded-full bg-brand-green/20 text-brand-green flex items-center justify-center shrink-0">
                   <Check className="w-2.5 h-2.5 stroke-[3]" />
                 </span>
-                <span>Chuẩn Full HD & 4K siêu tốc</span>
+                <span>Xem chuẩn Full HD & 4K siêu tốc</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-4 h-4 rounded-full bg-brand-green/20 text-brand-green flex items-center justify-center shrink-0">
                   <Check className="w-2.5 h-2.5 stroke-[3]" />
                 </span>
-                <span>Lưu lịch sử & phút giây xem dở</span>
+                <span>Tự động lưu lịch sử & phút xem dở</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-4 h-4 rounded-full bg-brand-green/20 text-brand-green flex items-center justify-center shrink-0">
                   <Check className="w-2.5 h-2.5 stroke-[3]" />
                 </span>
-                <span>Đồng bộ Điện thoại, Máy tính & TV</span>
+                <span>Đồng bộ đa thiết bị: Điện thoại & TV</span>
               </div>
             </div>
           </div>
