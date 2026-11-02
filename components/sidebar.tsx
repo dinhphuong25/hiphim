@@ -1104,7 +1104,7 @@ function SidebarContent({
         </div>
 
         {/* Scrollable Navigation Body - Balanced spacing to fit frame seamlessly and prevent cutoff */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 lg:px-2.5 lg:pt-2.5 lg:pb-3 space-y-2.5 lg:space-y-0.5 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 lg:px-2.5 lg:pt-2.5 lg:pb-3 space-y-2.5 lg:space-y-0.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           
           {/* Main Nav Section */}
           <div className="space-y-1 lg:space-y-1">
