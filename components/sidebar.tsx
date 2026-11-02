@@ -46,7 +46,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { sortCountriesByPopularity, getCountryCode, POPULAR_COUNTRIES } from "@/lib/countries";
-import { getCategoryEmoji, sortCategoriesByPopularity, POPULAR_CATEGORIES } from "@/lib/categories";
+import { sortCategoriesByPopularity, POPULAR_CATEGORIES } from "@/lib/categories";
+import CategoryIcon from "@/components/ui/category-icon";
 import { instantMovieStore } from "@/lib/instant-movie-store";
 import MobileExploreSheet from "@/components/navigation/mobile-explore-sheet";
 import BrandLogo from "@/components/ui/brand-logo";
@@ -1588,7 +1589,6 @@ function SidebarContent({
                     <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3.5 sm:gap-4.5 pb-10">
                       {displayedCategories.map((cat, idx) => {
                         const active = currentCategory === cat.slug;
-                        const emoji = getCategoryEmoji(cat.slug) || "🎬";
                         return (
                           <button
                             key={`${cat.slug}-${idx}`}
@@ -1602,16 +1602,21 @@ function SidebarContent({
                             )}
                           >
                             <div className="flex items-center gap-3 sm:gap-3.5 min-w-0 flex-1">
-                              {/* Large Emoji / Icon Badge */}
+                              {/* Large Cinema SVG Icon Badge (No Emoji) */}
                               <div
                                 className={cn(
-                                  "w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center text-lg sm:text-xl shrink-0 transition-all duration-200 shadow-sm",
+                                  "w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 shadow-sm",
                                   active
-                                    ? "bg-brand-green/20 border border-brand-green/40 text-brand-green scale-105"
-                                    : "bg-white/[0.06] group-hover:bg-brand-green/15 border border-white/10 group-hover:border-brand-green/35 group-hover:scale-105"
+                                    ? "bg-brand-green/20 border border-brand-green/40 text-brand-green scale-105 shadow-[0_0_12px_rgba(32,214,107,0.25)]"
+                                    : "bg-white/[0.06] group-hover:bg-brand-green/15 border border-white/10 group-hover:border-brand-green/35 text-white/70 group-hover:text-brand-green group-hover:scale-105"
                                 )}
                               >
-                                {emoji}
+                                <CategoryIcon
+                                  slug={cat.slug}
+                                  name={cat.name}
+                                  size={21}
+                                  className={active ? "text-brand-green" : "text-white/70 group-hover:text-brand-green"}
+                                />
                               </div>
 
                               <div className="min-w-0 flex-1">
