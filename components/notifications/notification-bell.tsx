@@ -1016,7 +1016,7 @@ export default function NotificationBell({ className }: { className?: string }) 
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         className={cn(
-          "relative flex items-center gap-2 h-9 sm:h-9.5 px-2.5 sm:px-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-green/50 text-white transition-all duration-200 group cursor-pointer active:scale-95 shadow-sm select-none",
+          "relative flex items-center justify-center sm:justify-start gap-2 h-9 sm:h-9.5 w-9 sm:w-auto px-0 sm:px-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-green/50 text-white transition-all duration-200 group cursor-pointer active:scale-95 shadow-sm select-none",
           isOpen && "border-brand-green bg-brand-green/15 text-brand-green shadow-[0_0_15px_rgba(32,214,107,0.25)]"
         )}
         aria-label="Thông báo hệ thống và báo lỗi tập"
@@ -1024,42 +1024,42 @@ export default function NotificationBell({ className }: { className?: string }) 
       >
         <div className="relative shrink-0 flex items-center justify-center">
           <AnimatedHeaderBellIcon
-            size={19}
+            size={18}
             hasUnread={badgeCount > 0 && hasUnread}
             isOpen={isOpen}
           />
+
+          {/* Outer Radar Ping Effect Wave for unread notifications in Green */}
+          {badgeCount > 0 && (
+            <span
+              className={cn(
+                "absolute -top-1 -right-1.5 w-4.5 h-4.5 rounded-full pointer-events-none animate-notif-radar",
+                isSuperAdmin && pendingReportsCount > 0 ? "bg-amber-400" : "bg-brand-green"
+              )}
+            />
+          )}
+
+          {/* Counter Badge on Bell */}
+          {badgeCount > 0 && (
+            <span
+              className={cn(
+                "absolute -top-1.5 -right-2 min-w-[17px] h-4 px-1 rounded-full flex items-center justify-center font-mono font-black text-[9.5px] leading-none select-none z-10 transition-all duration-300 pointer-events-none shrink-0",
+                "ring-2 ring-[#0B100E] shadow-sm",
+                isSuperAdmin && pendingReportsCount > 0
+                  ? "bg-gradient-to-tr from-amber-500 via-rose-500 to-red-500 text-white shadow-[0_0_10px_rgba(244,63,94,0.7)] border border-white/40"
+                  : "bg-brand-green text-black shadow-[0_0_8px_rgba(32,214,107,0.8)]",
+                isBumping && "scale-110"
+              )}
+            >
+              {badgeCount > 99 ? "99+" : badgeCount}
+            </span>
+          )}
         </div>
 
         {/* Chữ "Thông Báo" kế bên chuông theo yêu cầu */}
-        <span className="hidden sm:inline-block text-[12.5px] font-bold text-white/90 group-hover:text-white transition-colors">
+        <span className="hidden sm:inline-block text-[12.5px] font-bold text-white/90 group-hover:text-white transition-colors tracking-tight pl-0.5">
           Thông Báo
         </span>
-
-        {/* Outer Radar Ping Effect Wave for unread notifications in Green (Mobile) */}
-        {badgeCount > 0 && (
-          <span
-            className={cn(
-              "absolute -top-1 -right-1 sm:hidden w-5 h-5 rounded-full pointer-events-none animate-notif-radar",
-              isSuperAdmin && pendingReportsCount > 0 ? "bg-amber-400" : "bg-brand-green"
-            )}
-          />
-        )}
-
-        {/* Counter Badge with Live Number Effect */}
-        {badgeCount > 0 && (
-          <span
-            className={cn(
-              "absolute -top-1.5 -right-1.5 sm:static sm:translate-x-0 sm:translate-y-0 min-w-[19px] h-4.5 px-1.5 rounded-full flex items-center justify-center font-mono font-black text-[10px] leading-none select-none z-10 transition-all duration-300 pointer-events-none shrink-0",
-              "ring-1 ring-[#070b09] shadow-sm",
-              isSuperAdmin && pendingReportsCount > 0
-                ? "bg-gradient-to-tr from-amber-500 via-rose-500 to-red-500 text-white shadow-[0_0_10px_rgba(244,63,94,0.7)] border border-white/40"
-                : "bg-gradient-to-tr from-emerald-600 via-brand-green to-emerald-300 text-black shadow-[0_0_10px_rgba(32,214,107,0.8)] border border-emerald-200/50",
-              isBumping && "scale-110"
-            )}
-          >
-            {badgeCount > 99 ? "99+" : badgeCount}
-          </span>
-        )}
       </button>
 
       {/* Fullscreen Notification Overlay rendered via React Portal into document.body */}

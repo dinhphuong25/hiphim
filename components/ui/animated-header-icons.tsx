@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { User, Search } from "lucide-react";
+import { User, Search, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface AnimatedHeaderIconProps {
@@ -32,95 +32,27 @@ export interface AnimatedHeaderBellProps extends AnimatedHeaderIconProps {
 }
 
 /**
- * 2. Chuông Thông Báo (Notification Bell Icon) - Phong cách Flaticon Lineal Color (GPU Accelerated)
- * Quả chuông vàng 3D với nẹp ruby đỏ, chuông ngân và con lắc đung đưa mượt mà trên GPU.
+ * 2. Chuông Thông Báo (Notification Bell Icon) - Hiện đại, đơn sắc, tinh tế đồng bộ rạp phim
  */
 export const AnimatedHeaderBellIcon = memo(function AnimatedHeaderBellIcon({
   className,
-  size = 20,
+  size = 18,
+  hasUnread = false,
+  isOpen = false,
 }: AnimatedHeaderBellProps) {
   return (
     <div className={cn("relative flex items-center justify-center shrink-0 select-none", className)}>
-      <svg
-        width={size}
-        height={size}
-        viewBox="0 0 24 24"
-        fill="none"
-        className="overflow-visible anim-bell will-change-transform"
-      >
-        <defs>
-          {/* Gradient thân chuông vàng óng */}
-          <linearGradient id="bellGoldGrad" x1="5" y1="4" x2="19" y2="18" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#fef08a" />
-            <stop offset="45%" stopColor="#facc15" />
-            <stop offset="85%" stopColor="#eab308" />
-            <stop offset="100%" stopColor="#ca8a04" />
-          </linearGradient>
-
-          {/* Gradient nẹp chuông ruby đỏ */}
-          <linearGradient id="bellRibbonGrad" x1="4" y1="15" x2="20" y2="18" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#f43f5e" />
-            <stop offset="50%" stopColor="#fb7185" />
-            <stop offset="100%" stopColor="#e11d48" />
-          </linearGradient>
-        </defs>
-
-        {/* Sóng âm thanh 2 bên phát ra khi lắc chuông GPU */}
-        <path
-          d="M3 8a8 8 0 0 0 0 8"
-          stroke="#facc15"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          className="anim-shine"
-        />
-        <path
-          d="M21 8a8 8 0 0 1 0 8"
-          stroke="#facc15"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          className="anim-shine"
-        />
-
-        {/* Quai treo chóp chuông tròn vàng kim */}
-        <path
-          d="M10 4a2 2 0 1 1 4 0"
-          stroke="#ca8a04"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-        <circle cx="12" cy="3" r="1.5" fill="#facc15" />
-
-        {/* Con lắc chuông bên dưới đung đưa nhịp nhàng GPU */}
-        <g className="anim-bell-clapper">
-          <circle cx="12" cy="19.5" r="2.2" fill="#d97706" stroke="#facc15" strokeWidth="1" />
-        </g>
-
-        {/* Thân chuông vàng Lineal Color nổi bật */}
-        <path
-          d="M18 16c-.8-1.5-1.5-3.5-1.5-6.5a4.5 4.5 0 0 0-9 0c0 3-.7 5-1.5 6.5C5.4 17.2 6.2 18 7.5 18h9c1.3 0 2.1-.8 1.5-2Z"
-          fill="url(#bellGoldGrad)"
-          stroke="#ca8a04"
-          strokeWidth="1.5"
-          strokeLinejoin="round"
-        />
-
-        {/* Vành đai đáy chuông bo cong Lineal Color */}
-        <path
-          d="M5.5 17.5c1.5-.8 3.8-1 6.5-1s5 .2 6.5 1c.5.3.3.9-.2.9H6c-.5 0-.7-.6-.5-.9Z"
-          fill="url(#bellRibbonGrad)"
-          stroke="#be123c"
-          strokeWidth="1"
-        />
-
-        {/* Vệt sáng bóng phản quang bên sườn chuông */}
-        <path
-          d="M9.5 7.5c-.8 1.5-1 3.5-.8 5"
-          stroke="#ffffff"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          className="anim-shine"
-        />
-      </svg>
+      <Bell
+        style={{ width: size, height: size }}
+        className={cn(
+          "stroke-[2.2] transition-all duration-200 group-hover:scale-110 shrink-0",
+          isOpen
+            ? "text-brand-green fill-brand-green/20"
+            : hasUnread
+            ? "text-brand-green drop-shadow-[0_0_8px_rgba(32,214,107,0.6)]"
+            : "text-brand-green/90 group-hover:text-brand-green"
+        )}
+      />
     </div>
   );
 });
