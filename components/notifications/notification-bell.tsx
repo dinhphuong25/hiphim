@@ -1016,23 +1016,30 @@ export default function NotificationBell({ className }: { className?: string }) 
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         className={cn(
-          "relative flex items-center justify-center w-9 sm:w-9.5 h-9 sm:h-9.5 rounded-xl bg-white/[0.04] hover:bg-brand-green/10 border border-white/10 hover:border-brand-green/60 text-white/80 hover:text-white transition-all duration-200 group cursor-pointer active:scale-95 shadow-sm",
+          "relative flex items-center gap-2 h-9 sm:h-9.5 px-2.5 sm:px-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-green/50 text-white transition-all duration-200 group cursor-pointer active:scale-95 shadow-sm select-none",
           isOpen && "border-brand-green bg-brand-green/15 text-brand-green shadow-[0_0_15px_rgba(32,214,107,0.25)]"
         )}
         aria-label="Thông báo hệ thống và báo lỗi tập"
         title="Thông báo"
       >
-        <AnimatedHeaderBellIcon
-          size={21}
-          hasUnread={badgeCount > 0 && hasUnread}
-          isOpen={isOpen}
-        />
+        <div className="relative shrink-0 flex items-center justify-center">
+          <AnimatedHeaderBellIcon
+            size={19}
+            hasUnread={badgeCount > 0 && hasUnread}
+            isOpen={isOpen}
+          />
+        </div>
 
-        {/* Outer Radar Ping Effect Wave for unread notifications in Green */}
+        {/* Chữ "Thông Báo" kế bên chuông theo yêu cầu */}
+        <span className="hidden sm:inline-block text-[12.5px] font-bold text-white/90 group-hover:text-white transition-colors">
+          Thông Báo
+        </span>
+
+        {/* Outer Radar Ping Effect Wave for unread notifications in Green (Mobile) */}
         {badgeCount > 0 && (
           <span
             className={cn(
-              "absolute -top-1 -right-1 w-5 h-5 rounded-full pointer-events-none animate-notif-radar",
+              "absolute -top-1 -right-1 sm:hidden w-5 h-5 rounded-full pointer-events-none animate-notif-radar",
               isSuperAdmin && pendingReportsCount > 0 ? "bg-amber-400" : "bg-brand-green"
             )}
           />
@@ -1042,12 +1049,12 @@ export default function NotificationBell({ className }: { className?: string }) 
         {badgeCount > 0 && (
           <span
             className={cn(
-              "absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full flex items-center justify-center font-mono font-black text-[10.5px] leading-none select-none z-10 transition-all duration-300 pointer-events-none",
-              "ring-2 ring-[#070b09] shadow-lg animate-notif-bounce",
+              "absolute -top-1.5 -right-1.5 sm:static sm:translate-x-0 sm:translate-y-0 min-w-[19px] h-4.5 px-1.5 rounded-full flex items-center justify-center font-mono font-black text-[10px] leading-none select-none z-10 transition-all duration-300 pointer-events-none shrink-0",
+              "ring-1 ring-[#070b09] shadow-sm",
               isSuperAdmin && pendingReportsCount > 0
-                ? "bg-gradient-to-tr from-amber-500 via-rose-500 to-red-500 text-white shadow-[0_0_12px_rgba(244,63,94,0.85)] border border-white/50"
-                : "bg-gradient-to-tr from-emerald-600 via-brand-green to-emerald-300 text-black shadow-[0_0_14px_rgba(32,214,107,0.9)] border border-emerald-200/60",
-              isBumping && "scale-125"
+                ? "bg-gradient-to-tr from-amber-500 via-rose-500 to-red-500 text-white shadow-[0_0_10px_rgba(244,63,94,0.7)] border border-white/40"
+                : "bg-gradient-to-tr from-emerald-600 via-brand-green to-emerald-300 text-black shadow-[0_0_10px_rgba(32,214,107,0.8)] border border-emerald-200/50",
+              isBumping && "scale-110"
             )}
           >
             {badgeCount > 99 ? "99+" : badgeCount}
