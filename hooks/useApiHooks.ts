@@ -24,19 +24,20 @@ async function proxyFetch(url: string, timeoutMs = 5000): Promise<any> {
     const timer = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
-        const res = await fetch(proxyUrl(url), { signal: controller.signal });
+        // Direct browser fetch to phimapi.com (CORS *) saves 100% of Cloudflare Worker request quota
+        const directRes = await fetch(url, { signal: controller.signal });
         clearTimeout(timer);
-        if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
-        return await res.json();
-    } catch (err) {
+        if (directRes.ok) return await directRes.json();
+    } catch {
         clearTimeout(timer);
-        // Direct fetch fallback if proxy times out or fails
-        try {
-            const directRes = await fetch(url);
-            if (directRes.ok) return await directRes.json();
-        } catch {}
-        throw err;
     }
+
+    // Fallback to proxy only if direct client fetch failed
+    try {
+        const res = await fetch(proxyUrl(url));
+        if (res.ok) return await res.json();
+    } catch {}
+    throw new Error(`Fetch failed: ${url}`);
 }
 
 // Phim luôn được ghim làm phim nổi bật trên trang chủ

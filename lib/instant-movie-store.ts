@@ -80,9 +80,8 @@ class InstantMovieStore {
     const key = this.buildKey({ typeList, page });
     if (this.cache.has(key) || this.inFlight.has(key)) return;
 
-    const url = `/api/phim?url=${encodeURIComponent(
-      `https://phimapi.com/v1/api/danh-sach/${typeList}?page=${page}&sort_field=modified.time&sort_type=desc&limit=20&sort_lang=vietsub`
-    )}`;
+    // Fetch directly from phimapi.com (CORS *) from client browser, saving 100% of Cloudflare Worker invocations
+    const url = `https://phimapi.com/v1/api/danh-sach/${typeList}?page=${page}&sort_field=modified.time&sort_type=desc&limit=20&sort_lang=vietsub`;
 
     const fetchPromise = (async () => {
       try {

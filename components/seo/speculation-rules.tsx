@@ -18,24 +18,10 @@ export default function SpeculationRules() {
       specScript.type = "speculationrules";
 
       const rules = {
-        prerender: [
-          {
-            source: "list",
-            urls: ["/", "/recently", "/favorites"],
-            eagerness: "moderate",
-          },
-        ],
         prefetch: [
           {
             source: "list",
-            urls: ["/", "/recently", "/favorites"],
-            eagerness: "moderate",
-          },
-          {
-            source: "document",
-            where: {
-              href_matches: "/phim/*",
-            },
+            urls: ["/recently", "/favorites"],
             eagerness: "conservative",
           },
         ],

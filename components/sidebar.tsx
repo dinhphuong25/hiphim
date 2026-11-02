@@ -102,7 +102,7 @@ function SidebarMainNavItem({
     <Link
       href={item.href}
       scroll={false}
-      prefetch={true}
+      prefetch={false}
       onClick={onClick}
       onMouseEnter={() => {
         setIsHovered(true);
@@ -146,7 +146,7 @@ function SidebarPersonalNavItem({
   return (
     <Link
       href={item.href}
-      prefetch={true}
+      prefetch={false}
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -357,12 +357,6 @@ function SidebarContent({
     setCountryRegionFilter("all");
   }, [pathname, searchParams]);
 
-  // Prefetch mobile bottom nav routes for instant 0ms transition on single tap
-  useEffect(() => {
-    router.prefetch("/");
-    router.prefetch("/recently");
-    router.prefetch("/favorites");
-  }, [router]);
 
   const handleBottomNavNavigate = (href: string, e?: React.MouseEvent) => {
     setIsMobileOpen(false);
@@ -608,7 +602,7 @@ function SidebarContent({
             return (
               <Link
                 href="/"
-                prefetch={true}
+                prefetch={false}
                 onClick={(e) => handleBottomNavNavigate("/", e)}
                 className="flex-1 h-full flex items-center justify-center select-none touch-manipulation active:scale-95 transition-transform"
                 aria-label="Trang Chủ"
@@ -638,7 +632,7 @@ function SidebarContent({
             return (
               <Link
                 href="/recently"
-                prefetch={true}
+                prefetch={false}
                 onClick={(e) => handleBottomNavNavigate("/recently", e)}
                 className="flex-1 h-full flex items-center justify-center select-none touch-manipulation active:scale-95 transition-transform"
                 aria-label="Lịch Sử Xem"
@@ -668,7 +662,7 @@ function SidebarContent({
             return (
               <Link
                 href="/favorites"
-                prefetch={true}
+                prefetch={false}
                 onClick={(e) => handleBottomNavNavigate("/favorites", e)}
                 className="flex-1 h-full flex items-center justify-center select-none touch-manipulation active:scale-95 transition-transform"
                 aria-label="Yêu Thích"
@@ -748,7 +742,7 @@ function SidebarContent({
             return (
               <Link
                 href="/tai-app"
-                prefetch={true}
+                prefetch={false}
                 onClick={(e) => handleBottomNavNavigate("/tai-app", e)}
                 className="flex-1 h-full flex items-center justify-center select-none touch-manipulation active:scale-95 transition-transform"
                 aria-label="Tải App"

@@ -48,26 +48,18 @@ export default function InfiniteMovieGrid({
         if (filterCategory) u.searchParams.set("category", filterCategory);
         if (filterCountry) u.searchParams.set("country", filterCountry);
         if (filterYear) u.searchParams.set("year", filterYear);
-        return `/api/phim?url=${encodeURIComponent(u.toString())}`;
+        return u.toString();
       }
       if (filterCountry) {
-        return `/api/phim?url=${encodeURIComponent(
-          `https://phimapi.com/v1/api/quoc-gia/${filterCountry}?page=${pageNum}&limit=${limit}`
-        )}`;
+        return `https://phimapi.com/v1/api/quoc-gia/${filterCountry}?page=${pageNum}&limit=${limit}`;
       }
       if (filterCategory) {
-        return `/api/phim?url=${encodeURIComponent(
-          `https://phimapi.com/v1/api/the-loai/${filterCategory}?page=${pageNum}&limit=${limit}`
-        )}`;
+        return `https://phimapi.com/v1/api/the-loai/${filterCategory}?page=${pageNum}&limit=${limit}`;
       }
       if (filterYear) {
-        return `/api/phim?url=${encodeURIComponent(
-          `https://phimapi.com/v1/api/nam-phat-hanh/${filterYear}?page=${pageNum}&limit=${limit}`
-        )}`;
+        return `https://phimapi.com/v1/api/nam-phat-hanh/${filterYear}?page=${pageNum}&limit=${limit}`;
       }
-      return `/api/phim?url=${encodeURIComponent(
-        `https://phimapi.com/danh-sach/phim-moi-cap-nhat?page=${pageNum}`
-      )}`;
+      return `https://phimapi.com/danh-sach/phim-moi-cap-nhat?page=${pageNum}`;
     },
     [searchParams, topic, category]
   );
