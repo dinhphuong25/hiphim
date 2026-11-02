@@ -169,6 +169,7 @@ const EmbedPlayer = ({
         className="w-full h-full absolute inset-0 rounded-2xl border-0 z-10"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
         allowFullScreen
+        referrerPolicy="no-referrer"
         title="Hi Phim Video Player"
         onLoad={() => setIsLoading(false)}
         onError={() => setHasError(true)}

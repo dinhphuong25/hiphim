@@ -1367,8 +1367,9 @@ export default function Description({ movie, serverData: rawServerData }: any) {
                     );
                   }
 
-                  // Use default Hi Phim <VideoPlayer> UI for m3u8 stream, and EmbedPlayer for VIP/Embed
-                  if (playerMode === 'm3u8' && playableM3u8Url) {
+                  // Priority #1: If stream has playable m3u8 (Mặc định or Dự phòng), ALWAYS use Hi Phim Cinema VideoPlayer
+                  // This eliminates broken third-party player.phimapi.com iframe freezes & CORS localStorage errors
+                  if (playableM3u8Url) {
                     return (
                       <SafePlayerErrorBoundary
                         onReset={() => {
@@ -1379,7 +1380,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
                         }}
                       >
                         <VideoPlayer
-                          key={`${playerMode}-${playableM3u8Url}`}
+                          key={`${playerMode}-${currentEpisodeIndex?.server}-${currentEpisodeIndex?.episode}-${playableM3u8Url}`}
                           videoUrl={playableM3u8Url}
                           autoplay={true}
                           poster={posterImg}
@@ -1392,14 +1393,15 @@ export default function Description({ movie, serverData: rawServerData }: any) {
                           onNextEpisode={handleNextEpisode}
                           onEnded={handleEnded}
                           onFullscreenChange={setIsPlayerFullscreen}
-                          hasAlternativeServer={Boolean(activeEpObj?.link_embed) || (currentServerData && currentServerData.length > 1)}
+                          hasAlternativeServer={Boolean(currentServerData && currentServerData.length > 1)}
                           onSwitchToEmbed={handleSwitchToEmbed}
                           onError={() => {
-                            if (currentServerData && currentServerData.length > 1 && currentEpisodeIndex?.server === 0) {
-                              setCurrentEpisodeIndex({ server: 1, episode: currentEpisodeIndex.episode });
-                              toast.info("Đang tự động kết nối sang Máy chủ Dự phòng...");
-                            } else if (activeEpObj?.link_embed) {
-                              handleSwitchToEmbed();
+                            if (currentServerData && currentServerData.length > 1) {
+                              const nextServer = ((currentEpisodeIndex?.server || 0) + 1) % currentServerData.length;
+                              if (nextServer !== (currentEpisodeIndex?.server || 0)) {
+                                setCurrentEpisodeIndex({ server: nextServer, episode: currentEpisodeIndex?.episode || 0 });
+                                toast.info(`Đang chuyển sang ${currentServerData[nextServer]?.server_name || "Máy chủ Dự phòng"}...`);
+                              }
                             }
                           }}
                           onReportError={() => setShowReportModal(true)}
@@ -1408,20 +1410,18 @@ export default function Description({ movie, serverData: rawServerData }: any) {
                     );
                   }
 
+                  // Priority #2: Pure third-party embed links without direct m3u8 (e.g. NguonC embedded players)
                   return (
                     <EmbedPlayer
                       videoUrl={
-                        activeEpObj?.link_embed ||
-                        (currentEpisodeUrl.includes('.m3u8')
-                          ? `https://player.phimapi.com/player/?url=${encodeURIComponent(currentEpisodeUrl)}`
-                          : currentEpisodeUrl)
+                        activeEpObj?.link_embed || currentEpisodeUrl
                       }
                       poster={posterImg}
                       onReportError={() => setShowReportModal(true)}
                       movieName={movie.name}
                       episodeName={activeEpObj?.name}
                       serverName={
-                        currentServerData?.[currentEpisodeIndex?.server || 0]?.server_name || "Máy chủ Mặc định"
+                        currentServerData?.[currentEpisodeIndex?.server || 0]?.server_name || "Máy chủ Dự phòng"
                       }
                       hasAlternativeServer={Boolean(playableM3u8Url) || (currentServerData && currentServerData.length > 1)}
                       onSwitchToM3u8={handleSwitchToM3u8}

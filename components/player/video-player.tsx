@@ -1487,9 +1487,9 @@ export default function VideoPlayer({
           fragLoadingRetryDelay: 500,
           fragLoadingMaxRetryTimeout: 20_000,
           
-          manifestLoadingTimeOut: 6_000, // Phát hiện mất kết nối/máy chủ chết siêu nhanh để chuyển dự phòng
-          levelLoadingTimeOut: 6_000,
-          fragLoadingTimeOut: 12_000,
+          manifestLoadingTimeOut: 15_000,
+          levelLoadingTimeOut: 15_000,
+          fragLoadingTimeOut: 20_000,
           
           xhrSetup: (xhr) => {
             xhr.withCredentials = false;
@@ -1609,15 +1609,15 @@ export default function VideoPlayer({
                 const is404 = (data.response as any)?.code === 404 || (data.response as any)?.status === 404;
                 const isManifestError = data.details === HLS.ErrorDetails.MANIFEST_LOAD_ERROR || data.details === HLS.ErrorDetails.MANIFEST_PARSING_ERROR;
 
-                if (is404 || isManifestError) {
-                  console.error("Fatal HLS manifest error (404/broken):", data);
+                if (is404) {
+                  console.error("Fatal HLS 404 error:", data);
                   setIsLoading(false);
-                  setError("Nguồn phát từ máy chủ này tạm thời chưa sẵn sàng hoặc bị gián đoạn. Bạn vui lòng chuyển sang Máy chủ Dự phòng để xem.");
+                  setError("Nguồn phát từ máy chủ này tạm thời chưa sẵn sàng. Bạn vui lòng thử lại sau.");
                   onErrorRef.current?.(data);
                   break;
                 }
 
-                if (retryCountRef.current < 2) {
+                if (retryCountRef.current < 3) {
                   retryCountRef.current += 1;
                   console.warn(`HLS Network error, retrying (${retryCountRef.current}/2)...`);
                   setIsSlowNetwork(true);
