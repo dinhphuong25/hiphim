@@ -714,7 +714,7 @@ export default function NotificationBell({ className }: { className?: string }) 
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                  {filteredSystemNotifs.map((item) => {
+                  {filteredSystemNotifs.map((item, index) => {
                     const isUnread = !readSystemIds.includes(item.id);
                     return (
                       <div
@@ -727,30 +727,37 @@ export default function NotificationBell({ className }: { className?: string }) 
                         )}
                       >
                         <div>
-                          {/* Card Top: Badge + Relative Time + Indicator */}
+                          {/* Card Top: Order Number + Badge + Relative Time + Indicator */}
                           <div className="flex items-center justify-between gap-2 mb-3">
-                            <span
-                              className={cn(
-                                "text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 font-mono",
-                                item.type === "update"
-                                  ? "bg-brand-green/20 text-brand-green border border-brand-green/40 shadow-[0_0_10px_rgba(32,214,107,0.25)]"
-                                  : item.type === "success"
-                                  ? "bg-brand-green/15 text-brand-green border border-brand-green/30"
-                                  : item.type === "warning"
-                                  ? "bg-amber-400/15 text-amber-300 border border-amber-400/30"
-                                  : "bg-blue-400/15 text-blue-300 border border-blue-400/30"
-                              )}
-                            >
-                              {item.type === "update"
-                                ? "Cập Nhật"
-                                : item.type === "success"
-                                ? "Chào Mừng"
-                                : item.type === "warning"
-                                ? "Cảnh Báo"
-                                : "Hệ Thống"}
-                            </span>
+                            <div className="flex items-center gap-2 min-w-0">
+                              {/* Số thứ tự thông báo ở góc trên */}
+                              <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-md bg-brand-green/15 border border-brand-green/35 text-[11px] font-mono font-black text-brand-green shadow-[0_0_10px_rgba(32,214,107,0.2)] shrink-0">
+                                #{String(index + 1).padStart(2, "0")}
+                              </span>
 
-                            <div className="flex items-center gap-2">
+                              <span
+                                className={cn(
+                                  "text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 font-mono",
+                                  item.type === "update"
+                                    ? "bg-brand-green/20 text-brand-green border border-brand-green/40 shadow-[0_0_10px_rgba(32,214,107,0.25)]"
+                                    : item.type === "success"
+                                    ? "bg-brand-green/15 text-brand-green border border-brand-green/30"
+                                    : item.type === "warning"
+                                    ? "bg-amber-400/15 text-amber-300 border border-amber-400/30"
+                                    : "bg-blue-400/15 text-blue-300 border border-blue-400/30"
+                                )}
+                              >
+                                {item.type === "update"
+                                  ? "Cập Nhật"
+                                  : item.type === "success"
+                                  ? "Chào Mừng"
+                                  : item.type === "warning"
+                                  ? "Cảnh Báo"
+                                  : "Hệ Thống"}
+                              </span>
+                            </div>
+
+                            <div className="flex items-center gap-2 shrink-0">
                               {isUnread && (
                                 <span className="w-2 h-2 rounded-full bg-brand-green animate-ping" title="Chưa đọc" />
                               )}
@@ -851,7 +858,7 @@ export default function NotificationBell({ className }: { className?: string }) 
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                  {filteredReports.map((report) => {
+                  {filteredReports.map((report, index) => {
                     const isPending = report.status === "pending";
                     return (
                       <div
@@ -864,9 +871,14 @@ export default function NotificationBell({ className }: { className?: string }) 
                         )}
                       >
                         <div className="space-y-3">
-                          {/* Status + Server + Time */}
+                          {/* Order Number + Status + Server + Time */}
                           <div className="flex items-center justify-between gap-2">
                             <div className="flex items-center gap-1.5 flex-wrap">
+                              {/* Số thứ tự báo lỗi ở góc trên */}
+                              <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-md bg-amber-400/15 border border-amber-400/35 text-[11px] font-mono font-black text-amber-300 shadow-[0_0_10px_rgba(251,191,36,0.15)] shrink-0">
+                                #{String(index + 1).padStart(2, "0")}
+                              </span>
+
                               <span
                                 className={cn(
                                   "text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 font-mono",
