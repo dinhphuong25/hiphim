@@ -1016,8 +1016,8 @@ export default function NotificationBell({ className }: { className?: string }) 
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         className={cn(
-          "relative flex items-center justify-center w-9 sm:w-10 h-9 sm:h-10 rounded-full bg-[#111714] border border-white/10 hover:border-brand-green/60 text-white/80 hover:text-white transition-all duration-300 group cursor-pointer active:scale-95 shadow-sm",
-          isOpen && "border-brand-green bg-[#141e18] text-brand-green shadow-[0_0_15px_rgba(32,214,107,0.25)]"
+          "relative flex items-center justify-center w-9 sm:w-9.5 h-9 sm:h-9.5 rounded-xl bg-white/[0.04] hover:bg-brand-green/10 border border-white/10 hover:border-brand-green/60 text-white/80 hover:text-white transition-all duration-200 group cursor-pointer active:scale-95 shadow-sm",
+          isOpen && "border-brand-green bg-brand-green/15 text-brand-green shadow-[0_0_15px_rgba(32,214,107,0.25)]"
         )}
         aria-label="Thông báo hệ thống và báo lỗi tập"
         title="Thông báo"

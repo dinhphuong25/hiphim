@@ -256,9 +256,9 @@ function HeaderComponent({}: HeaderProps) {
           )}
 
           {/* Ô 3: 2 CÁI CÒN LẠI (Notification Bell + User Menu Bento Island) */}
-          <div className="pointer-events-auto flex items-center gap-2.5 h-[48px] px-3 rounded-2xl bg-[#0B100E]/95 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.65)] hover:border-white/20 transition-all duration-200">
+          <div className="pointer-events-auto flex items-center gap-3 sm:gap-3.5 h-[48px] px-3.5 sm:px-4 rounded-2xl bg-[#0B100E]/95 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.65)] hover:border-brand-green/40 hover:bg-[#0E1512]/95 hover:shadow-[0_8px_30px_rgba(32,214,107,0.12)] transition-all duration-200">
             <NotificationBell />
-            <div className="h-4 w-px bg-white/10 shrink-0" />
+            <div className="h-5 w-px bg-white/15 shrink-0" />
             <UserMenu />
           </div>
         </div>

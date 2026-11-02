@@ -65,11 +65,11 @@ export default function UserMenu() {
       <button
         type="button"
         onClick={() => openAuthModal("login")}
-        className="pointer-events-auto flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 h-9 sm:h-10 rounded-full bg-[#111714]/80 backdrop-blur-md hover:bg-white/[0.08] border border-white/10 hover:border-brand-green/40 hover:shadow-[0_0_20px_rgba(32,214,107,0.2)] text-white/80 hover:text-white transition-all duration-300 text-xs font-medium group active:scale-95 shrink-0"
+        className="pointer-events-auto flex items-center justify-center gap-2 px-3.5 sm:px-4 h-9 sm:h-9.5 rounded-xl bg-brand-green/15 hover:bg-brand-green/25 border border-brand-green/40 hover:border-brand-green/70 text-brand-green hover:text-white shadow-[0_0_15px_rgba(32,214,107,0.15)] text-[12.5px] font-bold group transition-all duration-200 active:scale-95 shrink-0 cursor-pointer"
         aria-label="Đăng nhập tài khoản"
       >
-        <User className="w-4 h-4 text-brand-green group-hover:scale-110 transition-transform shrink-0" strokeWidth={1.85} />
-        <span className="font-semibold text-white/90 group-hover:text-white">Đăng Nhập</span>
+        <User className="w-4 h-4 text-brand-green group-hover:scale-110 transition-transform shrink-0" strokeWidth={2} />
+        <span className="font-bold tracking-tight">Đăng Nhập</span>
       </button>
     );
   }
@@ -85,41 +85,41 @@ export default function UserMenu() {
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "flex items-center gap-1.5 sm:gap-2 h-9 sm:h-10 pl-1.5 pr-2 sm:pr-3 rounded-full bg-[#111714]/90 backdrop-blur-md border border-white/15 hover:border-brand-green/60 text-white transition-all duration-300 group active:scale-95",
-          isSuperAdmin && "border-amber-400/50 hover:border-amber-400/80 shadow-[0_0_15px_rgba(251,191,36,0.2)]",
-          !isSuperAdmin && isVip && "border-amber-400/40 hover:border-amber-400 shadow-[0_0_12px_rgba(251,191,36,0.2)]",
-          isOpen && "border-brand-green shadow-[0_0_20px_rgba(32,214,107,0.3)]"
+          "flex items-center gap-2 sm:gap-2.5 h-9 sm:h-9.5 pl-1.5 pr-2.5 sm:pr-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-green/50 text-white transition-all duration-200 group active:scale-95 cursor-pointer",
+          isSuperAdmin && "border-amber-400/40 hover:border-amber-400/80 shadow-[0_0_15px_rgba(251,191,36,0.15)] bg-amber-400/[0.05]",
+          !isSuperAdmin && isVip && "border-amber-400/35 hover:border-amber-400/70 shadow-[0_0_12px_rgba(251,191,36,0.15)]",
+          isOpen && "border-brand-green shadow-[0_0_20px_rgba(32,214,107,0.25)]"
         )}
         aria-label="Menu tài khoản"
       >
         {/* Circular Avatar */}
         <div className={cn(
-          "w-6 h-6 sm:w-7 sm:h-7 rounded-full font-black text-[11px] sm:text-xs flex items-center justify-center shrink-0 relative",
+          "w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-lg font-black text-xs sm:text-[13px] flex items-center justify-center shrink-0 relative",
           isSuperAdmin
-            ? "bg-gradient-to-tr from-amber-400 via-emerald-400 to-brand-green text-black shadow-[0_0_12px_rgba(251,191,36,0.5)] ring-1.5 sm:ring-2 ring-amber-400/50"
+            ? "bg-gradient-to-tr from-amber-400 via-emerald-400 to-brand-green text-black shadow-[0_0_12px_rgba(251,191,36,0.5)] ring-1.5 ring-amber-400/60"
             : "bg-gradient-to-tr from-brand-green to-emerald-300 text-black shadow-[0_0_10px_rgba(32,214,107,0.4)]"
         )}>
           {initial}
           {(isSuperAdmin || isVip) && (
-            <span className="sm:hidden absolute -top-1 -right-1 w-3 h-3 rounded-full bg-amber-400 text-black flex items-center justify-center ring-1 ring-[#111714]">
+            <span className="sm:hidden absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-amber-400 text-black flex items-center justify-center ring-1 ring-[#111714]">
               <Crown className="w-2 h-2 fill-current" />
             </span>
           )}
         </div>
 
         {/* User Display Name */}
-        <span className="hidden sm:inline-block max-w-[90px] md:max-w-[120px] truncate text-xs font-semibold text-white/90 group-hover:text-white">
+        <span className="hidden sm:inline-block max-w-[120px] md:max-w-[150px] lg:max-w-[180px] xl:max-w-[210px] truncate text-[13px] font-bold text-white/95 group-hover:text-white transition-colors">
           {user.name || user.email.split("@")[0]}
         </span>
 
         {/* Super Admin / VIP Pill Badge */}
         {isSuperAdmin ? (
-          <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-400/25 to-amber-500/15 text-amber-300 border border-amber-400/40 shadow-[0_0_10px_rgba(251,191,36,0.25)]">
+          <span className="hidden md:inline-flex items-center gap-1.5 text-[10.5px] font-black uppercase px-2.5 py-0.5 rounded-md bg-gradient-to-r from-amber-400/25 via-amber-500/20 to-yellow-500/15 text-amber-300 border border-amber-400/40 shadow-[0_0_10px_rgba(251,191,36,0.25)] tracking-wide">
             <Crown className="w-3 h-3 text-amber-300" />
             Admin
           </span>
         ) : isVip ? (
-          <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-400/25 to-yellow-500/15 text-amber-300 border border-amber-400/40 shadow-[0_0_10px_rgba(251,191,36,0.2)]">
+          <span className="hidden md:inline-flex items-center gap-1.5 text-[10.5px] font-black uppercase px-2.5 py-0.5 rounded-md bg-gradient-to-r from-amber-400/25 to-yellow-500/15 text-amber-300 border border-amber-400/40 shadow-[0_0_10px_rgba(251,191,36,0.2)] tracking-wide">
             <Crown className="w-3 h-3 text-amber-300" />
             VIP
           </span>
@@ -127,7 +127,7 @@ export default function UserMenu() {
 
         <ChevronDown
           className={cn(
-            "w-3 h-3 sm:w-3.5 sm:h-3.5 text-white/50 group-hover:text-brand-green transition-transform duration-200",
+            "w-3.5 h-3.5 text-white/50 group-hover:text-brand-green transition-transform duration-200 ml-0.5",
             isOpen && "rotate-180 text-brand-green"
           )}
         />
