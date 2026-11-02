@@ -22,20 +22,19 @@ import { toast } from "sonner";
 import BrandLogo from "@/components/ui/brand-logo";
 import TurnstileWidget from "./turnstile-widget";
 
-// 12 Curated high-res verified posters from blockbuster cinema & popular films (All verified 200 OK)
-const COLLAGE_POSTERS = [
+// Curated high-res verified posters from blockbuster cinema & popular films (All verified 200 OK)
+const COLLAGE_POSTERS_COL1 = [
+  "https://phimimg.com/uploads/movies/20260723/nu-hoang-nuoc-mat-poster.webp", // Nữ Hoàng Nước Mắt
   "https://phimimg.com/uploads/movies/20260827/nguoi-nhen-khoi-dau-moi-poster.webp", // Người Nhện
-  "https://phimimg.com/uploads/movies/20260829/doraemon-nobita-va-lau-dai-duoi-day-bien-phien-ban-moi-poster.webp", // Doraemon
-  "https://phimimg.com/uploads/movies/20261028/shaun-the-sheep-quai-la-ghe-nha-poster.webp", // Shaun The Sheep
   "https://phimimg.com/uploads/movies/20261026/quy-bat-hon-poster.webp", // Quỷ Bắt Hồn
   "https://phimimg.com/uploads/movies/20261030/duoi-day-ho-poster.webp", // Dưới Đáy Hồ
+];
+
+const COLLAGE_POSTERS_COL2 = [
+  "https://phimimg.com/upload/vod/20260420-1/9d05f830d9ebd8edce49267b7c44f882.jpg", // Godzilla x Kong
+  "https://phimimg.com/upload/vod/20241109-1/a35018e1760e3901fdd614464e724e7e.jpg", // Arcane
+  "https://phimimg.com/uploads/movies/20260829/doraemon-nobita-va-lau-dai-duoi-day-bien-phien-ban-moi-poster.webp", // Doraemon
   "https://phimimg.com/uploads/movies/20260919/hope-vung-tu-dia-poster.webp", // Hope
-  "https://phimimg.com/uploads/movies/20261021/van-co-cua-co-ay-poster.webp", // Ván Cờ Của Cô Ấy
-  "https://phimimg.com/uploads/movies/20260830/yeu-het-long-chang-fanboy-poster.webp", // Fanboy
-  "https://phimimg.com/uploads/movies/20260915/yeu-nham-canh-sat-thanh-tra-theer-yeu-dau-poster.webp", // Thanh tra Theer
-  "https://phimimg.com/uploads/movies/20261024/ngu-cung-soi-poster.webp", // Ngủ Cùng Sói
-  "https://phimimg.com/uploads/movies/20260818/than-tai-dau-chiem-long-poster.webp", // Thần Tài
-  "https://phimimg.com/uploads/movies/20261031/hoa-dang-khoi-poster.webp", // Hoa Đăng Khởi
 ];
 
 const FALLBACK_POSTER = "https://phimimg.com/uploads/movies/20260827/nguoi-nhen-khoi-dau-moi-poster.webp";
@@ -230,29 +229,29 @@ export default function AuthModal() {
       {/* Backdrop click to close */}
       <div className="absolute inset-0" onClick={closeAuthModal} />
 
-      {/* 2-Column Split Cinematic Modal Container (Compact & Streamlined) */}
-      <div className="relative w-full max-w-[660px] bg-[#0A0E0C] border border-white/10 rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.95),0_0_40px_rgba(32,214,107,0.1)] overflow-hidden z-10 grid grid-cols-1 md:grid-cols-12">
+      {/* 2-Column Split Cinematic Modal Container */}
+      <div className="relative w-full max-w-[840px] bg-[#0A0E0C] border border-white/10 rounded-2xl sm:rounded-3xl shadow-[0_25px_80px_rgba(0,0,0,0.95),0_0_50px_rgba(32,214,107,0.12)] overflow-hidden z-10 grid grid-cols-1 md:grid-cols-12 min-h-[520px]">
         
         {/* ======================================================== */}
         {/* LEFT COLUMN: CINEMATIC POSTER COLLAGE & HI PHIM BRAND    */}
         {/* ======================================================== */}
-        <div className="relative hidden md:flex md:col-span-5 flex-col justify-between p-4 sm:p-5 overflow-hidden select-none bg-[#070B09] border-r border-white/[0.08]">
+        <div className="relative hidden md:flex md:col-span-5 flex-col justify-between p-5 lg:p-6 overflow-hidden select-none bg-[#070B09] border-r border-white/[0.08]">
           
           {/* Ambient Emerald Aura Glows */}
-          <div className="absolute -left-16 -top-16 w-52 h-52 rounded-full bg-brand-green/20 blur-[90px] pointer-events-none" />
-          <div className="absolute -right-16 -bottom-16 w-52 h-52 rounded-full bg-emerald-500/15 blur-[80px] pointer-events-none" />
+          <div className="absolute -left-12 -top-12 w-64 h-64 rounded-full bg-brand-green/25 blur-[100px] pointer-events-none" />
+          <div className="absolute -right-12 -bottom-12 w-64 h-64 rounded-full bg-emerald-500/20 blur-[90px] pointer-events-none" />
 
-          {/* Poster Collage Background (3 Staggered Columns of Verified Posters) */}
-          <div className="absolute inset-0 grid grid-cols-3 gap-1.5 p-2 opacity-25 scale-100 pointer-events-none transform -rotate-1">
+          {/* Poster Collage Background (2 Staggered Columns of Real Blockbuster Posters) */}
+          <div className="absolute inset-0 grid grid-cols-2 gap-2.5 p-3 opacity-65 scale-105 pointer-events-none transform -rotate-1">
             {/* Column 1 */}
-            <div className="flex flex-col gap-1.5 -translate-y-3">
-              {COLLAGE_POSTERS.slice(0, 4).map((src, i) => (
-                <div key={i} className="relative aspect-[2/3] w-full rounded-lg overflow-hidden bg-[#101714] shadow-md border border-white/10">
+            <div className="flex flex-col gap-2.5 -translate-y-5">
+              {COLLAGE_POSTERS_COL1.map((src, i) => (
+                <div key={i} className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-[#101714] shadow-2xl border border-white/15">
                   <Image
                     src={src}
                     alt=""
                     fill
-                    sizes="110px"
+                    sizes="170px"
                     unoptimized
                     className="object-cover"
                     onError={(e) => {
@@ -263,34 +262,15 @@ export default function AuthModal() {
               ))}
             </div>
 
-            {/* Column 2 */}
-            <div className="flex flex-col gap-1.5 translate-y-2">
-              {COLLAGE_POSTERS.slice(4, 8).map((src, i) => (
-                <div key={i} className="relative aspect-[2/3] w-full rounded-lg overflow-hidden bg-[#101714] shadow-md border border-white/10">
+            {/* Column 2 (Offset for dynamic visual rhythm) */}
+            <div className="flex flex-col gap-2.5 translate-y-2">
+              {COLLAGE_POSTERS_COL2.map((src, i) => (
+                <div key={i} className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-[#101714] shadow-2xl border border-white/15">
                   <Image
                     src={src}
                     alt=""
                     fill
-                    sizes="110px"
-                    unoptimized
-                    className="object-cover"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = FALLBACK_POSTER;
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-
-            {/* Column 3 */}
-            <div className="flex flex-col gap-1.5 -translate-y-4">
-              {COLLAGE_POSTERS.slice(8, 12).map((src, i) => (
-                <div key={i} className="relative aspect-[2/3] w-full rounded-lg overflow-hidden bg-[#101714] shadow-md border border-white/10">
-                  <Image
-                    src={src}
-                    alt=""
-                    fill
-                    sizes="110px"
+                    sizes="170px"
                     unoptimized
                     className="object-cover"
                     onError={(e) => {
@@ -302,45 +282,45 @@ export default function AuthModal() {
             </div>
           </div>
 
-          {/* Vignette & Gradient Overlays for readable content */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0A0E0C] via-[#0A0E0C]/85 to-[#070B09]/50 pointer-events-none" />
+          {/* Vignette & Soft Gradient Overlays for readable text and posters integration */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0A0E0C] via-[#0A0E0C]/75 to-[#070B09]/25 pointer-events-none" />
           <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#0A0E0C] to-transparent pointer-events-none" />
 
           {/* Top Brand Tag */}
           <div className="relative z-10 flex items-center justify-between">
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-brand-green/10 border border-brand-green/20 text-brand-green text-[10px] font-bold tracking-wider uppercase">
-              <Sparkles className="w-2.5 h-2.5 text-brand-green" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-brand-green/30 text-brand-green text-[11px] font-bold tracking-wider uppercase shadow-lg">
+              <Sparkles className="w-3 h-3 text-brand-green" />
               Rạp Chiếu Riêng
             </span>
           </div>
 
           {/* Bottom Card: Official Web Brand Logo & Features List */}
-          <div className="relative z-10 flex flex-col gap-2.5 bg-[#0A0E0C]/85 backdrop-blur-md p-3.5 rounded-xl border border-white/10 shadow-[0_8px_24px_rgba(0,0,0,0.6)]">
+          <div className="relative z-10 flex flex-col gap-2.5 bg-black/65 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.8)]">
             <div className="flex items-center">
               <BrandLogo size="md" showSlogan slogan="Điện ảnh không giới hạn" />
             </div>
 
-            <p className="text-[11px] text-white/70 leading-snug">
+            <p className="text-xs text-white/75 leading-relaxed font-normal">
               Đồng bộ tủ phim, nhớ tập đang xem dở và nhận thông báo khi có tập phim mới.
             </p>
 
             {/* Premium feature checklist */}
-            <div className="space-y-1.5 pt-1.5 border-t border-white/10 text-[10.5px] font-medium text-white/80">
-              <div className="flex items-center gap-1.5">
-                <span className="w-3.5 h-3.5 rounded-full bg-brand-green/20 text-brand-green flex items-center justify-center shrink-0">
-                  <Check className="w-2 h-2 stroke-[3]" />
+            <div className="space-y-1.5 pt-2 border-t border-white/10 text-[11px] font-medium text-white/85">
+              <div className="flex items-center gap-2">
+                <span className="w-4 h-4 rounded-full bg-brand-green/20 text-brand-green flex items-center justify-center shrink-0">
+                  <Check className="w-2.5 h-2.5 stroke-[3]" />
                 </span>
                 <span>Chuẩn Full HD & 4K siêu tốc</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-3.5 h-3.5 rounded-full bg-brand-green/20 text-brand-green flex items-center justify-center shrink-0">
-                  <Check className="w-2 h-2 stroke-[3]" />
+              <div className="flex items-center gap-2">
+                <span className="w-4 h-4 rounded-full bg-brand-green/20 text-brand-green flex items-center justify-center shrink-0">
+                  <Check className="w-2.5 h-2.5 stroke-[3]" />
                 </span>
                 <span>Lưu lịch sử & phút giây xem dở</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-3.5 h-3.5 rounded-full bg-brand-green/20 text-brand-green flex items-center justify-center shrink-0">
-                  <Check className="w-2 h-2 stroke-[3]" />
+              <div className="flex items-center gap-2">
+                <span className="w-4 h-4 rounded-full bg-brand-green/20 text-brand-green flex items-center justify-center shrink-0">
+                  <Check className="w-2.5 h-2.5 stroke-[3]" />
                 </span>
                 <span>Đồng bộ Điện thoại, Máy tính & TV</span>
               </div>
@@ -351,19 +331,19 @@ export default function AuthModal() {
         {/* ======================================================== */}
         {/* RIGHT COLUMN: MODERN SLEEK AUTH FORM                     */}
         {/* ======================================================== */}
-        <div className="md:col-span-7 flex flex-col justify-center p-5 sm:p-6 relative bg-[#0A0E0C]">
+        <div className="md:col-span-7 flex flex-col justify-center p-6 sm:p-7 md:p-8 relative bg-[#0A0E0C]">
           
           {/* Close Button (Desktop) */}
           <button
             onClick={closeAuthModal}
-            className="hidden md:flex absolute top-3.5 right-3.5 p-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white/60 hover:text-white active:scale-95 transition-all z-20 cursor-pointer"
+            className="hidden md:flex absolute top-4 right-4 p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white/60 hover:text-white active:scale-95 transition-all z-20 cursor-pointer"
             aria-label="Đóng cửa sổ"
           >
             <X className="w-4 h-4" />
           </button>
 
           {/* Mobile Header (Brand Logo + Close Button) */}
-          <div className="md:hidden flex items-center justify-between mb-3.5 select-none">
+          <div className="md:hidden flex items-center justify-between mb-4 select-none">
             <BrandLogo size="md" showSlogan={false} />
             <button
               onClick={closeAuthModal}
@@ -376,7 +356,7 @@ export default function AuthModal() {
 
           {/* Mode Switch Tabs (Đăng nhập / Đăng ký) */}
           {authModalMode !== "otp" && (
-            <div className="grid grid-cols-2 p-0.5 bg-white/[0.04] border border-white/10 rounded-lg mb-3.5 select-none">
+            <div className="grid grid-cols-2 p-1 bg-white/[0.04] border border-white/10 rounded-xl mb-4 select-none">
               <button
                 type="button"
                 onClick={() => {
@@ -384,9 +364,9 @@ export default function AuthModal() {
                   openAuthModal("login");
                 }}
                 className={cn(
-                  "py-1.5 text-xs font-bold rounded-md transition-all duration-200 cursor-pointer text-center",
+                  "py-2 text-xs sm:text-sm font-bold rounded-lg transition-all duration-200 cursor-pointer text-center",
                   authModalMode === "login"
-                    ? "bg-brand-green text-black shadow-[0_2px_10px_rgba(32,214,107,0.3)]"
+                    ? "bg-brand-green text-black shadow-[0_2px_12px_rgba(32,214,107,0.35)]"
                     : "text-white/60 hover:text-white hover:bg-white/5"
                 )}
               >
@@ -399,9 +379,9 @@ export default function AuthModal() {
                   openAuthModal("register");
                 }}
                 className={cn(
-                  "py-1.5 text-xs font-bold rounded-md transition-all duration-200 cursor-pointer text-center",
+                  "py-2 text-xs sm:text-sm font-bold rounded-lg transition-all duration-200 cursor-pointer text-center",
                   authModalMode === "register"
-                    ? "bg-brand-green text-black shadow-[0_2px_10px_rgba(32,214,107,0.3)]"
+                    ? "bg-brand-green text-black shadow-[0_2px_12px_rgba(32,214,107,0.35)]"
                     : "text-white/60 hover:text-white hover:bg-white/5"
                 )}
               >
@@ -411,27 +391,27 @@ export default function AuthModal() {
           )}
 
           {/* Title Header */}
-          <div className="mb-3.5">
-            <h2 className="text-lg sm:text-xl font-black text-white tracking-tight flex items-center gap-2">
+          <div className="mb-4">
+            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2">
               {authModalMode === "login" && "Chào mừng trở lại"}
               {authModalMode === "register" && "Tạo tài khoản Hi Phim"}
               {authModalMode === "otp" && "Xác thực mã OTP"}
             </h2>
 
             {authModalMode === "login" && (
-              <p className="text-xs text-white/50 mt-0.5">
+              <p className="text-xs sm:text-sm text-white/50 mt-1">
                 Nhập thông tin đăng nhập để tiếp tục xem phim
               </p>
             )}
 
             {authModalMode === "register" && (
-              <p className="text-xs text-white/50 mt-0.5">
+              <p className="text-xs sm:text-sm text-white/50 mt-1">
                 Đăng ký hoàn toàn miễn phí chỉ trong vài giây
               </p>
             )}
 
             {authModalMode === "otp" && (
-              <p className="text-xs text-white/60 mt-0.5">
+              <p className="text-xs sm:text-sm text-white/60 mt-1">
                 Mã xác thực 6 số đã được gửi tới{" "}
                 <strong className="text-brand-green underline">{pendingEmail || email}</strong>
               </p>
@@ -440,16 +420,16 @@ export default function AuthModal() {
 
           {/* Error Message Alert */}
           {errorMessage && (
-            <div className="mb-3 p-2.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs text-center font-medium animate-in fade-in duration-200">
+            <div className="mb-3.5 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs sm:text-sm text-center font-medium animate-in fade-in duration-200">
               {errorMessage}
             </div>
           )}
 
           {/* Dev Mode OTP helper banner */}
           {devCodeBanner && (
-            <div className="mb-3 p-2.5 rounded-lg bg-brand-green/10 border border-brand-green/30 text-brand-green text-xs text-center font-medium">
+            <div className="mb-3.5 p-3 rounded-xl bg-brand-green/10 border border-brand-green/30 text-brand-green text-xs sm:text-sm text-center font-medium">
               💡 <strong>[Dev Mode]</strong> Mã OTP của bạn là:{" "}
-              <span className="font-mono font-bold tracking-widest text-sm underline">{devCodeBanner}</span>
+              <span className="font-mono font-bold tracking-widest text-sm sm:text-base underline">{devCodeBanner}</span>
             </div>
           )}
 
@@ -457,10 +437,10 @@ export default function AuthModal() {
           {/* 1. LOGIN MODE                                            */}
           {/* ======================================================== */}
           {authModalMode === "login" && (
-            <form onSubmit={handleLogin} className="space-y-3">
+            <form onSubmit={handleLogin} className="space-y-3.5">
               {/* Email Input */}
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/40 pointer-events-none" />
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
                 <input
                   type="email"
                   required
@@ -468,13 +448,13 @@ export default function AuthModal() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Địa chỉ Email"
-                  className="w-full h-10 pl-9 pr-3.5 rounded-lg bg-[#121815] border border-white/10 hover:border-white/20 text-white text-xs sm:text-sm placeholder:text-white/35 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green/20 transition-all"
+                  className="w-full h-11 sm:h-12 pl-10 pr-4 rounded-xl bg-[#121815] border border-white/10 hover:border-white/20 text-white text-xs sm:text-sm placeholder:text-white/35 focus:outline-none focus:border-brand-green focus:ring-2 focus:ring-brand-green/20 transition-all"
                 />
               </div>
 
               {/* Password Input with Show/Hide toggle */}
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/40 pointer-events-none" />
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
                 <input
                   type={showPassword ? "text" : "password"}
                   required
@@ -482,15 +462,15 @@ export default function AuthModal() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Mật khẩu"
-                  className="w-full h-10 pl-9 pr-9 rounded-lg bg-[#121815] border border-white/10 hover:border-white/20 text-white text-xs sm:text-sm placeholder:text-white/35 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green/20 transition-all"
+                  className="w-full h-11 sm:h-12 pl-10 pr-10 rounded-xl bg-[#121815] border border-white/10 hover:border-white/20 text-white text-xs sm:text-sm placeholder:text-white/35 focus:outline-none focus:border-brand-green focus:ring-2 focus:ring-brand-green/20 transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-white/40 hover:text-white transition-colors cursor-pointer rounded-md"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-white/40 hover:text-white transition-colors cursor-pointer rounded-md"
                 >
-                  {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
 
@@ -499,7 +479,7 @@ export default function AuthModal() {
                 <button
                   type="button"
                   onClick={handleForgotPassword}
-                  className="text-[11px] text-white/50 hover:text-brand-green transition-colors cursor-pointer"
+                  className="text-xs text-white/50 hover:text-brand-green transition-colors cursor-pointer"
                 >
                   Quên mật khẩu?
                 </button>
@@ -509,14 +489,34 @@ export default function AuthModal() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full h-10 rounded-lg bg-gradient-to-r from-brand-green to-[#25d366] hover:brightness-110 active:scale-[0.99] text-black font-extrabold text-xs sm:text-sm tracking-wide shadow-[0_0_20px_rgba(32,214,107,0.3)] transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2 mt-1"
+                className="w-full h-11 sm:h-12 rounded-xl bg-gradient-to-r from-brand-green to-[#25d366] hover:brightness-110 active:scale-[0.99] text-black font-extrabold text-sm sm:text-base tracking-wide shadow-[0_0_24px_rgba(32,214,107,0.35)] transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2 mt-1"
               >
                 {isSubmitting ? (
-                  <RefreshCw className="w-3.5 h-3.5 animate-spin text-black" />
+                  <RefreshCw className="w-4 h-4 animate-spin text-black" />
                 ) : (
                   <span>Đăng nhập ngay</span>
                 )}
               </button>
+
+              {/* Divider */}
+              <div className="relative flex items-center justify-center py-1 select-none">
+                <div className="w-full border-t border-white/10" />
+                <span className="absolute px-3 bg-[#0A0E0C] text-[11px] font-semibold text-white/40 uppercase tracking-wider">
+                  Hoặc
+                </span>
+              </div>
+
+              {/* Google Social Option */}
+              <div>
+                <button
+                  type="button"
+                  onClick={handleGoogleLogin}
+                  className="w-full h-11 sm:h-12 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] active:scale-[0.99] border border-white/10 hover:border-white/25 text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2.5 transition-all cursor-pointer shadow-sm group"
+                >
+                  <GoogleIcon className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 group-hover:scale-105 transition-transform" />
+                  <span>Đăng nhập nhanh bằng Google</span>
+                </button>
+              </div>
             </form>
           )}
 
@@ -524,10 +524,10 @@ export default function AuthModal() {
           {/* 2. REGISTER MODE                                         */}
           {/* ======================================================== */}
           {authModalMode === "register" && (
-            <form onSubmit={handleRegister} className="space-y-2.5">
+            <form onSubmit={handleRegister} className="space-y-3">
               {/* Full Name */}
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/40 pointer-events-none" />
+                <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
                 <input
                   type="text"
                   required
@@ -535,13 +535,13 @@ export default function AuthModal() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Họ và tên của bạn"
-                  className="w-full h-10 pl-9 pr-3.5 rounded-lg bg-[#121815] border border-white/10 hover:border-white/20 text-white text-xs sm:text-sm placeholder:text-white/35 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green/20 transition-all"
+                  className="w-full h-11 sm:h-12 pl-10 pr-4 rounded-xl bg-[#121815] border border-white/10 hover:border-white/20 text-white text-xs sm:text-sm placeholder:text-white/35 focus:outline-none focus:border-brand-green focus:ring-2 focus:ring-brand-green/20 transition-all"
                 />
               </div>
 
               {/* Email */}
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/40 pointer-events-none" />
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
                 <input
                   type="email"
                   required
@@ -549,13 +549,13 @@ export default function AuthModal() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Địa chỉ Gmail (ví dụ: ten_ban@gmail.com)"
-                  className="w-full h-10 pl-9 pr-3.5 rounded-lg bg-[#121815] border border-white/10 hover:border-white/20 text-white text-xs sm:text-sm placeholder:text-white/35 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green/20 transition-all"
+                  className="w-full h-11 sm:h-12 pl-10 pr-4 rounded-xl bg-[#121815] border border-white/10 hover:border-white/20 text-white text-xs sm:text-sm placeholder:text-white/35 focus:outline-none focus:border-brand-green focus:ring-2 focus:ring-brand-green/20 transition-all"
                 />
               </div>
 
               {/* Password */}
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/40 pointer-events-none" />
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
                 <input
                   type={showPassword ? "text" : "password"}
                   required
@@ -564,15 +564,15 @@ export default function AuthModal() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Mật khẩu (tối thiểu 6 ký tự)"
-                  className="w-full h-10 pl-9 pr-9 rounded-lg bg-[#121815] border border-white/10 hover:border-white/20 text-white text-xs sm:text-sm placeholder:text-white/35 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green/20 transition-all"
+                  className="w-full h-11 sm:h-12 pl-10 pr-10 rounded-xl bg-[#121815] border border-white/10 hover:border-white/20 text-white text-xs sm:text-sm placeholder:text-white/35 focus:outline-none focus:border-brand-green focus:ring-2 focus:ring-brand-green/20 transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-white/40 hover:text-white transition-colors cursor-pointer rounded-md"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-white/40 hover:text-white transition-colors cursor-pointer rounded-md"
                 >
-                  {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
 
@@ -588,17 +588,37 @@ export default function AuthModal() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full h-10 rounded-lg bg-gradient-to-r from-brand-green to-[#25d366] hover:brightness-110 active:scale-[0.99] text-black font-extrabold text-xs sm:text-sm tracking-wide shadow-[0_0_20px_rgba(32,214,107,0.3)] transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2 mt-1"
+                className="w-full h-11 sm:h-12 rounded-xl bg-gradient-to-r from-brand-green to-[#25d366] hover:brightness-110 active:scale-[0.99] text-black font-extrabold text-sm sm:text-base tracking-wide shadow-[0_0_24px_rgba(32,214,107,0.35)] transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2 mt-1"
               >
                 {isSubmitting ? (
-                  <RefreshCw className="w-3.5 h-3.5 animate-spin text-black" />
+                  <RefreshCw className="w-4 h-4 animate-spin text-black" />
                 ) : (
                   <>
                     <span>Tiếp Tục (Nhận Mã OTP)</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-4 h-4" />
                   </>
                 )}
               </button>
+
+              {/* Divider */}
+              <div className="relative flex items-center justify-center py-1 select-none">
+                <div className="w-full border-t border-white/10" />
+                <span className="absolute px-3 bg-[#0A0E0C] text-[11px] font-semibold text-white/40 uppercase tracking-wider">
+                  Hoặc
+                </span>
+              </div>
+
+              {/* Google Social Option */}
+              <div>
+                <button
+                  type="button"
+                  onClick={handleGoogleLogin}
+                  className="w-full h-11 sm:h-12 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] active:scale-[0.99] border border-white/10 hover:border-white/25 text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2.5 transition-all cursor-pointer shadow-sm group"
+                >
+                  <GoogleIcon className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 group-hover:scale-105 transition-transform" />
+                  <span>Đăng ký nhanh bằng Google</span>
+                </button>
+              </div>
             </form>
           )}
 
@@ -606,9 +626,9 @@ export default function AuthModal() {
           {/* 3. OTP VERIFICATION MODE                                 */}
           {/* ======================================================== */}
           {authModalMode === "otp" && (
-            <form onSubmit={handleVerifyOtp} className="space-y-3">
+            <form onSubmit={handleVerifyOtp} className="space-y-4">
               {/* 6 Digit OTP Segmented Boxes */}
-              <div className="relative max-w-[300px] mx-auto py-1">
+              <div className="relative max-w-[320px] mx-auto py-1">
                 <input
                   ref={otpInputRef}
                   type="text"
@@ -622,7 +642,7 @@ export default function AuthModal() {
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-text z-10 font-mono"
                 />
-                <div className="flex items-center justify-between gap-1.5">
+                <div className="flex items-center justify-between gap-2">
                   {[0, 1, 2, 3, 4, 5].map((index) => {
                     const digit = otp[index] || "";
                     const isCurrent = otp.length === index;
@@ -630,7 +650,7 @@ export default function AuthModal() {
                       <div
                         key={index}
                         className={cn(
-                          "w-9 sm:w-10 h-10 sm:h-11 rounded-lg flex items-center justify-center font-mono font-black text-lg sm:text-xl transition-all border-2 select-none",
+                          "w-10 sm:w-11 h-11 sm:h-12 rounded-xl flex items-center justify-center font-mono font-black text-xl transition-all border-2 select-none",
                           digit
                             ? "bg-brand-green/10 border-brand-green text-brand-green shadow-[0_0_12px_rgba(32,214,107,0.3)]"
                             : isCurrent
@@ -648,13 +668,13 @@ export default function AuthModal() {
               <button
                 type="submit"
                 disabled={isSubmitting || otp.length < 6}
-                className="w-full h-10 flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-brand-green to-[#25d366] hover:brightness-110 active:scale-[0.99] text-black font-extrabold text-xs sm:text-sm shadow-[0_0_20px_rgba(32,214,107,0.3)] transition-all disabled:opacity-50 cursor-pointer"
+                className="w-full h-11 sm:h-12 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-green to-[#25d366] hover:brightness-110 active:scale-[0.99] text-black font-extrabold text-sm sm:text-base shadow-[0_0_24px_rgba(32,214,107,0.35)] transition-all disabled:opacity-50 cursor-pointer"
               >
                 {isSubmitting ? (
-                  <RefreshCw className="w-3.5 h-3.5 animate-spin text-black" />
+                  <RefreshCw className="w-4 h-4 animate-spin text-black" />
                 ) : (
                   <>
-                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <CheckCircle2 className="w-4 h-4" />
                     <span>Kích Hoạt Tài Khoản Ngay</span>
                   </>
                 )}
@@ -667,9 +687,9 @@ export default function AuthModal() {
                     type="button"
                     onClick={handleResend}
                     disabled={isSubmitting}
-                    className="text-xs text-brand-green hover:underline font-bold flex items-center justify-center gap-1.5 mx-auto cursor-pointer"
+                    className="text-xs sm:text-sm text-brand-green hover:underline font-bold flex items-center justify-center gap-1.5 mx-auto cursor-pointer"
                   >
-                    <RefreshCw className="w-3 h-3" /> Gửi lại mã OTP mới
+                    <RefreshCw className="w-3.5 h-3.5" /> Gửi lại mã OTP mới
                   </button>
                 ) : (
                   <p className="text-xs text-white/40">
@@ -680,7 +700,7 @@ export default function AuthModal() {
                 <button
                   type="button"
                   onClick={() => openAuthModal("register")}
-                  className="mt-2.5 text-xs text-white/40 hover:text-white/70 block mx-auto transition-colors cursor-pointer"
+                  className="mt-3 text-xs text-white/40 hover:text-white/70 block mx-auto transition-colors cursor-pointer"
                 >
                   ← Đổi địa chỉ email khác
                 </button>
