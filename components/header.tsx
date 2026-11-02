@@ -119,7 +119,7 @@ function HeaderComponent({}: HeaderProps) {
           // Mobile: floating wrapper with safe-area padding
           "left-0 right-0 pt-2 pt-[max(0.5rem,env(safe-area-inset-top))] px-3 pb-1",
           // Desktop: floating island top bar
-          "lg:top-0 lg:left-[252px] lg:right-0 lg:pt-0 lg:pr-3 lg:pb-0 lg:pl-0 lg:bg-transparent lg:border-none lg:shadow-none"
+          "lg:top-0 lg:left-[252px] lg:right-0 lg:pt-3 lg:pr-3 lg:pb-0 lg:pl-0 lg:bg-transparent lg:border-none lg:shadow-none"
         )}
       >
         {/* ======================================================== */}
@@ -229,7 +229,7 @@ function HeaderComponent({}: HeaderProps) {
             type="button"
             onClick={() => setShowSearchOverlay(true)}
             aria-label="Tìm kiếm phim, diễn viên..."
-            className="pointer-events-auto flex items-center justify-between h-[50px] px-4 w-72 xl:w-80 rounded-b-2xl bg-[#0B100E]/95 backdrop-blur-xl border-x border-b border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.65)] hover:border-brand-green/50 hover:bg-[#0E1512]/95 hover:shadow-[0_8px_30px_rgba(32,214,107,0.12)] transition-all duration-200 group cursor-pointer text-left"
+            className="pointer-events-auto flex items-center justify-between h-[48px] px-4 w-72 xl:w-80 rounded-2xl bg-[#0B100E]/95 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.65)] hover:border-brand-green/50 hover:bg-[#0E1512]/95 hover:shadow-[0_8px_30px_rgba(32,214,107,0.15)] transition-all duration-200 group cursor-pointer text-left"
           >
             <div className="flex items-center gap-2.5 min-w-0">
               <Search className="w-4 h-4 text-brand-green shrink-0 stroke-[2.2] group-hover:scale-110 transition-transform duration-200" />
@@ -244,7 +244,7 @@ function HeaderComponent({}: HeaderProps) {
 
           {/* Center Info: Hiện tên phim đang phát nếu có (hoặc để trống thoáng mắt) */}
           {activeMovieName ? (
-            <div className="pointer-events-auto hidden xl:flex items-center gap-2 h-[42px] px-4 rounded-b-xl bg-[#0B100E]/90 backdrop-blur-xl border-x border-b border-white/10 shadow-[0_8px_24px_rgba(0,0,0,0.5)]">
+            <div className="pointer-events-auto hidden xl:flex items-center gap-2 h-[44px] px-4 rounded-2xl bg-[#0B100E]/90 backdrop-blur-xl border border-white/10 shadow-[0_8px_24px_rgba(0,0,0,0.5)]">
               <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse shrink-0" />
               <span className="text-white/50 text-[11px] font-medium shrink-0">Đang phát:</span>
               <span className="text-white font-bold text-[12px] truncate max-w-[220px]">
@@ -256,7 +256,7 @@ function HeaderComponent({}: HeaderProps) {
           )}
 
           {/* Ô 3: 2 CÁI CÒN LẠI (Notification Bell + User Menu Bento Island) */}
-          <div className="pointer-events-auto flex items-center gap-2.5 h-[50px] px-3 rounded-b-2xl bg-[#0B100E]/95 backdrop-blur-xl border-x border-b border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.65)] hover:border-white/15 transition-all duration-200">
+          <div className="pointer-events-auto flex items-center gap-2.5 h-[48px] px-3 rounded-2xl bg-[#0B100E]/95 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.65)] hover:border-white/20 transition-all duration-200">
             <NotificationBell />
             <div className="h-4 w-px bg-white/10 shrink-0" />
             <UserMenu />
