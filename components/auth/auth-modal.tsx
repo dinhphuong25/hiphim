@@ -22,26 +22,27 @@ import { toast } from "sonner";
 import BrandLogo from "@/components/ui/brand-logo";
 import TurnstileWidget from "./turnstile-widget";
 
-// Curated high-res verified posters for the left cinema panel
-const CINEMA_POSTERS = [
-  {
-    name: "Người Nhện: Không Còn Nhà",
-    badge: "Bom Tấn Hollywood",
-    url: "https://i0.wp.com/phimimg.com/uploads/movies/20260827/nguoi-nhen-khoi-dau-moi-poster.webp?w=600&strip=all",
-  },
-  {
-    name: "Nữ Hoàng Nước Mắt",
-    badge: "Phim Bộ Hàn Quốc Hot",
-    url: "https://i0.wp.com/phimimg.com/uploads/movies/20260723/nu-hoang-nuoc-mat-poster.webp?w=600&strip=all",
-  },
-  {
-    name: "Quỷ Bắt Hồn",
-    badge: "Chiếu Rạp Kinh Dị",
-    url: "https://i0.wp.com/phimimg.com/uploads/movies/20261026/quy-bat-hon-poster.webp?w=600&strip=all",
-  },
+// Curated high-res verified posters for the 3-column cinematic collage (RoPhim Style)
+const COLLAGE_COL1 = [
+  "https://i0.wp.com/phimimg.com/uploads/movies/20260827/nguoi-nhen-khoi-dau-moi-poster.webp?w=320&strip=all", // Người Nhện
+  "https://i0.wp.com/phimimg.com/uploads/movies/20261026/quy-bat-hon-poster.webp?w=320&strip=all", // Quỷ Bắt Hồn
+  "https://i0.wp.com/phimimg.com/uploads/movies/20260830/yeu-het-long-chang-fanboy-poster.webp?w=320&strip=all", // Fanboy
+  "https://i0.wp.com/phimimg.com/uploads/movies/20261028/shaun-the-sheep-quai-la-ghe-nha-poster.webp?w=320&strip=all", // Shaun The Sheep
 ];
 
-const FALLBACK_POSTER = "https://i0.wp.com/phimimg.com/uploads/movies/20260827/nguoi-nhen-khoi-dau-moi-poster.webp?w=600&strip=all";
+const COLLAGE_COL2 = [
+  "https://i0.wp.com/phimimg.com/uploads/movies/20260723/nu-hoang-nuoc-mat-poster.webp?w=320&strip=all", // Nữ Hoàng Nước Mắt
+  "https://i0.wp.com/phimimg.com/uploads/movies/20261030/duoi-day-ho-poster.webp?w=320&strip=all", // Dưới Đáy Hồ
+  "https://i0.wp.com/phimimg.com/uploads/movies/20261021/van-co-cua-co-ay-poster.webp?w=320&strip=all", // Ván Cờ Của Cô Ấy
+  "https://i0.wp.com/phimimg.com/uploads/movies/20260919/hope-vung-tu-dia-poster.webp?w=320&strip=all", // Hope
+];
+
+const COLLAGE_COL3 = [
+  "https://i0.wp.com/phimimg.com/uploads/movies/20260829/doraemon-nobita-va-lau-dai-duoi-day-bien-phien-ban-moi-poster.webp?w=320&strip=all", // Doraemon
+  "https://i0.wp.com/phimimg.com/uploads/movies/20260827/nguoi-nhen-khoi-dau-moi-poster.webp?w=320&strip=all", // Người Nhện
+  "https://i0.wp.com/phimimg.com/uploads/movies/20261026/quy-bat-hon-poster.webp?w=320&strip=all", // Quỷ Bắt Hồn
+  "https://i0.wp.com/phimimg.com/uploads/movies/20260723/nu-hoang-nuoc-mat-poster.webp?w=320&strip=all", // Nữ Hoàng Nước Mắt
+];
 
 // Official Multi-color Google "G" SVG
 function GoogleIcon({ className = "w-5 h-5" }: { className?: string }) {
@@ -90,22 +91,12 @@ export default function AuthModal() {
   const [errorMessage, setErrorMessage] = useState("");
   const [devCodeBanner, setDevCodeBanner] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState("");
-  const [currentPosterIdx, setCurrentPosterIdx] = useState(0);
 
   // OTP Countdown
   const [countdown, setCountdown] = useState(60);
   const [canResend, setCanResend] = useState(false);
 
   const otpInputRef = useRef<HTMLInputElement>(null);
-
-  // Auto-cycle cinema posters smoothly
-  useEffect(() => {
-    if (!isAuthModalOpen) return;
-    const interval = setInterval(() => {
-      setCurrentPosterIdx((prev) => (prev + 1) % CINEMA_POSTERS.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, [isAuthModalOpen]);
 
   // Reset states when opened or mode changed
   useEffect(() => {
@@ -243,98 +234,63 @@ export default function AuthModal() {
       {/* Backdrop click to close */}
       <div className="absolute inset-0" onClick={closeAuthModal} />
 
-      {/* 2-Column Split Cinematic Modal Container */}
-      <div className="relative w-full max-w-[840px] bg-[#0A0E0C] border border-white/10 rounded-2xl sm:rounded-3xl shadow-[0_25px_80px_rgba(0,0,0,0.95),0_0_50px_rgba(32,214,107,0.12)] overflow-hidden z-10 grid grid-cols-1 md:grid-cols-12 min-h-[520px]">
+      {/* 2-Column Split Cinematic Modal Container (RoPhim Style) */}
+      <div className="relative w-full max-w-[780px] bg-[#0A0E0C] border border-white/10 rounded-2xl shadow-[0_25px_80px_rgba(0,0,0,0.95),0_0_50px_rgba(32,214,107,0.1)] overflow-hidden z-10 grid grid-cols-1 md:grid-cols-12 min-h-[480px]">
         
         {/* ======================================================== */}
-        {/* LEFT COLUMN: FULL CINEMATIC POSTER & BRAND EXPERIENCE    */}
+        {/* LEFT COLUMN: CINEMATIC POSTER COLLAGE (ROPHIM STYLE)     */}
         {/* ======================================================== */}
-        <div className="relative hidden md:flex md:col-span-5 flex-col justify-between p-6 overflow-hidden select-none bg-[#070B09] border-r border-white/[0.08]">
+        <div className="relative hidden md:flex md:col-span-5 flex-col justify-end p-7 sm:p-8 overflow-hidden select-none bg-[#070B09] border-r border-white/[0.08]">
           
-          {/* Main Cinematic Poster Background (Direct CDN image, full bleed) */}
-          <div className="absolute inset-0 z-0 overflow-hidden">
-            <img
-              key={currentPosterIdx}
-              src={CINEMA_POSTERS[currentPosterIdx]?.url || FALLBACK_POSTER}
-              alt={CINEMA_POSTERS[currentPosterIdx]?.name || "Cinema Poster"}
-              className="w-full h-full object-cover object-center scale-105 transition-all duration-700 ease-out animate-in fade-in"
-              loading="eager"
-            />
-            {/* Cinematic Darkness & Vignette Gradients */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0E0C] via-[#0A0E0C]/50 to-black/30 pointer-events-none" />
-            <div className="absolute inset-y-0 right-0 w-28 bg-gradient-to-l from-[#0A0E0C] to-transparent pointer-events-none" />
+          {/* 3 Staggered Tilted Columns Poster Collage */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute -inset-10 grid grid-cols-3 gap-2.5 -rotate-6 scale-110 opacity-45">
+              {/* Column 1 */}
+              <div className="flex flex-col gap-2.5 -translate-y-8">
+                {COLLAGE_COL1.map((src, i) => (
+                  <div key={i} className="relative aspect-[2/3] w-full rounded-lg overflow-hidden bg-[#101714] shadow-xl">
+                    <img src={src} alt="" className="w-full h-full object-cover" loading="eager" />
+                  </div>
+                ))}
+              </div>
+
+              {/* Column 2 (Offset down) */}
+              <div className="flex flex-col gap-2.5 translate-y-3">
+                {COLLAGE_COL2.map((src, i) => (
+                  <div key={i} className="relative aspect-[2/3] w-full rounded-lg overflow-hidden bg-[#101714] shadow-xl">
+                    <img src={src} alt="" className="w-full h-full object-cover" loading="eager" />
+                  </div>
+                ))}
+              </div>
+
+              {/* Column 3 (Offset up) */}
+              <div className="flex flex-col gap-2.5 -translate-y-12">
+                {COLLAGE_COL3.map((src, i) => (
+                  <div key={i} className="relative aspect-[2/3] w-full rounded-lg overflow-hidden bg-[#101714] shadow-xl">
+                    <img src={src} alt="" className="w-full h-full object-cover" loading="eager" />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Cinematic Moody Vignette & Fade Gradients matching RoPhim */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0E0C] via-[#0A0E0C]/65 to-[#0A0E0C]/35" />
+            <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#0A0E0C] to-transparent" />
             
-            {/* Ambient Emerald Aura Glow */}
-            <div className="absolute -left-12 -top-12 w-64 h-64 rounded-full bg-brand-green/25 blur-[100px] pointer-events-none" />
-            <div className="absolute -right-12 -bottom-12 w-64 h-64 rounded-full bg-emerald-500/20 blur-[90px] pointer-events-none" />
+            {/* Subtle Brand Green Ambient Glow */}
+            <div className="absolute -left-12 -bottom-12 w-64 h-64 rounded-full bg-brand-green/15 blur-[100px] pointer-events-none" />
           </div>
 
-          {/* Top Floating Badge & Poster Switcher Dots */}
-          <div className="relative z-10 flex items-center justify-between">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-brand-green/40 text-brand-green text-xs font-bold tracking-wider uppercase shadow-xl">
-              <Sparkles className="w-3.5 h-3.5 text-brand-green" />
-              Rạp Chiếu Riêng
-            </span>
-            
-            {/* Carousel dots for 3 blockbusters */}
-            <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10">
-              {CINEMA_POSTERS.map((poster, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => setCurrentPosterIdx(idx)}
-                  className={cn(
-                    "h-1.5 rounded-full transition-all cursor-pointer",
-                    currentPosterIdx === idx
-                      ? "w-5 bg-brand-green shadow-[0_0_8px_rgba(32,214,107,0.8)]"
-                      : "w-1.5 bg-white/30 hover:bg-white/60"
-                  )}
-                  aria-label={`Xem poster ${poster.name}`}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Bottom Floating Glassmorphism Info Card */}
-          <div className="relative z-10 flex flex-col gap-2.5 bg-black/75 backdrop-blur-xl p-4 sm:p-4.5 rounded-2xl border border-white/15 shadow-[0_16px_40px_rgba(0,0,0,0.85)]">
-            <div className="flex items-center justify-between">
-              <BrandLogo size="md" showSlogan slogan="Điện ảnh không giới hạn" />
-              <span className="text-[10px] font-bold text-brand-green bg-brand-green/10 border border-brand-green/30 px-2 py-0.5 rounded-full">
-                {CINEMA_POSTERS[currentPosterIdx]?.badge || "4K Vietsub"}
-              </span>
-            </div>
-
-            <p className="text-xs text-white/80 leading-relaxed font-normal">
-              Đăng nhập để đồng bộ tủ phim, nhớ phút đang xem dở và nhận thông báo khi có tập phim mới.
-            </p>
-
-            <div className="space-y-1.5 pt-2 border-t border-white/10 text-[11px] font-medium text-white/90">
-              <div className="flex items-center gap-2">
-                <span className="w-4 h-4 rounded-full bg-brand-green/20 text-brand-green flex items-center justify-center shrink-0">
-                  <Check className="w-2.5 h-2.5 stroke-[3]" />
-                </span>
-                <span>Xem chuẩn Full HD & 4K siêu tốc</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-4 h-4 rounded-full bg-brand-green/20 text-brand-green flex items-center justify-center shrink-0">
-                  <Check className="w-2.5 h-2.5 stroke-[3]" />
-                </span>
-                <span>Tự động lưu lịch sử & phút xem dở</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-4 h-4 rounded-full bg-brand-green/20 text-brand-green flex items-center justify-center shrink-0">
-                  <Check className="w-2.5 h-2.5 stroke-[3]" />
-                </span>
-                <span>Đồng bộ đa thiết bị: Điện thoại & TV</span>
-              </div>
-            </div>
+          {/* Bottom Branding: Only clean Brand Logo & Slogan (NO card, NO box, NO rạp chiếu riêng!) */}
+          <div className="relative z-10">
+            <BrandLogo size="lg" showSlogan slogan="Điện ảnh không giới hạn" />
           </div>
         </div>
 
         {/* ======================================================== */}
         {/* RIGHT COLUMN: MODERN SLEEK AUTH FORM                     */}
         {/* ======================================================== */}
-        <div className="md:col-span-7 flex flex-col justify-center p-6 sm:p-7 md:p-8 relative bg-[#0A0E0C]">
+        <div className="md:col-span-7 flex flex-col justify-center p-7 sm:p-8 md:p-9 relative bg-[#0A0E0C]">
           
           {/* Close Button (Desktop) */}
           <button
@@ -346,7 +302,7 @@ export default function AuthModal() {
           </button>
 
           {/* Mobile Header (Brand Logo + Close Button) */}
-          <div className="md:hidden flex items-center justify-between mb-4 select-none">
+          <div className="md:hidden flex items-center justify-between mb-5 select-none">
             <BrandLogo size="md" showSlogan={false} />
             <button
               onClick={closeAuthModal}
@@ -357,68 +313,54 @@ export default function AuthModal() {
             </button>
           </div>
 
-          {/* Mode Switch Tabs (Đăng nhập / Đăng ký) */}
-          {authModalMode !== "otp" && (
-            <div className="grid grid-cols-2 p-1 bg-white/[0.04] border border-white/10 rounded-xl mb-4 select-none">
-              <button
-                type="button"
-                onClick={() => {
-                  setErrorMessage("");
-                  openAuthModal("login");
-                }}
-                className={cn(
-                  "py-2 text-xs sm:text-sm font-bold rounded-lg transition-all duration-200 cursor-pointer text-center",
-                  authModalMode === "login"
-                    ? "bg-brand-green text-black shadow-[0_2px_12px_rgba(32,214,107,0.35)]"
-                    : "text-white/60 hover:text-white hover:bg-white/5"
-                )}
-              >
-                Đăng nhập
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setErrorMessage("");
-                  openAuthModal("register");
-                }}
-                className={cn(
-                  "py-2 text-xs sm:text-sm font-bold rounded-lg transition-all duration-200 cursor-pointer text-center",
-                  authModalMode === "register"
-                    ? "bg-brand-green text-black shadow-[0_2px_12px_rgba(32,214,107,0.35)]"
-                    : "text-white/60 hover:text-white hover:bg-white/5"
-                )}
-              >
-                Đăng ký mới
-              </button>
-            </div>
-          )}
-
-          {/* Title Header */}
-          <div className="mb-4">
-            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2">
-              {authModalMode === "login" && "Chào mừng trở lại"}
-              {authModalMode === "register" && "Tạo tài khoản Hi Phim"}
+          {/* Title Header (RoPhim Style: Title + direct inline link to switch mode) */}
+          <div className="mb-5">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              {authModalMode === "login" && "Đăng nhập"}
+              {authModalMode === "register" && "Đăng ký tài khoản"}
               {authModalMode === "otp" && "Xác thực mã OTP"}
             </h2>
 
-            {authModalMode === "login" && (
-              <p className="text-xs sm:text-sm text-white/50 mt-1">
-                Nhập thông tin đăng nhập để tiếp tục xem phim
-              </p>
-            )}
+            <p className="text-xs sm:text-sm text-white/50 mt-1.5">
+              {authModalMode === "login" && (
+                <>
+                  Nếu bạn chưa có tài khoản,{" "}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setErrorMessage("");
+                      openAuthModal("register");
+                    }}
+                    className="text-brand-green hover:underline font-bold cursor-pointer"
+                  >
+                    đăng ký ngay
+                  </button>
+                </>
+              )}
 
-            {authModalMode === "register" && (
-              <p className="text-xs sm:text-sm text-white/50 mt-1">
-                Đăng ký hoàn toàn miễn phí chỉ trong vài giây
-              </p>
-            )}
+              {authModalMode === "register" && (
+                <>
+                  Nếu bạn đã có tài khoản,{" "}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setErrorMessage("");
+                      openAuthModal("login");
+                    }}
+                    className="text-brand-green hover:underline font-bold cursor-pointer"
+                  >
+                    đăng nhập ngay
+                  </button>
+                </>
+              )}
 
-            {authModalMode === "otp" && (
-              <p className="text-xs sm:text-sm text-white/60 mt-1">
-                Mã xác thực 6 số đã được gửi tới{" "}
-                <strong className="text-brand-green underline">{pendingEmail || email}</strong>
-              </p>
-            )}
+              {authModalMode === "otp" && (
+                <>
+                  Mã xác thực 6 số đã được gửi tới{" "}
+                  <strong className="text-brand-green underline">{pendingEmail || email}</strong>
+                </>
+              )}
+            </p>
           </div>
 
           {/* Error Message Alert */}
@@ -450,7 +392,7 @@ export default function AuthModal() {
                   aria-label="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Địa chỉ Email"
+                  placeholder="Email"
                   className="w-full h-11 sm:h-12 pl-10 pr-4 rounded-xl bg-[#121815] border border-white/10 hover:border-white/20 text-white text-xs sm:text-sm placeholder:text-white/35 focus:outline-none focus:border-brand-green focus:ring-2 focus:ring-brand-green/20 transition-all"
                 />
               </div>
@@ -477,8 +419,21 @@ export default function AuthModal() {
                 </button>
               </div>
 
-              {/* Forgot Password Link */}
-              <div className="flex justify-end">
+              {/* Submit Button (RoPhim Style: Big solid action button) */}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full h-11 sm:h-12 rounded-xl bg-brand-green hover:bg-[#1bb85c] active:scale-[0.99] text-black font-extrabold text-sm sm:text-base tracking-wide shadow-[0_0_24px_rgba(32,214,107,0.35)] transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2 mt-2"
+              >
+                {isSubmitting ? (
+                  <RefreshCw className="w-4 h-4 animate-spin text-black" />
+                ) : (
+                  <span>Đăng nhập</span>
+                )}
+              </button>
+
+              {/* Centered Forgot Password Link (Like RoPhim) */}
+              <div className="text-center pt-1.5">
                 <button
                   type="button"
                   onClick={handleForgotPassword}
@@ -487,19 +442,6 @@ export default function AuthModal() {
                   Quên mật khẩu?
                 </button>
               </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full h-11 sm:h-12 rounded-xl bg-gradient-to-r from-brand-green to-[#25d366] hover:brightness-110 active:scale-[0.99] text-black font-extrabold text-sm sm:text-base tracking-wide shadow-[0_0_24px_rgba(32,214,107,0.35)] transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2 mt-1"
-              >
-                {isSubmitting ? (
-                  <RefreshCw className="w-4 h-4 animate-spin text-black" />
-                ) : (
-                  <span>Đăng nhập ngay</span>
-                )}
-              </button>
 
               {/* Divider */}
               <div className="relative flex items-center justify-center py-1 select-none">
@@ -591,13 +533,13 @@ export default function AuthModal() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full h-11 sm:h-12 rounded-xl bg-gradient-to-r from-brand-green to-[#25d366] hover:brightness-110 active:scale-[0.99] text-black font-extrabold text-sm sm:text-base tracking-wide shadow-[0_0_24px_rgba(32,214,107,0.35)] transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2 mt-1"
+                className="w-full h-11 sm:h-12 rounded-xl bg-brand-green hover:bg-[#1bb85c] active:scale-[0.99] text-black font-extrabold text-sm sm:text-base tracking-wide shadow-[0_0_24px_rgba(32,214,107,0.35)] transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2 mt-2"
               >
                 {isSubmitting ? (
                   <RefreshCw className="w-4 h-4 animate-spin text-black" />
                 ) : (
                   <>
-                    <span>Tiếp Tục (Nhận Mã OTP)</span>
+                    <span>Đăng ký tài khoản</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
