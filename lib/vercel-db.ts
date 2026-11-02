@@ -56,14 +56,35 @@ export const vercelSql: any = new Proxy(
 );
 
 let hasCreatedIndex = false;
+let _dbAvailable: boolean | null = null;
+let _lastCheckTime = 0;
 
 /**
- * Super-fast check: returns true if database connection is configured.
- * Bảng dữ liệu đã được tạo sẵn trong Neon PostgreSQL nên không chạy lại DDL thừa.
+ * Super-fast check: returns true only if database connection is configured and responsive.
+ * Gracefully falls back to local JSON storage if PostgreSQL is down or unauthenticated.
  */
 export async function ensureVercelDatabase(): Promise<boolean> {
+  const url = getDatabaseUrl();
+  if (!url) return false;
   const sql = getVercelSql();
   if (!sql) return false;
+
+  const now = Date.now();
+  if (_dbAvailable !== null && now - _lastCheckTime < 30_000) {
+    return _dbAvailable;
+  }
+
+  try {
+    await sql`SELECT 1`;
+    _dbAvailable = true;
+    _lastCheckTime = now;
+  } catch (err: any) {
+    _dbAvailable = false;
+    _lastCheckTime = now;
+    console.warn("[Database] PostgreSQL connection failed, falling back to local file storage:", err?.message || err);
+    return false;
+  }
+
   if (!hasCreatedIndex) {
     hasCreatedIndex = true;
     (async () => {

@@ -98,14 +98,19 @@ async function readPersistentUserByEmail(email: string): Promise<User | null | u
   }
 
   // 2. Fallback to PostgreSQL (Neon)
-  if (!(await ensureVercelDatabase())) return undefined;
-  const rows = await vercelSql!`SELECT data FROM hiphim_users WHERE email = ${normalized}`;
-  const row = rows[0] as { data: User } | undefined;
-  if (row) {
-    const user = row.data;
-    userProfileCacheByEmail.set(normalized, { user, expires: Date.now() + USER_CACHE_TTL });
-    if (user.id) userProfileCacheById.set(user.id, { user, expires: Date.now() + USER_CACHE_TTL });
-    return user;
+  if (await ensureVercelDatabase()) {
+    try {
+      const rows = await vercelSql!`SELECT data FROM hiphim_users WHERE email = ${normalized}`;
+      const row = rows[0] as { data: User } | undefined;
+      if (row) {
+        const user = row.data;
+        userProfileCacheByEmail.set(normalized, { user, expires: Date.now() + USER_CACHE_TTL });
+        if (user.id) userProfileCacheById.set(user.id, { user, expires: Date.now() + USER_CACHE_TTL });
+        return user;
+      }
+    } catch (err) {
+      console.warn("[PostgreSQL] Error reading user by email, falling back:", err);
+    }
   }
 
   // Import a legacy local account the first time it is requested.
@@ -270,12 +275,17 @@ export async function savePendingRegistrationPersistent(
     }
   }
 
-  if (!(await ensureVercelDatabase())) {
-    savePendingRegistration(normalized, passwordHash, name, otp);
-    return;
+  if (await ensureVercelDatabase()) {
+    try {
+      await vercelSql!`INSERT INTO hiphim_pending_registrations (email, data, expires_at) VALUES (${normalized}, ${JSON.stringify(pending)}::jsonb, ${pending.expiresAt})
+        ON CONFLICT (email) DO UPDATE SET data = EXCLUDED.data, expires_at = EXCLUDED.expires_at`;
+      return;
+    } catch (err) {
+      console.warn("[PostgreSQL] Error saving pending registration, falling back to JSON:", err);
+    }
   }
-  await vercelSql!`INSERT INTO hiphim_pending_registrations (email, data, expires_at) VALUES (${normalized}, ${JSON.stringify(pending)}::jsonb, ${pending.expiresAt})
-    ON CONFLICT (email) DO UPDATE SET data = EXCLUDED.data, expires_at = EXCLUDED.expires_at`;
+
+  savePendingRegistration(normalized, passwordHash, name, otp);
 }
 
 export async function getPendingRegistrationPersistent(email: string): Promise<PendingRegistration | null> {
@@ -295,11 +305,16 @@ export async function getPendingRegistrationPersistent(email: string): Promise<P
     }
   }
 
-  if (!(await ensureVercelDatabase())) return getPendingRegistration(normalized);
-  const rows = await vercelSql!`SELECT data, expires_at FROM hiphim_pending_registrations WHERE email = ${normalized}`;
-  const row = rows[0] as { data: PendingRegistration; expires_at: number } | undefined;
-  if (!row || Number(row.expires_at) <= Date.now()) return null;
-  return row.data;
+  if (await ensureVercelDatabase()) {
+    try {
+      const rows = await vercelSql!`SELECT data, expires_at FROM hiphim_pending_registrations WHERE email = ${normalized}`;
+      const row = rows[0] as { data: PendingRegistration; expires_at: number } | undefined;
+      if (row && Number(row.expires_at) > Date.now()) return row.data;
+    } catch (err) {
+      console.warn("[PostgreSQL] Error getting pending registration, falling back to JSON:", err);
+    }
+  }
+  return getPendingRegistration(normalized);
 }
 
 export async function verifyAndCreateUserPersistent(
@@ -384,16 +399,35 @@ export async function verifyAndCreateUserPersistent(
     history: [],
   };
 
-  try {
-    await vercelSql!`INSERT INTO hiphim_users (email, id, data) VALUES (${newUser.email}, ${newUser.id}, ${JSON.stringify(newUser)}::jsonb)`;
-  } catch (error: unknown) {
-    if ((error as { code?: string })?.code === "23505") {
-      return { error: "Email này đã được kích hoạt tài khoản trước đó. Vui lòng đăng nhập." };
+  if (await ensureVercelDatabase()) {
+    try {
+      await vercelSql!`INSERT INTO hiphim_users (email, id, data) VALUES (${newUser.email}, ${newUser.id}, ${JSON.stringify(newUser)}::jsonb)`;
+      await vercelSql!`DELETE FROM hiphim_pending_registrations WHERE email = ${normalized}`;
+    } catch (error: unknown) {
+      if ((error as { code?: string })?.code === "23505") {
+        return { error: "Email này đã được kích hoạt tài khoản trước đó. Vui lòng đăng nhập." };
+      }
+      console.warn("[PostgreSQL] Error writing new user to database, falling back to local file:", error);
     }
-    throw error;
   }
 
-  await vercelSql!`DELETE FROM hiphim_pending_registrations WHERE email = ${normalized}`;
+  // Always save to local JSON file as persistent fallback
+  try {
+    const users = readUsers();
+    if (!users.some((u) => u.email.toLowerCase() === normalized)) {
+      users.push(newUser);
+      writeUsers(users);
+    }
+    const pendingList = readPending();
+    const index = pendingList.findIndex((p) => p.email.toLowerCase() === normalized);
+    if (index >= 0) {
+      pendingList.splice(index, 1);
+      writePending(pendingList);
+    }
+  } catch (err) {
+    console.warn("Failed saving user to local JSON:", err);
+  }
+
   return { user: newUser };
 }
 
