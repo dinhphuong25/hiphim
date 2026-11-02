@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { User } from "lucide-react";
+import { User, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface AnimatedHeaderIconProps {
@@ -10,9 +10,7 @@ export interface AnimatedHeaderIconProps {
 }
 
 /**
- * 1. Kính Lúp Tìm Kiếm (Search Icon) - Phong cách Flaticon Lineal Color (GPU Accelerated)
- * Tròng kính lam ngọc phản quang, viền vàng kim loại, cán titan.
- * Chuyển động rà quét và sao lấp lánh chạy hoàn toàn trên GPU Compositor thread.
+ * 1. Kính Lúp Tìm Kiếm (Search Icon) - Hiện đại, đơn sắc, tinh tế đồng bộ rạp phim
  */
 export const AnimatedSearchIcon = memo(function AnimatedSearchIcon({
   className,
@@ -20,103 +18,10 @@ export const AnimatedSearchIcon = memo(function AnimatedSearchIcon({
 }: AnimatedHeaderIconProps) {
   return (
     <div className={cn("relative flex items-center justify-center shrink-0 select-none", className)}>
-      <svg
-        width={size}
-        height={size}
-        viewBox="0 0 24 24"
-        fill="none"
-        className="overflow-visible anim-search will-change-transform"
-      >
-        <defs>
-          {/* Gradient tròng kính lúp lam ngọc */}
-          <linearGradient id="searchLensGrad" x1="4" y1="4" x2="16" y2="16" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.5" />
-            <stop offset="50%" stopColor="#20d66b" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="#0284c7" stopOpacity="0.6" />
-          </linearGradient>
-
-          {/* Gradient vành kính vàng neon */}
-          <linearGradient id="searchRimGrad" x1="3" y1="3" x2="17" y2="17" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#fef08a" />
-            <stop offset="50%" stopColor="#20d66b" />
-            <stop offset="100%" stopColor="#10b981" />
-          </linearGradient>
-
-          {/* Gradient cán kính lúp kim loại */}
-          <linearGradient id="searchHandleGrad" x1="14" y1="14" x2="21" y2="21" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#f59e0b" />
-            <stop offset="40%" stopColor="#64748b" />
-            <stop offset="100%" stopColor="#0f172a" />
-          </linearGradient>
-        </defs>
-
-        {/* Tròng kính lúp với màu kính trong suốt huyền ảo */}
-        <circle
-          cx="10"
-          cy="10"
-          r="6.5"
-          fill="url(#searchLensGrad)"
-        />
-
-        {/* Vành kính kim loại dày Lineal Color */}
-        <circle
-          cx="10"
-          cy="10"
-          r="6.5"
-          stroke="url(#searchRimGrad)"
-          strokeWidth="2"
-        />
-
-        {/* Vệt phản chiếu ánh sáng trắng trên mặt kính */}
-        <path
-          d="M6 7.5a4.5 4.5 0 0 1 4.5-4"
-          stroke="#ffffff"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          className="anim-shine"
-        />
-
-        {/* Chốt nối cán kính lúp màu vàng kim */}
-        <rect
-          x="14.2"
-          y="14.2"
-          width="2.2"
-          height="1.5"
-          rx="0.5"
-          transform="rotate(45 15.2 15)"
-          fill="#facc15"
-          stroke="#d97706"
-          strokeWidth="0.5"
-        />
-
-        {/* Cán cầm kính lúp Lineal Color dày dặn */}
-        <path
-          d="m15.5 15.5 5 5"
-          stroke="url(#searchHandleGrad)"
-          strokeWidth="3.2"
-          strokeLinecap="round"
-        />
-        {/* Lõi viền cán phản quang */}
-        <path
-          d="m16 16 3.8 3.8"
-          stroke="#fde047"
-          strokeWidth="1"
-          strokeLinecap="round"
-          opacity="0.8"
-        />
-
-        {/* Ngôi sao lấp lánh 4 cánh trên góc kính lúp GPU */}
-        <g
-          transform="translate(13.5, 4.5)"
-          className="anim-sparkle"
-          style={{ transformOrigin: "13.5px 4.5px" }}
-        >
-          <path
-            d="M0 -3 C0 -1 1 0 3 0 C1 0 0 1 0 3 C0 1 -1 0 -3 0 C-1 0 0 -1 0 -3 Z"
-            fill="#facc15"
-          />
-        </g>
-      </svg>
+      <Search
+        style={{ width: size, height: size }}
+        className="text-brand-green stroke-[2.2] transition-transform duration-200 group-hover:scale-110 shrink-0"
+      />
     </div>
   );
 });

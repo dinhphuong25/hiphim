@@ -10,7 +10,6 @@ import SearchOverlay from "@/components/search/search-overlay";
 import UserMenu from "@/components/auth/user-menu";
 import NotificationBell from "@/components/notifications/notification-bell";
 import BrandLogo from "@/components/ui/brand-logo";
-import { AnimatedSearchIcon } from "@/components/ui/animated-header-icons";
 import { pipStore } from "@/lib/pip-store";
 import { preconnect } from "react-dom";
 
@@ -81,9 +80,9 @@ function HeaderComponent({}: HeaderProps) {
   // Hotkey '/' or 'Ctrl+K' to open search overlay
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "/" || (e.ctrlKey && e.key === "k")) {
+      if (e.key === "/" || ((e.ctrlKey || e.metaKey) && (e.key === "k" || e.key === "K"))) {
         const tag = (e.target as HTMLElement)?.tagName;
-        if (tag === "INPUT" || tag === "TEXTAREA") return;
+        if (tag === "INPUT" || tag === "TEXTAREA" || (e.target as HTMLElement)?.isContentEditable) return;
         e.preventDefault();
         setShowSearchOverlay(true);
       }
@@ -205,13 +204,14 @@ function HeaderComponent({}: HeaderProps) {
           {/* Mobile Right: Search & Notification */}
           <div className="flex items-center gap-2 pointer-events-auto shrink-0">
             <button
+              type="button"
               onClick={() => setShowSearchOverlay(true)}
-              className="relative flex items-center justify-between h-[38px] px-3.5 rounded-full bg-[#1E2228] hover:bg-[#262B33] border border-white/15 hover:border-brand-green/50 text-white transition-all duration-300 cursor-pointer group shadow-[0_4px_24px_rgba(0,0,0,0.7)] active:scale-95 shrink-0 overflow-hidden"
+              className="relative flex items-center justify-between h-[38px] px-3.5 rounded-full bg-[#1E2228] hover:bg-[#262B33] border border-white/15 hover:border-brand-green/50 text-white transition-all duration-200 cursor-pointer group shadow-[0_4px_24px_rgba(0,0,0,0.7)] active:scale-95 shrink-0 overflow-hidden"
               aria-label="Tìm kiếm phim"
             >
               <div className="flex items-center gap-2 z-10 min-w-0">
-                <AnimatedSearchIcon size={17} />
-                <span className="text-white/60 group-hover:text-white/90 font-medium text-[12.5px] whitespace-nowrap">
+                <Search className="w-4 h-4 text-brand-green shrink-0 stroke-[2.2] group-hover:scale-105 transition-transform" />
+                <span className="text-white/70 group-hover:text-white font-medium text-[12.5px] whitespace-nowrap transition-colors">
                   Tìm kiếm...
                 </span>
               </div>
@@ -225,24 +225,22 @@ function HeaderComponent({}: HeaderProps) {
         {/* ======================================================== */}
         <div className="hidden lg:flex w-full items-center justify-between pointer-events-none">
           {/* Ô 1: TÌM KIẾM (Search Bento Island) */}
-          <div className="pointer-events-auto flex items-center h-[50px] px-3.5 rounded-b-2xl bg-[#0B100E]/95 backdrop-blur-xl border-x border-b border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.65)] hover:border-brand-green/40 transition-all duration-200 group">
-            <button
-              type="button"
-              onClick={() => setShowSearchOverlay(true)}
-              className="relative flex items-center justify-between h-full w-64 xl:w-72 text-white/70 hover:text-white transition-colors cursor-pointer"
-              aria-label="Tìm kiếm phim, diễn viên..."
-            >
-              <div className="flex items-center gap-2.5 min-w-0">
-                <AnimatedSearchIcon size={16} />
-                <span className="text-[12.5px] font-medium text-white/50 group-hover:text-white/80 select-none truncate">
-                  Tìm kiếm phim, diễn viên...
-                </span>
-              </div>
-              <kbd className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-brand-green/10 border border-brand-green/30 text-[9.5px] text-brand-green font-mono font-bold uppercase shadow-[0_0_8px_rgba(32,214,107,0.15)] group-hover:bg-brand-green/20 group-hover:border-brand-green/60 transition-all shrink-0 ml-2">
-                <span>Ctrl</span>K
-              </kbd>
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => setShowSearchOverlay(true)}
+            aria-label="Tìm kiếm phim, diễn viên..."
+            className="pointer-events-auto flex items-center justify-between h-[50px] px-4 w-72 xl:w-80 rounded-b-2xl bg-[#0B100E]/95 backdrop-blur-xl border-x border-b border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.65)] hover:border-brand-green/50 hover:bg-[#0E1512]/95 hover:shadow-[0_8px_30px_rgba(32,214,107,0.12)] transition-all duration-200 group cursor-pointer text-left"
+          >
+            <div className="flex items-center gap-2.5 min-w-0">
+              <Search className="w-4 h-4 text-brand-green shrink-0 stroke-[2.2] group-hover:scale-110 transition-transform duration-200" />
+              <span className="text-[13px] font-medium text-white/55 group-hover:text-white/95 select-none truncate transition-colors">
+                Tìm kiếm phim, diễn viên...
+              </span>
+            </div>
+            <kbd className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-md bg-white/[0.06] border border-white/10 text-[10px] text-white/50 font-mono font-semibold uppercase group-hover:border-brand-green/40 group-hover:text-brand-green group-hover:bg-brand-green/10 shadow-sm transition-all duration-200 shrink-0 ml-2">
+              <span>Ctrl</span>K
+            </kbd>
+          </button>
 
           {/* Center Info: Hiện tên phim đang phát nếu có (hoặc để trống thoáng mắt) */}
           {activeMovieName ? (
