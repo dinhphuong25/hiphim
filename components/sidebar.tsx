@@ -112,7 +112,7 @@ function SidebarMainNavItem({
       onMouseLeave={() => setIsHovered(false)}
       onTouchStart={onPrefetch}
       className={cn(
-        "relative flex items-center gap-3 lg:gap-2.5 px-3 lg:px-2.5 py-2 lg:py-2 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-all duration-150 group overflow-hidden border",
+        "relative flex items-center gap-3 lg:gap-2.5 px-3 lg:px-2.5 py-2 lg:py-1.5 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-all duration-150 group overflow-hidden border",
         active
           ? "bg-brand-green/15 text-brand-green border-brand-green/30 shadow-[0_0_12px_rgba(32,214,107,0.15)] font-semibold"
           : "text-white/65 hover:text-white hover:bg-white/[0.06] border-transparent"
@@ -1105,14 +1105,10 @@ function SidebarContent({
         </div>
 
         {/* Scrollable Navigation Body - Balanced spacing to fit frame seamlessly and prevent cutoff */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 lg:px-2.5 lg:pt-2.5 lg:pb-3 space-y-2.5 lg:space-y-0.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 lg:px-2.5 lg:pt-1.5 lg:pb-2 space-y-2 lg:space-y-0.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           
-          {/* Main Nav Section */}
-          <div className="space-y-1 lg:space-y-1">
-            <span className="px-3 lg:px-2 text-[11px] lg:text-[10px] font-extrabold text-white/45 uppercase tracking-wider block mb-1.5 lg:mb-1">
-              MENU CHÍNH
-            </span>
-
+          {/* Main Nav Section (Gỡ chữ Menu Chính theo yêu cầu để hiển thị trọn vẹn ở dưới) */}
+          <div className="space-y-1 lg:space-y-0.5">
             {NAV_MAIN.map((item) => (
               <SidebarMainNavItem
                 key={item.href}
@@ -1149,7 +1145,7 @@ function SidebarContent({
               onMouseEnter={() => setIsCategoryHovered(true)}
               onMouseLeave={() => setIsCategoryHovered(false)}
               className={cn(
-                "w-full relative flex items-center justify-between px-3 lg:px-2.5 py-2 lg:py-2 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-all duration-150 group text-left cursor-pointer border",
+                "w-full relative flex items-center justify-between px-3 lg:px-2.5 py-2 lg:py-1.5 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-all duration-150 group text-left cursor-pointer border",
                 currentCategory
                   ? "bg-brand-green/15 text-brand-green border-brand-green/30 shadow-[0_0_12px_rgba(32,214,107,0.15)] font-semibold"
                   : "text-white/65 hover:text-white hover:bg-white/[0.06] border-transparent"
@@ -1194,7 +1190,7 @@ function SidebarContent({
               onMouseEnter={() => setIsCountryHovered(true)}
               onMouseLeave={() => setIsCountryHovered(false)}
               className={cn(
-                "w-full relative flex items-center justify-between px-3 lg:px-2.5 py-2 lg:py-2 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-all duration-150 group text-left cursor-pointer border",
+                "w-full relative flex items-center justify-between px-3 lg:px-2.5 py-2 lg:py-1.5 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-all duration-150 group text-left cursor-pointer border",
                 currentCountry
                   ? "bg-brand-green/15 text-brand-green border-brand-green/30 shadow-[0_0_12px_rgba(32,214,107,0.15)] font-semibold"
                   : "text-white/65 hover:text-white hover:bg-white/[0.06] border-transparent"
@@ -1239,7 +1235,7 @@ function SidebarContent({
               onMouseEnter={() => setIsYearHovered(true)}
               onMouseLeave={() => setIsYearHovered(false)}
               className={cn(
-                "w-full relative flex items-center justify-between px-3 lg:px-2.5 py-2 lg:py-2 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-all duration-150 group text-left cursor-pointer border",
+                "w-full relative flex items-center justify-between px-3 lg:px-2.5 py-2 lg:py-1.5 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-all duration-150 group text-left cursor-pointer border",
                 currentYear
                   ? "bg-brand-green/15 text-brand-green border-brand-green/30 shadow-[0_0_12px_rgba(32,214,107,0.15)] font-semibold"
                   : "text-white/65 hover:text-white hover:bg-white/[0.06] border-transparent"
@@ -1278,7 +1274,7 @@ function SidebarContent({
         {/* ======================================================== */}
         {/* BOTTOM PERSONAL DOCK: 2 Ô NGANG (LỊCH SỬ & YÊU THÍCH)     */}
         {/* ======================================================== */}
-        <div className="shrink-0 p-2 lg:p-2 border-t border-white/[0.08] bg-[#080D0B]/90 backdrop-blur-md">
+        <div className="shrink-0 p-1.5 lg:p-1.5 border-t border-white/[0.08] bg-[#080D0B]/90 backdrop-blur-md">
           <div className="grid grid-cols-2 gap-1.5 lg:gap-1.5">
             {/* Ô 1: Lịch Sử */}
             <button
@@ -1288,7 +1284,7 @@ function SidebarContent({
                 navigateToTab("/recently");
               }}
               className={cn(
-                "flex items-center justify-center gap-1.5 h-9 lg:h-8.5 px-2 rounded-xl text-xs lg:text-[11.5px] font-bold transition-all border select-none cursor-pointer active:scale-95",
+                "flex items-center justify-center gap-1.5 h-8.5 lg:h-8 px-2 rounded-xl text-xs lg:text-[11.5px] font-bold transition-all border select-none cursor-pointer active:scale-95",
                 currentActiveTab === "/recently"
                   ? "bg-brand-green/15 text-brand-green border-brand-green/40 shadow-[0_0_12px_rgba(32,214,107,0.2)]"
                   : "bg-white/[0.04] hover:bg-white/[0.08] text-white/70 hover:text-white border-white/10 hover:border-brand-green/40"
@@ -1308,7 +1304,7 @@ function SidebarContent({
                 navigateToTab("/favorites");
               }}
               className={cn(
-                "flex items-center justify-center gap-1.5 h-9 lg:h-8.5 px-2 rounded-xl text-xs lg:text-[11.5px] font-bold transition-all border select-none cursor-pointer active:scale-95",
+                "flex items-center justify-center gap-1.5 h-8.5 lg:h-8 px-2 rounded-xl text-xs lg:text-[11.5px] font-bold transition-all border select-none cursor-pointer active:scale-95",
                 currentActiveTab === "/favorites"
                   ? "bg-brand-green/15 text-brand-green border-brand-green/40 shadow-[0_0_12px_rgba(32,214,107,0.2)]"
                   : "bg-white/[0.04] hover:bg-white/[0.08] text-white/70 hover:text-white border-white/10 hover:border-brand-green/40"
