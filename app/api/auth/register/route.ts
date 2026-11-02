@@ -9,18 +9,20 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { email, password, name, turnstileToken } = body;
 
-    // Verify Cloudflare Turnstile token
-    const clientIp =
-      request.headers.get("cf-connecting-ip") ||
-      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-      undefined;
+    // Optional Cloudflare Turnstile token check (if provided)
+    if (turnstileToken) {
+      const clientIp =
+        request.headers.get("cf-connecting-ip") ||
+        request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+        undefined;
 
-    const cfCheck = await verifyTurnstileToken(turnstileToken, clientIp);
-    if (!cfCheck.success) {
-      return NextResponse.json(
-        { success: false, error: cfCheck.error || "Xác thực bảo vệ Cloudflare không thành công." },
-        { status: 403 }
-      );
+      const cfCheck = await verifyTurnstileToken(turnstileToken, clientIp);
+      if (!cfCheck.success) {
+        return NextResponse.json(
+          { success: false, error: cfCheck.error || "Xác thực bảo vệ Cloudflare không thành công." },
+          { status: 403 }
+        );
+      }
     }
 
     const normalizedEmail = (email || "").trim().toLowerCase();

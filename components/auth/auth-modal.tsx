@@ -20,7 +20,6 @@ import { useUserAuth } from "@/context/user-auth-context";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import BrandLogo from "@/components/ui/brand-logo";
-import TurnstileWidget from "./turnstile-widget";
 
 // Curated high-res verified posters for the 3-column cinematic collage (RoPhim Style)
 const COLLAGE_COL1 = [
@@ -90,7 +89,6 @@ export default function AuthModal() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [devCodeBanner, setDevCodeBanner] = useState<string | null>(null);
-  const [turnstileToken, setTurnstileToken] = useState("");
 
   // OTP Countdown
   const [countdown, setCountdown] = useState(60);
@@ -103,7 +101,6 @@ export default function AuthModal() {
     if (isAuthModalOpen) {
       setErrorMessage("");
       setDevCodeBanner(null);
-      setTurnstileToken("");
       setShowPassword(false);
       if (authModalMode === "otp") {
         setOtp("");
@@ -171,7 +168,7 @@ export default function AuthModal() {
     }
 
     setIsSubmitting(true);
-    const res = await register(cleanEmail, password, cleanName, turnstileToken);
+    const res = await register(cleanEmail, password, cleanName);
     setIsSubmitting(false);
     if (res.success) {
       if (res.devMode && res.devCode) {
@@ -519,14 +516,6 @@ export default function AuthModal() {
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
-              </div>
-
-              {/* Cloudflare Turnstile */}
-              <div>
-                <TurnstileWidget
-                  onVerify={(token) => setTurnstileToken(token)}
-                  onExpire={() => setTurnstileToken("")}
-                />
               </div>
 
               {/* Submit Action */}
