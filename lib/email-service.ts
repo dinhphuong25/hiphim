@@ -1,4 +1,4 @@
-const DEFAULT_SENDER = process.env.EMAIL_FROM || "Hi Phim <auth@hiphim.one>";
+const DEFAULT_SENDER = process.env.EMAIL_FROM || "Hi Phim <notification@hiphim.one>";
 
 // Obfuscated fallback key so GitHub Push Protection doesn't block git commits
 const FALLBACK_RESEND_KEY = Buffer.from(
