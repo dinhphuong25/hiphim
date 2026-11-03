@@ -164,8 +164,17 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: "/(bang-xep-hang|new-updates|recently|favorites)",
+        source: "/",
         headers: [
+          { key: "Cache-Control", value: "public, max-age=180, s-maxage=300, stale-while-revalidate=600" },
+          { key: "CDN-Cache-Control", value: "public, max-age=300, stale-while-revalidate=600" },
+          { key: "Cloudflare-CDN-Cache-Control", value: "public, max-age=300, stale-while-revalidate=600" },
+        ],
+      },
+      {
+        source: "/(bang-xep-hang|new-updates|recently|favorites|search)",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=180, s-maxage=300, stale-while-revalidate=600" },
           { key: "CDN-Cache-Control", value: "public, max-age=300, stale-while-revalidate=600" },
           { key: "Cloudflare-CDN-Cache-Control", value: "public, max-age=300, stale-while-revalidate=600" },
         ],
@@ -173,6 +182,7 @@ const nextConfig: NextConfig = {
       {
         source: "/phim/:slug*",
         headers: [
+          { key: "Cache-Control", value: "public, max-age=600, s-maxage=1800, stale-while-revalidate=86400" },
           { key: "CDN-Cache-Control", value: "public, max-age=1800, stale-while-revalidate=86400" },
           { key: "Cloudflare-CDN-Cache-Control", value: "public, max-age=1800, stale-while-revalidate=86400" },
         ],
