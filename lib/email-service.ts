@@ -32,6 +32,18 @@ export interface SendOtpResult {
 
 export function generateOtpEmailHtml(otp: string, userName?: string): string {
   const name = userName?.trim() || "bạn";
+  const digits = (otp || "").trim().slice(0, 6).split("");
+
+  const digitCells = digits
+    .map(
+      (d) => `
+      <td style="padding: 0 4px;" align="center">
+        <div style="width: 44px; height: 56px; line-height: 56px; background: #151a17; border: 1px solid rgba(34, 197, 94, 0.35); border-radius: 12px; color: #22c55e; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif; font-size: 30px; font-weight: 800; text-align: center; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);">
+          ${d}
+        </div>
+      </td>`
+    )
+    .join("");
 
   return `<!DOCTYPE html>
 <html lang="vi">
@@ -40,63 +52,50 @@ export function generateOtpEmailHtml(otp: string, userName?: string): string {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark">
   <meta name="supported-color-schemes" content="dark">
-  <title>Mã kích hoạt tài khoản Hi Phim</title>
+  <title>Mã kích hoạt Hi Phim</title>
 </head>
-<body style="margin: 0; padding: 36px 12px; background-color: #080b09; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
+<body style="margin: 0; padding: 40px 12px; background-color: #060807; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
   <!-- Preview text -->
   <div style="display: none; max-height: 0px; overflow: hidden; mso-hide: all;">
-    Mã xác thực Hi Phim của bạn là ${otp}. Có hiệu lực trong 10 phút.
+    Mã xác thực Hi Phim: ${otp}
   </div>
 
   <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
     <tr>
       <td align="center">
-        <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 440px; background-color: #111613; border: 1px solid #1f2a22; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);">
-          
-          <!-- Brand Header -->
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 420px; background-color: #0e1210; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; overflow: hidden; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);">
           <tr>
-            <td style="padding: 32px 28px 0; text-align: left;">
-              <span style="font-size: 22px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">
-                Hi <span style="color: #22c55e;">Phim</span>
-              </span>
-            </td>
-          </tr>
-
-          <!-- Main Content -->
-          <tr>
-            <td style="padding: 20px 28px 24px; text-align: left;">
-              <h1 style="margin: 0 0 8px; color: #ffffff; font-size: 18px; font-weight: 600; line-height: 1.4;">
-                Mã xác thực tài khoản
-              </h1>
-              <p style="margin: 0 0 24px; color: #9ca3af; font-size: 14px; line-height: 1.5;">
-                Xin chào <strong style="color: #f3f4f6;">${name}</strong>, hãy sử dụng mã OTP dưới đây để hoàn tất kích hoạt tài khoản Hi Phim của bạn:
-              </p>
-
-              <!-- OTP Code Box (Single Selectable & Copyable Block) -->
-              <div style="background-color: #070a08; border: 1px solid #233529; border-radius: 12px; padding: 18px 20px; text-align: center; margin-bottom: 22px;">
-                <span style="font-family: 'SF Mono', Consolas, Menlo, Monaco, 'Courier New', monospace; font-size: 34px; font-weight: 700; color: #22c55e; letter-spacing: 10px; display: inline-block; padding-left: 10px; user-select: all;">
-                  ${otp}
+            <td style="padding: 36px 28px; text-align: center;">
+              
+              <!-- Brand Logo -->
+              <div style="display: inline-block; margin-bottom: 20px;">
+                <span style="font-size: 26px; font-weight: 900; color: #ffffff; letter-spacing: -0.5px;">
+                  Hi <span style="color: #22c55e;">Phim</span>
                 </span>
               </div>
 
-              <!-- Security Notice -->
-              <p style="margin: 0; color: #6b7280; font-size: 13px; line-height: 1.6;">
-                ⏱ Mã có hiệu lực trong vòng <strong style="color: #d1d5db;">10 phút</strong>.<br>
-                🔒 Tuyệt đối không chia sẻ mã này cho bất kỳ ai để bảo vệ tài khoản.
+              <!-- Title -->
+              <h1 style="margin: 0 0 8px; color: #ffffff; font-size: 19px; font-weight: 700; letter-spacing: -0.3px;">
+                Mã xác thực tài khoản
+              </h1>
+              <p style="margin: 0 0 28px; color: #9ca3af; font-size: 14px; line-height: 1.5;">
+                Chào <strong style="color: #f3f4f6;">${name}</strong>, nhập mã sau để tiếp tục:
               </p>
+
+              <!-- 6 Sleek Digit Cards -->
+              <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="margin: 0 auto;">
+                <tr>
+                  ${digitCells}
+                </tr>
+              </table>
+
+              <!-- Tiny expiration hint -->
+              <p style="margin: 24px 0 0; color: #6b7280; font-size: 12px; font-weight: 500;">
+                Mã có hiệu lực trong 10 phút
+              </p>
+
             </td>
           </tr>
-
-          <!-- Footer -->
-          <tr>
-            <td style="padding: 20px 28px; background-color: #0c100d; border-top: 1px solid #1a241c; text-align: left;">
-              <p style="margin: 0; color: #6b7280; font-size: 12px; line-height: 1.6;">
-                Nếu bạn không thực hiện yêu cầu này, vui lòng an tâm bỏ qua email.<br>
-                <a href="https://hiphim.one" target="_blank" style="color: #22c55e; text-decoration: none; font-weight: 500;">hiphim.one</a> • Nền tảng xem phim trực tuyến
-              </p>
-            </td>
-          </tr>
-
         </table>
       </td>
     </tr>
