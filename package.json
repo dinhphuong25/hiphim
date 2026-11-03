@@ -7,8 +7,9 @@
   "copyright": "Copyright (c) 2025-2026 Kim Đình Phương (HI PHIM). All rights reserved.",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "pages:build": "next build",
+    "build": "npx opennextjs-cloudflare build",
+    "build:next": "next build",
+    "pages:build": "npx opennextjs-cloudflare build",
     "build:analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "eslint .",
@@ -16,6 +17,7 @@
     "build:cf": "npx opennextjs-cloudflare build",
     "deploy:cf": "npm run build:cf && npx opennextjs-cloudflare deploy -- --keep-vars",
     "preview:cf": "npx opennextjs-cloudflare preview",
+    "cloudflare:build": "npx opennextjs-cloudflare build",
     "vercel-build": "next build"
   },
   "dependencies": {

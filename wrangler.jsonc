@@ -1,6 +1,6 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "hiphim",
+	"name": "hiphim-updates",
 	"main": ".open-next/worker.js",
 	"compatibility_date": "2026-02-01",
 	"compatibility_flags": [
@@ -21,7 +21,7 @@
 	"services": [
 		{
 			"binding": "WORKER_SELF_REFERENCE",
-			"service": "hiphim"
+			"service": "hiphim-updates"
 		}
 	],
 	"images": {
