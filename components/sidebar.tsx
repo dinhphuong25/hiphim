@@ -93,7 +93,7 @@ function SidebarMainNavItem({
 }: {
   item: NavMainItem;
   active: boolean;
-  onClick: (e: React.MouseEvent) => void;
+  onClick: () => void;
   onPrefetch?: () => void;
 }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -103,10 +103,7 @@ function SidebarMainNavItem({
       href={item.href}
       scroll={false}
       prefetch={false}
-      onClick={(e) => {
-        e.preventDefault();
-        onClick(e);
-      }}
+      onClick={onClick}
       onMouseEnter={() => {
         setIsHovered(true);
         onPrefetch?.();
@@ -362,12 +359,10 @@ function SidebarContent({
 
 
   const handleBottomNavNavigate = (href: string, e?: React.MouseEvent) => {
-    if (e) e.preventDefault();
     setIsMobileOpen(false);
     setIsAccountOpen(false);
     setIsExploreOpen(false);
     setActiveModal(null);
-    setOptimisticItem(null);
     setCategorySearchQuery("");
     setCountrySearchQuery("");
     setYearSearchQuery("");
@@ -380,26 +375,9 @@ function SidebarContent({
     }
 
     navigateToTab(href);
-  };
 
-  const handleMainNavItemClick = (item: NavMainItem, e?: React.MouseEvent) => {
-    if (e) e.preventDefault();
-    setIsMobileOpen(false);
-    setOptimisticItem({ href: item.href, typeList: item.typeList });
-
-    if (typeof window !== "undefined") {
-      window.scrollTo({ top: 0, behavior: "instant" });
-    }
-
-    if (item.typeList) {
-      instantMovieStore.notifyNav({ typeList: item.typeList, href: item.href });
-      router.push(item.href, { scroll: false });
-    } else if (item.href === "/") {
-      instantMovieStore.notifyNav({ href: "/" });
-      navigateToTab("/");
-    } else {
-      instantMovieStore.notifyNav({ href: item.href });
-      router.push(item.href, { scroll: false });
+    if (pathname === href && !hasActiveFilters) {
+      if (e) e.preventDefault();
     }
   };
 
@@ -434,13 +412,6 @@ function SidebarContent({
     searchParams.get("q")
   );
 
-  const [optimisticItem, setOptimisticItem] = useState<{ href: string; typeList?: string } | null>(null);
-
-  // Clear optimistic state when searchParams or pathname changes
-  useEffect(() => {
-    setOptimisticItem(null);
-  }, [pathname, searchParams]);
-
   // Find active names
   const activeCategoryObj = useMemo(() => {
     return categories.find((c) => c.slug === currentCategory);
@@ -451,15 +422,6 @@ function SidebarContent({
   }, [countries, currentCountry]);
 
   const isLinkActive = (href: string, typeList?: string) => {
-    if (optimisticItem) {
-      if (typeList && optimisticItem.typeList) {
-        return optimisticItem.typeList === typeList;
-      }
-      if (optimisticItem.href === href) {
-        return true;
-      }
-      return false;
-    }
     if (typeList) {
       return pathname === "/" && (currentTypeList === typeList || searchParams.get("typelist") === typeList);
     }
@@ -585,10 +547,6 @@ function SidebarContent({
     setIsMobileOpen(false);
     setIsExploreOpen(false);
     setIsSelecting(false);
-    if (typeof window !== "undefined") {
-      window.scrollTo({ top: 0, behavior: "instant" });
-    }
-    instantMovieStore.notifyNav({ category: slug, href: `/?category=${slug}` });
     router.push(`/?category=${slug}`, { scroll: false });
   };
 
@@ -601,10 +559,6 @@ function SidebarContent({
     setIsMobileOpen(false);
     setIsExploreOpen(false);
     setIsSelecting(false);
-    if (typeof window !== "undefined") {
-      window.scrollTo({ top: 0, behavior: "instant" });
-    }
-    instantMovieStore.notifyNav({ country: slug, href: `/?country=${slug}` });
     router.push(`/?country=${slug}`, { scroll: false });
   };
 
@@ -617,10 +571,6 @@ function SidebarContent({
     setIsMobileOpen(false);
     setIsExploreOpen(false);
     setIsSelecting(false);
-    if (typeof window !== "undefined") {
-      window.scrollTo({ top: 0, behavior: "instant" });
-    }
-    instantMovieStore.notifyNav({ year, href: `/?year=${year}` });
     router.push(`/?year=${year}`, { scroll: false });
   };
 
@@ -1157,7 +1107,10 @@ function SidebarContent({
                 key={item.href}
                 item={item}
                 active={isLinkActive(item.href, item.typeList)}
-                onClick={(e) => handleMainNavItemClick(item, e)}
+                onClick={() => {
+                  setIsMobileOpen(false);
+                  navigateToTab(item.href);
+                }}
                 onPrefetch={() => {
                   if (item.typeList) instantMovieStore.prefetch(item.typeList);
                 }}
@@ -1317,14 +1270,11 @@ function SidebarContent({
         <div className="shrink-0 p-2 lg:p-2 border-t border-white/[0.08] bg-[#080D0B]/95 backdrop-blur-md">
           <div className="grid grid-cols-2 gap-2 lg:gap-1.5">
             {/* Ô 1: Lịch Sử */}
-            <Link
-              href="/recently"
-              prefetch={true}
-              onClick={(e) => {
-                e.preventDefault();
+            <button
+              type="button"
+              onClick={() => {
                 setIsMobileOpen(false);
-                setOptimisticItem(null);
-                navigateToTab("/recently", e);
+                navigateToTab("/recently");
               }}
               className={cn(
                 "flex items-center justify-center gap-1.5 h-9 lg:h-8.5 px-2 rounded-xl text-xs lg:text-[11.5px] font-bold transition-all border select-none cursor-pointer active:scale-95",
@@ -1337,17 +1287,14 @@ function SidebarContent({
             >
               <Clock className={cn("w-3.5 h-3.5 shrink-0", currentActiveTab === "/recently" ? "text-brand-green" : "text-white/60")} />
               <span className="truncate">Lịch sử</span>
-            </Link>
+            </button>
 
             {/* Ô 2: Yêu Thích */}
-            <Link
-              href="/favorites"
-              prefetch={true}
-              onClick={(e) => {
-                e.preventDefault();
+            <button
+              type="button"
+              onClick={() => {
                 setIsMobileOpen(false);
-                setOptimisticItem(null);
-                navigateToTab("/favorites", e);
+                navigateToTab("/favorites");
               }}
               className={cn(
                 "flex items-center justify-center gap-1.5 h-9 lg:h-8.5 px-2 rounded-xl text-xs lg:text-[11.5px] font-bold transition-all border select-none cursor-pointer active:scale-95",
@@ -1360,7 +1307,7 @@ function SidebarContent({
             >
               <Heart className={cn("w-3.5 h-3.5 shrink-0", currentActiveTab === "/favorites" ? "fill-brand-green text-brand-green" : "text-white/60")} />
               <span className="truncate">Yêu thích</span>
-            </Link>
+            </button>
           </div>
         </div>
       </aside>

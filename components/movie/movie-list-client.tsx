@@ -217,48 +217,15 @@ const MovieListClient = ({
       return;
     }
 
-    // Not in cache: Immediately switch to skeleton loading so user has instant feedback
-    setMovies([]);
-    setLoading(true);
-    setIsTransitioning(false);
-    fetchMovies(currentKey, false);
+    // Not in cache: if we have existing movies, keep them visible and show subtle indicator
+    if (movies.length > 0) {
+      setIsTransitioning(true);
+      fetchMovies(currentKey, false);
+    } else {
+      setLoading(true);
+      fetchMovies(currentKey, false);
+    }
   }, [currentKey, index]);
-
-  // Subscribe to instant navigation clicks for 0ms skeleton display
-  useEffect(() => {
-    const unsubscribe = instantMovieStore.subscribeNav((event) => {
-      if (!event.typeList && !event.category && !event.country && !event.year && !event.topic) {
-        return;
-      }
-
-      const targetKey = instantMovieStore.buildKey({
-        typeList: event.typeList,
-        category: event.category,
-        topic: event.topic,
-        country: event.country,
-        year: event.year,
-        page: 1,
-      });
-
-      lastKeyRef.current = targetKey;
-
-      const cached = instantMovieStore.get(targetKey);
-      if (cached && cached.items.length > 0) {
-        setMovies(cached.items);
-        setPageInfo(cached.pagination);
-        setLoading(false);
-        setIsTransitioning(false);
-      } else {
-        // Instant response: immediately display skeleton loading on click
-        setMovies([]);
-        setLoading(true);
-        setIsTransitioning(false);
-        fetchMovies(targetKey, false);
-      }
-    });
-
-    return unsubscribe;
-  }, []);
 
   const getPageTitle = () => {
     const catName = getCategoryDisplayName(currentCategory, categories);

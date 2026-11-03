@@ -6,7 +6,6 @@ import { LoadingProvider } from "@/components/ui/loading-context";
 import { WebsiteStructuredData, OrganizationStructuredData } from "@/components/seo/structured-data";
 import EnhancedGTMTracking from "@/components/seo/enhanced-gtm";
 import HydrationFix from "@/components/ui/hydration-fix";
-import { SplashScreen } from "@/components/ui/splash-screen";
 import { PWAInstaller, PerformanceMonitor } from "@/components/pwa-init";
 import SecurityGuard from "@/components/ui/security-guard";
 import NotificationBanner from "@/components/ui/notification-banner";
@@ -210,8 +209,6 @@ export default function RootLayout({
         className={`${beVietnam.variable} ${oswald.variable} font-sans antialiased bg-background text-foreground`}
         suppressHydrationWarning
       >
-        <SplashScreen />
-
         {/* Google Tag Manager & GA4 (Deferred on interaction / idle) */}
         <GTM />
         <EnhancedGTMTracking />

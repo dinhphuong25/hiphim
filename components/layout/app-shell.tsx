@@ -1,12 +1,10 @@
 "use client";
 
-import { memo, useEffect } from "react";
+import { memo, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Sidebar from "@/components/sidebar";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-
-import { useNavigationTab } from "@/context/navigation-tab-context";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -14,7 +12,7 @@ interface AppShellProps {
 
 function AppShellComponent({ children }: AppShellProps) {
   const pathname = usePathname();
-  const { activeTab } = useNavigationTab();
+  const lastMaintenanceCheckRef = useRef<number>(0);
 
   // Standalone pages that do not display the global sidebar/header
   const isStandalonePage =
@@ -26,11 +24,10 @@ function AppShellComponent({ children }: AppShellProps) {
   useEffect(() => {
     if (isStandalonePage) return;
 
-    let lastCheckTime = 0;
-    const checkMaintenance = async (force = false) => {
+    const checkMaintenance = async () => {
       const now = Date.now();
-      if (!force && now - lastCheckTime < 600_000) return; // 10 minutes throttle
-      lastCheckTime = now;
+      if (now - lastMaintenanceCheckRef.current < 600_000) return;
+      lastMaintenanceCheckRef.current = now;
 
       try {
         const res = await fetch("/api/system/maintenance");
@@ -50,16 +47,14 @@ function AppShellComponent({ children }: AppShellProps) {
       }
     };
 
-    checkMaintenance(false);
-
     const handleVisibility = () => {
       if (document.visibilityState === "visible") {
-        checkMaintenance(false);
+        checkMaintenance();
       }
     };
 
     document.addEventListener("visibilitychange", handleVisibility);
-    const timer = setInterval(() => checkMaintenance(true), 600000); // 10 minutes
+    const timer = setInterval(checkMaintenance, 600_000); // 10 minutes
 
     return () => {
       document.removeEventListener("visibilitychange", handleVisibility);

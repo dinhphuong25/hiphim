@@ -1,12 +1,11 @@
 "use client";
 
-import { memo, useMemo, useEffect, useState } from "react";
+import { memo, useMemo, useEffect } from "react";
 import { useNewUpdates, useTopicsWithMovies } from "@/hooks/useApiHooks";
 import HeroSection from "@/components/hero-section";
 import MovieSection from "@/components/movie-section";
 import { filterHiddenMovies } from "@/lib/hidden-movies";
 import { instantMovieStore } from "@/lib/instant-movie-store";
-import { MovieGridSkeleton } from "@/components/movie/movie-skeleton";
 import dynamic from "next/dynamic";
 
 const ContinueWatching = dynamic(() => import("@/components/movie/continue-watching"), {
@@ -45,18 +44,6 @@ function HomeClientComponent({
     instantMovieStore.prime(primeMap);
     instantMovieStore.warmUpMainTabs();
   }, [initialMovies, initialTopicsWithMovies]);
-
-  const [navigatingSection, setNavigatingSection] = useState<string | null>(null);
-
-  useEffect(() => {
-    const unsubscribe = instantMovieStore.subscribeNav((event) => {
-      if (event.typeList || event.category || event.country || event.year) {
-        setNavigatingSection(event.typeList || event.category || "loading");
-      }
-    });
-    return unsubscribe;
-  }, []);
-
   const {
     movies: clientMovies,
     heroMovie,
@@ -106,16 +93,6 @@ function HomeClientComponent({
     });
     return map;
   }, [initialTopicsWithMovies, topicsData]);
-
-  if (navigatingSection) {
-    return (
-      <main className="w-full px-3.5 sm:px-6 lg:px-6 xl:px-8 pb-20 pt-16 sm:pt-20 animate-in fade-in duration-150">
-        <div className="pt-2 sm:pt-4 px-1 sm:px-0">
-          <MovieGridSkeleton count={10} />
-        </div>
-      </main>
-    );
-  }
 
   return (
     <main className="pb-6 sm:pb-8">

@@ -1,8 +1,5 @@
 import { cache, Suspense, Fragment } from "react";
 import PhimApi from "@/libs/phimapi.com";
-
-// Cache watch page HTML at Cloudflare Edge CDN for 30 minutes (1800s)
-export const revalidate = 1800;
 import Description from "@/components/movie/description";
 import { MovieStructuredData, BreadcrumbStructuredData } from "@/components/seo/structured-data";
 import { HIDDEN_MOVIE_SLUGS } from "@/lib/hidden-movies";
