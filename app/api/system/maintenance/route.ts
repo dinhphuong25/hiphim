@@ -20,12 +20,14 @@ export async function GET(req: NextRequest) {
   const reason = searchParams.get("reason");
   const duration = parseInt(searchParams.get("duration") || "60", 10);
 
-  // 1. Public read-only status check (Cache at Edge for 30s)
+  // 1. Public read-only status check (Cache at Edge for 10 minutes)
   if (!action) {
     const state = getMaintenanceState();
     return NextResponse.json(state, {
       headers: {
-        "Cache-Control": "public, s-maxage=30, max-age=10, stale-while-revalidate=120",
+        "Cache-Control": "public, s-maxage=600, max-age=60, stale-while-revalidate=3600",
+        "CDN-Cache-Control": "public, max-age=600, stale-while-revalidate=3600",
+        "Cloudflare-CDN-Cache-Control": "public, max-age=600, stale-while-revalidate=3600",
       },
     });
   }

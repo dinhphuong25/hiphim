@@ -3,7 +3,7 @@
 let cachedData: any = null;
 let cachedAt = 0;
 let inFlightPromise: Promise<any> | null = null;
-const CLIENT_ANNOUNCEMENT_TTL = 25_000; // 25 seconds client-side deduplication
+const CLIENT_ANNOUNCEMENT_TTL = 600_000; // 10 minutes client-side deduplication (eliminates worker request spam)
 
 export async function fetchAnnouncementShared(forceRefresh = false): Promise<any> {
   if (typeof window === "undefined") return null;

@@ -24,11 +24,16 @@ function AppShellComponent({ children }: AppShellProps) {
     pathname.startsWith("/admin") ||
     pathname.startsWith("/maintenance");
 
-  // Real-time client listener for maintenance mode
+  // Real-time client listener for maintenance mode (throttled to max once per 10 minutes)
   useEffect(() => {
     if (isStandalonePage) return;
 
-    const checkMaintenance = async () => {
+    let lastCheckTime = 0;
+    const checkMaintenance = async (force = false) => {
+      const now = Date.now();
+      if (!force && now - lastCheckTime < 600_000) return; // 10 minutes throttle
+      lastCheckTime = now;
+
       try {
         const res = await fetch("/api/system/maintenance");
         if (res.ok) {
@@ -47,14 +52,16 @@ function AppShellComponent({ children }: AppShellProps) {
       }
     };
 
+    checkMaintenance(false);
+
     const handleVisibility = () => {
       if (document.visibilityState === "visible") {
-        checkMaintenance();
+        checkMaintenance(false);
       }
     };
 
     document.addEventListener("visibilitychange", handleVisibility);
-    const timer = setInterval(checkMaintenance, 300000); // 5 minutes
+    const timer = setInterval(() => checkMaintenance(true), 600000); // 10 minutes
 
     return () => {
       document.removeEventListener("visibilitychange", handleVisibility);

@@ -11,7 +11,16 @@ export async function GET(req: NextRequest) {
     }
 
     const rating = await getMovieRating(slug);
-    return NextResponse.json({ success: true, rating });
+    return NextResponse.json(
+      { success: true, rating },
+      {
+        headers: {
+          "Cache-Control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400",
+          "CDN-Cache-Control": "public, max-age=86400",
+          "Cloudflare-CDN-Cache-Control": "public, max-age=86400",
+        },
+      }
+    );
   } catch (error) {
     console.error("Error fetching rating:", error);
     return NextResponse.json({ success: false, error: "Lỗi tải đánh giá." }, { status: 500 });

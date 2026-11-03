@@ -26,7 +26,9 @@ export async function GET() {
       },
       {
         headers: {
-          "Cache-Control": "public, s-maxage=30, max-age=15, stale-while-revalidate=120",
+          "Cache-Control": "public, s-maxage=600, max-age=300, stale-while-revalidate=3600",
+          "CDN-Cache-Control": "public, max-age=600, stale-while-revalidate=3600",
+          "Cloudflare-CDN-Cache-Control": "public, max-age=600, stale-while-revalidate=3600",
         },
       }
     );

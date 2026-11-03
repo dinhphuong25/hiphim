@@ -497,11 +497,19 @@ export async function proxy(request: NextRequest) {
     const response = NextResponse.next();
 
     // 5. Cloudflare Edge CDN Caching Strategy (Zero-Worker Invocations on CDN Hits)
-    if (method === 'GET' && !pathname.startsWith('/api/') && !pathname.startsWith('/admin')) {
-        const hasAuthCookie = request.cookies.has('hiphim_user_session') || request.cookies.has('hiphim_admin_session');
-        if (!hasAuthCookie) {
-            response.headers.set('Cloudflare-CDN-Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
-            response.headers.set('CDN-Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+    if (method === 'GET' && !pathname.startsWith('/admin')) {
+        const isPublicCacheableApi =
+            pathname === '/api/announcement' ||
+            pathname === '/api/rating' ||
+            (pathname === '/api/system/maintenance' && !url.search);
+
+        if (!pathname.startsWith('/api/') || isPublicCacheableApi) {
+            const hasAuthCookie = request.cookies.has('hiphim_user_session') || request.cookies.has('hiphim_admin_session');
+            if (!hasAuthCookie) {
+                const maxAge = isPublicCacheableApi ? 600 : 300;
+                response.headers.set('Cloudflare-CDN-Cache-Control', `public, max-age=${maxAge}, stale-while-revalidate=3600`);
+                response.headers.set('CDN-Cache-Control', `public, max-age=${maxAge}, stale-while-revalidate=3600`);
+            }
         }
     }
 

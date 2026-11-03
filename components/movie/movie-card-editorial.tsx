@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, memo } from "react";
+import { useState, useEffect, useMemo, memo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Play, Star, Heart, Film } from "lucide-react";
@@ -59,6 +59,11 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
   const { toggleFavorite, isFavorite } = useFavorites();
   const [candidateIndex, setCandidateIndex] = useState(0);
   const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setCandidateIndex(0);
+    setHasError(false);
+  }, [movie?.poster_url, movie?.thumb_url, movie?.slug]);
 
   const candidates = useMemo(
     () => getMovieImageCandidates(movie, "poster"),
@@ -210,9 +215,14 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
             )}
           </div>
 
-          {/* Rating Badge Top Right */}
+          {/* Rating Badge Top Right (Shifted to right-11 when delete/trash button is present) */}
           {isValidRating && (
-            <span className="absolute top-2.5 right-2.5 z-10 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-black/80 text-cinema-gold border border-white/15 flex items-center gap-1 shadow-sm">
+            <span
+              className={cn(
+                "absolute top-2.5 z-10 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-black/80 text-cinema-gold border border-white/15 flex items-center gap-1 shadow-sm",
+                isHistoryCard || hideFavoriteButton ? "right-11" : "right-2.5"
+              )}
+            >
               <Star className="w-3 h-3 fill-cinema-gold" />
               {rating.toFixed(1)}
             </span>

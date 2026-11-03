@@ -8,6 +8,7 @@ import { useWatchHistory, getWatchHistory } from "@/hooks/useLocalStorage";
 import { useUserAuth } from "@/context/user-auth-context";
 import AuthGate from "@/components/auth/auth-gate";
 import MovieCardEditorial from "@/components/movie/movie-card-editorial";
+import { normalizeImageUrl } from "@/lib/image-helper";
 import type { WatchHistoryItem } from "@/lib/types";
 
 interface RecentlyWatchedClientProps {
@@ -52,8 +53,8 @@ export default function RecentlyWatchedClient({}: RecentlyWatchedClientProps) {
             origin_name: m.origin_name || item.origin_name,
             year: typeof m.year === "string" ? parseInt(m.year, 10) : (m.year || item.year),
             quality: m.quality || item.quality,
-            poster_url: m.poster_url || item.poster_url,
-            thumb_url: m.thumb_url || item.thumb_url,
+            poster_url: normalizeImageUrl(m.poster_url) || item.poster_url,
+            thumb_url: normalizeImageUrl(m.thumb_url) || item.thumb_url,
             tmdb: m.tmdb?.vote_average ? { vote_average: m.tmdb.vote_average } : item.tmdb,
             imdb:
               m.imdb?.vote_average || m.imdb?.rating

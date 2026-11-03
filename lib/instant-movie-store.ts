@@ -8,10 +8,39 @@ interface CachedMovieList {
   timestamp: number;
 }
 
+export type NavEvent = {
+  typeList?: string | null;
+  category?: string | null;
+  country?: string | null;
+  year?: string | number | null;
+  topic?: string | null;
+  href?: string;
+};
+
+type NavListener = (event: NavEvent) => void;
+
 class InstantMovieStore {
   private cache: Map<string, CachedMovieList> = new Map();
   private inFlight: Map<string, Promise<any>> = new Map();
   private isPrefetchingAll = false;
+  private navListeners: Set<NavListener> = new Set();
+
+  public subscribeNav(listener: NavListener): () => void {
+    this.navListeners.add(listener);
+    return () => {
+      this.navListeners.delete(listener);
+    };
+  }
+
+  public notifyNav(event: NavEvent) {
+    this.navListeners.forEach((listener) => {
+      try {
+        listener(event);
+      } catch (err) {
+        console.error("Error in nav listener:", err);
+      }
+    });
+  }
 
   public buildKey(params: {
     typeList?: string | null;

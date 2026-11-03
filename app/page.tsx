@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import MovieListClient from "@/components/movie/movie-list-client";
 import HomeClient from "@/components/home-client";
+import { MovieGridSkeleton } from "@/components/movie/movie-skeleton";
 
 import {
   getCachedCategories,
@@ -150,8 +151,18 @@ export default async function Home({ searchParams }: HomeProps) {
     />
   );
 
+function FilteredHomeSkeleton() {
   return (
-    <Suspense fallback={defaultHomeView}>
+    <main className="w-full px-3.5 sm:px-6 lg:px-6 xl:px-8 pb-20 pt-16 sm:pt-20">
+      <div className="pt-2 sm:pt-4 px-1 sm:px-0">
+        <MovieGridSkeleton count={10} />
+      </div>
+    </main>
+  );
+}
+
+  return (
+    <Suspense fallback={<FilteredHomeSkeleton />}>
       <FilteredHomeView
         searchParams={searchParams}
         categories={categories as any[]}

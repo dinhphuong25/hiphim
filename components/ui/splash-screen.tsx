@@ -5,7 +5,19 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export function SplashScreen() {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(() => {
+    if (typeof window !== "undefined") {
+      try {
+        if (sessionStorage.getItem("hiphim_splash_shown")) {
+          return false;
+        }
+        sessionStorage.setItem("hiphim_splash_shown", "1");
+      } catch {
+        // sessionStorage might be restricted in some private modes
+      }
+    }
+    return true;
+  });
   const [isFading, setIsFading] = useState(false);
   const [isMerged, setIsMerged] = useState(false);
   const [showSlogan, setShowSlogan] = useState(false);

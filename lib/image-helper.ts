@@ -136,7 +136,14 @@ export function getMovieImageCandidates(
         candidates.push(normalized);
       }
 
-      // Add mirror CDN fallback ONLY for known ophim domains that share identical paths
+      // Add mirror CDN fallback ONLY for known ophim/phimimg domains that share identical paths
+      if (normalized.includes("phimimg.com/")) {
+        const mirror = normalized.replace("phimimg.com", "img.phimapi.com");
+        if (!candidates.includes(mirror)) candidates.push(mirror);
+      } else if (normalized.includes("img.phimapi.com/")) {
+        const mirror = normalized.replace("img.phimapi.com", "phimimg.com");
+        if (!candidates.includes(mirror)) candidates.push(mirror);
+      }
       if (normalized.includes("img.ophim1.com/")) {
         const mirror = normalized.replace("img.ophim1.com", "img.ophim.live");
         if (!candidates.includes(mirror)) candidates.push(mirror);

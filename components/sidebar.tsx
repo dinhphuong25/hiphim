@@ -93,7 +93,7 @@ function SidebarMainNavItem({
 }: {
   item: NavMainItem;
   active: boolean;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent) => void;
   onPrefetch?: () => void;
 }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -103,7 +103,10 @@ function SidebarMainNavItem({
       href={item.href}
       scroll={false}
       prefetch={false}
-      onClick={onClick}
+      onClick={(e) => {
+        e.preventDefault();
+        onClick(e);
+      }}
       onMouseEnter={() => {
         setIsHovered(true);
         onPrefetch?.();
@@ -359,6 +362,7 @@ function SidebarContent({
 
 
   const handleBottomNavNavigate = (href: string, e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
     setIsMobileOpen(false);
     setIsAccountOpen(false);
     setIsExploreOpen(false);
@@ -375,9 +379,26 @@ function SidebarContent({
     }
 
     navigateToTab(href);
+  };
 
-    if (pathname === href && !hasActiveFilters) {
-      if (e) e.preventDefault();
+  const handleMainNavItemClick = (item: NavMainItem, e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
+    setIsMobileOpen(false);
+    setOptimisticItem({ href: item.href, typeList: item.typeList });
+
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+
+    if (item.typeList) {
+      instantMovieStore.notifyNav({ typeList: item.typeList, href: item.href });
+      router.push(item.href, { scroll: false });
+    } else if (item.href === "/") {
+      instantMovieStore.notifyNav({ href: "/" });
+      navigateToTab("/");
+    } else {
+      instantMovieStore.notifyNav({ href: item.href });
+      router.push(item.href, { scroll: false });
     }
   };
 
@@ -412,6 +433,13 @@ function SidebarContent({
     searchParams.get("q")
   );
 
+  const [optimisticItem, setOptimisticItem] = useState<{ href: string; typeList?: string } | null>(null);
+
+  // Clear optimistic state when searchParams or pathname changes
+  useEffect(() => {
+    setOptimisticItem(null);
+  }, [pathname, searchParams]);
+
   // Find active names
   const activeCategoryObj = useMemo(() => {
     return categories.find((c) => c.slug === currentCategory);
@@ -422,6 +450,15 @@ function SidebarContent({
   }, [countries, currentCountry]);
 
   const isLinkActive = (href: string, typeList?: string) => {
+    if (optimisticItem) {
+      if (typeList && optimisticItem.typeList) {
+        return optimisticItem.typeList === typeList;
+      }
+      if (optimisticItem.href === href) {
+        return true;
+      }
+      return false;
+    }
     if (typeList) {
       return pathname === "/" && (currentTypeList === typeList || searchParams.get("typelist") === typeList);
     }
@@ -547,6 +584,10 @@ function SidebarContent({
     setIsMobileOpen(false);
     setIsExploreOpen(false);
     setIsSelecting(false);
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+    instantMovieStore.notifyNav({ category: slug, href: `/?category=${slug}` });
     router.push(`/?category=${slug}`, { scroll: false });
   };
 
@@ -559,6 +600,10 @@ function SidebarContent({
     setIsMobileOpen(false);
     setIsExploreOpen(false);
     setIsSelecting(false);
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+    instantMovieStore.notifyNav({ country: slug, href: `/?country=${slug}` });
     router.push(`/?country=${slug}`, { scroll: false });
   };
 
@@ -571,6 +616,10 @@ function SidebarContent({
     setIsMobileOpen(false);
     setIsExploreOpen(false);
     setIsSelecting(false);
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+    instantMovieStore.notifyNav({ year, href: `/?year=${year}` });
     router.push(`/?year=${year}`, { scroll: false });
   };
 
@@ -1107,10 +1156,7 @@ function SidebarContent({
                 key={item.href}
                 item={item}
                 active={isLinkActive(item.href, item.typeList)}
-                onClick={() => {
-                  setIsMobileOpen(false);
-                  navigateToTab(item.href);
-                }}
+                onClick={(e) => handleMainNavItemClick(item, e)}
                 onPrefetch={() => {
                   if (item.typeList) instantMovieStore.prefetch(item.typeList);
                 }}
@@ -1272,9 +1318,10 @@ function SidebarContent({
             {/* Ô 1: Lịch Sử */}
             <button
               type="button"
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
                 setIsMobileOpen(false);
-                navigateToTab("/recently");
+                navigateToTab("/recently", e);
               }}
               className={cn(
                 "flex items-center justify-center gap-1.5 h-9 lg:h-8.5 px-2 rounded-xl text-xs lg:text-[11.5px] font-bold transition-all border select-none cursor-pointer active:scale-95",
@@ -1292,9 +1339,10 @@ function SidebarContent({
             {/* Ô 2: Yêu Thích */}
             <button
               type="button"
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
                 setIsMobileOpen(false);
-                navigateToTab("/favorites");
+                navigateToTab("/favorites", e);
               }}
               className={cn(
                 "flex items-center justify-center gap-1.5 h-9 lg:h-8.5 px-2 rounded-xl text-xs lg:text-[11.5px] font-bold transition-all border select-none cursor-pointer active:scale-95",
