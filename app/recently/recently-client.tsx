@@ -123,35 +123,7 @@ export default function RecentlyWatchedClient({}: RecentlyWatchedClientProps) {
   }
 
   return (
-    <div className="w-full px-3.5 sm:px-6 lg:px-6 xl:px-8 pt-6 sm:pt-8 pb-20">
-      {/* Header Bar */}
-      {movies.length > 0 && (
-        <div className="flex items-center justify-between gap-4 mb-5 pb-3 border-b border-white/[0.08]">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-brand-green/15 border border-brand-green/30 flex items-center justify-center text-brand-green">
-              <History className="w-4 h-4" />
-            </div>
-            <div>
-              <h1 className="text-base sm:text-lg font-extrabold text-white tracking-tight flex items-center gap-2">
-                <span>Lịch Sử Xem</span>
-                <span className="px-2 py-0.5 rounded-full text-[11px] font-mono font-bold bg-white/[0.06] text-brand-green border border-white/10">
-                  {movies.length} phim
-                </span>
-              </h1>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleClearAll}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-red-500/15 text-white/60 hover:text-red-400 border border-white/10 hover:border-red-500/30 text-xs font-semibold transition-all active:scale-95 cursor-pointer"
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-            <span>Xóa tất cả</span>
-          </button>
-        </div>
-      )}
-
+    <div className="w-full px-3.5 sm:px-6 lg:px-6 xl:px-8 pt-20 sm:pt-24 lg:pt-24 pb-20">
       {/* Empty State */}
       {movies.length === 0 ? (
         <div className="py-16 sm:py-24 text-center select-none animate-in fade-in duration-200">
