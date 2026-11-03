@@ -188,6 +188,14 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        source: "/watch",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=600, s-maxage=1800, stale-while-revalidate=86400" },
+          { key: "CDN-Cache-Control", value: "public, max-age=1800, stale-while-revalidate=86400" },
+          { key: "Cloudflare-CDN-Cache-Control", value: "public, max-age=1800, stale-while-revalidate=86400" },
+        ],
+      },
+      {
         source: "/api/cron/:path*",
         headers: [{ key: "Cache-Control", value: "no-store, no-cache, must-revalidate, private, max-age=0" }],
       },
