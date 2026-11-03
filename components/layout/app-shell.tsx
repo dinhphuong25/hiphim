@@ -89,7 +89,7 @@ function AppShellComponent({ children }: AppShellProps) {
       <Header />
 
       {/* Dynamic Right-side Content Container */}
-      <div className="min-h-screen lg:pl-[252px] flex flex-col">
+      <div className="min-h-screen lg:pl-[268px] flex flex-col">
         <div className={showInstantRecently || showInstantFavorites ? "hidden" : "contents"}>
           {children}
         </div>

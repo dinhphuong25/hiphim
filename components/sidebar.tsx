@@ -111,10 +111,10 @@ function SidebarMainNavItem({
       onMouseLeave={() => setIsHovered(false)}
       onTouchStart={onPrefetch}
       className={cn(
-        "relative flex items-center gap-3 lg:gap-2.5 px-3 lg:px-2.5 py-2 lg:py-1.5 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-all duration-150 group overflow-hidden border",
+        "relative flex items-center gap-3 lg:gap-3 px-3 lg:px-3 py-2 lg:py-2.5 rounded-xl text-sm lg:text-[14px] font-medium lg:font-semibold transition-all duration-150 group overflow-hidden border",
         active
-          ? "bg-brand-green/15 text-brand-green border-brand-green/30 shadow-[0_0_12px_rgba(32,214,107,0.15)] font-semibold"
-          : "text-white/65 hover:text-white hover:bg-white/[0.06] border-transparent"
+          ? "bg-brand-green/15 text-brand-green border-brand-green/30 shadow-[0_0_14px_rgba(32,214,107,0.18)] font-bold"
+          : "text-white/65 hover:text-white hover:bg-white/[0.07] border-transparent"
       )}
       aria-current={active ? "page" : undefined}
     >
@@ -123,7 +123,7 @@ function SidebarMainNavItem({
         isHovered={isHovered}
         isActive={active}
         className={cn(
-          "w-[18px] h-[18px] lg:w-4 lg:h-4 shrink-0 transition-colors duration-150",
+          "w-[18px] h-[18px] lg:w-5 lg:h-5 shrink-0 transition-colors duration-150",
           active ? "text-brand-green" : "text-white/60 group-hover:text-white"
         )}
       />
@@ -151,10 +151,10 @@ function SidebarPersonalNavItem({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={cn(
-        "w-full relative flex items-center gap-3 lg:gap-2.5 px-3 lg:px-2.5 py-2 lg:py-2 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-all duration-150 group overflow-hidden text-left cursor-pointer border",
+        "w-full relative flex items-center gap-3 lg:gap-3 px-3 lg:px-3 py-2 lg:py-2.5 rounded-xl text-sm lg:text-[14px] font-medium lg:font-semibold transition-all duration-150 group overflow-hidden text-left cursor-pointer border",
         active
-          ? "bg-brand-green/15 text-brand-green border-brand-green/30 shadow-[0_0_12px_rgba(32,214,107,0.15)] font-semibold"
-          : "text-white/65 hover:text-white hover:bg-white/[0.06] border-transparent"
+          ? "bg-brand-green/15 text-brand-green border-brand-green/30 shadow-[0_0_14px_rgba(32,214,107,0.18)] font-bold"
+          : "text-white/65 hover:text-white hover:bg-white/[0.07] border-transparent"
       )}
       aria-current={active ? "page" : undefined}
     >
@@ -163,7 +163,7 @@ function SidebarPersonalNavItem({
         isHovered={isHovered}
         isActive={active}
         className={cn(
-          "w-[18px] h-[18px] lg:w-4 lg:h-4 shrink-0 transition-colors duration-150",
+          "w-[18px] h-[18px] lg:w-5 lg:h-5 shrink-0 transition-colors duration-150",
           active ? "text-brand-green" : "text-white/60 group-hover:text-white"
         )}
       />
@@ -1073,11 +1073,11 @@ function SidebarContent({
           "top-0 left-0 bottom-0 w-[280px] bg-cinema-sub border-r border-white/10 rounded-none shadow-none",
           isMobileOpen ? "translate-x-0 z-[130]" : "-translate-x-full lg:translate-x-0 z-[100]",
           // Desktop state: floating island card matching bento / cut-out style (rounded corners, detached borders)
-          "lg:top-3 lg:bottom-3 lg:left-3 lg:w-[230px] lg:h-auto lg:rounded-2xl lg:border lg:border-white/10 lg:bg-[#0B100E]/95 lg:backdrop-blur-xl lg:shadow-[0_12px_40px_rgba(0,0,0,0.65)] lg:overflow-hidden"
+          "lg:top-3 lg:bottom-3 lg:left-3 lg:w-[245px] lg:h-auto lg:rounded-2xl lg:border lg:border-white/10 lg:bg-[#0B100E]/95 lg:backdrop-blur-xl lg:shadow-[0_12px_40px_rgba(0,0,0,0.65)] lg:overflow-hidden"
         )}
       >
         {/* Sidebar Header / Brand Logo (Desktop & Mobile) */}
-        <div className="h-[52px] px-3.5 lg:px-4 flex items-center justify-between lg:justify-center border-b border-white/[0.08] shrink-0 bg-white/[0.01]">
+        <div className="h-[52px] lg:h-[60px] px-3.5 lg:px-4 flex items-center justify-between lg:justify-center border-b border-white/[0.08] shrink-0 bg-white/[0.01]">
           <Link href="/" className="flex items-center justify-center select-none py-1 group transition-transform active:scale-95" aria-label="Về trang chủ Hi Phim">
             <BrandLogo size="md" showSlogan={false} />
           </Link>
@@ -1098,10 +1098,10 @@ function SidebarContent({
         </div>
 
         {/* Scrollable Navigation Body - Balanced spacing to fit frame seamlessly and prevent cutoff */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 lg:px-2.5 lg:pt-2 lg:pb-2 space-y-2 lg:space-y-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 lg:p-3 space-y-2 lg:space-y-2 flex flex-col [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           
-          {/* Main Nav Section (Gỡ chữ Menu Chính theo yêu cầu để hiển thị trọn vẹn ở dưới) */}
-          <div className="space-y-1 lg:space-y-1">
+          {/* Main Nav Section */}
+          <div className="space-y-1 lg:space-y-2">
             {NAV_MAIN.map((item) => (
               <SidebarMainNavItem
                 key={item.href}
@@ -1119,11 +1119,11 @@ function SidebarContent({
           </div>
 
           {/* Divider 1 */}
-          <div className="h-[1px] bg-white/5 mx-2 lg:mx-1 my-1.5 lg:my-1.5" />
+          <div className="h-[1px] bg-white/[0.07] mx-2 lg:mx-1 my-1.5 lg:my-2.5 shrink-0" />
 
           {/* Discovery / Selection Boards Trigger */}
-          <div className="space-y-1 lg:space-y-1">
-            <span className="px-3 lg:px-2 text-[11px] lg:text-[10px] font-extrabold text-white/45 uppercase tracking-wider block mb-1.5 lg:mb-1">
+          <div className="space-y-1 lg:space-y-2">
+            <span className="px-3 lg:px-2.5 text-[11px] lg:text-[10.5px] font-extrabold text-white/45 uppercase tracking-wider block mb-1.5 lg:mb-1.5">
               KHÁM PHÁ
             </span>
 
@@ -1138,37 +1138,37 @@ function SidebarContent({
               onMouseEnter={() => setIsCategoryHovered(true)}
               onMouseLeave={() => setIsCategoryHovered(false)}
               className={cn(
-                "w-full relative flex items-center justify-between px-3 lg:px-2.5 py-2 lg:py-1.5 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-all duration-150 group text-left cursor-pointer border",
+                "w-full relative flex items-center justify-between px-3 lg:px-3 py-2 lg:py-2.5 rounded-xl text-sm lg:text-[14px] font-medium lg:font-semibold transition-all duration-150 group text-left cursor-pointer border",
                 currentCategory
-                  ? "bg-brand-green/15 text-brand-green border-brand-green/30 shadow-[0_0_12px_rgba(32,214,107,0.15)] font-semibold"
-                  : "text-white/65 hover:text-white hover:bg-white/[0.06] border-transparent"
+                  ? "bg-brand-green/15 text-brand-green border-brand-green/30 shadow-[0_0_14px_rgba(32,214,107,0.18)] font-bold"
+                  : "text-white/65 hover:text-white hover:bg-white/[0.07] border-transparent"
               )}
             >
-              <div className="flex items-center gap-3 lg:gap-2 min-w-0">
+              <div className="flex items-center gap-3 lg:gap-3 min-w-0">
                 <SidebarAnimatedIcon
                   type="layers"
                   isHovered={isCategoryHovered}
                   isActive={!!currentCategory}
                   className={cn(
-                    "w-[18px] h-[18px] lg:w-4 lg:h-4 shrink-0 transition-colors duration-150",
+                    "w-[18px] h-[18px] lg:w-5 lg:h-5 shrink-0 transition-colors duration-150",
                     currentCategory ? "text-brand-green" : "text-white/60 group-hover:text-white"
                   )}
                 />
                 <div className="flex flex-col min-w-0">
                   <span className="truncate">Thể Loại</span>
                   {activeCategoryObj && (
-                    <span className="text-xs lg:text-[10px] text-brand-green font-normal truncate">
+                    <span className="text-xs lg:text-[11px] text-brand-green font-medium truncate">
                       {activeCategoryObj.name}
                     </span>
                   )}
                 </div>
               </div>
 
-              <div className="flex items-center gap-1.5 lg:gap-1 shrink-0 ml-1">
-                <span className="text-[10px] lg:text-[9px] px-2 lg:px-1.5 py-0.5 rounded-full bg-white/5 text-white/50 group-hover:bg-brand-green/20 group-hover:text-brand-green font-mono font-bold">
+              <div className="flex items-center gap-1.5 lg:gap-1.5 shrink-0 ml-1">
+                <span className="text-[10px] lg:text-[10px] px-2 lg:px-2 py-0.5 rounded-full bg-white/5 text-white/50 group-hover:bg-brand-green/20 group-hover:text-brand-green font-mono font-bold">
                   {categories.length || "24"}
                 </span>
-                <ChevronRight className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-white/40 group-hover:text-white group-hover:translate-x-0.5 transition-transform" />
+                <ChevronRight className="w-4 h-4 lg:w-4 lg:h-4 text-white/40 group-hover:text-white group-hover:translate-x-0.5 transition-transform" />
               </div>
             </button>
 
@@ -1183,37 +1183,37 @@ function SidebarContent({
               onMouseEnter={() => setIsCountryHovered(true)}
               onMouseLeave={() => setIsCountryHovered(false)}
               className={cn(
-                "w-full relative flex items-center justify-between px-3 lg:px-2.5 py-2 lg:py-1.5 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-all duration-150 group text-left cursor-pointer border",
+                "w-full relative flex items-center justify-between px-3 lg:px-3 py-2 lg:py-2.5 rounded-xl text-sm lg:text-[14px] font-medium lg:font-semibold transition-all duration-150 group text-left cursor-pointer border",
                 currentCountry
-                  ? "bg-brand-green/15 text-brand-green border-brand-green/30 shadow-[0_0_12px_rgba(32,214,107,0.15)] font-semibold"
-                  : "text-white/65 hover:text-white hover:bg-white/[0.06] border-transparent"
+                  ? "bg-brand-green/15 text-brand-green border-brand-green/30 shadow-[0_0_14px_rgba(32,214,107,0.18)] font-bold"
+                  : "text-white/65 hover:text-white hover:bg-white/[0.07] border-transparent"
               )}
             >
-              <div className="flex items-center gap-3 lg:gap-2 min-w-0">
+              <div className="flex items-center gap-3 lg:gap-3 min-w-0">
                 <SidebarAnimatedIcon
                   type="globe"
                   isHovered={isCountryHovered}
                   isActive={!!currentCountry}
                   className={cn(
-                    "w-[18px] h-[18px] lg:w-4 lg:h-4 shrink-0 transition-colors duration-150",
+                    "w-[18px] h-[18px] lg:w-5 lg:h-5 shrink-0 transition-colors duration-150",
                     currentCountry ? "text-brand-green" : "text-white/60 group-hover:text-white"
                   )}
                 />
                 <div className="flex flex-col min-w-0">
                   <span className="truncate">Quốc Gia</span>
                   {activeCountryObj && (
-                    <span className="text-xs lg:text-[10px] text-brand-green font-normal truncate">
+                    <span className="text-xs lg:text-[11px] text-brand-green font-medium truncate">
                       {activeCountryObj.name}
                     </span>
                   )}
                 </div>
               </div>
 
-              <div className="flex items-center gap-1.5 lg:gap-1 shrink-0 ml-1">
-                <span className="text-[10px] lg:text-[9px] px-2 lg:px-1.5 py-0.5 rounded-full bg-white/5 text-white/50 group-hover:bg-brand-green/20 group-hover:text-brand-green font-mono font-bold">
+              <div className="flex items-center gap-1.5 lg:gap-1.5 shrink-0 ml-1">
+                <span className="text-[10px] lg:text-[10px] px-2 lg:px-2 py-0.5 rounded-full bg-white/5 text-white/50 group-hover:bg-brand-green/20 group-hover:text-brand-green font-mono font-bold">
                   {countries.length || "12+"}
                 </span>
-                <ChevronRight className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-white/40 group-hover:text-white group-hover:translate-x-0.5 transition-transform" />
+                <ChevronRight className="w-4 h-4 lg:w-4 lg:h-4 text-white/40 group-hover:text-white group-hover:translate-x-0.5 transition-transform" />
               </div>
             </button>
 
@@ -1228,37 +1228,37 @@ function SidebarContent({
               onMouseEnter={() => setIsYearHovered(true)}
               onMouseLeave={() => setIsYearHovered(false)}
               className={cn(
-                "w-full relative flex items-center justify-between px-3 lg:px-2.5 py-2 lg:py-1.5 rounded-xl text-sm lg:text-[13px] font-medium lg:font-semibold transition-all duration-150 group text-left cursor-pointer border",
+                "w-full relative flex items-center justify-between px-3 lg:px-3 py-2 lg:py-2.5 rounded-xl text-sm lg:text-[14px] font-medium lg:font-semibold transition-all duration-150 group text-left cursor-pointer border",
                 currentYear
-                  ? "bg-brand-green/15 text-brand-green border-brand-green/30 shadow-[0_0_12px_rgba(32,214,107,0.15)] font-semibold"
-                  : "text-white/65 hover:text-white hover:bg-white/[0.06] border-transparent"
+                  ? "bg-brand-green/15 text-brand-green border-brand-green/30 shadow-[0_0_14px_rgba(32,214,107,0.18)] font-bold"
+                  : "text-white/65 hover:text-white hover:bg-white/[0.07] border-transparent"
               )}
             >
-              <div className="flex items-center gap-3 lg:gap-2 min-w-0">
+              <div className="flex items-center gap-3 lg:gap-3 min-w-0">
                 <SidebarAnimatedIcon
                   type="calendar"
                   isHovered={isYearHovered}
                   isActive={!!currentYear}
                   className={cn(
-                    "w-[18px] h-[18px] lg:w-4 lg:h-4 shrink-0 transition-colors duration-150",
+                    "w-[18px] h-[18px] lg:w-5 lg:h-5 shrink-0 transition-colors duration-150",
                     currentYear ? "text-brand-green" : "text-white/60 group-hover:text-white"
                   )}
                 />
                 <div className="flex flex-col min-w-0">
                   <span className="whitespace-nowrap">Năm Phát Hành</span>
                   {currentYear && (
-                    <span className="text-xs lg:text-[10px] text-brand-green font-normal truncate">
+                    <span className="text-xs lg:text-[11px] text-brand-green font-medium truncate">
                       Năm {currentYear}
                     </span>
                   )}
                 </div>
               </div>
 
-              <div className="flex items-center gap-1.5 lg:gap-1 shrink-0 ml-1">
-                <span className="text-[10px] lg:text-[9px] px-2 lg:px-1.5 py-0.5 rounded-full bg-white/5 text-white/50 group-hover:bg-brand-green/20 group-hover:text-brand-green font-mono font-bold">
+              <div className="flex items-center gap-1.5 lg:gap-1.5 shrink-0 ml-1">
+                <span className="text-[10px] lg:text-[10px] px-2 lg:px-2 py-0.5 rounded-full bg-white/5 text-white/50 group-hover:bg-brand-green/20 group-hover:text-brand-green font-mono font-bold">
                   {YEARS_LIST.length}+
                 </span>
-                <ChevronRight className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-white/40 group-hover:text-white group-hover:translate-x-0.5 transition-transform" />
+                <ChevronRight className="w-4 h-4 lg:w-4 lg:h-4 text-white/40 group-hover:text-white group-hover:translate-x-0.5 transition-transform" />
               </div>
             </button>
           </div>
@@ -1267,8 +1267,8 @@ function SidebarContent({
         {/* ======================================================== */}
         {/* BOTTOM PERSONAL DOCK: 2 Ô NGANG (LỊCH SỬ & YÊU THÍCH)     */}
         {/* ======================================================== */}
-        <div className="shrink-0 p-2 lg:p-2 border-t border-white/[0.08] bg-[#080D0B]/90 backdrop-blur-md mt-auto">
-          <div className="grid grid-cols-2 gap-2 lg:gap-2">
+        <div className="shrink-0 p-2.5 lg:p-3 border-t border-white/[0.08] bg-[#080D0B]/95 backdrop-blur-md mt-auto">
+          <div className="grid grid-cols-2 gap-2 lg:gap-2.5">
             {/* Ô 1: Lịch Sử */}
             <button
               type="button"
@@ -1277,15 +1277,15 @@ function SidebarContent({
                 navigateToTab("/recently");
               }}
               className={cn(
-                "flex items-center justify-center gap-1.5 h-9 lg:h-8.5 px-2.5 rounded-xl text-xs lg:text-[11.5px] font-bold transition-all border select-none cursor-pointer active:scale-95",
+                "flex items-center justify-center gap-2 h-10 lg:h-11 px-3 rounded-xl text-xs lg:text-[12.5px] font-bold transition-all border select-none cursor-pointer active:scale-95",
                 currentActiveTab === "/recently"
-                  ? "bg-brand-green/15 text-brand-green border-brand-green/40 shadow-[0_0_12px_rgba(32,214,107,0.2)]"
+                  ? "bg-brand-green/15 text-brand-green border-brand-green/40 shadow-[0_0_14px_rgba(32,214,107,0.22)]"
                   : "bg-white/[0.04] hover:bg-white/[0.08] text-white/70 hover:text-white border-white/10 hover:border-brand-green/40"
               )}
               aria-label="Lịch sử xem phim"
               title="Lịch sử xem phim"
             >
-              <Clock className={cn("w-3.5 h-3.5 shrink-0", currentActiveTab === "/recently" ? "text-brand-green" : "text-white/60")} />
+              <Clock className={cn("w-4 h-4 lg:w-[18px] lg:h-[18px] shrink-0", currentActiveTab === "/recently" ? "text-brand-green" : "text-white/60")} />
               <span className="truncate">Lịch sử</span>
             </button>
 
@@ -1297,15 +1297,15 @@ function SidebarContent({
                 navigateToTab("/favorites");
               }}
               className={cn(
-                "flex items-center justify-center gap-1.5 h-9 lg:h-8.5 px-2.5 rounded-xl text-xs lg:text-[11.5px] font-bold transition-all border select-none cursor-pointer active:scale-95",
+                "flex items-center justify-center gap-2 h-10 lg:h-11 px-3 rounded-xl text-xs lg:text-[12.5px] font-bold transition-all border select-none cursor-pointer active:scale-95",
                 currentActiveTab === "/favorites"
-                  ? "bg-brand-green/15 text-brand-green border-brand-green/40 shadow-[0_0_12px_rgba(32,214,107,0.2)]"
+                  ? "bg-brand-green/15 text-brand-green border-brand-green/40 shadow-[0_0_14px_rgba(32,214,107,0.22)]"
                   : "bg-white/[0.04] hover:bg-white/[0.08] text-white/70 hover:text-white border-white/10 hover:border-brand-green/40"
               )}
               aria-label="Phim yêu thích"
               title="Phim yêu thích"
             >
-              <Heart className={cn("w-3.5 h-3.5 shrink-0", currentActiveTab === "/favorites" ? "fill-brand-green text-brand-green" : "text-white/60")} />
+              <Heart className={cn("w-4 h-4 lg:w-[18px] lg:h-[18px] shrink-0", currentActiveTab === "/favorites" ? "fill-brand-green text-brand-green" : "text-white/60")} />
               <span className="truncate">Yêu thích</span>
             </button>
           </div>

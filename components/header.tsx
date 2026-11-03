@@ -119,7 +119,7 @@ function HeaderComponent({}: HeaderProps) {
           // Mobile: floating wrapper with safe-area padding
           "left-0 right-0 pt-2 pt-[max(0.5rem,env(safe-area-inset-top))] px-3 pb-1",
           // Desktop: floating island top bar
-          "lg:top-0 lg:left-[252px] lg:right-0 lg:pt-3 lg:pr-3 lg:pb-0 lg:pl-0 lg:bg-transparent lg:border-none lg:shadow-none"
+          "lg:top-0 lg:left-[268px] lg:right-0 lg:pt-3 lg:pr-3 lg:pb-0 lg:pl-0 lg:bg-transparent lg:border-none lg:shadow-none"
         )}
       >
         {/* ======================================================== */}
