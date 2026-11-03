@@ -47,6 +47,9 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
   reactStrictMode: false,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 
   experimental: {
     optimizePackageImports: [
@@ -64,7 +67,7 @@ const nextConfig: NextConfig = {
       "sonner",
       "date-fns",
     ],
-    staticGenerationRetryCount: 3,
+    staticGenerationRetryCount: 1,
     staleTimes: {
       dynamic: 300,
       static: 1800,

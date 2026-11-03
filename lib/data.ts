@@ -67,7 +67,7 @@ export const getCachedFeaturedMovies = unstable_cache(
         }
       }
 
-      const combinedSlugs = Array.from(new Set([...slugs, ...extraSlugs]));
+      const combinedSlugs = Array.from(new Set([...slugs, ...extraSlugs])).slice(0, 8);
       // Luôn bảo đảm "nguoi-nhen-khoi-dau-moi" đứng vị trí #01
       const spiderPos = combinedSlugs.indexOf("nguoi-nhen-khoi-dau-moi");
       if (spiderPos > 0) {

@@ -1,6 +1,7 @@
 // ISR: trang chủ được cache tĩnh 300s (5 phút), tiết kiệm CPU và băng thông Origin
 export const revalidate = 300;
 
+import type { Metadata } from "next";
 import MovieListClient from "@/components/movie/movie-list-client";
 import HomeClient from "@/components/home-client";
 
@@ -37,73 +38,52 @@ const TOPICS = [
   { name: "Phim Hoạt Hình", slug: "hoat-hinh" },
 ];
 
-export async function generateMetadata({ searchParams }: HomeProps) {
-  const params = await searchParams;
-  const index = Number(params.index) || 1;
-  const category = params.category;
-  const topic = params.topic;
-  const typeList = params.typeList || (params as any).typelist;
-  const country = params.country;
-  const year = params.year;
-
-  let postTitle: { name: string } | undefined;
-
-  if (typeList) {
-    postTitle = { name: "Kết quả Lọc" };
-  } else if (topic) {
-    postTitle = TOPICS.find((t) => t.slug === topic);
-  } else if (category) {
-    const categories = await getCachedCategories();
-    postTitle = (categories as any[]).find((c: any) => c.slug === category);
-  } else if (year) {
-    postTitle = { name: `Phim Năm ${year}` };
-  } else if (country) {
-    postTitle = { name: `Phim ${country}` };
-  }
-
-  const titleText =
-    (postTitle ? `${postTitle.name} | ` : "") +
-    "Hi Phim - Xem Phim Online HD Miễn Phí" +
-    (index > 1 ? " - Trang " + index : "");
-
-  return {
-    title: titleText,
+export const metadata: Metadata = {
+  title: "Hi Phim - Xem Phim Online HD Miễn Phí Mới Nhất 2026",
+  description:
+    "Hi Phim - Trang xem phim online HD miễn phí hàng đầu. Kho 50,000+ phim bộ, phim lẻ, anime vietsub mới nhất 2026. Tốc độ nhanh, không quảng cáo.",
+  keywords: [
+    "hi phim",
+    "hiphim",
+    "xem phim online",
+    "phim HD miễn phí",
+    "phim mới nhất",
+    "phim bộ hay",
+    "anime vietsub",
+    "phim Hàn Quốc",
+    "phim hành động",
+  ],
+  openGraph: {
+    title: "Hi Phim - Xem Phim Online HD Vietsub Miễn Phí",
     description:
-      "Hi Phim - Trang xem phim online HD miễn phí hàng đầu. Kho 50,000+ phim bộ, phim lẻ, anime vietsub cập nhật mới nhất 2026. Tốc độ nhanh, không quảng cáo.",
-    keywords:
-      "hi phim, hiphim, xem phim online, phim HD miễn phí, phim mới nhất, phim bộ hay, anime vietsub, phim Hàn Quốc, phim hành động",
-    openGraph: {
-      title: postTitle ? `${postTitle.name} | Hi Phim` : "Hi Phim - Xem Phim Online HD Vietsub Miễn Phí",
-      description:
-        "Kho 50,000+ phim bộ, phim lẻ chiếu rạp, anime vietsub mới nhất 2026. Tốc độ cao, chuẩn Full HD/4K, cập nhật liên tục hàng ngày.",
-      url: "https://hiphim.one",
-      siteName: "Hi Phim",
-      type: "website",
-      locale: "vi_VN",
-      images: [
-        {
-          url: "/og-image.jpg",
-          width: 1200,
-          height: 630,
-          alt: "Hi Phim - Xem Phim Online HD Vietsub Miễn Phí",
-        },
-        {
-          url: "/og-image.png",
-          width: 1200,
-          height: 630,
-          alt: "Hi Phim - Xem Phim Online HD Vietsub Miễn Phí",
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: postTitle ? `${postTitle.name} | Hi Phim` : "Hi Phim - Xem Phim Online HD Vietsub Miễn Phí",
-      description:
-        "Kho 50,000+ phim bộ, phim lẻ chiếu rạp, anime vietsub mới nhất 2026. Tốc độ cao, chuẩn Full HD/4K, cập nhật liên tục hàng ngày.",
-      images: ["/og-image.jpg"],
-    },
-  };
-}
+      "Kho 50,000+ phim bộ, phim lẻ chiếu rạp, anime vietsub mới nhất 2026. Tốc độ cao, chuẩn Full HD/4K, cập nhật liên tục hàng ngày.",
+    url: "https://hiphim.one",
+    siteName: "Hi Phim",
+    type: "website",
+    locale: "vi_VN",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Hi Phim - Xem Phim Online HD Vietsub Miễn Phí",
+      },
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Hi Phim - Xem Phim Online HD Vietsub Miễn Phí",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hi Phim - Xem Phim Online HD Vietsub Miễn Phí",
+    description:
+      "Kho 50,000+ phim bộ, phim lẻ chiếu rạp, anime vietsub mới nhất 2026. Tốc độ cao, chuẩn Full HD/4K, cập nhật liên tục hàng ngày.",
+    images: ["/og-image.jpg"],
+  },
+};
 
 
 export default async function Home({ searchParams }: HomeProps) {
