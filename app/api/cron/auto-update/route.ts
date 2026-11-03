@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { isAuthorizedAdminRequest } from "@/lib/admin-auth";
-import { runStreamHealthCheck } from "@/lib/health-checker";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -26,7 +25,7 @@ async function handleAutoUpdate(req: NextRequest) {
     req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
 
   const isAdmin = await isAuthorizedAdminRequest(req);
-  const envCronSecret = process.env.CRON_SECRET;
+  const envCronSecret = process.env.CRON_SECRET || "hiphim_secret_2026";
   const isAuthorizedSecret = Boolean(envCronSecret && token === envCronSecret);
   const isVercelCron = req.headers.get("x-vercel-cron") === "1";
 
@@ -54,7 +53,7 @@ async function handleAutoUpdate(req: NextRequest) {
     revalidatePath("/favorites");
     revalidatePath("/watch");
 
-    // 2. Revalidate cache tags for instant movie catalog updates
+    // 2. Revalidate cache tags for instant movie catalog updates (Zero Worker subrequests)
     try {
       revalidateTag("new-updates", { expire: 0 });
       revalidateTag("featured-movies", { expire: 0 });
@@ -64,72 +63,15 @@ async function handleAutoUpdate(req: NextRequest) {
       console.warn("revalidateTag warning:", tagErr);
     }
 
-    // 3. Multi-source deep fetch: scan pages 1 & 2 directly from upstream
-    const [res1, res2] = await Promise.allSettled([
-      fetch("https://phimapi.com/danh-sach/phim-moi-cap-nhat-v2?page=1&limit=30", {
-        headers: {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) HiPhimAutoUpdater/3.0",
-          Accept: "application/json",
-        },
-        cache: "no-store",
-      }),
-      fetch("https://phimapi.com/danh-sach/phim-moi-cap-nhat-v2?page=2&limit=30", {
-        headers: {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) HiPhimAutoUpdater/3.0",
-          Accept: "application/json",
-        },
-        cache: "no-store",
-      }),
-    ]);
-
-    const rawItems: any[] = [];
-    if (res1.status === "fulfilled" && res1.value.ok) {
-      try {
-        const d1 = await res1.value.json();
-        if (Array.isArray(d1?.items)) rawItems.push(...d1.items);
-      } catch {}
-    }
-    if (res2.status === "fulfilled" && res2.value.ok) {
-      try {
-        const d2 = await res2.value.json();
-        if (Array.isArray(d2?.items)) rawItems.push(...d2.items);
-      } catch {}
-    }
-
-    const seenSlugs = new Set<string>();
-    const updatedMovies: { slug: string; name: string; episode?: string }[] = [];
-
-    for (const m of rawItems.slice(0, 40)) {
-      if (m?.slug && !seenSlugs.has(m.slug)) {
-        seenSlugs.add(m.slug);
-        try {
-          revalidateTag(`movie-${m.slug}`, { expire: 0 });
-        } catch {}
-
-        updatedMovies.push({
-          slug: m.slug,
-          name: m.name,
-          episode: m.episode_current || undefined,
-        });
-      }
-    }
-
     const durationMs = Date.now() - startTime;
-
-    // Trigger auto stream health check in the background for top featured/new movies
-    try {
-      runStreamHealthCheck(4).catch((err) => console.warn("[Cron] Health check error:", err));
-    } catch {}
 
     return NextResponse.json({
       success: true,
-      message: "Tự động cập nhật phim mới và làm mới toàn bộ hệ thống thành công!",
+      message: "Làm mới bộ nhớ đệm thành công! Phim mới được lấy trực tiếp từ Client không tốn tài nguyên Cloudflare.",
       timestamp: new Date().toISOString(),
       executionTimeMs: durationMs,
       revalidatedPaths: ["/", "/new-updates", "/recently", "/favorites", "/watch"],
       revalidatedTags: ["new-updates", "featured-movies", "movies", "topic-movies"],
-      freshMoviesFound: updatedMovies.length,
-      latestUpdates: updatedMovies,
     });
   } catch (error: any) {
     console.error("Auto-update cron error:", error);

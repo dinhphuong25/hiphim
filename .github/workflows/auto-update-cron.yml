@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Trigger Movie Update & Cache Revalidation
         run: |
-          TARGET_URL="${{ secrets.WEBSITE_URL || 'https://hiphim.biz' }}"
+          TARGET_URL="${{ secrets.WEBSITE_URL || 'https://hiphim.one' }}"
           SECRET_TOKEN="${{ secrets.CRON_TOKEN || 'hiphim_secret_2026' }}"
           echo "Đang kích hoạt cập nhật cache tự động tới: $TARGET_URL"
           curl -f -s -m 30 "$TARGET_URL/api/cron/auto-update?token=$SECRET_TOKEN" || echo "Gửi yêu cầu hoàn tất."
