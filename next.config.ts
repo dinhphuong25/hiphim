@@ -151,11 +151,31 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/api/announcement",
-        headers: [{ key: "Cache-Control", value: "public, s-maxage=60, max-age=30, stale-while-revalidate=300" }],
+        headers: [
+          { key: "Cache-Control", value: "public, s-maxage=60, max-age=30, stale-while-revalidate=300" },
+          { key: "Cloudflare-CDN-Cache-Control", value: "public, max-age=60, stale-while-revalidate=300" },
+        ],
       },
       {
         source: "/api/system/maintenance",
-        headers: [{ key: "Cache-Control", value: "public, s-maxage=30, max-age=10, stale-while-revalidate=120" }],
+        headers: [
+          { key: "Cache-Control", value: "public, s-maxage=30, max-age=10, stale-while-revalidate=120" },
+          { key: "Cloudflare-CDN-Cache-Control", value: "public, max-age=60, stale-while-revalidate=120" },
+        ],
+      },
+      {
+        source: "/(bang-xep-hang|new-updates|recently|favorites)",
+        headers: [
+          { key: "CDN-Cache-Control", value: "public, max-age=300, stale-while-revalidate=600" },
+          { key: "Cloudflare-CDN-Cache-Control", value: "public, max-age=300, stale-while-revalidate=600" },
+        ],
+      },
+      {
+        source: "/phim/:slug*",
+        headers: [
+          { key: "CDN-Cache-Control", value: "public, max-age=1800, stale-while-revalidate=86400" },
+          { key: "Cloudflare-CDN-Cache-Control", value: "public, max-age=1800, stale-while-revalidate=86400" },
+        ],
       },
       {
         source: "/api/cron/:path*",

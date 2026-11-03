@@ -47,11 +47,10 @@ async function handleAutoUpdate(req: NextRequest) {
 
   try {
     // 1. Revalidate Next.js ISR static & dynamic pages
-    revalidatePath("/");
+    revalidatePath("/", "layout");
     revalidatePath("/new-updates");
     revalidatePath("/recently");
     revalidatePath("/favorites");
-    revalidatePath("/watch");
 
     // 2. Revalidate cache tags for instant movie catalog updates (Zero Worker subrequests)
     try {
@@ -70,7 +69,7 @@ async function handleAutoUpdate(req: NextRequest) {
       message: "Làm mới bộ nhớ đệm thành công! Phim mới được lấy trực tiếp từ Client không tốn tài nguyên Cloudflare.",
       timestamp: new Date().toISOString(),
       executionTimeMs: durationMs,
-      revalidatedPaths: ["/", "/new-updates", "/recently", "/favorites", "/watch"],
+      revalidatedPaths: ["/", "/new-updates", "/recently", "/favorites"],
       revalidatedTags: ["new-updates", "featured-movies", "movies", "topic-movies"],
     });
   } catch (error: any) {

@@ -251,37 +251,6 @@ function containsSuspiciousPayload(urlStr: string): boolean {
   return SUSPICIOUS_PATTERNS.some((pattern) => pattern.test(urlStr));
 }
 
-let maintenanceCache = {
-  enabled: false,
-  lastChecked: 0,
-};
-
-async function getIsMaintenanceActive(request: NextRequest): Promise<boolean> {
-  const now = Date.now();
-  if (now - maintenanceCache.lastChecked < 2500) {
-    return maintenanceCache.enabled;
-  }
-
-  try {
-    const origin = request.nextUrl.origin;
-    const res = await fetch(`${origin}/api/system/maintenance`, {
-      cache: 'no-store',
-      headers: { 'x-proxy-check': '1' },
-    });
-    if (res.ok) {
-      const data = await res.json();
-      maintenanceCache = {
-        enabled: Boolean(data?.enabled),
-        lastChecked: now,
-      };
-      return maintenanceCache.enabled;
-    }
-  } catch {
-    // Ignore fetch error, keep cached
-  }
-  return maintenanceCache.enabled;
-}
-
 async function checkVerifiedAdminCookies(request: NextRequest): Promise<boolean> {
   const userSessionCookie = request.cookies.get('hiphim_user_session')?.value;
   if (userSessionCookie) {
@@ -432,19 +401,12 @@ export async function proxy(request: NextRequest) {
         pathname === '/sitemap.xml' ||
         pathname === '/dmca-validation.html';
 
-    let isMaintenanceActive = 
+    const isMaintenanceActive = 
         process.env.MAINTENANCE_MODE === 'true' || 
         process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true' ||
         maintenanceCookie === 'true' ||
-        (globalThis as any).__HIPHIM_MAINTENANCE__?.enabled === true;
-
-    if (!isMaintenanceActive && !isExemptPath) {
-        try {
-            isMaintenanceActive = await getIsMaintenanceActive(request);
-        } catch {
-            // fallback
-        }
-    }
+        (globalThis as any).__HIPHIM_MAINTENANCE__?.enabled === true ||
+        (globalThis as any).__HIPHIM_SITE_CONFIG__?.maintenance?.enabled === true;
 
     if (isMaintenanceActive && !isExemptPath) {
         const isVerifiedAdmin = await checkVerifiedAdminCookies(request);
@@ -527,13 +489,23 @@ export async function proxy(request: NextRequest) {
         });
 
         if (hasModifiedParams) {
-            return NextResponse.redirect(url, 307);
+            // Rewrite internally to the normalized clean URL to preserve edge cache hits without a costly 307 round-trip
+            return NextResponse.rewrite(url);
         }
     }
 
     const response = NextResponse.next();
 
-    // 5. Enterprise Security Headers (Defense-in-Depth)
+    // 5. Cloudflare Edge CDN Caching Strategy (Zero-Worker Invocations on CDN Hits)
+    if (method === 'GET' && !pathname.startsWith('/api/') && !pathname.startsWith('/admin')) {
+        const hasAuthCookie = request.cookies.has('hiphim_user_session') || request.cookies.has('hiphim_admin_session');
+        if (!hasAuthCookie) {
+            response.headers.set('Cloudflare-CDN-Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+            response.headers.set('CDN-Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+        }
+    }
+
+    // 6. Enterprise Security Headers (Defense-in-Depth)
     response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
     response.headers.set('X-Frame-Options', 'SAMEORIGIN');
     response.headers.set('X-Content-Type-Options', 'nosniff');
@@ -558,6 +530,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
     matcher: [
-        '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)',
+        '/((?!_next|favicon.*|icon.*|apple-icon.*|manifest.*|robots\\.txt|sitemap\\.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff|woff2|ttf|eot|css|js|map|json|xml|txt|plist|webmanifest)$).*)',
     ],
 };
