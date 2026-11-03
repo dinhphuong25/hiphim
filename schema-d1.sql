@@ -1,5 +1,5 @@
 -- Cloudflare D1 Database Schema for Hi Phim
--- Database: hiphim-users (ID: a5300649-2281-459d-8f57-a0e6f3c5dda7)
+-- Database: hiphim-users (ID: 084c7ac4-eca8-4c6d-92db-f176b86a4268)
 
 CREATE TABLE IF NOT EXISTS hiphim_users (
   email TEXT PRIMARY KEY,
