@@ -59,31 +59,72 @@ export async function GET(request: NextRequest) {
               flexShrink: 0,
             }}
           >
-            {poster ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={poster}
-                alt={title}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}
-              />
-            ) : (
+            {/* Movie Poster Slate / Standalone Cinema Graphic (Zero external network subrequests) */}
+            <div
+              style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'linear-gradient(145deg, #16241c 0%, #0c1410 100%)',
+                padding: '24px',
+                textAlign: 'center',
+              }}
+            >
               <div
                 style={{
+                  width: '80px',
+                  height: '80px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(32, 214, 107, 0.15)',
+                  border: '2px solid rgba(32, 214, 107, 0.5)',
                   display: 'flex',
-                  flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#20d66b',
-                  fontSize: '70px',
+                  marginBottom: '20px',
                 }}
               >
-                🎬
+                <svg
+                  width="36"
+                  height="36"
+                  viewBox="0 0 24 24"
+                  fill="#20d66b"
+                  stroke="#20d66b"
+                  strokeWidth="2"
+                >
+                  <polygon points="5 3 19 12 5 21 5 3" />
+                </svg>
               </div>
-            )}
+              <div
+                style={{
+                  color: '#ffffff',
+                  fontSize: '20px',
+                  fontWeight: 800,
+                  lineHeight: 1.3,
+                  maxHeight: '130px',
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 4,
+                  WebkitBoxOrient: 'vertical',
+                }}
+              >
+                {title}
+              </div>
+              {year && (
+                <div
+                  style={{
+                    color: '#20d66b',
+                    fontSize: '15px',
+                    fontWeight: 700,
+                    marginTop: '10px',
+                  }}
+                >
+                  NĂM {year}
+                </div>
+              )}
+            </div>
 
             {/* Poster Overlay Badge */}
             {quality && (

@@ -131,10 +131,15 @@ const MovieListClient = ({
   const lastKeyRef = useRef(currentKey);
   const isInitialMount = useRef(true);
 
+  // Direct client fetch to phimapi.com (CORS *) to completely eliminate Cloudflare Worker subrequests
   const proxyFetch = (url: string) =>
-    apiCache.fetchWithCache(url, () =>
-      fetch(`/api/phim?url=${encodeURIComponent(url)}`).then((r) => r.json())
-    , 60000);
+    apiCache.fetchWithCache(url, async () => {
+      try {
+        const res = await fetch(url);
+        if (res.ok) return await res.json();
+      } catch {}
+      return null;
+    }, 60000);
 
   const fetchMovies = async (targetKey: string, isSilent = false) => {
     if (isSilent) {

@@ -685,7 +685,8 @@ export default function Description({ movie, serverData: rawServerData }: any) {
     if (!movie?.slug || isSyncingRef.current || !isSeriesOngoing) return;
     isSyncingRef.current = true;
     try {
-      const res = await fetch(`/api/phim?url=${encodeURIComponent(`https://phimapi.com/phim/${movie.slug}`)}`);
+      // Direct client fetch to phimapi.com (CORS *) to completely eliminate Cloudflare Worker subrequests
+      const res = await fetch(`https://phimapi.com/phim/${movie.slug}`);
       if (!res.ok) return;
       const data = await res.json();
       const freshServers = data?.episodes || [];

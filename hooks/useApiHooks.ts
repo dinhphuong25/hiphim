@@ -13,18 +13,12 @@ const API_BASE = "https://phimapi.com";
 const REFRESH_INTERVAL = 60000; // 60s auto-refresh for real-time freshness
 const CACHE_TTL = 60000; // 1 minute client-side cache
 
-// Route all fetches through /api/phim proxy for server-side caching
-function proxyUrl(url: string): string {
-    if (typeof window === "undefined") return url; // SSR: direct fetch
-    return `/api/phim?url=${encodeURIComponent(url)}`;
-}
-
-async function proxyFetch(url: string, timeoutMs = 5000): Promise<any> {
+// Direct browser fetch to phimapi.com (CORS *) saves 100% of Cloudflare Worker request quota
+async function proxyFetch(url: string, timeoutMs = 6000): Promise<any> {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
-        // Direct browser fetch to phimapi.com (CORS *) saves 100% of Cloudflare Worker request quota
         const directRes = await fetch(url, { signal: controller.signal });
         clearTimeout(timer);
         if (directRes.ok) return await directRes.json();
@@ -32,11 +26,12 @@ async function proxyFetch(url: string, timeoutMs = 5000): Promise<any> {
         clearTimeout(timer);
     }
 
-    // Fallback to proxy only if direct client fetch failed
+    // Secondary attempt directly from client before failing
     try {
-        const res = await fetch(proxyUrl(url));
-        if (res.ok) return await res.json();
+        const retryRes = await fetch(url);
+        if (retryRes.ok) return await retryRes.json();
     } catch {}
+
     throw new Error(`Fetch failed: ${url}`);
 }
 

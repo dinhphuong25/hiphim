@@ -152,30 +152,6 @@ export async function fetchMovieClientSide(slug: string): Promise<RescuedMovieDa
 
   let fallbackCandidate: RescuedMovieData | null = null;
 
-  // 2. Try internal Edge proxy (/api/phim)
-  try {
-    const proxyUrl = `/api/phim?url=${encodeURIComponent(`https://phimapi.com/phim/${cleanSlug}`)}`;
-    const res = await fetch(proxyUrl);
-    if (res.ok) {
-      const data = await res.json();
-      if (data?.movie?.slug) {
-        const episodes = data.episodes || data.server || [];
-        const candidate: RescuedMovieData = {
-          movie: {
-            ...data.movie,
-            thumb_url: normalizeImageUrl(data.movie.thumb_url),
-            poster_url: normalizeImageUrl(data.movie.poster_url),
-          },
-          episodes,
-        };
-        if (hasAnyM3u8Stream(episodes)) {
-          return candidate;
-        }
-        fallbackCandidate = candidate;
-      }
-    }
-  } catch {}
-
   // 3. Direct browser fetch from NguonC fallback
   if (!fallbackCandidate) {
     try {
