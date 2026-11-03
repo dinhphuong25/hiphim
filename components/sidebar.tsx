@@ -1073,7 +1073,7 @@ function SidebarContent({
           "top-0 left-0 bottom-0 w-[280px] bg-cinema-sub border-r border-white/10 rounded-none shadow-none",
           isMobileOpen ? "translate-x-0 z-[130]" : "-translate-x-full lg:translate-x-0 z-[100]",
           // Desktop state: floating island card matching bento / cut-out style (rounded corners, detached borders)
-          "lg:top-3 lg:bottom-3 lg:left-3 lg:w-[245px] lg:h-auto lg:rounded-2xl lg:border lg:border-white/10 lg:bg-[#0B100E]/95 lg:backdrop-blur-xl lg:shadow-[0_12px_40px_rgba(0,0,0,0.65)] lg:overflow-hidden"
+          "lg:top-3 lg:bottom-auto lg:left-3 lg:w-[245px] lg:h-fit lg:max-h-[calc(100vh-24px)] lg:rounded-2xl lg:border lg:border-white/10 lg:bg-[#0B100E]/95 lg:backdrop-blur-xl lg:shadow-[0_12px_40px_rgba(0,0,0,0.65)] lg:overflow-hidden"
         )}
       >
         {/* Sidebar Header / Brand Logo (Desktop & Mobile) */}
@@ -1267,7 +1267,7 @@ function SidebarContent({
         {/* ======================================================== */}
         {/* BOTTOM PERSONAL DOCK: 2 Ô NGANG (LỊCH SỬ & YÊU THÍCH)     */}
         {/* ======================================================== */}
-        <div className="shrink-0 p-2 lg:p-2 border-t border-white/[0.08] bg-[#080D0B]/95 backdrop-blur-md mt-auto">
+        <div className="shrink-0 p-2 lg:p-2 border-t border-white/[0.08] bg-[#080D0B]/95 backdrop-blur-md">
           <div className="grid grid-cols-2 gap-2 lg:gap-1.5">
             {/* Ô 1: Lịch Sử */}
             <button
