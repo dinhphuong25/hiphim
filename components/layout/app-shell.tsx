@@ -7,8 +7,6 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 
 import { useNavigationTab } from "@/context/navigation-tab-context";
-import RecentlyWatchedClient from "@/app/recently/recently-client";
-import FavoritesClient from "@/app/favorites/favorites-client";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -73,17 +71,13 @@ function AppShellComponent({ children }: AppShellProps) {
     return <>{children}</>;
   }
 
-  // Instant Tab views when user navigates between /, /recently, /favorites
-  const showInstantRecently = activeTab === "/recently" && pathname !== "/recently";
-  const showInstantFavorites = activeTab === "/favorites" && pathname !== "/favorites";
-
   // Pages where footer must NOT be displayed:
   // 1. Movie detail pages (/phim/...)
-  // 2. Watch history (/recently) - URL route or instant tab view
-  // 3. Favorites (/favorites) - URL route or instant tab view
+  // 2. Watch history (/recently)
+  // 3. Favorites (/favorites)
   const isMovieDetailPage = pathname.startsWith("/phim");
-  const isRecentlyPage = pathname.startsWith("/recently") || activeTab === "/recently";
-  const isFavoritesPage = pathname.startsWith("/favorites") || activeTab === "/favorites";
+  const isRecentlyPage = pathname.startsWith("/recently");
+  const isFavoritesPage = pathname.startsWith("/favorites");
 
   const showFooter = !isMovieDetailPage && !isRecentlyPage && !isFavoritesPage;
 
@@ -97,11 +91,7 @@ function AppShellComponent({ children }: AppShellProps) {
 
       {/* Dynamic Right-side Content Container */}
       <div className="min-h-screen lg:pl-[268px] flex flex-col">
-        <div className={showInstantRecently || showInstantFavorites ? "hidden" : "contents"}>
-          {children}
-        </div>
-        {showInstantRecently && <RecentlyWatchedClient />}
-        {showInstantFavorites && <FavoritesClient />}
+        {children}
 
         {/* Global Footer Card matching Hi Download (hidden on movie detail pages) */}
         {showFooter && <Footer />}

@@ -16,6 +16,7 @@ function getTabFromPath(path: string): string | null {
   if (!path || path === "/") return "/";
   if (path.startsWith("/recently")) return "/recently";
   if (path.startsWith("/favorites")) return "/favorites";
+  if (path.startsWith("/tai-app")) return "/tai-app";
   return null;
 }
 
@@ -68,41 +69,13 @@ export function NavigationTabProvider({ children }: { children: React.ReactNode 
         window.scrollTo({ top: 0, behavior: "instant" });
       }
 
-      // If already on the same tab
-      if (activeTab === targetTab) {
-        if (targetTab === "/" && typeof window !== "undefined" && window.location.search) {
-          window.history.pushState(null, "", "/");
-          router.push("/");
-        }
-        return;
-      }
-
-      // 1. Optimistic 0ms UI tab highlight
+      // Optimistic 0ms UI tab highlight
       setActiveTab(targetTab);
 
-      // 2. If navigating from standalone pages (/phim/[slug], /watch, /admin)
-      if (pathname.startsWith("/phim/") || pathname.startsWith("/watch") || pathname.startsWith("/admin")) {
-        router.push(targetTab);
-        return;
-      }
-
-      // 3. For instant tabs (/, /recently, /favorites), perform 0ms local state switch via AppShell
-      const isKnownInstantTab = targetTab === "/" || targetTab === "/recently" || targetTab === "/favorites";
-      if (isKnownInstantTab) {
-        if (typeof window !== "undefined") {
-          window.history.pushState(null, "", targetTab);
-        }
-
-        // If target is home and search query params need clearing, route to /
-        if (targetTab === "/" && (!hasEverMountedHomeRef.current || (typeof window !== "undefined" && window.location.search))) {
-          router.push("/");
-        }
-      } else {
-        // Fallback for other routes
-        router.push(targetTab);
-      }
+      // Perform real Next.js client-side SPA routing (instant 0ms)
+      router.push(targetTab);
     },
-    [activeTab, pathname, router]
+    [router]
   );
 
   const value = useMemo(() => ({ activeTab, setActiveTab, navigateToTab }), [activeTab, navigateToTab]);

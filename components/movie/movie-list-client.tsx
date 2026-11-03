@@ -227,6 +227,10 @@ const MovieListClient = ({
   // Subscribe to instant navigation clicks for 0ms skeleton display
   useEffect(() => {
     const unsubscribe = instantMovieStore.subscribeNav((event) => {
+      if (!event.typeList && !event.category && !event.country && !event.year && !event.topic) {
+        return;
+      }
+
       const targetKey = instantMovieStore.buildKey({
         typeList: event.typeList,
         category: event.category,

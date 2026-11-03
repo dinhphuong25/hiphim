@@ -367,6 +367,7 @@ function SidebarContent({
     setIsAccountOpen(false);
     setIsExploreOpen(false);
     setActiveModal(null);
+    setOptimisticItem(null);
     setCategorySearchQuery("");
     setCountrySearchQuery("");
     setYearSearchQuery("");
@@ -1316,11 +1317,13 @@ function SidebarContent({
         <div className="shrink-0 p-2 lg:p-2 border-t border-white/[0.08] bg-[#080D0B]/95 backdrop-blur-md">
           <div className="grid grid-cols-2 gap-2 lg:gap-1.5">
             {/* Ô 1: Lịch Sử */}
-            <button
-              type="button"
+            <Link
+              href="/recently"
+              prefetch={true}
               onClick={(e) => {
                 e.preventDefault();
                 setIsMobileOpen(false);
+                setOptimisticItem(null);
                 navigateToTab("/recently", e);
               }}
               className={cn(
@@ -1334,14 +1337,16 @@ function SidebarContent({
             >
               <Clock className={cn("w-3.5 h-3.5 shrink-0", currentActiveTab === "/recently" ? "text-brand-green" : "text-white/60")} />
               <span className="truncate">Lịch sử</span>
-            </button>
+            </Link>
 
             {/* Ô 2: Yêu Thích */}
-            <button
-              type="button"
+            <Link
+              href="/favorites"
+              prefetch={true}
               onClick={(e) => {
                 e.preventDefault();
                 setIsMobileOpen(false);
+                setOptimisticItem(null);
                 navigateToTab("/favorites", e);
               }}
               className={cn(
@@ -1355,7 +1360,7 @@ function SidebarContent({
             >
               <Heart className={cn("w-3.5 h-3.5 shrink-0", currentActiveTab === "/favorites" ? "fill-brand-green text-brand-green" : "text-white/60")} />
               <span className="truncate">Yêu thích</span>
-            </button>
+            </Link>
           </div>
         </div>
       </aside>
