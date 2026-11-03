@@ -273,8 +273,11 @@ export default function NotificationBell({ className }: { className?: string }) 
     }
   }, [user]);
 
+  const lastRefreshRef = useRef<number>(Date.now());
+
   const refreshAll = useCallback(
     async (isSilent = false) => {
+      lastRefreshRef.current = Date.now();
       if (!isSilent) setIsLoading(true);
       await Promise.all([fetchSystemNotifications(), fetchReports(true)]);
       if (!isSilent) setIsLoading(false);
@@ -282,20 +285,23 @@ export default function NotificationBell({ className }: { className?: string }) 
     [fetchSystemNotifications, fetchReports]
   );
 
-  // Initial fetch and 5-minute background refresh
+  // Initial fetch and 15-minute background refresh (throttled on tab visibility)
   useEffect(() => {
     refreshAll(false);
 
     const handleVis = () => {
       if (document.visibilityState === "visible") {
-        refreshAll(true);
+        const now = Date.now();
+        if (now - lastRefreshRef.current >= 900_000) {
+          refreshAll(true);
+        }
       }
     };
     document.addEventListener("visibilitychange", handleVis);
 
     const interval = setInterval(() => {
       refreshAll(true);
-    }, 300000); // 5 minutes
+    }, 900000); // 15 minutes
 
     return () => {
       document.removeEventListener("visibilitychange", handleVis);

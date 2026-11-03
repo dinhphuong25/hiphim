@@ -22,6 +22,8 @@ const SCORE_LABELS: Record<number, string> = {
   10: "Kiệt tác điện ảnh (10/10)",
 };
 
+const ratingMemoryCache = new Map<string, { averageScore: number; totalVotes: number }>();
+
 export default function MovieRating({ slug, movieName }: MovieRatingProps) {
   const [averageScore, setAverageScore] = useState<number | null>(null);
   const [totalVotes, setTotalVotes] = useState<number>(0);
@@ -40,11 +42,23 @@ export default function MovieRating({ slug, movieName }: MovieRatingProps) {
       }
     } catch {}
 
+    // Check memory cache first
+    const cached = ratingMemoryCache.get(slug);
+    if (cached) {
+      setAverageScore(cached.averageScore);
+      setTotalVotes(cached.totalVotes);
+      return;
+    }
+
     // Fetch from API
     fetch(`/api/rating?slug=${encodeURIComponent(slug)}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success && data.rating) {
+          ratingMemoryCache.set(slug, {
+            averageScore: data.rating.averageScore,
+            totalVotes: data.rating.totalVotes,
+          });
           setAverageScore(data.rating.averageScore);
           setTotalVotes(data.rating.totalVotes);
         }
@@ -70,6 +84,10 @@ export default function MovieRating({ slug, movieName }: MovieRatingProps) {
 
       const data = await res.json();
       if (data.success && data.rating) {
+        ratingMemoryCache.set(slug, {
+          averageScore: data.rating.averageScore,
+          totalVotes: data.rating.totalVotes,
+        });
         setAverageScore(data.rating.averageScore);
         setTotalVotes(data.rating.totalVotes);
         toast.success(`Đã ghi nhận bạn chấm ${score}/10 sao cho phim!`);

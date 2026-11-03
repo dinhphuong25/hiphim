@@ -152,15 +152,25 @@ const nextConfig: NextConfig = {
       {
         source: "/api/announcement",
         headers: [
-          { key: "Cache-Control", value: "public, s-maxage=60, max-age=30, stale-while-revalidate=300" },
-          { key: "Cloudflare-CDN-Cache-Control", value: "public, max-age=60, stale-while-revalidate=300" },
+          { key: "Cache-Control", value: "public, s-maxage=600, max-age=300, stale-while-revalidate=3600" },
+          { key: "CDN-Cache-Control", value: "public, max-age=600, stale-while-revalidate=3600" },
+          { key: "Cloudflare-CDN-Cache-Control", value: "public, max-age=600, stale-while-revalidate=3600" },
         ],
       },
       {
         source: "/api/system/maintenance",
         headers: [
-          { key: "Cache-Control", value: "public, s-maxage=30, max-age=10, stale-while-revalidate=120" },
-          { key: "Cloudflare-CDN-Cache-Control", value: "public, max-age=60, stale-while-revalidate=120" },
+          { key: "Cache-Control", value: "public, s-maxage=600, max-age=60, stale-while-revalidate=3600" },
+          { key: "CDN-Cache-Control", value: "public, max-age=600, stale-while-revalidate=3600" },
+          { key: "Cloudflare-CDN-Cache-Control", value: "public, max-age=600, stale-while-revalidate=3600" },
+        ],
+      },
+      {
+        source: "/api/rating",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400" },
+          { key: "CDN-Cache-Control", value: "public, max-age=86400" },
+          { key: "Cloudflare-CDN-Cache-Control", value: "public, max-age=86400" },
         ],
       },
       {
