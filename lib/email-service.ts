@@ -32,18 +32,6 @@ export interface SendOtpResult {
 
 export function generateOtpEmailHtml(otp: string, userName?: string): string {
   const name = userName?.trim() || "bạn";
-  const digits = (otp || "").split("");
-
-  const digitCells = digits
-    .map(
-      (d) => `
-      <td style="padding: 0 4px;" align="center">
-        <div style="width: 44px; height: 56px; line-height: 56px; background: #08140e; border: 2px solid #20D66B; border-radius: 12px; color: #20D66B; font-family: 'SF Mono', Consolas, Menlo, Monaco, 'Courier New', monospace; font-size: 32px; font-weight: 800; text-align: center; box-shadow: 0 0 16px rgba(32, 214, 107, 0.25);">
-          ${d}
-        </div>
-      </td>`
-    )
-    .join("");
 
   return `<!DOCTYPE html>
 <html lang="vi">
@@ -54,90 +42,57 @@ export function generateOtpEmailHtml(otp: string, userName?: string): string {
   <meta name="supported-color-schemes" content="dark">
   <title>Mã kích hoạt tài khoản Hi Phim</title>
 </head>
-<body style="margin: 0; padding: 24px 10px; background-color: #050806; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
+<body style="margin: 0; padding: 36px 12px; background-color: #080b09; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
   <!-- Preview text -->
   <div style="display: none; max-height: 0px; overflow: hidden; mso-hide: all;">
-    Mã xác thực kích hoạt tài khoản Hi Phim của bạn là ${otp}. Có hiệu lực trong 10 phút.
+    Mã xác thực Hi Phim của bạn là ${otp}. Có hiệu lực trong 10 phút.
   </div>
 
   <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
     <tr>
       <td align="center">
-        <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 560px; background-color: #0e1410; border: 1px solid rgba(32, 214, 107, 0.3); border-radius: 20px; overflow: hidden; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(32, 214, 107, 0.1);">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 440px; background-color: #111613; border: 1px solid #1f2a22; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);">
           
-          <!-- Top Brand Header -->
+          <!-- Brand Header -->
           <tr>
-            <td style="padding: 32px 24px 20px; text-align: center; background: linear-gradient(180deg, #16241b 0%, #0e1410 100%); border-bottom: 1px solid rgba(255, 255, 255, 0.06);">
-              <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation">
-                <tr>
-                  <td style="padding: 8px 20px; background: rgba(32, 214, 107, 0.12); border: 1px solid rgba(32, 214, 107, 0.4); border-radius: 12px;">
-                    <span style="font-size: 24px; font-weight: 900; color: #ffffff; letter-spacing: 0.5px; text-decoration: none;">
-                      Hi <span style="color: #20D66B;">Phim</span>
-                    </span>
-                  </td>
-                </tr>
-              </table>
-              <p style="margin: 12px 0 0; color: rgba(255, 255, 255, 0.5); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px;">
-                Xác Thực Tài Khoản Người Dùng
-              </p>
+            <td style="padding: 32px 28px 0; text-align: left;">
+              <span style="font-size: 22px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">
+                Hi <span style="color: #22c55e;">Phim</span>
+              </span>
             </td>
           </tr>
 
           <!-- Main Content -->
           <tr>
-            <td style="padding: 32px 28px 24px; text-align: center;">
-              <h2 style="margin: 0 0 12px; color: #ffffff; font-size: 20px; font-weight: 700; letter-spacing: -0.3px;">
-                Chào mừng <span style="color: #20D66B;">${name}</span>!
-              </h2>
-              <p style="margin: 0 0 24px; color: rgba(255, 255, 255, 0.75); font-size: 14px; line-height: 1.6;">
-                Cảm ơn bạn đã đăng ký tại <strong>Hi Phim</strong>. Vui lòng nhập mã OTP 6 chữ số dưới đây để kích hoạt tài khoản của bạn:
+            <td style="padding: 20px 28px 24px; text-align: left;">
+              <h1 style="margin: 0 0 8px; color: #ffffff; font-size: 18px; font-weight: 600; line-height: 1.4;">
+                Mã xác thực tài khoản
+              </h1>
+              <p style="margin: 0 0 24px; color: #9ca3af; font-size: 14px; line-height: 1.5;">
+                Xin chào <strong style="color: #f3f4f6;">${name}</strong>, hãy sử dụng mã OTP dưới đây để hoàn tất kích hoạt tài khoản Hi Phim của bạn:
               </p>
 
-              <!-- 6-Digit OTP Box -->
-              <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="margin: 0 auto;">
-                <tr>
-                  ${digitCells}
-                </tr>
-              </table>
-
-              <!-- Expiration Notice -->
-              <div style="margin-top: 22px;">
-                <span style="display: inline-block; padding: 6px 14px; background: rgba(32, 214, 107, 0.1); border: 1px solid rgba(32, 214, 107, 0.3); border-radius: 30px; color: #20D66B; font-size: 12px; font-weight: 600;">
-                  ⏱️ Mã có hiệu lực trong vòng 10 phút
+              <!-- OTP Code Box (Single Selectable & Copyable Block) -->
+              <div style="background-color: #070a08; border: 1px solid #233529; border-radius: 12px; padding: 18px 20px; text-align: center; margin-bottom: 22px;">
+                <span style="font-family: 'SF Mono', Consolas, Menlo, Monaco, 'Courier New', monospace; font-size: 34px; font-weight: 700; color: #22c55e; letter-spacing: 10px; display: inline-block; padding-left: 10px; user-select: all;">
+                  ${otp}
                 </span>
               </div>
 
-              <!-- Security Warning Box -->
-              <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="margin-top: 28px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; text-align: left;">
-                <tr>
-                  <td style="padding: 16px 18px;">
-                    <p style="margin: 0 0 6px; color: #ffffff; font-size: 12px; font-weight: 700;">
-                      🛡️ Lưu ý bảo mật quan trọng:
-                    </p>
-                    <p style="margin: 0; color: rgba(255, 255, 255, 0.6); font-size: 12px; line-height: 1.6;">
-                      • Tuyệt đối <strong>không chia sẻ</strong> mã OTP này cho bất kỳ ai.<br>
-                      • Ban quản trị Hi Phim không bao giờ yêu cầu cung cấp OTP qua tin nhắn hay điện thoại.<br>
-                      • Nếu bạn không yêu cầu tạo tài khoản, bạn có thể an tâm bỏ qua email này.
-                    </p>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- Website Link Button -->
-              <div style="margin-top: 28px;">
-                <a href="https://hiphim.one" target="_blank" style="display: inline-block; padding: 11px 26px; background: #20D66B; color: #050806; font-size: 13px; font-weight: 800; text-decoration: none; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 0 20px rgba(32, 214, 107, 0.3);">
-                  Vào Trang Chủ Hi Phim
-                </a>
-              </div>
+              <!-- Security Notice -->
+              <p style="margin: 0; color: #6b7280; font-size: 13px; line-height: 1.6;">
+                ⏱ Mã có hiệu lực trong vòng <strong style="color: #d1d5db;">10 phút</strong>.<br>
+                🔒 Tuyệt đối không chia sẻ mã này cho bất kỳ ai để bảo vệ tài khoản.
+              </p>
             </td>
           </tr>
 
           <!-- Footer -->
           <tr>
-            <td style="padding: 20px; text-align: center; background-color: #070b08; border-top: 1px solid rgba(255, 255, 255, 0.05);">
-              <p style="margin: 0; color: rgba(255, 255, 255, 0.4); font-size: 11px; line-height: 1.6;">
-                © 2026 <strong>Hi Phim</strong> • Nền tảng xem phim chất lượng cao miễn phí.<br>
-                Đây là thư điện tử được gửi tự động, vui lòng không trả lời thư này.
+            <td style="padding: 20px 28px; background-color: #0c100d; border-top: 1px solid #1a241c; text-align: left;">
+              <p style="margin: 0; color: #6b7280; font-size: 12px; line-height: 1.6;">
+                Nếu bạn không thực hiện yêu cầu này, vui lòng an tâm bỏ qua email.<br>
+                <a href="https://hiphim.one" target="_blank" style="color: #22c55e; text-decoration: none; font-weight: 500;">hiphim.one</a> • Nền tảng xem phim trực tuyến
               </p>
             </td>
           </tr>
