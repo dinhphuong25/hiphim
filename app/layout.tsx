@@ -164,10 +164,12 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/favicon.png" />
 
         {/* DNS Preconnect & Prefetch — Tối ưu cho ảnh CDN Edge và API */}
-        <link rel="preconnect" href="https://i0.wp.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://i0.wp.com" />
+        <link rel="preconnect" href="https://img.phimapi.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://img.phimapi.com" />
         <link rel="preconnect" href="https://phimimg.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://phimimg.com" />
+        <link rel="preconnect" href="https://i0.wp.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://i0.wp.com" />
         <link rel="dns-prefetch" href="https://phimapi.com" />
         <link rel="dns-prefetch" href="https://img.ophim.live" />
 

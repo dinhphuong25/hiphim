@@ -19,12 +19,14 @@ CREATE TABLE IF NOT EXISTS hiphim_users (
   updated_at INTEGER
 );
 CREATE INDEX IF NOT EXISTS idx_hiphim_users_id ON hiphim_users (id);
+CREATE INDEX IF NOT EXISTS idx_hiphim_users_updated ON hiphim_users (updated_at DESC);
 
 CREATE TABLE IF NOT EXISTS hiphim_pending_registrations (
   email TEXT PRIMARY KEY,
   data TEXT NOT NULL,
   expires_at INTEGER NOT NULL
 );
+CREATE INDEX IF NOT EXISTS idx_hiphim_pending_expires ON hiphim_pending_registrations (expires_at);
 
 CREATE TABLE IF NOT EXISTS hiphim_ratings (
   slug TEXT PRIMARY KEY,
@@ -33,6 +35,7 @@ CREATE TABLE IF NOT EXISTS hiphim_ratings (
   updated_at INTEGER NOT NULL DEFAULT 0,
   data TEXT
 );
+CREATE INDEX IF NOT EXISTS idx_hiphim_ratings_updated ON hiphim_ratings (updated_at DESC);
 
 CREATE TABLE IF NOT EXISTS hiphim_reports (
   id TEXT PRIMARY KEY,
@@ -51,6 +54,8 @@ CREATE TABLE IF NOT EXISTS hiphim_reports (
   data TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_hiphim_reports_created ON hiphim_reports (created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_hiphim_reports_status ON hiphim_reports (status, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_hiphim_reports_slug ON hiphim_reports (movie_slug);
 
 CREATE TABLE IF NOT EXISTS hiphim_system_notifications (
   id TEXT PRIMARY KEY,

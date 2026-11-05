@@ -8,15 +8,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const api = new PhimApi();
 
   try {
-    // Fetch multiple pages of movies for comprehensive coverage
-    const [page1] = await api.newAdding(1);
-    const [page2] = await api.newAdding(2);
-    const [page3] = await api.newAdding(3);
-    const [page4] = await api.newAdding(4);
-    const [page5] = await api.newAdding(5);
+    // Fetch multiple pages of movies in parallel for fast sitemap generation
+    const [p1, p2, p3, p4, p5, categories] = await Promise.all([
+      api.newAdding(1).catch(() => [[]]),
+      api.newAdding(2).catch(() => [[]]),
+      api.newAdding(3).catch(() => [[]]),
+      api.newAdding(4).catch(() => [[]]),
+      api.newAdding(5).catch(() => [[]]),
+      api.listCategories().catch(() => []),
+    ]);
+    const page1 = p1[0] || [];
+    const page2 = p2[0] || [];
+    const page3 = p3[0] || [];
+    const page4 = p4[0] || [];
+    const page5 = p5[0] || [];
     const allMovies = [...page1, ...page2, ...page3, ...page4, ...page5];
 
-    const categories = await api.listCategories();
     const topics = api.listTopics();
 
     // Core pages — highest priority

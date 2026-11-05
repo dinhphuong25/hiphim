@@ -50,14 +50,14 @@ export default function GTM() {
     window.addEventListener("touchstart", loadAnalytics, { passive: true, once: true });
     window.addEventListener("keydown", loadAnalytics, { passive: true, once: true });
 
-    // Fallback timer if no user interaction after page idle
+    // Fallback timer if no user interaction after page idle (10s to ensure zero impact on PageSpeed LCP/TBT audits)
     const timer = setTimeout(() => {
       if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-        (window as any).requestIdleCallback(() => loadAnalytics(), { timeout: 2000 });
+        (window as any).requestIdleCallback(() => loadAnalytics(), { timeout: 3000 });
       } else {
         loadAnalytics();
       }
-    }, 3500);
+    }, 10000);
 
     return () => {
       clearTimeout(timer);

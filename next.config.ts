@@ -177,10 +177,19 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: "/(bang-xep-hang|new-updates|recently|favorites)",
+        source: "/api/og",
         headers: [
-          { key: "CDN-Cache-Control", value: "public, max-age=300, stale-while-revalidate=600" },
-          { key: "Cloudflare-CDN-Cache-Control", value: "public, max-age=300, stale-while-revalidate=600" },
+          { key: "Cache-Control", value: "public, max-age=86400, s-maxage=604800, stale-while-revalidate=2592000" },
+          { key: "CDN-Cache-Control", value: "public, max-age=604800, stale-while-revalidate=2592000" },
+          { key: "Cloudflare-CDN-Cache-Control", value: "public, max-age=604800, stale-while-revalidate=2592000" },
+        ],
+      },
+      {
+        source: "/:path(bang-xep-hang|new-updates|recently|favorites)",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=180, s-maxage=1800, stale-while-revalidate=86400" },
+          { key: "CDN-Cache-Control", value: "public, max-age=1800, stale-while-revalidate=86400" },
+          { key: "Cloudflare-CDN-Cache-Control", value: "public, max-age=1800, stale-while-revalidate=86400" },
         ],
       },
       {
