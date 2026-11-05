@@ -155,7 +155,7 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
   return (
     <div
       ref={inViewRef}
-      className="group relative flex flex-col h-full select-none transition-transform duration-200 ease-out hover:-translate-y-1.5 hover:scale-[1.02] active:scale-[0.98]"
+      className="group relative flex flex-col h-full select-none transition-transform duration-200 ease-out sm:hover:-translate-y-1.5 sm:hover:scale-[1.02] active:scale-[0.98] transform-gpu"
     >
       {/* Poster Image Container Wrapper */}
       <div className="relative w-full aspect-[2/3] rounded-xl overflow-hidden bg-cinema-surface border border-white/10 group-hover:border-brand-green/60 transition-[border-color,box-shadow] duration-300 shadow-xl group-hover:shadow-[0_12px_32px_rgba(32,214,107,0.25)]">

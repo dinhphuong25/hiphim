@@ -105,11 +105,25 @@ class InstantMovieStore {
   }
 
   /**
-   * Proactively warm up all top tabs in background on page load
-   * Deferred until first user interaction or long idle so it does NOT compete with initial render
+   * Proactively warm up top tabs in background
+   * On mobile or slow networks: strictly disabled during touch/scroll to avoid jank and bandwidth drain
    */
   public warmUpMainTabs() {
     if (typeof window === "undefined" || this.isPrefetchingAll) return;
+
+    const nav = navigator as any;
+    const isMobile =
+      /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent) ||
+      window.innerWidth < 768;
+    const isSlowNetwork =
+      Boolean(nav?.connection?.saveData) ||
+      nav?.connection?.effectiveType === "2g" ||
+      nav?.connection?.effectiveType === "3g";
+
+    // On mobile or slow connections, do NOT launch prefetch storm on touch/scroll!
+    if (isMobile || isSlowNetwork) {
+      return;
+    }
 
     let triggered = false;
     const triggerWarmUp = () => {
@@ -118,25 +132,21 @@ class InstantMovieStore {
       this.isPrefetchingAll = true;
 
       // Clean up event listeners
-      window.removeEventListener("scroll", triggerWarmUp);
       window.removeEventListener("pointerdown", triggerWarmUp);
-      window.removeEventListener("touchstart", triggerWarmUp);
       window.removeEventListener("keydown", triggerWarmUp);
 
       const topTabs = ["phim-chieu-rap", "phim-bo", "phim-le", "hoat-hinh"];
       topTabs.forEach((tab, index) => {
         setTimeout(() => {
           this.prefetch(tab);
-        }, index * 250);
+        }, index * 800);
       });
     };
 
-    window.addEventListener("scroll", triggerWarmUp, { passive: true, once: true });
     window.addEventListener("pointerdown", triggerWarmUp, { passive: true, once: true });
-    window.addEventListener("touchstart", triggerWarmUp, { passive: true, once: true });
     window.addEventListener("keydown", triggerWarmUp, { passive: true, once: true });
 
-    // Fallback after 8 seconds idle (well after Lighthouse audit completes)
+    // Fallback after 12 seconds idle
     setTimeout(() => {
       if (!triggered) {
         if ("requestIdleCallback" in window) {
@@ -145,7 +155,7 @@ class InstantMovieStore {
           triggerWarmUp();
         }
       }
-    }, 8000);
+    }, 12000);
   }
 }
 

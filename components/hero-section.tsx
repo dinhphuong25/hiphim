@@ -80,7 +80,6 @@ export default function HeroSection({ movies }: HeroSectionProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [showInfoModal, setShowInfoModal] = useState(false);
 
   const { user, checkAuthOrPrompt, updateServerData } = useUserAuth();
@@ -104,14 +103,12 @@ export default function HeroSection({ movies }: HeroSectionProps) {
   useEffect(() => {
     setBackdropIdx(0);
     setBackdropError(false);
-    setProgress(0);
   }, [currentIndex]);
 
   const goTo = useCallback(
     (index: number) => {
       if (isTransitioning || index === currentIndex) return;
       setIsTransitioning(true);
-      setProgress(0);
       setTimeout(() => {
         setCurrentIndex(index);
         setIsTransitioning(false);
@@ -130,24 +127,16 @@ export default function HeroSection({ movies }: HeroSectionProps) {
     goTo((currentIndex - 1 + validMovies.length) % validMovies.length);
   }, [currentIndex, validMovies.length, goTo]);
 
-  // Live Auto-slide Progress Bar (100ms ticks)
+  // Auto-slide after AUTO_SLIDE_DURATION (Single one-shot timer, ZERO main-thread re-renders)
   useEffect(() => {
     if (isPaused || validMovies.length <= 1) return;
-    const intervalTime = 100;
-    const increment = (intervalTime / AUTO_SLIDE_DURATION) * 100;
 
-    const timer = setInterval(() => {
-      setProgress((prevProgress) => {
-        if (prevProgress >= 100) {
-          next();
-          return 0;
-        }
-        return prevProgress + increment;
-      });
-    }, intervalTime);
+    const timer = setTimeout(() => {
+      next();
+    }, AUTO_SLIDE_DURATION);
 
-    return () => clearInterval(timer);
-  }, [isPaused, next, validMovies.length]);
+    return () => clearTimeout(timer);
+  }, [isPaused, next, validMovies.length, currentIndex]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -279,6 +268,12 @@ export default function HeroSection({ movies }: HeroSectionProps) {
         onTouchEnd={handleTouchEnd}
         aria-label="Phim Nổi Bật Trên Trang Chủ"
       >
+        <style dangerouslySetInnerHTML={{ __html: `
+          @keyframes heroSlideProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+          }
+        `}} />
         {/* 1. Backdrop Background Image with Smooth Cross-fade */}
         <div
           className={cn(
@@ -508,10 +503,15 @@ export default function HeroSection({ movies }: HeroSectionProps) {
                         <div className="w-full h-full bg-[#111]" />
                       )}
                       {isActive && (
-                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/60">
+                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/60 overflow-hidden">
                           <div
-                            className="h-full bg-brand-green transition-all duration-100 ease-linear"
-                            style={{ width: `${progress}%` }}
+                            key={`hero-progress-m-${currentIndex}`}
+                            className="h-full bg-brand-green"
+                            style={{
+                              animation: isPaused
+                                ? "none"
+                                : `heroSlideProgress ${AUTO_SLIDE_DURATION}ms linear forwards`,
+                            }}
                           />
                         </div>
                       )}
@@ -570,10 +570,15 @@ export default function HeroSection({ movies }: HeroSectionProps) {
 
                       {/* Active timer progress line */}
                       {isActive && (
-                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/60">
+                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/60 overflow-hidden">
                           <div
-                            className="h-full bg-brand-green transition-all duration-100 ease-linear"
-                            style={{ width: `${progress}%` }}
+                            key={`hero-progress-m-${currentIndex}`}
+                            className="h-full bg-brand-green"
+                            style={{
+                              animation: isPaused
+                                ? "none"
+                                : `heroSlideProgress ${AUTO_SLIDE_DURATION}ms linear forwards`,
+                            }}
                           />
                         </div>
                       )}

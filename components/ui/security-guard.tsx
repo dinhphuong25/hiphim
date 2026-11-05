@@ -132,38 +132,49 @@ export default function SecurityGuard() {
       } catch {}
     };
 
-    purgeDownloaderElements();
+    const isMobileDevice =
+      typeof navigator !== "undefined" &&
+      (/Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent) ||
+        (typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches));
 
-    const domObserver = new MutationObserver((mutations) => {
-      for (const mutation of mutations) {
-        if (mutation.addedNodes.length > 0) {
-          for (let i = 0; i < mutation.addedNodes.length; i++) {
-            const node = mutation.addedNodes[i];
-            if (node.nodeType === 1) {
-              const el = node as HTMLElement;
-              if (isDownloaderElement(el)) {
-                try {
-                  el.remove();
-                } catch {
-                  el.style.setProperty("display", "none", "important");
-                  el.style.setProperty("visibility", "hidden", "important");
-                  el.style.setProperty("pointer-events", "none", "important");
+    let domObserver: MutationObserver | null = null;
+    let intervalTimer: ReturnType<typeof setInterval> | null = null;
+
+    // Desktop only: check for extension downloaders (IDM, CocCoc, etc. do NOT exist on mobile browsers)
+    if (!isMobileDevice) {
+      purgeDownloaderElements();
+
+      domObserver = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+          if (mutation.addedNodes.length > 0) {
+            for (let i = 0; i < mutation.addedNodes.length; i++) {
+              const node = mutation.addedNodes[i];
+              if (node.nodeType === 1) {
+                const el = node as HTMLElement;
+                if (isDownloaderElement(el)) {
+                  try {
+                    el.remove();
+                  } catch {
+                    el.style.setProperty("display", "none", "important");
+                    el.style.setProperty("visibility", "hidden", "important");
+                    el.style.setProperty("pointer-events", "none", "important");
+                  }
                 }
               }
             }
           }
         }
-      }
-    });
-
-    try {
-      domObserver.observe(document.documentElement, {
-        childList: true,
-        subtree: true,
       });
-    } catch {}
 
-    const intervalTimer = setInterval(purgeDownloaderElements, 1200);
+      try {
+        domObserver.observe(document.documentElement, {
+          childList: true,
+          subtree: true,
+        });
+      } catch {}
+
+      intervalTimer = setInterval(purgeDownloaderElements, 5000);
+    }
 
     document.addEventListener("contextmenu", handleContextMenu);
     document.addEventListener("keydown", handleKeyDown);
@@ -172,8 +183,8 @@ export default function SecurityGuard() {
     document.addEventListener("cut", handleCopy);
 
     return () => {
-      domObserver.disconnect();
-      clearInterval(intervalTimer);
+      domObserver?.disconnect();
+      if (intervalTimer) clearInterval(intervalTimer);
       document.removeEventListener("contextmenu", handleContextMenu);
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("dragstart", handleDragStart);

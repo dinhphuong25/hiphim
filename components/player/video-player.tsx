@@ -1462,10 +1462,10 @@ export default function VideoPlayer({
           autoStartLoad: true,
           startPosition: targetStartPosition,
           
-          backBufferLength: isMobile ? 15 : 30,
-          maxBufferLength: isMobile ? 30 : 60,
-          maxMaxBufferLength: isMobile ? 60 : 120,
-          maxBufferSize: isMobile ? 32 * 1024 * 1024 : 80 * 1024 * 1024,
+          backBufferLength: isMobile ? 5 : 30,
+          maxBufferLength: isMobile ? 15 : 60,
+          maxMaxBufferLength: isMobile ? 25 : 120,
+          maxBufferSize: isMobile ? 20 * 1024 * 1024 : 80 * 1024 * 1024,
           maxBufferHole: 0.5, // Nhảy ngay qua khe hở timestamp gián đoạn (0.5s) thay vì chờ 8.5s
           highBufferWatchdogPeriod: 2,
           nudgeOffset: 0.1,

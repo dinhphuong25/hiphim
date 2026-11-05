@@ -212,17 +212,25 @@ function SidebarContent({
     }
   }, [isMovieDetailPage, pathname]);
 
-  // Auto-collapse when scrolling down on movie detail page
+  // Auto-collapse when scrolling down on movie detail page (throttled with rAF)
   useEffect(() => {
     if (!isMovieDetailPage) return;
 
     let lastScrollY = window.scrollY;
+    let ticking = false;
+
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY + 30 && !isDetailNavCollapsed) {
-        setIsDetailNavCollapsed(true);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          if (currentScrollY > lastScrollY + 30 && !isDetailNavCollapsed) {
+            setIsDetailNavCollapsed(true);
+          }
+          lastScrollY = currentScrollY;
+          ticking = false;
+        });
+        ticking = true;
       }
-      lastScrollY = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
