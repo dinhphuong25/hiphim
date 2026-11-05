@@ -85,12 +85,12 @@ function AppShellComponent({ children }: AppShellProps) {
       <Header />
 
       {/* Dynamic Right-side Content Container */}
-      <div className="min-h-screen lg:pl-[268px] flex flex-col">
+      <main id="main-content" tabIndex={-1} className="min-h-screen lg:pl-[268px] flex flex-col outline-none">
         {children}
 
         {/* Global Footer Card matching Hi Download (hidden on movie detail pages) */}
         {showFooter && <Footer />}
-      </div>
+      </main>
     </div>
   );
 }

@@ -173,8 +173,12 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://phimapi.com" />
         <link rel="dns-prefetch" href="https://img.ophim.live" />
 
-        {/* Facebook App ID */}
+        {/* Facebook App ID & SEO Fallbacks */}
         <meta property="fb:app_id" content={process.env.NEXT_PUBLIC_FB_APP_ID || "10000000000000"} />
+        <meta name="description" content="Hi Phim - Xem phim online HD vietsub miễn phí tốc độ cao tại Việt Nam. Kho 50,000+ phim bộ, phim lẻ chiếu rạp, anime vietsub mới nhất 2026." />
+        <meta property="og:title" content="Hi Phim - Xem Phim Online HD Vietsub Miễn Phí" />
+        <meta property="og:description" content="Kho 50,000+ phim bộ, phim lẻ chiếu rạp, anime vietsub mới nhất 2026. Tốc độ cao, chuẩn Full HD/4K." />
+        <meta property="og:type" content="website" />
 
         {/* Critical inline CSS — show body ngay lập tức */}
         <style
@@ -211,6 +215,14 @@ export default function RootLayout({
         className={`${beVietnam.variable} ${oswald.variable} font-sans antialiased bg-background text-foreground`}
         suppressHydrationWarning
       >
+        {/* Skip to Main Content Link for WCAG Accessibility */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[99999] focus:px-4 focus:py-2.5 focus:bg-emerald-500 focus:text-black focus:font-bold focus:rounded-xl focus:shadow-2xl focus:outline-none focus:ring-2 focus:ring-white transition-transform"
+        >
+          Chuyển đến nội dung chính
+        </a>
+
         {/* Google Tag Manager & GA4 (Deferred on interaction / idle) */}
         <GTM />
         <EnhancedGTMTracking />

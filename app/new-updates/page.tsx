@@ -16,6 +16,12 @@ export async function generateMetadata({ searchParams }: NewUpdatesProps) {
     title: `Mới Cập Nhật | Hi Phim${index > 1 ? " - Trang " + index : ""}`,
     description: "Khám phá những bộ phim mới nhất được cập nhật trên Hi Phim.",
     keywords: "phim mới, phim cập nhật, phim ảnh, phim hd, hi phim, hiphim",
+    openGraph: {
+      title: `Phim Mới Cập Nhật | Hi Phim${index > 1 ? " - Trang " + index : ""}`,
+      description: "Khám phá những bộ phim điện ảnh, phim bộ mới nhất cập nhật liên tục hàng ngày trên Hi Phim.",
+      type: "website",
+      images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Phim Mới Cập Nhật - Hi Phim" }],
+    },
   };
 }
 

@@ -33,6 +33,12 @@ export async function generateMetadata({ searchParams }: SearchPageProps) {
     description:
       "Khám phá kho tàng phim ảnh chất lượng cao với hình ảnh và âm thanh hoàn hảo. Trải nghiệm những tác phẩm điện ảnh kinh điển với chất lượng tuyệt đỉnh.",
     keywords: `${query || "phim ảnh"}, phim ảnh, phim chất lượng cao, phim hd, phim kinh điển`,
+    openGraph: {
+      title: `${postTitle} | Hi Phim`,
+      description: "Tìm kiếm phim bộ, phim lẻ, anime vietsub chất lượng cao trên Hi Phim.",
+      type: "website",
+      images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Tìm Kiếm Phim - Hi Phim" }],
+    },
   };
 }
 
