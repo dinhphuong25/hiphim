@@ -11,8 +11,6 @@ import {
   Star,
   ArrowRight,
   Loader2,
-  LayoutGrid,
-  List,
   Play,
   TrendingUp,
 } from "lucide-react";
@@ -530,8 +528,8 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
       <div className="min-h-full flex flex-col">
         {/* Sticky Search Header Container - Solid background to eliminate backdrop-blur lag */}
         <div className="sticky top-0 z-40 bg-[#050807]/95 backdrop-blur-md border-b border-white/5 shadow-[0_4px_25px_rgba(0,0,0,0.8)]">
-          <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-3 sm:pb-4">
-            <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-white/10 focus-within:border-white/20 transition-colors relative">
+          <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-3.5 sm:py-5">
+            <div className="flex items-center justify-between relative">
               <form
                 onSubmit={handleSubmit}
                 className="flex items-center gap-2.5 sm:gap-4 flex-1 mr-2 sm:mr-4"
@@ -564,62 +562,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
               </button>
             </div>
 
-            {/* Shortcuts & Mode Indicator */}
-            <div className="hidden sm:flex items-center justify-between text-xs font-mono text-white/40 mt-2.5 px-1">
-              <div className="flex items-center gap-4">
-                <span className="flex items-center gap-1.5">
-                  <kbd className="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 text-white/80 font-semibold">
-                    ↑↓
-                  </kbd>{" "}
-                  Di chuyển
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <kbd className="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 text-white/80 font-semibold">
-                    Enter
-                  </kbd>{" "}
-                  Xem phim
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <kbd className="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 text-white/80 font-semibold">
-                    ESC
-                  </kbd>{" "}
-                  Đóng
-                </span>
-              </div>
 
-              {results.length > 0 && (
-                <div className="flex items-center gap-1 bg-white/5 p-1 rounded-lg border border-white/10">
-                  <button
-                    type="button"
-                    onClick={() => setViewMode("grid")}
-                    className={cn(
-                      "flex items-center gap-1.5 px-2.5 py-1 rounded text-xs transition-all font-sans",
-                      viewMode === "grid"
-                        ? "bg-brand-green text-cinema-bg font-bold shadow-sm"
-                        : "text-white/60 hover:text-white"
-                    )}
-                    title="Chế độ lưới"
-                  >
-                    <LayoutGrid className="w-3.5 h-3.5" />
-                    <span>Lưới</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setViewMode("list")}
-                    className={cn(
-                      "flex items-center gap-1.5 px-2.5 py-1 rounded text-xs transition-all font-sans",
-                      viewMode === "list"
-                        ? "bg-brand-green text-cinema-bg font-bold shadow-sm"
-                        : "text-white/60 hover:text-white"
-                    )}
-                    title="Chế độ danh sách"
-                  >
-                    <List className="w-3.5 h-3.5" />
-                    <span>Danh sách</span>
-                  </button>
-                </div>
-              )}
-            </div>
           </div>
         </div>
 
@@ -628,47 +571,20 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
           {query.trim().length === 0 ? null : results.length > 0 ? (
             /* Live Results */
             <div className="space-y-6 pb-12">
-              {/* Results Header Bar */}
-              <div className="flex items-center justify-between flex-wrap gap-3 pb-2 border-b border-white/6">
-                <div className="flex items-center gap-2.5">
-                  <span className="text-xs sm:text-sm font-bold text-white/70 uppercase tracking-wider">
-                    Kết Quả Gợi Ý ({results.length})
-                  </span>
-                  {totalItems > 0 && (
-                    <span className="text-xs text-brand-green font-medium px-2.5 py-0.5 rounded-full bg-brand-green/15 border border-brand-green/25">
-                      {totalItems} phim phù hợp
-                    </span>
-                  )}
-                </div>
-              </div>
 
-              {/* View Mode: Grid View (Default - Large posters) */}
-              {viewMode === "grid" ? (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
-                  {results.map((movie, idx) => (
-                    <SearchGridCard
-                      key={movie.slug}
-                      movie={movie}
-                      isSelected={idx === selectedIndex}
-                      priority={idx < 6}
-                      onClose={onClose}
-                    />
-                  ))}
-                </div>
-              ) : (
-                /* View Mode: List View (Spacious 2-column detailed cards) */
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                  {results.map((movie, idx) => (
-                    <SearchListCard
-                      key={movie.slug}
-                      movie={movie}
-                      isSelected={idx === selectedIndex}
-                      priority={idx < 4}
-                      onClose={onClose}
-                    />
-                  ))}
-                </div>
-              )}
+
+              {/* Grid View */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
+                {results.map((movie, idx) => (
+                  <SearchGridCard
+                    key={movie.slug}
+                    movie={movie}
+                    isSelected={idx === selectedIndex}
+                    priority={idx < 6}
+                    onClose={onClose}
+                  />
+                ))}
+              </div>
 
 
             </div>
