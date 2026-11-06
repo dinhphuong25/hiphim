@@ -40,7 +40,7 @@ export async function isAuthorizedAdminRequest(req: NextRequest): Promise<boolea
 
 /**
  * Validates admin credentials.
- * Per security specification: Only kimdinhphuong205@gmail.com has superadmin privileges.
+ * Per security specification: Only configured SUPER_ADMIN_EMAIL has superadmin privileges.
  * The default 'admin' account is disabled.
  */
 export async function checkAdminCredentials(usernameOrEmail: string, password: string): Promise<boolean> {

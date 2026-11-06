@@ -256,7 +256,6 @@ async function checkVerifiedAdminCookies(request: NextRequest): Promise<boolean>
   if (userSessionCookie) {
     const userPayload = await verifyUserSessionToken(userSessionCookie);
     if (
-      userPayload?.email?.toLowerCase() === 'kimdinhphuong205@gmail.com' ||
       userPayload?.role === 'superadmin' ||
       userPayload?.role === 'admin'
     ) {

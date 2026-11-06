@@ -182,7 +182,7 @@ export function MobileExploreSheet() {
   const { user, openAccountSheet } = useUserAuth();
 
   const isSuperAdmin = Boolean(
-    user && (user.role === "superadmin" || user.role === "admin" || user.email?.toLowerCase() === "kimdinhphuong205@gmail.com")
+    user && (user.role === "superadmin" || user.role === "admin")
   );
 
   const [searchFilter, setSearchFilter] = useState("");

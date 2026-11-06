@@ -87,7 +87,7 @@ export function AccountSheet() {
   if (!isAccountSheetOpen) return null;
 
   const isSuperAdmin = Boolean(
-    user && (user.role === "superadmin" || user.role === "admin" || user.email?.toLowerCase() === "kimdinhphuong205@gmail.com")
+    user && (user.role === "superadmin" || user.role === "admin")
   );
 
   const handleManualSync = async () => {

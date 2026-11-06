@@ -866,8 +866,8 @@ export default function AdminDashboardPage() {
           <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-white/[0.03] border border-white/[0.08] text-zinc-300">
             <Crown className="w-3.5 h-3.5 text-amber-400/80 shrink-0" />
             <div className="flex items-center gap-1.5 text-xs">
-              <span className="text-zinc-500 font-normal hidden lg:inline">Admin:</span>
-              <span className="text-zinc-200 font-mono text-xs">kimdinhphuong205@gmail.com</span>
+              <span className="text-zinc-500 font-normal hidden lg:inline">Quyền:</span>
+              <span className="text-zinc-200 font-mono text-xs">Super Admin</span>
             </div>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" title="Đang trực tuyến" />
           </div>
@@ -956,7 +956,7 @@ export default function AdminDashboardPage() {
                 <Crown className="w-4 h-4 text-amber-300 shrink-0" />
                 <div className="min-w-0 flex-1">
                   <p className="text-[10px] text-amber-300/80 font-bold uppercase tracking-wider">Super Admin</p>
-                  <p className="text-xs font-mono font-bold text-white truncate">kimdinhphuong205@gmail.com</p>
+                  <p className="text-xs font-mono font-bold text-white truncate">Ban Quản Trị Tối Cao</p>
                 </div>
               </div>
 
@@ -1374,7 +1374,7 @@ export default function AdminDashboardPage() {
                     </div>
 
                     <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-                      Xin chào, Kim Đình Phương
+                      Xin chào, Ban Quản Trị
                     </h2>
 
                     <p className="text-xs sm:text-[13px] text-zinc-400 leading-relaxed">
@@ -1639,7 +1639,7 @@ export default function AdminDashboardPage() {
                         cw.duration > 0
                           ? Math.min(100, Math.round((cw.currentTime / cw.duration) * 100))
                           : 0;
-                      const isSuper = u.role === "superadmin" || u.email?.toLowerCase() === "kimdinhphuong205@gmail.com";
+                      const isSuper = u.role === "superadmin";
                       const initial = (u.name || u.email || "U").charAt(0).toUpperCase();
 
                       return (
@@ -1744,7 +1744,7 @@ export default function AdminDashboardPage() {
                       </h4>
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                         {usersList.slice(0, 4).map((u) => {
-                          const isSuper = u.role === "superadmin" || u.email?.toLowerCase() === "kimdinhphuong205@gmail.com";
+                          const isSuper = u.role === "superadmin";
                           const initial = (u.name || u.email || "U").charAt(0).toUpperCase();
 
                           return (
@@ -3579,7 +3579,7 @@ export default function AdminDashboardPage() {
                 {userViewMode === "card" && (
                   <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                     {paginatedUsers.map((u) => {
-                      const isSuper = u.role === "superadmin" || u.email?.toLowerCase() === "kimdinhphuong205@gmail.com";
+                      const isSuper = u.role === "superadmin";
                       const isPermBanned = Boolean(u.isLocked);
                       const isTempBanned = Boolean(u.bannedUntil && u.bannedUntil > Date.now());
                       const isBanned = isPermBanned || isTempBanned;
@@ -3977,7 +3977,7 @@ export default function AdminDashboardPage() {
                         </thead>
                         <tbody className="divide-y divide-white/[0.04]">
                           {paginatedUsers.map((u) => {
-                            const isSuper = u.role === "superadmin" || u.email?.toLowerCase() === "kimdinhphuong205@gmail.com";
+                            const isSuper = u.role === "superadmin";
                             const isPermBanned = Boolean(u.isLocked);
                             const isTempBanned = Boolean(u.bannedUntil && u.bannedUntil > Date.now());
                             const isBanned = isPermBanned || isTempBanned;
@@ -5040,7 +5040,7 @@ export default function AdminDashboardPage() {
       {/* MODAL 4: CHI TIẾT DỮ LIỆU & TOÀN QUYỀN THÀNH VIÊN */}
       {/* ======================================================== */}
       {inspectedUser && (() => {
-        const isSuper = inspectedUser.role === "superadmin" || inspectedUser.email?.toLowerCase() === "kimdinhphuong205@gmail.com";
+        const isSuper = inspectedUser.role === "superadmin";
         const isPermBanned = Boolean(inspectedUser.isLocked);
         const isTempBanned = Boolean(inspectedUser.bannedUntil && inspectedUser.bannedUntil > Date.now());
         const isBanned = isPermBanned || isTempBanned;

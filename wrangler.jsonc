@@ -38,7 +38,6 @@
 		"NEXT_PUBLIC_APP_URL": "https://hiphim.one",
 		"USER_JWT_SECRET": "hiphim_user_jwt_secret_key_2026_super_secure",
 		"ADMIN_JWT_SECRET": "hiphim_admin_jwt_secret_key_2026_super_secure",
-		"GMAIL_USER": "notification.hiphim@gmail.com",
-		"GMAIL_APP_PASSWORD": "rxdddpbnrziieila"
+		"GMAIL_USER": "notification.hiphim@gmail.com"
 	}
 }

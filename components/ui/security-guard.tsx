@@ -81,7 +81,7 @@ export default function SecurityGuard() {
           "color: #22c55e; font-size: 20px; font-weight: 900; padding: 8px; background: #000; border: 2px solid #22c55e; border-radius: 6px;"
         );
         console.log(
-          "%c© 2025 - 2026 Bản quyền tác giả & Quyền sở hữu trí tuệ thuộc về: Kim Đình Phương.\nNghiêm cấm mọi hành vi sao chép, trích xuất, đảo ngược mã nguồn (reverse engineering) hoặc sử dụng trái phép khi chưa có sự đồng ý bằng văn bản của tác giả.",
+          "%c© 2025 - 2026 Bản quyền tác giả & Quyền sở hữu trí tuệ thuộc về: Ban Quản Trị Hi Phim.\nNghiêm cấm mọi hành vi sao chép, trích xuất, đảo ngược mã nguồn (reverse engineering) hoặc sử dụng trái phép khi chưa có sự đồng ý bằng văn bản.",
           "color: #94a3b8; font-size: 13px; font-weight: bold; line-height: 1.6;"
         );
         console.log(

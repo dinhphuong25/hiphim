@@ -2,7 +2,7 @@
   "expo": {
     "name": "Hi Phim",
     "slug": "hiphim-mobile",
-    "owner": "dinhphuongkim",
+    "owner": "hiphim",
     "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/icon.png",
@@ -47,7 +47,7 @@
     "android": {
       "userInterfaceStyle": "dark",
       "backgroundColor": "#050807",
-      "package": "com.dinhphuongkim.hiphim",
+      "package": "com.hiphim.app",
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",

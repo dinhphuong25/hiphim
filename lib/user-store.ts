@@ -9,7 +9,10 @@ const PENDING_FILE_PATH = path.join(process.cwd(), "data", "pending-registration
 const USERS_TABLE = "hiphim_users";
 const PENDING_TABLE = "hiphim_pending_registrations";
 
-export const SUPER_ADMIN_EMAIL = "kimdinhphuong205@gmail.com";
+export const SUPER_ADMIN_EMAIL =
+  process.env.SUPER_ADMIN_EMAIL ||
+  (globalThis as any)?.__ENV__?.SUPER_ADMIN_EMAIL ||
+  "admin@hiphim.one";
 
 export interface UserProfile {
   id: string;

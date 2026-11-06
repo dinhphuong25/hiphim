@@ -712,8 +712,7 @@ export function UserAuthProvider({ children }: { children: React.ReactNode }) {
 
       const isUserAdmin =
         data.user?.role === "admin" ||
-        data.user?.role === "superadmin" ||
-        data.user?.email?.toLowerCase() === "kimdinhphuong205@gmail.com";
+        data.user?.role === "superadmin";
 
       if (typeof window !== "undefined") {
         sessionStorage.setItem("hiphim_welcomed_session", "true");

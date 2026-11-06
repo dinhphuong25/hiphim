@@ -3,6 +3,7 @@ import {
   isAuthorizedAdminRequest,
   checkAdminCredentials,
   updateAdminPassword,
+  SUPER_ADMIN_EMAIL,
 } from "@/lib/admin-auth";
 
 export async function POST(req: NextRequest) {
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Verify current credentials
-    const isCurrentValid = await checkAdminCredentials(username || "kimdinhphuong205@gmail.com", currentPassword);
+    const isCurrentValid = await checkAdminCredentials(username || SUPER_ADMIN_EMAIL, currentPassword);
     if (!isCurrentValid) {
       return NextResponse.json(
         { success: false, error: "Mật khẩu hiện tại không chính xác!" },

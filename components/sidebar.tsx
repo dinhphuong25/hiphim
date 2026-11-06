@@ -178,7 +178,7 @@ function SidebarContent({
 }: SidebarProps) {
   const { user, openAuthModal, logout, syncWithServer } = useUserAuth();
   const isSuperAdmin = Boolean(
-    user && (user.role === "superadmin" || user.role === "admin" || user.email?.toLowerCase() === "kimdinhphuong205@gmail.com")
+    user && (user.role === "superadmin" || user.role === "admin")
   );
   const pathname = usePathname();
   const searchParams = useSearchParams();

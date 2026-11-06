@@ -127,8 +127,7 @@ export default function NotificationBell({ className }: { className?: string }) 
   const isSuperAdmin = Boolean(
     user &&
       (user.role === "admin" ||
-        user.role === "superadmin" ||
-        user.email?.toLowerCase() === "kimdinhphuong205@gmail.com")
+        user.role === "superadmin")
   );
 
   useEffect(() => {

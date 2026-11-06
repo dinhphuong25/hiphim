@@ -384,18 +384,18 @@
       "ip": "2405:4803:5234:7f80:4dfc:bfa5:e6c2:7027",
       "status": "pending",
       "userId": "user_1789412553841_bzuki7",
-      "userName": "Kim Đình Phương",
+      "userName": "Ban Quản Trị",
       "createdAt": 1791514559881,
       "issueType": "Sai tập phim / Nhầm phim khác",
       "movieName": "Below: Ác Mộng Đại Dương",
       "movieSlug": "below-ac-mong-dai-duong",
-      "userEmail": "kimdinhphuong205@gmail.com",
+      "userEmail": "admin@hiphim.one",
       "serverName": "Vietsub",
       "episodeName": "Tập 01"
     },
     "user_id": "user_1789412553841_bzuki7",
-    "user_email": "kimdinhphuong205@gmail.com",
-    "user_name": "Kim Đình Phương",
+    "user_email": "admin@hiphim.one",
+    "user_name": "Ban Quản Trị",
     "resolved_at": null
   }
 ]

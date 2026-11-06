@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "license": "UNLICENSED",
-  "author": "Kim Đình Phương <kdphuonglqcc2311088@student.ctuet.edu.vn>",
-  "copyright": "Copyright (c) 2025-2026 Kim Đình Phương (HI PHIM). All rights reserved.",
+  "author": "Hi Phim Team <admin@hiphim.one>",
+  "copyright": "Copyright (c) 2025-2026 Hi Phim Team. All rights reserved.",
   "scripts": {
     "dev": "next dev",
     "build": "npx opennextjs-cloudflare build",
