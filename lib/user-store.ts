@@ -320,6 +320,146 @@ export async function getPendingRegistrationPersistent(email: string): Promise<P
   return getPendingRegistration(normalized);
 }
 
+export interface PasswordResetEntry {
+  email: string;
+  otp: string;
+  expiresAt: number;
+}
+
+const memoryPasswordResetStore = new Map<string, PasswordResetEntry>();
+
+export async function savePasswordResetOtpPersistent(email: string, otp: string): Promise<void> {
+  const normalized = email.trim().toLowerCase();
+  const resetKey = `reset_${normalized}`;
+  const entry: PasswordResetEntry = {
+    email: normalized,
+    otp,
+    expiresAt: Date.now() + 5 * 60 * 1000, // 5 minutes
+  };
+
+  memoryPasswordResetStore.set(normalized, entry);
+
+  const d1 = await getD1Database();
+  if (d1) {
+    try {
+      await d1
+        .prepare("INSERT OR REPLACE INTO hiphim_pending_registrations (email, data, expires_at) VALUES (?, ?, ?)")
+        .bind(resetKey, JSON.stringify(entry), entry.expiresAt)
+        .run();
+      return;
+    } catch (err) {
+      console.warn("[D1] Error saving password reset OTP:", err);
+    }
+  }
+
+  if (await ensureVercelDatabase()) {
+    try {
+      await vercelSql!`INSERT INTO hiphim_pending_registrations (email, data, expires_at) VALUES (${resetKey}, ${JSON.stringify(entry)}::jsonb, ${entry.expiresAt})
+        ON CONFLICT (email) DO UPDATE SET data = EXCLUDED.data, expires_at = EXCLUDED.expires_at`;
+      return;
+    } catch (err) {
+      console.warn("[PostgreSQL] Error saving password reset OTP:", err);
+    }
+  }
+}
+
+export async function getPasswordResetOtpPersistent(email: string): Promise<PasswordResetEntry | null> {
+  const normalized = email.trim().toLowerCase();
+  const resetKey = `reset_${normalized}`;
+
+  const d1 = await getD1Database();
+  if (d1) {
+    try {
+      const row = await d1
+        .prepare("SELECT data, expires_at FROM hiphim_pending_registrations WHERE email = ?")
+        .bind(resetKey)
+        .first<{ data: string; expires_at: number }>();
+      if (row && Number(row.expires_at) > Date.now()) {
+        return JSON.parse(row.data) as PasswordResetEntry;
+      }
+      return null;
+    } catch (err) {
+      console.warn("[D1] Error getting password reset OTP:", err);
+    }
+  }
+
+  if (await ensureVercelDatabase()) {
+    try {
+      const rows = await vercelSql!`SELECT data, expires_at FROM hiphim_pending_registrations WHERE email = ${resetKey}`;
+      const row = rows[0] as { data: PasswordResetEntry; expires_at: number } | undefined;
+      if (row && Number(row.expires_at) > Date.now()) return row.data;
+      return null;
+    } catch (err) {
+      console.warn("[PostgreSQL] Error getting password reset OTP:", err);
+    }
+  }
+
+  const mem = memoryPasswordResetStore.get(normalized);
+  if (mem && mem.expiresAt > Date.now()) return mem;
+  return null;
+}
+
+export async function deletePasswordResetOtpPersistent(email: string): Promise<void> {
+  const normalized = email.trim().toLowerCase();
+  const resetKey = `reset_${normalized}`;
+  memoryPasswordResetStore.delete(normalized);
+
+  const d1 = await getD1Database();
+  if (d1) {
+    try {
+      await d1.prepare("DELETE FROM hiphim_pending_registrations WHERE email = ?").bind(resetKey).run();
+    } catch (err) {
+      console.warn("[D1] Error deleting password reset OTP:", err);
+    }
+  }
+
+  if (await ensureVercelDatabase()) {
+    try {
+      await vercelSql!`DELETE FROM hiphim_pending_registrations WHERE email = ${resetKey}`;
+    } catch (err) {
+      console.warn("[PostgreSQL] Error deleting password reset OTP:", err);
+    }
+  }
+}
+
+export async function verifyAndResetPasswordPersistent(
+  email: string,
+  otp: string,
+  newPassword: string
+): Promise<{ success: boolean; user?: User; error?: string }> {
+  const normalized = email.trim().toLowerCase();
+  const resetEntry = await getPasswordResetOtpPersistent(normalized);
+
+  if (!resetEntry) {
+    return { success: false, error: "Mã OTP đã hết hạn hoặc không tồn tại. Vui lòng yêu cầu mã mới." };
+  }
+
+  if (resetEntry.otp !== otp.trim()) {
+    return { success: false, error: "Mã OTP không chính xác. Vui lòng kiểm tra lại." };
+  }
+
+  const user = await findUserByEmailPersistent(normalized);
+  if (!user) {
+    return { success: false, error: "Không tìm thấy tài khoản người dùng." };
+  }
+
+  const newHash = await hashPassword(newPassword);
+  const updatedUser = await updateUserPersistent(user.id, {
+    passwordHash: newHash,
+    updatedAt: new Date().toISOString(),
+  });
+
+  if (!updatedUser) {
+    return { success: false, error: "Lỗi cập nhật mật khẩu. Vui lòng thử lại sau." };
+  }
+
+  await deletePasswordResetOtpPersistent(normalized);
+  invalidateUserProfileCache(user.id);
+  invalidateUserProfileCache(user.email);
+
+  return { success: true, user: updatedUser };
+}
+
 export async function verifyAndCreateUserPersistent(
   email: string,
   otp: string,

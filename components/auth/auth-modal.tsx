@@ -78,6 +78,7 @@ export default function AuthModal() {
     register,
     verifyOtp,
     resendOtp,
+    syncWithServer,
   } = useUserAuth();
 
   // Form states
@@ -94,7 +95,17 @@ export default function AuthModal() {
   const [countdown, setCountdown] = useState(60);
   const [canResend, setCanResend] = useState(false);
 
+  // Forgot password flow states
+  const [authView, setAuthView] = useState<"standard" | "forgot_email" | "forgot_otp">("standard");
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotOtp, setForgotOtp] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [forgotCountdown, setForgotCountdown] = useState(60);
+  const [canResendForgotOtp, setCanResendForgotOtp] = useState(false);
+
   const otpInputRef = useRef<HTMLInputElement>(null);
+  const forgotOtpInputRef = useRef<HTMLInputElement>(null);
 
   // Reset states when opened or mode changed
   useEffect(() => {
@@ -102,6 +113,8 @@ export default function AuthModal() {
       setErrorMessage("");
       setDevCodeBanner(null);
       setShowPassword(false);
+      setShowNewPassword(false);
+      setAuthView("standard");
       if (authModalMode === "otp") {
         setOtp("");
         setCountdown(60);
@@ -111,7 +124,7 @@ export default function AuthModal() {
     }
   }, [isAuthModalOpen, authModalMode]);
 
-  // Timer countdown
+  // Standard register OTP timer countdown
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (isAuthModalOpen && authModalMode === "otp" && countdown > 0) {
@@ -127,6 +140,23 @@ export default function AuthModal() {
     }
     return () => clearInterval(timer);
   }, [isAuthModalOpen, authModalMode, countdown]);
+
+  // Forgot Password OTP timer countdown
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isAuthModalOpen && authView === "forgot_otp" && forgotCountdown > 0) {
+      timer = setInterval(() => {
+        setForgotCountdown((prev) => {
+          if (prev <= 1) {
+            setCanResendForgotOtp(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [isAuthModalOpen, authView, forgotCountdown]);
 
   if (!isAuthModalOpen) return null;
 
@@ -221,9 +251,107 @@ export default function AuthModal() {
   };
 
   const handleForgotPassword = () => {
-    toast.info("Để lấy lại mật khẩu, vui lòng liên hệ Admin qua kênh Hỗ trợ hoặc Telegram!", {
-      duration: 4000,
-    });
+    setErrorMessage("");
+    setDevCodeBanner(null);
+    setForgotEmail(email.trim());
+    setForgotOtp("");
+    setNewPassword("");
+    setAuthView("forgot_email");
+  };
+
+  const handleSendForgotOtp = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setErrorMessage("");
+    const cleanEmail = forgotEmail.trim().toLowerCase();
+    if (!cleanEmail.endsWith("@gmail.com")) {
+      setErrorMessage("Hệ thống chỉ chấp nhận địa chỉ email có đuôi @gmail.com");
+      return;
+    }
+    const localPart = cleanEmail.replace("@gmail.com", "").trim();
+    if (!localPart || localPart.length < 3) {
+      setErrorMessage("Địa chỉ Gmail không hợp lệ (tên tài khoản quá ngắn)");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const res = await fetch("/api/auth/forgot-password/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: cleanEmail }),
+      });
+      const data = await res.json();
+      setIsSubmitting(false);
+
+      if (data.success) {
+        toast.success("Mã xác thực 6 số đã được gửi tới Gmail của bạn!");
+        setForgotCountdown(60);
+        setCanResendForgotOtp(false);
+        setForgotOtp("");
+        if (data.devMode && data.devCode) {
+          setDevCodeBanner(data.devCode);
+          setForgotOtp(data.devCode);
+        }
+        setAuthView("forgot_otp");
+        setTimeout(() => forgotOtpInputRef.current?.focus(), 150);
+      } else {
+        setErrorMessage(data.error || "Không thể gửi mã xác thực. Vui lòng kiểm tra lại email.");
+      }
+    } catch {
+      setIsSubmitting(false);
+      setErrorMessage("Lỗi kết nối máy chủ. Vui lòng thử lại sau.");
+    }
+  };
+
+  const handleResendForgotOtp = async () => {
+    if (!canResendForgotOtp || isSubmitting) return;
+    await handleSendForgotOtp();
+  };
+
+  const handleVerifyResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage("");
+
+    if (forgotOtp.length < 6) {
+      setErrorMessage("Vui lòng nhập đủ 6 chữ số mã OTP");
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setErrorMessage("Mật khẩu mới phải có tối thiểu 6 ký tự");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const res = await fetch("/api/auth/forgot-password/verify-reset", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: forgotEmail.trim().toLowerCase(),
+          otp: forgotOtp.trim(),
+          newPassword: newPassword,
+        }),
+      });
+      const data = await res.json();
+      setIsSubmitting(false);
+
+      if (data.success) {
+        toast.success("Đặt lại mật khẩu thành công! Đang tự động đăng nhập...");
+        await syncWithServer();
+        closeAuthModal();
+        // Reset states
+        setAuthView("standard");
+        setForgotEmail("");
+        setForgotOtp("");
+        setNewPassword("");
+      } else {
+        setErrorMessage(data.error || "Mã OTP không chính xác hoặc đã hết hạn.");
+      }
+    } catch {
+      setIsSubmitting(false);
+      setErrorMessage("Lỗi kết nối máy chủ. Vui lòng thử lại sau.");
+    }
   };
 
   return (
@@ -313,48 +441,81 @@ export default function AuthModal() {
           {/* Title Header (RoPhim Style: Title + direct inline link to switch mode) */}
           <div className="mb-5">
             <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-              {authModalMode === "login" && "Đăng nhập"}
-              {authModalMode === "register" && "Đăng ký tài khoản"}
-              {authModalMode === "otp" && "Xác thực mã OTP"}
+              {authView === "forgot_email" && "Quên mật khẩu"}
+              {authView === "forgot_otp" && "Đặt lại mật khẩu"}
+              {authView === "standard" && (
+                <>
+                  {authModalMode === "login" && "Đăng nhập"}
+                  {authModalMode === "register" && "Đăng ký tài khoản"}
+                  {authModalMode === "otp" && "Xác thực mã OTP"}
+                </>
+              )}
             </h2>
 
             <p className="text-xs sm:text-sm text-white/50 mt-1.5">
-              {authModalMode === "login" && (
+              {authView === "forgot_email" && (
                 <>
-                  Nếu bạn chưa có tài khoản,{" "}
+                  Nhập địa chỉ Gmail để nhận mã xác thực đặt lại mật khẩu.{" "}
                   <button
                     type="button"
                     onClick={() => {
                       setErrorMessage("");
-                      openAuthModal("register");
+                      setAuthView("standard");
                     }}
                     className="text-brand-green hover:underline font-bold cursor-pointer"
                   >
-                    đăng ký ngay
+                    Quay lại
                   </button>
                 </>
               )}
 
-              {authModalMode === "register" && (
-                <>
-                  Nếu bạn đã có tài khoản,{" "}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setErrorMessage("");
-                      openAuthModal("login");
-                    }}
-                    className="text-brand-green hover:underline font-bold cursor-pointer"
-                  >
-                    đăng nhập ngay
-                  </button>
-                </>
-              )}
-
-              {authModalMode === "otp" && (
+              {authView === "forgot_otp" && (
                 <>
                   Mã xác thực 6 số đã được gửi tới{" "}
-                  <strong className="text-brand-green underline">{pendingEmail || email}</strong>
+                  <strong className="text-brand-green underline">{forgotEmail}</strong>
+                </>
+              )}
+
+              {authView === "standard" && (
+                <>
+                  {authModalMode === "login" && (
+                    <>
+                      Nếu bạn chưa có tài khoản,{" "}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setErrorMessage("");
+                          openAuthModal("register");
+                        }}
+                        className="text-brand-green hover:underline font-bold cursor-pointer"
+                      >
+                        đăng ký ngay
+                      </button>
+                    </>
+                  )}
+
+                  {authModalMode === "register" && (
+                    <>
+                      Nếu bạn đã có tài khoản,{" "}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setErrorMessage("");
+                          openAuthModal("login");
+                        }}
+                        className="text-brand-green hover:underline font-bold cursor-pointer"
+                      >
+                        đăng nhập ngay
+                      </button>
+                    </>
+                  )}
+
+                  {authModalMode === "otp" && (
+                    <>
+                      Mã xác thực 6 số đã được gửi tới{" "}
+                      <strong className="text-brand-green underline">{pendingEmail || email}</strong>
+                    </>
+                  )}
                 </>
               )}
             </p>
@@ -378,7 +539,7 @@ export default function AuthModal() {
           {/* ======================================================== */}
           {/* 1. LOGIN MODE                                            */}
           {/* ======================================================== */}
-          {authModalMode === "login" && (
+          {authView === "standard" && authModalMode === "login" && (
             <form onSubmit={handleLogin} className="space-y-3.5">
               {/* Email Input */}
               <div className="relative">
@@ -465,7 +626,7 @@ export default function AuthModal() {
           {/* ======================================================== */}
           {/* 2. REGISTER MODE                                         */}
           {/* ======================================================== */}
-          {authModalMode === "register" && (
+          {authView === "standard" && authModalMode === "register" && (
             <form onSubmit={handleRegister} className="space-y-3">
               {/* Full Name */}
               <div className="relative">
@@ -559,7 +720,7 @@ export default function AuthModal() {
           {/* ======================================================== */}
           {/* 3. OTP VERIFICATION MODE                                 */}
           {/* ======================================================== */}
-          {authModalMode === "otp" && (
+          {authView === "standard" && authModalMode === "otp" && (
             <form onSubmit={handleVerifyOtp} className="space-y-4">
               {/* 6 Digit OTP Segmented Boxes */}
               <div className="relative max-w-[320px] mx-auto py-1">
@@ -638,6 +799,180 @@ export default function AuthModal() {
                 >
                   ← Đổi địa chỉ email khác
                 </button>
+              </div>
+            </form>
+          )}
+
+          {/* ======================================================== */}
+          {/* 4. FORGOT PASSWORD - STEP 1: ENTER EMAIL                 */}
+          {/* ======================================================== */}
+          {authView === "forgot_email" && (
+            <form onSubmit={handleSendForgotOtp} className="space-y-3.5">
+              <div className="relative">
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
+                <input
+                  type="email"
+                  required
+                  autoFocus
+                  aria-label="Địa chỉ Gmail (@gmail.com)"
+                  value={forgotEmail}
+                  onChange={(e) => setForgotEmail(e.target.value)}
+                  placeholder="Địa chỉ Gmail (ví dụ: ten_ban@gmail.com)"
+                  className="w-full h-11 sm:h-12 pl-10 pr-4 rounded-xl bg-[#121815] border border-white/10 hover:border-white/20 text-white text-xs sm:text-sm placeholder:text-white/35 focus:outline-none focus:border-brand-green focus:ring-2 focus:ring-brand-green/20 transition-all"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting || !forgotEmail}
+                className="w-full h-11 sm:h-12 rounded-xl bg-brand-green hover:bg-[#1bb85c] active:scale-[0.99] text-black font-extrabold text-sm sm:text-base tracking-wide shadow-[0_0_24px_rgba(32,214,107,0.35)] transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2 mt-2"
+              >
+                {isSubmitting ? (
+                  <RefreshCw className="w-4 h-4 animate-spin text-black" />
+                ) : (
+                  <>
+                    <span>Gửi mã xác thực OTP</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+
+              <div className="text-center pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setErrorMessage("");
+                    setAuthView("standard");
+                  }}
+                  className="text-xs text-white/50 hover:text-white transition-colors cursor-pointer"
+                >
+                  ← Quay lại đăng nhập
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* ======================================================== */}
+          {/* 5. FORGOT PASSWORD - STEP 2: VERIFY OTP & NEW PASSWORD    */}
+          {/* ======================================================== */}
+          {authView === "forgot_otp" && (
+            <form onSubmit={handleVerifyResetPassword} className="space-y-4">
+              {/* 6 Digit OTP Segmented Boxes */}
+              <div className="relative max-w-[320px] mx-auto py-1">
+                <input
+                  ref={forgotOtpInputRef}
+                  type="text"
+                  maxLength={6}
+                  pattern="[0-9]*"
+                  inputMode="numeric"
+                  required
+                  autoFocus
+                  aria-label="Mã xác thực OTP 6 số"
+                  value={forgotOtp}
+                  onChange={(e) => setForgotOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-text z-10 font-mono"
+                />
+                <div className="flex items-center justify-between gap-2">
+                  {[0, 1, 2, 3, 4, 5].map((index) => {
+                    const digit = forgotOtp[index] || "";
+                    const isCurrent = forgotOtp.length === index;
+                    return (
+                      <div
+                        key={index}
+                        className={cn(
+                          "w-10 sm:w-11 h-11 sm:h-12 rounded-xl flex items-center justify-center font-mono font-black text-xl transition-all border-2 select-none",
+                          digit
+                            ? "bg-brand-green/10 border-brand-green text-brand-green shadow-[0_0_12px_rgba(32,214,107,0.3)]"
+                            : isCurrent
+                            ? "bg-white/[0.08] border-brand-green/80 text-white animate-pulse"
+                            : "bg-white/[0.03] border-white/10 text-white/20"
+                        )}
+                      >
+                        {digit || "•"}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* New Password Input with toggle */}
+              <div className="relative">
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
+                <input
+                  type={showNewPassword ? "text" : "password"}
+                  required
+                  minLength={6}
+                  aria-label="Mật khẩu mới"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Mật khẩu mới (tối thiểu 6 ký tự)"
+                  className="w-full h-11 sm:h-12 pl-10 pr-10 rounded-xl bg-[#121815] border border-white/10 hover:border-white/20 text-white text-xs sm:text-sm placeholder:text-white/35 focus:outline-none focus:border-brand-green focus:ring-2 focus:ring-brand-green/20 transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  aria-label={showNewPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-white/40 hover:text-white transition-colors cursor-pointer rounded-md"
+                >
+                  {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting || forgotOtp.length < 6 || newPassword.length < 6}
+                className="w-full h-11 sm:h-12 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-green to-[#25d366] hover:brightness-110 active:scale-[0.99] text-black font-extrabold text-sm sm:text-base shadow-[0_0_24px_rgba(32,214,107,0.35)] transition-all disabled:opacity-50 cursor-pointer"
+              >
+                {isSubmitting ? (
+                  <RefreshCw className="w-4 h-4 animate-spin text-black" />
+                ) : (
+                  <>
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>Đặt lại mật khẩu & Đăng nhập</span>
+                  </>
+                )}
+              </button>
+
+              {/* Countdown & Resend Button */}
+              <div className="text-center pt-1">
+                {canResendForgotOtp ? (
+                  <button
+                    type="button"
+                    onClick={handleResendForgotOtp}
+                    disabled={isSubmitting}
+                    className="text-xs sm:text-sm text-brand-green hover:underline font-bold flex items-center justify-center gap-1.5 mx-auto cursor-pointer"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" /> Gửi lại mã OTP mới
+                  </button>
+                ) : (
+                  <p className="text-xs text-white/40">
+                    Gửi lại mã sau: <span className="text-brand-green font-mono font-bold">{forgotCountdown}s</span>
+                  </p>
+                )}
+
+                <div className="flex items-center justify-center gap-3 mt-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setErrorMessage("");
+                      setAuthView("forgot_email");
+                    }}
+                    className="text-xs text-white/40 hover:text-white/70 transition-colors cursor-pointer"
+                  >
+                    ← Đổi email khác
+                  </button>
+                  <span className="text-white/20">•</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setErrorMessage("");
+                      setAuthView("standard");
+                    }}
+                    className="text-xs text-white/40 hover:text-white/70 transition-colors cursor-pointer"
+                  >
+                    Hủy & Đăng nhập
+                  </button>
+                </div>
               </div>
             </form>
           )}
