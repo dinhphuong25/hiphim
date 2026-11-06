@@ -627,7 +627,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex-1">
           {query.trim().length === 0 ? null : results.length > 0 ? (
             /* Live Results */
-            <div className="space-y-6">
+            <div className="space-y-6 pb-12">
               {/* Results Header Bar */}
               <div className="flex items-center justify-between flex-wrap gap-3 pb-2 border-b border-white/6">
                 <div className="flex items-center gap-2.5">
@@ -670,24 +670,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                 </div>
               )}
 
-              {/* Bottom: View All Results Action */}
-              <div className="pt-4 pb-8 flex justify-center">
-                <button
-                  type="button"
-                  onClick={() => {
-                    router.push(
-                      `/search?query=${encodeURIComponent(query.trim())}`
-                    );
-                    onClose();
-                  }}
-                  className="px-6 py-3 rounded-xl bg-brand-green/10 hover:bg-brand-green text-brand-green hover:text-cinema-bg border border-brand-green/30 hover:border-brand-green font-bold text-sm sm:text-base transition-all duration-200 flex items-center gap-2 group shadow-lg active:scale-95"
-                >
-                  <span>
-                    Xem toàn bộ kết quả cho "{query}" {totalItems > 0 ? `(${totalItems} phim)` : ""}
-                  </span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </div>
+
             </div>
           ) : !isLoading ? (
             <div className="py-20 text-center flex flex-col items-center justify-center gap-3">
