@@ -135,14 +135,10 @@ export default function NotificationBell({ className }: { className?: string }) 
     setMounted(true);
   }, []);
 
-  // Set default main tab: Admin defaults to reports; regular users and guests default to system notices
+  // Set default main tab: Luôn ghim tab thông báo từ admin trước cho mọi người dùng
   useEffect(() => {
-    if (isSuperAdmin) {
-      setMainTab("reports");
-    } else {
-      setMainTab("system");
-    }
-  }, [isSuperAdmin]);
+    setMainTab("system");
+  }, []);
 
   // Load cached notifications & read notification IDs from localStorage
   useEffect(() => {
@@ -166,6 +162,7 @@ export default function NotificationBell({ className }: { className?: string }) 
   // Lock root & body scroll when fullscreen notification overlay is open (identical to SearchOverlay)
   useEffect(() => {
     if (isOpen) {
+      setMainTab("system");
       const html = document.documentElement;
       const body = document.body;
       const prevHtmlOverflow = html.style.overflow;
@@ -527,17 +524,10 @@ export default function NotificationBell({ className }: { className?: string }) 
               </button>
             </div>
 
-            {/* Sub-bar: Shortcuts + Unread Status + Action Tabs */}
+            {/* Sub-bar: Unread Status + Action Tabs */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-white/50 mt-2.5 sm:mt-3 px-1">
-              {/* Left Cluster: ESC shortcut & unread count */}
+              {/* Left Cluster: unread count */}
               <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
-                <span className="hidden sm:inline-flex items-center gap-1.5 font-mono text-white/40">
-                  <kbd className="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 text-white/80 font-semibold text-[11px]">
-                    ESC
-                  </kbd>{" "}
-                  Đóng
-                </span>
-
                 <div className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-full border border-white/5 text-[11px] font-semibold text-white/80">
                   <span
                     className={cn(
