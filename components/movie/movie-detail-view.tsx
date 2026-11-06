@@ -500,13 +500,20 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
       </div>
 
       {/* ======================================================== */}
-      {/* 2. ASYMMETRIC 2-COLUMN BODY CONTENT                      */}
+      {/* 2. BODY CONTENT: SYNOPSIS (LEFT) + EPISODES (RIGHT)      */}
       {/* ======================================================== */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 pt-6 sm:pt-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-          {/* LEFT / MAIN COLUMN (8/12 on Desktop): Synopsis + Episode Selector */}
-          <div className="lg:col-span-8 space-y-6">
-            {/* SYNOPSIS CARD */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 pt-6 sm:pt-8 pb-16 sm:pb-24 space-y-6">
+        {/* Top Row: Synopsis (Left) + Episodes (Right) */}
+        {(cleanContent || (episodes.length > 0 && episodeList.length > 0)) && (
+          <div
+            className={cn(
+              "grid grid-cols-1 gap-6 items-start",
+              cleanContent && episodes.length > 0 && episodeList.length > 0
+                ? "lg:grid-cols-2"
+                : "grid-cols-1"
+            )}
+          >
+            {/* LEFT COLUMN: SYNOPSIS CARD */}
             {cleanContent && (
               <section className="rounded-2xl bg-white/[0.025] border border-white/[0.08] p-4 sm:p-6 space-y-2.5">
                 <div className="flex items-center gap-2">
@@ -518,7 +525,7 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
                 <p
                   className={cn(
                     "text-xs sm:text-[14px] text-white/75 leading-relaxed text-justify transition-all duration-200",
-                    !expandedContent && "line-clamp-4 sm:line-clamp-5"
+                    !expandedContent && "line-clamp-6"
                   )}
                 >
                   {cleanContent}
@@ -535,7 +542,7 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
               </section>
             )}
 
-            {/* EPISODES & SERVERS CARD */}
+            {/* RIGHT COLUMN: EPISODES & SERVERS CARD */}
             {episodes.length > 0 && episodeList.length > 0 && (
               <section
                 id="episode-section"
@@ -609,7 +616,7 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
                       </div>
                     )}
 
-                    <div className="relative w-full sm:w-48 ml-auto">
+                    <div className="relative w-full sm:w-44 ml-auto">
                       <Search className="w-3.5 h-3.5 text-white/40 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                       <input
                         type="text"
@@ -623,7 +630,7 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
                 )}
 
                 {/* Episode Grid */}
-                <div className="grid grid-cols-4 xs:grid-cols-5 sm:grid-cols-6 md:grid-cols-7 lg:grid-cols-8 gap-2 sm:gap-2.5 max-h-[360px] overflow-y-auto pr-1 custom-scrollbar">
+                <div className="grid grid-cols-4 xs:grid-cols-5 sm:grid-cols-6 md:grid-cols-6 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-2.5 max-h-[360px] overflow-y-auto pr-1 custom-scrollbar">
                   {filteredEpisodes.map(({ ep, idx }) => {
                     const isLastWatched =
                       resumeWatchInfo &&
@@ -658,142 +665,143 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
               </section>
             )}
           </div>
+        )}
 
-          {/* RIGHT SIDEBAR COLUMN (4/12 on Desktop): Movie Specifications & Cast */}
-          <aside className="lg:col-span-4 space-y-6">
-            <section className="rounded-2xl bg-white/[0.025] border border-white/[0.08] p-4 sm:p-6 space-y-4">
-              <div className="flex items-center gap-2 pb-2.5 border-b border-white/[0.07]">
-                <Info className="w-4 h-4 text-brand-green stroke-[2.4]" />
-                <h2 className="text-sm sm:text-base font-bold text-white tracking-wide uppercase">
-                  Thông Tin Chi Tiết
-                </h2>
+        {/* BOTTOM: THÔNG TIN CHI TIẾT (FULL-WIDTH HORIZONTAL CARD) */}
+        <section className="rounded-2xl bg-white/[0.025] border border-white/[0.08] p-4 sm:p-6 space-y-5">
+          <div className="flex items-center gap-2 pb-2.5 border-b border-white/[0.07]">
+            <Info className="w-4 h-4 text-brand-green stroke-[2.4]" />
+            <h2 className="text-sm sm:text-base font-bold text-white tracking-wide uppercase">
+              Thông Tin Chi Tiết
+            </h2>
+          </div>
+
+          {/* 4 Quick Specs Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+            <div className="p-3 sm:p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+              <span className="text-[10px] sm:text-[11px] text-white/45 uppercase font-bold tracking-wider block">
+                Năm Phát Hành
+              </span>
+              <span className="text-xs sm:text-sm font-extrabold text-white mt-0.5 block">
+                {movie.year || "2026"}
+              </span>
+            </div>
+
+            <div className="p-3 sm:p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+              <span className="text-[10px] sm:text-[11px] text-white/45 uppercase font-bold tracking-wider block">
+                Thời Lượng
+              </span>
+              <span className="text-xs sm:text-sm font-extrabold text-white mt-0.5 block truncate">
+                {movie.time || "Đang cập nhật"}
+              </span>
+            </div>
+
+            <div className="p-3 sm:p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+              <span className="text-[10px] sm:text-[11px] text-white/45 uppercase font-bold tracking-wider block">
+                Chất Lượng
+              </span>
+              <span className="text-xs sm:text-sm font-extrabold text-brand-green mt-0.5 block">
+                {movie.quality || "FHD"}
+              </span>
+            </div>
+
+            <div className="p-3 sm:p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+              <span className="text-[10px] sm:text-[11px] text-white/45 uppercase font-bold tracking-wider block">
+                Ngôn Ngữ
+              </span>
+              <span className="text-xs sm:text-sm font-extrabold text-white mt-0.5 block truncate">
+                {movie.lang || "Vietsub"}
+              </span>
+            </div>
+          </div>
+
+          {/* Horizontal Meta Rows */}
+          <div className="space-y-3.5 pt-4 border-t border-white/[0.07]">
+            {/* Countries */}
+            {countries.length > 0 && (
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-white/55 uppercase tracking-wider sm:w-28 shrink-0">
+                  <Globe className="w-3.5 h-3.5 text-brand-green shrink-0" />
+                  <span>Quốc Gia</span>
+                </div>
+                <div className="flex items-center gap-1.5 flex-wrap flex-1">
+                  {countries.map((c, idx) => (
+                    <Link
+                      key={c.slug || idx}
+                      href={`/?country=${c.slug}`}
+                      className="px-2.5 py-1 rounded-lg bg-white/[0.04] hover:bg-brand-green/15 hover:border-brand-green/40 hover:text-brand-green border border-white/10 text-xs font-medium text-white/85 transition-colors"
+                    >
+                      {c.name}
+                    </Link>
+                  ))}
+                </div>
               </div>
+            )}
 
-              {/* 2x2 Quick Specs Mini Grid */}
-              <div className="grid grid-cols-2 gap-2.5">
-                <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06]">
-                  <span className="text-[10px] text-white/45 uppercase font-bold tracking-wider block">
-                    Năm Phát Hành
-                  </span>
-                  <span className="text-xs sm:text-sm font-extrabold text-white mt-0.5 block">
-                    {movie.year || "2026"}
-                  </span>
+            {/* Categories */}
+            {categories.length > 0 && (
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-white/55 uppercase tracking-wider sm:w-28 shrink-0">
+                  <Layers className="w-3.5 h-3.5 text-brand-green shrink-0" />
+                  <span>Thể Loại</span>
                 </div>
-
-                <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06]">
-                  <span className="text-[10px] text-white/45 uppercase font-bold tracking-wider block">
-                    Thời Lượng
-                  </span>
-                  <span className="text-xs sm:text-sm font-extrabold text-white mt-0.5 block truncate">
-                    {movie.time || "Đang cập nhật"}
-                  </span>
-                </div>
-
-                <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06]">
-                  <span className="text-[10px] text-white/45 uppercase font-bold tracking-wider block">
-                    Chất Lượng
-                  </span>
-                  <span className="text-xs sm:text-sm font-extrabold text-brand-green mt-0.5 block">
-                    {movie.quality || "FHD"}
-                  </span>
-                </div>
-
-                <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06]">
-                  <span className="text-[10px] text-white/45 uppercase font-bold tracking-wider block">
-                    Ngôn Ngữ
-                  </span>
-                  <span className="text-xs sm:text-sm font-extrabold text-white mt-0.5 block truncate">
-                    {movie.lang || "Vietsub"}
-                  </span>
+                <div className="flex items-center gap-1.5 flex-wrap flex-1">
+                  {categories.map((cat, idx) => (
+                    <Link
+                      key={cat.slug || idx}
+                      href={`/?category=${cat.slug}`}
+                      className="px-2.5 py-1 rounded-lg bg-white/[0.04] hover:bg-brand-green/15 hover:border-brand-green/40 hover:text-brand-green border border-white/10 text-xs font-medium text-white/85 transition-colors"
+                    >
+                      {cat.name}
+                    </Link>
+                  ))}
                 </div>
               </div>
+            )}
 
-              {/* Countries */}
-              {countries.length > 0 && (
-                <div className="space-y-1.5 pt-1">
-                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-white/55 uppercase tracking-wider">
-                    <Globe className="w-3.5 h-3.5 text-brand-green" />
-                    <span>Quốc Gia</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    {countries.map((c, idx) => (
-                      <Link
-                        key={c.slug || idx}
-                        href={`/?country=${c.slug}`}
-                        className="px-2.5 py-1 rounded-lg bg-white/[0.04] hover:bg-brand-green/15 hover:border-brand-green/40 hover:text-brand-green border border-white/10 text-xs font-medium text-white/85 transition-colors"
-                      >
-                        {c.name}
-                      </Link>
-                    ))}
-                  </div>
+            {/* Directors */}
+            {directorsList.length > 0 && (
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-white/55 uppercase tracking-wider sm:w-28 shrink-0">
+                  <Clapperboard className="w-3.5 h-3.5 text-brand-green shrink-0" />
+                  <span>Đạo Diễn</span>
                 </div>
-              )}
+                <div className="flex items-center gap-1.5 flex-wrap flex-1">
+                  {directorsList.map((director, idx) => (
+                    <Link
+                      key={idx}
+                      href={`/search?query=${encodeURIComponent(director)}`}
+                      className="px-2.5 py-1 rounded-lg bg-white/[0.04] hover:bg-brand-green/15 hover:border-brand-green/40 hover:text-brand-green border border-white/10 text-xs font-medium text-white/85 transition-colors"
+                    >
+                      {director}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
 
-              {/* Categories */}
-              {categories.length > 0 && (
-                <div className="space-y-1.5 pt-1">
-                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-white/55 uppercase tracking-wider">
-                    <Layers className="w-3.5 h-3.5 text-brand-green" />
-                    <span>Thể Loại</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    {categories.map((cat, idx) => (
-                      <Link
-                        key={cat.slug || idx}
-                        href={`/?category=${cat.slug}`}
-                        className="px-2.5 py-1 rounded-lg bg-white/[0.04] hover:bg-brand-green/15 hover:border-brand-green/40 hover:text-brand-green border border-white/10 text-xs font-medium text-white/85 transition-colors"
-                      >
-                        {cat.name}
-                      </Link>
-                    ))}
-                  </div>
+            {/* Actors */}
+            {actorsList.length > 0 && (
+              <div className="flex flex-col sm:flex-row sm:items-start gap-1.5 sm:gap-4">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-white/55 uppercase tracking-wider sm:w-28 shrink-0 sm:pt-1">
+                  <Users className="w-3.5 h-3.5 text-brand-green shrink-0" />
+                  <span>Diễn Viên</span>
                 </div>
-              )}
-
-              {/* Directors */}
-              {directorsList.length > 0 && (
-                <div className="space-y-1.5 pt-1">
-                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-white/55 uppercase tracking-wider">
-                    <Clapperboard className="w-3.5 h-3.5 text-brand-green" />
-                    <span>Đạo Diễn</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    {directorsList.map((director, idx) => (
-                      <Link
-                        key={idx}
-                        href={`/search?query=${encodeURIComponent(director)}`}
-                        className="px-2.5 py-1 rounded-lg bg-white/[0.04] hover:bg-brand-green/15 hover:border-brand-green/40 hover:text-brand-green border border-white/10 text-xs font-medium text-white/85 transition-colors"
-                      >
-                        {director}
-                      </Link>
-                    ))}
-                  </div>
+                <div className="flex items-center gap-1.5 flex-wrap flex-1">
+                  {actorsList.map((actor, idx) => (
+                    <Link
+                      key={idx}
+                      href={`/search?query=${encodeURIComponent(actor)}`}
+                      className="px-2.5 py-1 rounded-lg bg-white/[0.04] hover:bg-brand-green/15 hover:border-brand-green/40 hover:text-brand-green border border-white/10 text-xs font-medium text-white/85 transition-colors"
+                    >
+                      {actor}
+                    </Link>
+                  ))}
                 </div>
-              )}
-
-              {/* Actors */}
-              {actorsList.length > 0 && (
-                <div className="space-y-1.5 pt-1">
-                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-white/55 uppercase tracking-wider">
-                    <Users className="w-3.5 h-3.5 text-brand-green" />
-                    <span>Diễn Viên</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    {actorsList.map((actor, idx) => (
-                      <Link
-                        key={idx}
-                        href={`/search?query=${encodeURIComponent(actor)}`}
-                        className="px-2.5 py-1 rounded-lg bg-white/[0.04] hover:bg-brand-green/15 hover:border-brand-green/40 hover:text-brand-green border border-white/10 text-xs font-medium text-white/85 transition-colors"
-                      >
-                        {actor}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </section>
-          </aside>
-        </div>
+              </div>
+            )}
+          </div>
+        </section>
       </div>
     </div>
   );
