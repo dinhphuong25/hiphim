@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import PhimApi from "@/libs/phimapi.com";
 import { createPortal } from "react-dom";
 import { getMovieImageCandidates } from "@/lib/image-helper";
+import { isSlugHidden } from "@/lib/hidden-movies";
 
 function AutocompleteImage({ src, title }: { src?: string; title: string }) {
   const [hasError, setHasError] = useState(false);
@@ -136,7 +137,10 @@ function SearchPanel({ open, onClose, categories = [] }: SearchPanelProps) {
           return weightB - weightA;
         });
 
-        sortedMovies.slice(0, 6).forEach((movie: any) => {
+        sortedMovies
+          .filter((movie: any) => !isSlugHidden(movie?.slug))
+          .slice(0, 6)
+          .forEach((movie: any) => {
           const candidates = getMovieImageCandidates(movie, "poster");
           results.push({
             type: "movie",

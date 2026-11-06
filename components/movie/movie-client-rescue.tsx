@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { Film, Home, RefreshCw, Search, ArrowLeft } from "lucide-react";
 import { LoadingWatch } from "@/components/ui/page-loaders";
 import { getMovieReferrer } from "@/lib/navigation-history";
+import { isSlugHidden } from "@/lib/hidden-movies";
 import {
   fetchMovieClientSide,
   fetchPrimaryPhimApiClient,
@@ -61,7 +62,7 @@ export function TrueNotFoundCard({ onRetry }: { onRetry?: () => void }) {
           Lạc lối giữa rạp phim
         </h2>
         <p className="text-white/60 text-sm sm:text-base mb-7 leading-relaxed">
-          Cuốn phim bạn đang tìm kiếm có thể đã thay đổi đường dẫn hoặc đang bảo trì máy chủ phát.
+          Cuốn phim bạn đang tìm kiếm không tồn tại hoặc đã được gỡ bỏ khỏi hệ thống.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full justify-center">
@@ -107,6 +108,10 @@ export function TrueNotFoundCard({ onRetry }: { onRetry?: () => void }) {
 }
 
 export function MovieDetailClientRescue({ slug }: { slug: string }) {
+  if (isSlugHidden(slug)) {
+    return <TrueNotFoundCard />;
+  }
+
   const [data, setData] = useState<RescuedMovieData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -138,6 +143,10 @@ export function MovieDetailClientRescue({ slug }: { slug: string }) {
 }
 
 export function WatchClientRescue({ slug }: { slug: string }) {
+  if (isSlugHidden(slug)) {
+    return <TrueNotFoundCard />;
+  }
+
   const [data, setData] = useState<RescuedMovieData | null>(null);
   const [loading, setLoading] = useState(true);
 

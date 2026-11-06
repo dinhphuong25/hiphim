@@ -6,6 +6,7 @@ import Pagination from "@/components/pagination";
 import { Search, Film } from "lucide-react";
 import Link from "next/link";
 import { getCachedCategories, getCachedCountries } from "@/lib/data";
+import { filterHiddenMovies } from "@/lib/hidden-movies";
 
 type SearchPageProps = {
   searchParams: Promise<{
@@ -80,6 +81,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     movies = [];
     pageInfo = null;
   }
+
+  movies = filterHiddenMovies(movies);
 
   return (
     <>

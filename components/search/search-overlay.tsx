@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useMemo, useTransition, memo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { isSlugHidden } from "@/lib/hidden-movies";
 import {
   Search,
   X,
@@ -453,7 +454,8 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
         const seenTitles = new Set<string>();
 
         for (const item of kkItems) {
-          if (item.slug && !seenSlugs.has(item.slug)) {
+          if (!item.slug || isSlugHidden(item.slug)) continue;
+          if (!seenSlugs.has(item.slug)) {
             seenSlugs.add(item.slug);
             const key = item.name?.toLowerCase().trim();
             if (key) seenTitles.add(key);
@@ -462,7 +464,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
         }
 
         for (const item of nguoncItems) {
-          if (!item.slug || seenSlugs.has(item.slug)) continue;
+          if (!item.slug || isSlugHidden(item.slug) || seenSlugs.has(item.slug)) continue;
           const key = item.name?.toLowerCase().trim();
           if (key && seenTitles.has(key)) continue;
 

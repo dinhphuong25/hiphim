@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { isSlugHidden } from "@/lib/hidden-movies";
 import {
   MovieDetailClientRescue,
   WatchClientRescue,
@@ -24,7 +25,7 @@ export default function NotFound() {
 
     if (pathname.startsWith("/phim/")) {
       const slug = pathname.replace(/^\/phim\//, "").replace(/\/+$/, "").trim();
-      if (slug) {
+      if (slug && !isSlugHidden(slug)) {
         setRescueRoute({ type: "detail", slug });
         return;
       }
@@ -33,7 +34,7 @@ export default function NotFound() {
     if (pathname.startsWith("/watch")) {
       const params = new URLSearchParams(search);
       const slug = params.get("slug")?.trim() || "";
-      if (slug) {
+      if (slug && !isSlugHidden(slug)) {
         setRescueRoute({ type: "watch", slug });
         return;
       }

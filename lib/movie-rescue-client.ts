@@ -1,4 +1,5 @@
 import { normalizeImageUrl } from "@/lib/image-helper";
+import { isSlugHidden } from "@/lib/hidden-movies";
 
 export interface RescuedMovieData {
   movie: any;
@@ -68,7 +69,7 @@ export async function fetchPrimaryPhimApiClient(
   originName?: string
 ): Promise<RescuedMovieData | null> {
   const cleanSlug = decodeURIComponent(slug || "").trim().replace(/^\/+|\/+$/g, "");
-  if (!cleanSlug) return null;
+  if (!cleanSlug || isSlugHidden(cleanSlug)) return null;
 
   // 1. Direct slug lookup on phimapi.com
   try {
@@ -142,7 +143,7 @@ export async function fetchPrimaryPhimApiClient(
 
 export async function fetchMovieClientSide(slug: string): Promise<RescuedMovieData | null> {
   const cleanSlug = decodeURIComponent(slug || "").trim().replace(/^\/+|\/+$/g, "");
-  if (!cleanSlug) return null;
+  if (!cleanSlug || isSlugHidden(cleanSlug)) return null;
 
   // 1. PRIORITY #1: Direct browser fetch from phimapi.com (residential/4G IP, always returns m3u8 Default Player)
   const primaryDirect = await fetchPrimaryPhimApiClient(cleanSlug);

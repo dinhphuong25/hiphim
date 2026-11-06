@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import PhimApi from "@/libs/phimapi.com";
+import { filterHiddenMovies } from "@/lib/hidden-movies";
 
 export const revalidate = 3600; // Re-generate sitemap every hour
 
@@ -22,7 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const page3 = p3[0] || [];
     const page4 = p4[0] || [];
     const page5 = p5[0] || [];
-    const allMovies = [...page1, ...page2, ...page3, ...page4, ...page5];
+    const allMovies = filterHiddenMovies([...page1, ...page2, ...page3, ...page4, ...page5]);
 
     const topics = api.listTopics();
 

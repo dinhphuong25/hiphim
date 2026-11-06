@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { isSlugHidden } from "@/lib/hidden-movies";
 
 export async function GET(req: NextRequest) {
   const urlParam = req.nextUrl.searchParams.get("url");
@@ -24,6 +25,13 @@ export async function GET(req: NextRequest) {
     return new Response(
       JSON.stringify({ error: "Invalid url" }),
       { status: 400, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
+  if (urlParam.toLowerCase().includes("ma-xo") || isSlugHidden(urlParam)) {
+    return new Response(
+      JSON.stringify({ error: "Content disabled or removed" }),
+      { status: 404, headers: { "Content-Type": "application/json" } }
     );
   }
 

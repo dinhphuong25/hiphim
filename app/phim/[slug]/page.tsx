@@ -1,6 +1,7 @@
 import { cache } from "react";
+import { notFound } from "next/navigation";
 import PhimApi from "@/libs/phimapi.com";
-import { HIDDEN_MOVIE_SLUGS } from "@/lib/hidden-movies";
+import { HIDDEN_MOVIE_SLUGS, isSlugHidden } from "@/lib/hidden-movies";
 import { MovieStructuredData, BreadcrumbStructuredData } from "@/components/seo/structured-data";
 import MovieDetailView from "@/components/movie/movie-detail-view";
 import { MovieDetailClientRescue, TrueNotFoundCard } from "@/components/movie/movie-client-rescue";
@@ -13,7 +14,9 @@ const getMovie = cache(async (slug: string) => {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  if (!slug || HIDDEN_MOVIE_SLUGS.includes(slug)) return { title: "Chi Tiết Phim | Hi Phim" };
+  if (!slug || isSlugHidden(slug)) {
+    notFound();
+  }
 
   try {
     const { movie } = await getMovie(slug);
@@ -40,8 +43,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function PhimDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
-  if (!slug || HIDDEN_MOVIE_SLUGS.includes(slug)) {
-    return <TrueNotFoundCard />;
+  if (!slug || isSlugHidden(slug)) {
+    notFound();
   }
 
   let movie: any = null;

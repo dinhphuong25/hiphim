@@ -1,8 +1,9 @@
 import { cache, Suspense, Fragment } from "react";
+import { notFound } from "next/navigation";
 import PhimApi from "@/libs/phimapi.com";
 import Description from "@/components/movie/description";
 import { MovieStructuredData, BreadcrumbStructuredData } from "@/components/seo/structured-data";
-import { HIDDEN_MOVIE_SLUGS } from "@/lib/hidden-movies";
+import { HIDDEN_MOVIE_SLUGS, isSlugHidden } from "@/lib/hidden-movies";
 import { LoadingWatch } from "@/components/ui/page-loaders";
 import { normalizeImageUrl } from "@/lib/image-helper";
 import { WatchClientRescue, TrueNotFoundCard } from "@/components/movie/movie-client-rescue";
@@ -16,7 +17,9 @@ const getMovieData = cache(async (slug: string) => {
 
 export async function generateMetadata({ searchParams }: any) {
   const { slug } = await searchParams;
-  if (!slug || HIDDEN_MOVIE_SLUGS.includes(slug)) return { title: "Xem phim | Hi Phim" };
+  if (!slug || isSlugHidden(slug)) {
+    notFound();
+  }
 
   try {
     const data = await getMovieData(slug);
@@ -78,8 +81,8 @@ export async function generateMetadata({ searchParams }: any) {
 export default async function WatchPage({ searchParams }: any) {
   const { slug, ep, sv } = await searchParams;
 
-  if (!slug || HIDDEN_MOVIE_SLUGS.includes(slug)) {
-    return <TrueNotFoundCard />;
+  if (!slug || isSlugHidden(slug)) {
+    notFound();
   }
 
   return (
@@ -90,6 +93,9 @@ export default async function WatchPage({ searchParams }: any) {
 }
 
 async function WatchContent({ slug, ep, sv }: { slug: string; ep?: string; sv?: string }) {
+  if (isSlugHidden(slug)) {
+    notFound();
+  }
   let movie: any = null;
   let server: any = [];
 

@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache";
 import PhimApi from "@/libs/phimapi.com";
 import { getSiteConfig } from "@/lib/site-config";
+import { filterHiddenMovies } from "@/lib/hidden-movies";
 
 export const TRENDING_FEATURED_SLUGS = [
   "nguoi-nhen-khoi-dau-moi",
@@ -91,7 +92,7 @@ export const getCachedFeaturedMovies = unstable_cache(
         movies.unshift(spider);
       }
 
-      return movies.length > 0 ? movies : [];
+      return movies.length > 0 ? filterHiddenMovies(movies) : [];
     } catch {
       return [];
     }
@@ -115,7 +116,7 @@ export const getCachedNewUpdates = unstable_cache(
   async () => {
     try {
       const [movies] = await api.newAddingMultiPage(2, 24);
-      return (movies as any[]) ?? [];
+      return filterHiddenMovies((movies as any[]) ?? []);
     } catch {
       return [];
     }
@@ -128,7 +129,8 @@ export const getCachedNewUpdates = unstable_cache(
 export const getCachedTopicMovies = unstable_cache(
   async (slug: string, limit: number = 12) => {
     try {
-      return await api.getTopicItems(slug, limit);
+      const items = await api.getTopicItems(slug, limit);
+      return filterHiddenMovies(items || []);
     } catch {
       return [];
     }
@@ -281,6 +283,8 @@ export const getCachedFilteredMovies = async (params: {
   return unstable_cache(
     async () => {
       try {
+        let rawItems: any[] = [];
+        let rawPagination: any = null;
         if (typeList) {
           const [items, pagination] = await api.getFilteredList({
             typeList,
@@ -293,26 +297,30 @@ export const getCachedFilteredMovies = async (params: {
             year,
             limit,
           });
-          return { items: items || [], pagination: pagination || null };
-        }
-        if (category) {
+          rawItems = items || [];
+          rawPagination = pagination || null;
+        } else if (category) {
           const [items, pagination] = await api.byCategory(category, page);
-          return { items: items || [], pagination: pagination || null };
-        }
-        if (country) {
+          rawItems = items || [];
+          rawPagination = pagination || null;
+        } else if (country) {
           const [items, pagination] = await api.byCountry(country, page);
-          return { items: items || [], pagination: pagination || null };
-        }
-        if (year) {
+          rawItems = items || [];
+          rawPagination = pagination || null;
+        } else if (year) {
           const [items, pagination] = await api.byYear(year, page);
-          return { items: items || [], pagination: pagination || null };
-        }
-        if (topic) {
+          rawItems = items || [];
+          rawPagination = pagination || null;
+        } else if (topic) {
           const [items, pagination] = await api.byTopic(topic, page);
-          return { items: items || [], pagination: pagination || null };
+          rawItems = items || [];
+          rawPagination = pagination || null;
+        } else {
+          const [items, pagination] = await api.newAdding(page);
+          rawItems = items || [];
+          rawPagination = pagination || null;
         }
-        const [items, pagination] = await api.newAdding(page);
-        return { items: items || [], pagination: pagination || null };
+        return { items: filterHiddenMovies(rawItems), pagination: rawPagination };
       } catch (err) {
         console.warn("Failed to fetch filtered movies in getCachedFilteredMovies:", err);
         return { items: [], pagination: null };
