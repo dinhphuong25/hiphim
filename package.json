@@ -6,18 +6,19 @@
   "author": "Hi Phim Team <admin@hiphim.one>",
   "copyright": "Copyright (c) 2025-2026 Hi Phim Team. All rights reserved.",
   "scripts": {
+    "postinstall": "node scripts/patch-opennext.js",
     "dev": "next dev",
-    "build": "npx opennextjs-cloudflare build",
+    "build": "node scripts/patch-opennext.js && npx opennextjs-cloudflare build",
     "build:next": "next build",
-    "pages:build": "npx opennextjs-cloudflare build",
+    "pages:build": "node scripts/patch-opennext.js && npx opennextjs-cloudflare build",
     "build:analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
-    "build:cf": "npx opennextjs-cloudflare build",
+    "build:cf": "node scripts/patch-opennext.js && npx opennextjs-cloudflare build",
     "deploy:cf": "npm run build:cf && npx opennextjs-cloudflare deploy -- --keep-vars",
     "preview:cf": "npx opennextjs-cloudflare preview",
-    "cloudflare:build": "npx opennextjs-cloudflare build",
+    "cloudflare:build": "node scripts/patch-opennext.js && npx opennextjs-cloudflare build",
     "vercel-build": "next build"
   },
   "dependencies": {

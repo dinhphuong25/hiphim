@@ -11,26 +11,28 @@ import type { MovieListItem, Pagination as PaginationInfo } from "@/lib/types";
 
 type SearchPageProps = {
   searchParams: Promise<{
-    index?: string;
-    query?: string;
-    category?: string;
-    country?: string;
-    typeList?: string;
-    sortField?: string;
-    sortType?: string;
-    year?: string;
+    [key: string]: string | string[] | undefined;
   }>;
 };
 
-function getPageIndex(value?: string): number {
-  const parsed = Number(value);
+function getParam(value?: string | string[]): string | undefined {
+  return (Array.isArray(value) ? value[0] : value)?.trim() || undefined;
+}
+
+function getPageIndex(value?: string | string[]): number {
+  const parsed = Number(getParam(value));
   return Number.isInteger(parsed) && parsed > 0 ? parsed : 1;
+}
+
+function getYear(value?: string | string[]): number | undefined {
+  const parsed = Number(getParam(value));
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : undefined;
 }
 
 export async function generateMetadata({ searchParams }: SearchPageProps) {
   const params = await searchParams;
   const index = getPageIndex(params.index);
-  const query = params.query?.trim();
+  const query = getParam(params.query);
   const postTitle = query ? `Kết quả cho "${query}"` : "Tìm kiếm Nâng cao";
 
   const titleText =
@@ -52,15 +54,20 @@ export async function generateMetadata({ searchParams }: SearchPageProps) {
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams;
   const index = getPageIndex(params.index);
-  const query = params.query?.trim();
-  const { category, country, typeList, year, sortField, sortType } = params;
+  const query = getParam(params.query);
+  const category = getParam(params.category);
+  const country = getParam(params.country);
+  const typeList = getParam(params.typeList);
+  const year = getParam(params.year);
+  const sortField = getParam(params.sortField);
+  const sortType = getParam(params.sortType);
   
   const api = new PhimApi();
-  const [categories, countries] = await Promise.all([
+  const categoriesAndCountries = Promise.allSettled([
     getCachedCategories(),
     getCachedCountries(),
   ]);
-  
+
   let movies: MovieListItem[] = [];
   let pageInfo: PaginationInfo | null = null;
 
@@ -73,7 +80,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         page: index,
         category,
         country,
-        year: year ? Number(year) : undefined,
+        year: getYear(year),
         sortField: sortField || "modified.time",
         sortType: sortType || "desc",
         limit: 20
@@ -88,7 +95,16 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     pageInfo = null;
   }
 
-  movies = filterHiddenMovies(movies);
+  const [categoriesResult, countriesResult] = await categoriesAndCountries;
+  if (categoriesResult.status === "rejected") {
+    console.error("Search categories fetch error:", categoriesResult.reason);
+  }
+  if (countriesResult.status === "rejected") {
+    console.error("Search countries fetch error:", countriesResult.reason);
+  }
+  const categories = categoriesResult.status === "fulfilled" ? categoriesResult.value : [];
+  const countries = countriesResult.status === "fulfilled" ? countriesResult.value : [];
+  movies = filterHiddenMovies(movies).slice(0, 20);
 
   return (
     <>
