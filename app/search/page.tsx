@@ -7,6 +7,7 @@ import { Search, Film } from "lucide-react";
 import Link from "next/link";
 import { getCachedCategories, getCachedCountries } from "@/lib/data";
 import { filterHiddenMovies } from "@/lib/hidden-movies";
+import type { MovieListItem, Pagination as PaginationInfo } from "@/lib/types";
 
 type SearchPageProps = {
   searchParams: Promise<{
@@ -21,10 +22,15 @@ type SearchPageProps = {
   }>;
 };
 
+function getPageIndex(value?: string): number {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : 1;
+}
+
 export async function generateMetadata({ searchParams }: SearchPageProps) {
   const params = await searchParams;
-  const index = params.index ? parseInt(params.index) : 1;
-  const query = params.query;
+  const index = getPageIndex(params.index);
+  const query = params.query?.trim();
   const postTitle = query ? `Kết quả cho "${query}"` : "Tìm kiếm Nâng cao";
 
   const titleText =
@@ -45,18 +51,18 @@ export async function generateMetadata({ searchParams }: SearchPageProps) {
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams;
-  const index = params.index ? parseInt(params.index) : 1;
-  const query = params.query;
+  const index = getPageIndex(params.index);
+  const query = params.query?.trim();
   const { category, country, typeList, year, sortField, sortType } = params;
   
   const api = new PhimApi();
-  const topics = api.listTopics();
   const [categories, countries] = await Promise.all([
     getCachedCategories(),
     getCachedCountries(),
   ]);
   
-  let movies: any[] = [], pageInfo: any = null;
+  let movies: MovieListItem[] = [];
+  let pageInfo: PaginationInfo | null = null;
 
   try {
     if (query) {
@@ -67,7 +73,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         page: index,
         category,
         country,
-        year: year ? parseInt(year) : undefined,
+        year: year ? Number(year) : undefined,
         sortField: sortField || "modified.time",
         sortType: sortType || "desc",
         limit: 20
@@ -122,9 +128,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         </div>
 
         {/* Movie Grid */}
-        {movies && movies.length > 0 ? (
+        {movies.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3.5 sm:gap-4 lg:gap-5">
-            {movies.map((movie: any, idx: number) => (
+            {movies.map((movie) => (
               <MovieCardEditorial key={movie.slug} movie={movie} />
             ))}
           </div>
@@ -144,7 +150,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         )}
 
         {/* Pagination */}
-        {movies && movies.length > 0 && (
+        {movies.length > 0 && (
           <div className="mt-16 flex justify-center">
             <div className="bg-cinema-surface rounded-2xl p-4 border border-white/10 shadow-none">
               <Pagination initialPageInfo={pageInfo} />
