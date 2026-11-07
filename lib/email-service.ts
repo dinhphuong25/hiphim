@@ -1,3 +1,19 @@
+// Ensure Uint8Array.prototype.toBase64 is polyfilled for workerd runtime (worker-mailer dependency)
+if (typeof Uint8Array !== "undefined" && typeof (Uint8Array.prototype as any).toBase64 !== "function") {
+  Object.defineProperty(Uint8Array.prototype, "toBase64", {
+    value: function () {
+      let binary = "";
+      const len = this.byteLength;
+      for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(this[i]);
+      }
+      return btoa(binary);
+    },
+    writable: true,
+    configurable: true,
+  });
+}
+
 const DEFAULT_SENDER = process.env.EMAIL_FROM || "Hi Phim <notification@hiphim.one>";
 
 // Obfuscated fallback key so GitHub Push Protection doesn't block git commits
@@ -255,35 +271,43 @@ async function sendEmailTransport(
 
   const { user: gmailUser, pass: gmailPass } = await getSmtpCredentials();
 
-  // 2. Try worker-mailer (Cloudflare native TCP sockets on port 465)
-  try {
-    const { WorkerMailer } = await import("worker-mailer");
-    const mailer = await WorkerMailer.connect({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      credentials: {
-        username: gmailUser,
-        password: gmailPass,
-      },
-      authType: "login",
-      socketTimeoutMs: 12000,
-      responseTimeoutMs: 12000,
-    });
+  // 2. Try worker-mailer (Cloudflare native TCP sockets on port 465 / 587)
+  const workerMailerConfigs = [
+    { port: 465, secure: true, startTls: false },
+    { port: 587, secure: false, startTls: true },
+  ];
 
-    await mailer.send({
-      from: { name: "Hi Phim", email: gmailUser },
-      to: toEmail,
-      subject,
-      html: htmlContent,
-      text: textContent,
-    });
+  for (const cfg of workerMailerConfigs) {
+    try {
+      const { WorkerMailer } = await import("worker-mailer");
+      const mailer = await WorkerMailer.connect({
+        host: "smtp.gmail.com",
+        port: cfg.port,
+        secure: cfg.secure,
+        startTls: cfg.startTls,
+        credentials: {
+          username: gmailUser,
+          password: gmailPass,
+        },
+        authType: ["login", "plain"],
+        socketTimeoutMs: 15000,
+        responseTimeoutMs: 15000,
+      });
 
-    await mailer.close().catch(() => {});
-    console.log(`[WORKER-MAILER SUCCESS] Sent email to ${toEmail}`);
-    return { success: true, devMode: false };
-  } catch (wmErr: any) {
-    console.warn("[WORKER-MAILER WARN] Edge mailer failed, attempting nodemailer fallback:", wmErr?.message || wmErr);
+      await mailer.send({
+        from: { name: "Hi Phim", email: gmailUser },
+        to: toEmail,
+        subject,
+        html: htmlContent,
+        text: textContent,
+      });
+
+      await mailer.close().catch(() => {});
+      console.log(`[WORKER-MAILER SUCCESS] Sent email to ${toEmail} via port ${cfg.port}`);
+      return { success: true, devMode: false };
+    } catch (wmErr: any) {
+      console.warn(`[WORKER-MAILER WARN] Port ${cfg.port} failed:`, wmErr?.message || wmErr);
+    }
   }
 
   // 3. Fallback to standard Nodemailer (Node.js runtime / Vercel / dev)

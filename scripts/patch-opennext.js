@@ -49,4 +49,21 @@ patchFile("node_modules/@opennextjs/cloudflare/dist/cli/build/patches/plugins/wr
   );
 });
 
+// 4. Polyfill Uint8Array.prototype.toBase64 for worker-mailer
+const polyfillCode = `if(typeof Uint8Array.prototype.toBase64!=="function"){Object.defineProperty(Uint8Array.prototype,"toBase64",{value:function(){var b="";for(var i=0;i<this.byteLength;i++){b+=String.fromCharCode(this[i]);}return btoa(b);},writable:true,configurable:true});}\n`;
+
+patchFile("node_modules/worker-mailer/dist/index.mjs", (content) => {
+  if (content.includes("Uint8Array.prototype.toBase64")) {
+    return content;
+  }
+  return polyfillCode + content;
+});
+
+patchFile("node_modules/worker-mailer/dist/index.js", (content) => {
+  if (content.includes("Uint8Array.prototype.toBase64")) {
+    return content;
+  }
+  return polyfillCode + content;
+});
+
 console.log("[patch-opennext] Patch execution completed.");
