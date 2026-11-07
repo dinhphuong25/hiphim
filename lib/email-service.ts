@@ -15,6 +15,19 @@ if (typeof Uint8Array !== "undefined" && typeof (Uint8Array.prototype as any).to
 }
 
 const DEFAULT_SENDER = process.env.EMAIL_FROM || "Hi Phim <notification@hiphim.one>";
+const DEFAULT_APP_URL = "https://hiphim.one";
+
+function getPublicAppUrl(): string {
+  return (
+    process.env.NEXT_PUBLIC_APP_URL ||
+    (globalThis as any)?.__ENV__?.NEXT_PUBLIC_APP_URL ||
+    DEFAULT_APP_URL
+  ).replace(/\/+$/, "");
+}
+
+function getBrandLogoUrl(): string {
+  return `${getPublicAppUrl()}/favicon.png`;
+}
 
 // Obfuscated fallback key so GitHub Push Protection doesn't block git commits
 const FALLBACK_RESEND_KEY = Buffer.from(
@@ -85,9 +98,7 @@ export function generateOtpEmailHtml(otp: string, userName?: string): string {
               
               <!-- Brand Logo -->
               <div style="display: inline-block; margin-bottom: 20px;">
-                <span style="font-size: 26px; font-weight: 900; color: #ffffff; letter-spacing: -0.5px;">
-                  Hi <span style="color: #22c55e;">Phim</span>
-                </span>
+                <img src="${getBrandLogoUrl()}" width="72" height="72" alt="Hi Phim" style="display: block; width: 72px; height: 72px; border: 0; margin: 0 auto;" />
               </div>
 
               <!-- Title -->
@@ -162,9 +173,7 @@ export function generatePasswordResetEmailHtml(otp: string, userName?: string): 
               
               <!-- Brand Logo -->
               <div style="display: inline-block; margin-bottom: 20px;">
-                <span style="font-size: 26px; font-weight: 900; color: #ffffff; letter-spacing: -0.5px;">
-                  Hi <span style="color: #22c55e;">Phim</span>
-                </span>
+                <img src="${getBrandLogoUrl()}" width="72" height="72" alt="Hi Phim" style="display: block; width: 72px; height: 72px; border: 0; margin: 0 auto;" />
               </div>
 
               <!-- Title -->

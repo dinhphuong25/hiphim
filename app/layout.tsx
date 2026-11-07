@@ -276,11 +276,18 @@ export default function RootLayout({
           expand={false}
           closeButton
           theme="dark"
+          offset={16}
           toastOptions={{
-            style: {
-              background: "hsl(217 19% 10%)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              color: "#fff",
+            duration: 4200,
+            classNames: {
+              toast: "hiphim-toast",
+              title: "hiphim-toast-title",
+              description: "hiphim-toast-description",
+              closeButton: "hiphim-toast-close",
+              success: "hiphim-toast-success",
+              error: "hiphim-toast-error",
+              warning: "hiphim-toast-warning",
+              info: "hiphim-toast-info",
             },
           }}
         />

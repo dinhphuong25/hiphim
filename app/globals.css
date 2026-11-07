@@ -75,6 +75,158 @@
   }
 }
 
+/* Compact cinematic toast surface used for auth and playback feedback. */
+.toaster[data-sonner-toaster][data-x-position="right"] {
+  right: 16px;
+}
+
+.toaster [data-sonner-toast].hiphim-toast {
+  width: min(390px, calc(100vw - 32px));
+  min-height: 64px;
+  padding: 14px 42px 14px 16px;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.07), transparent 46%),
+    rgba(13, 19, 16, 0.94);
+  box-shadow:
+    0 18px 48px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+  color: var(--cinema-text);
+  overflow: hidden;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.toaster [data-sonner-toast].hiphim-toast:hover {
+  border-color: rgba(32, 214, 107, 0.35);
+  box-shadow:
+    0 20px 52px rgba(0, 0, 0, 0.46),
+    0 0 0 1px rgba(32, 214, 107, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.toaster [data-sonner-toast].hiphim-toast::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 0 999px 999px 0;
+  background: var(--brand-green);
+  box-shadow: 0 0 14px rgba(32, 214, 107, 0.45);
+}
+
+.toaster [data-sonner-toast].hiphim-toast-error::after {
+  background: #fb7185;
+  box-shadow: 0 0 14px rgba(251, 113, 133, 0.4);
+}
+
+.toaster [data-sonner-toast].hiphim-toast-warning::after {
+  background: #fbbf24;
+  box-shadow: 0 0 14px rgba(251, 191, 36, 0.35);
+}
+
+.toaster [data-sonner-toast].hiphim-toast-info::after {
+  background: #60a5fa;
+  box-shadow: 0 0 14px rgba(96, 165, 250, 0.35);
+}
+
+.toaster [data-sonner-toast].hiphim-toast [data-icon] {
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  flex: 0 0 30px;
+  border: 1px solid rgba(32, 214, 107, 0.18);
+  border-radius: 10px;
+  background: rgba(32, 214, 107, 0.12);
+  color: var(--brand-green);
+}
+
+.toaster [data-sonner-toast].hiphim-toast-error [data-icon] {
+  border-color: rgba(251, 113, 133, 0.2);
+  background: rgba(251, 113, 133, 0.12);
+  color: #fb7185;
+}
+
+.toaster [data-sonner-toast].hiphim-toast-warning [data-icon] {
+  border-color: rgba(251, 191, 36, 0.2);
+  background: rgba(251, 191, 36, 0.12);
+  color: #fbbf24;
+}
+
+.toaster [data-sonner-toast].hiphim-toast-info [data-icon] {
+  border-color: rgba(96, 165, 250, 0.2);
+  background: rgba(96, 165, 250, 0.12);
+  color: #60a5fa;
+}
+
+.hiphim-toast-title {
+  color: #f5f7f4;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.hiphim-toast-description {
+  margin-top: 3px;
+  color: rgba(244, 245, 242, 0.58);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.toaster [data-sonner-toast].hiphim-toast .hiphim-toast-close {
+  top: 9px;
+  right: 9px;
+  width: 25px;
+  height: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.46);
+  opacity: 1;
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.toaster [data-sonner-toast].hiphim-toast .hiphim-toast-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+@media (max-width: 640px) {
+  .toaster[data-sonner-toaster][data-x-position="right"] {
+    right: 8px;
+    left: 8px;
+    width: auto;
+  }
+
+  .toaster [data-sonner-toast].hiphim-toast {
+    width: 100%;
+    min-height: 60px;
+    padding-left: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toaster [data-sonner-toast].hiphim-toast,
+  .toaster [data-sonner-toast].hiphim-toast .hiphim-toast-close {
+    transition: none;
+  }
+}
+
   /* ============================================================
      CINEMA SINGLE SCROLLBAR SYSTEM
      Luôn chỉ có DUY NHẤT một thanh scroll ở ngoài cùng mép màn hình.
