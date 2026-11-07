@@ -55,11 +55,7 @@ export async function GET() {
     }
 
     const isSuper = isSuperAdmin(user);
-    const role = isSuper
-      ? "superadmin"
-      : user.email?.toLowerCase() === "kimdinhphuong205@gmail.com"
-      ? "vip"
-      : (user.role || "user");
+    const role = isSuper ? "superadmin" : (user.role || "user");
 
     // Check if temporary ban has expired
     let isLocked = Boolean(user.isLocked);

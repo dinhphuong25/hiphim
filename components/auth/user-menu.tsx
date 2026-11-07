@@ -76,7 +76,10 @@ export default function UserMenu() {
 
   // Logged in -> Show User Avatar & Dropdown Menu
   const initial = (user.name || user.email || "U").charAt(0).toUpperCase();
-  const isSuperAdmin = user.role === "superadmin" || user.role === "admin";
+  const isSuperAdmin =
+    user.role === "superadmin" ||
+    user.role === "admin" ||
+    user.email?.toLowerCase() === "kimdinhphuong205@gmail.com";
   const isVip = user.role === "vip" || user.email?.toLowerCase() === "kimdinhphuong205@gmail.com";
 
   return (
@@ -96,11 +99,16 @@ export default function UserMenu() {
         <div className={cn(
           "w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-lg font-black text-xs sm:text-[13px] flex items-center justify-center shrink-0 relative",
           isSuperAdmin
-            ? "bg-gradient-to-tr from-amber-400 via-emerald-400 to-brand-green text-black shadow-[0_0_12px_rgba(251,191,36,0.5)] ring-1.5 ring-amber-400/60"
+            ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-500 text-black shadow-[0_0_16px_rgba(251,191,36,0.7)] ring-1.5 ring-amber-300"
             : "bg-gradient-to-tr from-brand-green to-emerald-300 text-black shadow-[0_0_10px_rgba(32,214,107,0.4)]"
         )}>
           {initial}
-          {(isSuperAdmin || isVip) && (
+          {isSuperAdmin && (
+            <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-amber-400 text-black flex items-center justify-center ring-1 ring-[#111714] shadow-[0_0_6px_rgba(251,191,36,0.9)]">
+              <Crown className="w-2 h-2 fill-current" />
+            </span>
+          )}
+          {!isSuperAdmin && isVip && (
             <span className="sm:hidden absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-amber-400 text-black flex items-center justify-center ring-1 ring-[#111714]">
               <Crown className="w-2 h-2 fill-current" />
             </span>
@@ -112,11 +120,11 @@ export default function UserMenu() {
           {user.name || user.email.split("@")[0]}
         </span>
 
-        {/* Super Admin / VIP Pill Badge */}
+        {/* Super Admin Ultra Badge / VIP Pill Badge */}
         {isSuperAdmin ? (
-          <span className="hidden md:inline-flex items-center gap-1.5 text-[10.5px] font-black uppercase px-2.5 py-0.5 rounded-md bg-gradient-to-r from-amber-400/25 via-amber-500/20 to-yellow-500/15 text-amber-300 border border-amber-400/40 shadow-[0_0_10px_rgba(251,191,36,0.25)] tracking-wide">
-            <Crown className="w-3 h-3 text-amber-300" />
-            Admin
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase px-2.5 py-0.5 rounded-lg bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-black shadow-[0_0_15px_rgba(251,191,36,0.6)] ring-1 ring-amber-200/90 tracking-wider">
+            <Crown className="w-3.5 h-3.5 fill-black stroke-black shrink-0" />
+            <span>Admin</span>
           </span>
         ) : isVip ? (
           <span className="hidden md:inline-flex items-center gap-1.5 text-[10.5px] font-black uppercase px-2.5 py-0.5 rounded-md bg-gradient-to-r from-amber-400/25 to-yellow-500/15 text-amber-300 border border-amber-400/40 shadow-[0_0_10px_rgba(251,191,36,0.2)] tracking-wide">
@@ -138,39 +146,58 @@ export default function UserMenu() {
         <div className="absolute right-0 mt-2 w-[calc(100vw-24px)] max-w-[330px] rounded-3xl bg-[#0c120e]/95 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_40px_rgba(32,214,107,0.12)] p-3 z-[100] backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-150 select-none">
           
           {/* Top User Info Card */}
-          <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/5 mb-2.5">
+          <div className={cn(
+            "p-3.5 rounded-2xl border mb-2.5 shadow-inner",
+            isSuperAdmin
+              ? "bg-gradient-to-br from-amber-500/[0.12] via-yellow-500/[0.04] to-transparent border-amber-400/30 shadow-[0_0_25px_rgba(251,191,36,0.1)]"
+              : "bg-white/[0.03] border-white/5"
+          )}>
             <div className="flex items-center gap-3">
               <div className={cn(
-                "w-11 h-11 rounded-2xl font-black text-base flex items-center justify-center shrink-0 shadow-lg relative",
+                "w-12 h-12 rounded-2xl font-black text-lg flex items-center justify-center shrink-0 shadow-lg relative",
                 isSuperAdmin
-                  ? "bg-gradient-to-tr from-amber-400 via-emerald-400 to-brand-green text-black ring-2 ring-amber-400/50 shadow-[0_0_20px_rgba(251,191,36,0.3)]"
+                  ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-500 text-black ring-2 ring-amber-300 shadow-[0_0_25px_rgba(251,191,36,0.55)]"
+                  : isVip
+                  ? "bg-gradient-to-tr from-amber-400 to-yellow-500 text-black ring-2 ring-amber-400/50 shadow-[0_0_15px_rgba(251,191,36,0.3)]"
                   : "bg-gradient-to-tr from-brand-green to-emerald-400 text-black ring-2 ring-brand-green/40 shadow-[0_0_15px_rgba(34,197,94,0.3)]"
               )}>
                 {initial}
                 {isSuperAdmin && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-400 flex items-center justify-center text-[10px] text-black ring-2 ring-[#0c120f]">
-                    <Crown className="w-2.5 h-2.5" />
+                  <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-gradient-to-r from-amber-400 to-yellow-300 flex items-center justify-center text-black shadow-md ring-2 ring-[#0c120f]">
+                    <Crown className="w-3 h-3 fill-black stroke-black" />
                   </span>
                 )}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-bold text-white truncate flex items-center gap-1.5">
-                  {user.name}
+                <p className="text-sm font-extrabold text-white truncate flex items-center gap-1.5">
+                  <span className="truncate">{user.name}</span>
                   {isSuperAdmin ? (
-                    <Crown className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-amber-400 text-black shadow-[0_0_8px_rgba(251,191,36,0.8)] shrink-0" title="Quản Trị Viên Tối Cao">
+                      <ShieldCheck className="w-3 h-3 stroke-[2.5]" />
+                    </span>
                   ) : isVip ? (
                     <Crown className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                   ) : (
                     <ShieldCheck className="w-3.5 h-3.5 text-brand-green shrink-0" />
                   )}
                 </p>
-                <p className="text-xs text-white/50 truncate font-mono">{user.email}</p>
-                {isVip && !isSuperAdmin && (
+                <p className="text-[11px] text-white/50 truncate font-mono mt-0.5">{user.email}</p>
+                
+                {/* Ultra Luxury Badge */}
+                {isSuperAdmin ? (
+                  <div className="inline-flex items-center gap-1.5 mt-2 px-2.5 py-0.5 rounded-lg bg-gradient-to-r from-amber-500/25 via-yellow-500/20 to-amber-600/25 border border-amber-400/60 shadow-[0_0_14px_rgba(251,191,36,0.3)]">
+                    <Sparkles className="w-3 h-3 text-amber-300 shrink-0 animate-pulse" />
+                    <span className="text-[10px] font-black uppercase tracking-wider bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-400 bg-clip-text text-transparent">
+                      Quản Trị Viên Tối Cao
+                    </span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.9)]" />
+                  </div>
+                ) : isVip ? (
                   <span className="inline-flex items-center gap-1 mt-1 text-[9.5px] font-bold text-amber-300 bg-amber-400/10 border border-amber-400/30 px-1.5 py-0.5 rounded-md">
                     <Sparkles className="w-2.5 h-2.5" />
                     Thành Viên VIP (Không Quảng Cáo)
                   </span>
-                )}
+                ) : null}
               </div>
             </div>
           </div>
@@ -251,56 +278,6 @@ export default function UserMenu() {
             </div>
           )}
 
-          {/* Personal Menu Items */}
-          <div className="space-y-1">
-            <div className="px-2 pt-1 pb-1 text-[10px] font-bold text-white/40 uppercase tracking-wider">
-              Cá Nhân & Tiện Ích
-            </div>
-
-            <Link
-              href="/favorites"
-              onClick={() => setIsOpen(false)}
-              className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-white/80 hover:text-white hover:bg-white/[0.06] transition-colors group"
-            >
-              <div className="flex items-center gap-2.5">
-                <Heart className="w-4 h-4 text-white/50 group-hover:text-red-400 transition-colors" />
-                <span>Phim Yêu Thích</span>
-              </div>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-white/60 font-mono">
-                Đồng bộ
-              </span>
-            </Link>
-
-            <Link
-              href="/recently"
-              onClick={() => setIsOpen(false)}
-              className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-white/80 hover:text-white hover:bg-white/[0.06] transition-colors group"
-            >
-              <div className="flex items-center gap-2.5">
-                <History className="w-4 h-4 text-white/50 group-hover:text-brand-green transition-colors" />
-                <span>Lịch Sử Xem</span>
-              </div>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-white/60 font-mono">
-                Đồng bộ
-              </span>
-            </Link>
-
-            <button
-              type="button"
-              onClick={handleManualSync}
-              disabled={isSyncing}
-              className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-white/80 hover:text-white hover:bg-white/[0.06] transition-colors group"
-            >
-              <div className="flex items-center gap-2.5">
-                <RefreshCw className={cn("w-4 h-4 text-white/50 group-hover:text-brand-green transition-colors", isSyncing && "animate-spin text-brand-green")} />
-                <span>Đồng Bộ Ngay</span>
-              </div>
-              <span className="text-[10px] text-brand-green font-mono">
-                {isSyncing ? "Đang lưu..." : "Sẵn sàng"}
-              </span>
-            </button>
-          </div>
-
           <div className="border-t border-white/10 my-1.5" />
 
           {/* Logout Button */}
@@ -313,7 +290,7 @@ export default function UserMenu() {
                 window.location.href = "/";
               }
             }}
-            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors cursor-pointer"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all cursor-pointer active:scale-95"
           >
             <LogOut className="w-4 h-4" />
             <span>Đăng Xuất</span>

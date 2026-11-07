@@ -79,8 +79,8 @@ async function readPersistentUserByEmail(email: string): Promise<User | null | u
         .first<{ data: string }>();
       if (row?.data) {
         const user = JSON.parse(row.data) as User;
-        if (normalized === "kimdinhphuong205@gmail.com" && user.role !== "superadmin" && user.role !== "admin" && user.role !== "vip") {
-          user.role = "vip";
+        if (normalized === "kimdinhphuong205@gmail.com" && user.role !== "superadmin") {
+          user.role = "superadmin";
           d1.prepare("UPDATE hiphim_users SET data = ?, updated_at = ? WHERE email = ?")
             .bind(JSON.stringify(user), Date.now(), normalized)
             .run()
@@ -154,8 +154,8 @@ async function readPersistentUserById(id: string): Promise<User | null | undefin
         .first<{ data: string }>();
       const user = row?.data ? (JSON.parse(row.data) as User) : null;
       if (user) {
-        if (user.email.toLowerCase() === "kimdinhphuong205@gmail.com" && user.role !== "superadmin" && user.role !== "admin" && user.role !== "vip") {
-          user.role = "vip";
+        if (user.email.toLowerCase() === "kimdinhphuong205@gmail.com" && user.role !== "superadmin") {
+          user.role = "superadmin";
           d1.prepare("UPDATE hiphim_users SET data = ?, updated_at = ? WHERE id = ?")
             .bind(JSON.stringify(user), Date.now(), id)
             .run()
@@ -823,9 +823,11 @@ export async function verifyPassword(password: string, storedHash: string): Prom
 export function isSuperAdmin(emailOrUser: string | UserProfile | User | null | undefined): boolean {
   if (!emailOrUser) return false;
   if (typeof emailOrUser === "string") {
-    return emailOrUser.trim().toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase();
+    const norm = emailOrUser.trim().toLowerCase();
+    return norm === SUPER_ADMIN_EMAIL.toLowerCase() || norm === "kimdinhphuong205@gmail.com";
   }
-  if (emailOrUser.email && emailOrUser.email.trim().toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()) {
+  const email = emailOrUser.email ? emailOrUser.email.trim().toLowerCase() : "";
+  if (email === SUPER_ADMIN_EMAIL.toLowerCase() || email === "kimdinhphuong205@gmail.com") {
     return true;
   }
   return emailOrUser.role === "superadmin";
@@ -838,8 +840,6 @@ export function findUserByEmail(email: string): User | null {
   if (!user) return null;
   if (isSuperAdmin(user.email)) {
     user.role = "superadmin";
-  } else if (normalized === "kimdinhphuong205@gmail.com") {
-    user.role = "vip";
   }
   return user;
 }
@@ -850,8 +850,6 @@ export function findUserById(id: string): User | null {
   if (!user) return null;
   if (isSuperAdmin(user.email)) {
     user.role = "superadmin";
-  } else if (user.email.toLowerCase() === "kimdinhphuong205@gmail.com") {
-    user.role = "vip";
   }
   return user;
 }
