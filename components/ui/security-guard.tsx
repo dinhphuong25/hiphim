@@ -115,20 +115,22 @@ export default function SecurityGuard() {
       );
     };
 
+    const removeDownloaderElement = (el: HTMLElement) => {
+      try {
+        el.remove();
+      } catch {
+        el.style.setProperty("display", "none", "important");
+        el.style.setProperty("visibility", "hidden", "important");
+        el.style.setProperty("pointer-events", "none", "important");
+      }
+    };
+
     const purgeDownloaderElements = () => {
       try {
         const suspicious = document.querySelectorAll(
-          '#__idm_frm__, #__idm_rpc__, #idm_net_panel, #idm_net_panel_bar, .idm_net_panel, [id*="idm_net_panel"], [class*="idm_net_panel"], [id^="__idm_"], div[id^="idm_"], iframe[id^="__idm_"], .coccoc-video-downloader, [class*="coccoc-download"], [id*="coccoc-download"], [class*="video-download-helper"], [class*="fetchv-"], [class*="cococut-"]'
+          '#__idm_frm__, #__idm_rpc__, #idm_net_panel, #idm_net_panel_bar, .idm_net_panel, [id*="idm_net_panel"], [class*="idm_net_panel"], [id^="__idm_"], div[id^="idm_"], iframe[id^="__idm_"], embed[type*="idm"], .coccoc-video-downloader, [class*="coccoc-download"], [id*="coccoc-download"], [class*="video-download-helper"], [id*="video-download-helper"], [class*="vget-download"], [id*="vget-download"], [class*="fetchv-"], [id*="fetchv-"], [class*="cococut-"], [id*="cococut-"]'
         );
-        suspicious.forEach((node) => {
-          try {
-            node.remove();
-          } catch {
-            (node as HTMLElement).style.setProperty("display", "none", "important");
-            (node as HTMLElement).style.setProperty("visibility", "hidden", "important");
-            (node as HTMLElement).style.setProperty("pointer-events", "none", "important");
-          }
-        });
+        suspicious.forEach((node) => removeDownloaderElement(node as HTMLElement));
       } catch {}
     };
 
@@ -152,13 +154,11 @@ export default function SecurityGuard() {
               if (node.nodeType === 1) {
                 const el = node as HTMLElement;
                 if (isDownloaderElement(el)) {
-                  try {
-                    el.remove();
-                  } catch {
-                    el.style.setProperty("display", "none", "important");
-                    el.style.setProperty("visibility", "hidden", "important");
-                    el.style.setProperty("pointer-events", "none", "important");
-                  }
+                  removeDownloaderElement(el);
+                } else {
+                  el.querySelectorAll<HTMLElement>("*").forEach((child) => {
+                    if (isDownloaderElement(child)) removeDownloaderElement(child);
+                  });
                 }
               }
             }

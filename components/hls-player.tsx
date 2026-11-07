@@ -19,7 +19,16 @@ const HLSPlayer = ({ videoUrl }: { videoUrl: string }) => {
 
   return (
     <div>
-      <video ref={videoRef} className="w-full h-full rounded-lg" controls />
+      <video
+        ref={videoRef}
+        className="w-full h-full rounded-lg"
+        controls
+        controlsList="nodownload noplaybackrate nofullscreen noremoteplayback"
+        disablePictureInPicture
+        disableRemotePlayback
+        onContextMenu={(event) => event.preventDefault()}
+        draggable={false}
+      />
     </div>
   );
 };

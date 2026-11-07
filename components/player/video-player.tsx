@@ -2460,7 +2460,7 @@ export default function VideoPlayer({
           (videoRef as any).current = el;
           if (el) {
             try {
-              el.disablePictureInPicture = false;
+              el.disablePictureInPicture = true;
             } catch {}
           }
         }} 
@@ -2468,6 +2468,7 @@ export default function VideoPlayer({
         controls={false}
         controlsList="nodownload noplaybackrate nofullscreen noremoteplayback"
         disableRemotePlayback
+        disablePictureInPicture
         onContextMenu={(e) => { e.preventDefault(); e.stopPropagation(); }}
         onDragStart={(e) => e.preventDefault()}
         draggable={false}
