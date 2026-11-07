@@ -1953,7 +1953,7 @@ export default function AdminDashboardPage() {
                       <span>{config.maintenance.enabled ? "TẮT BẢO TRÌ NGAY (Mở Web)" : "BẬT CHẾ ĐỘ BẢO TRÌ"}</span>
                     </button>
                     <div className="flex items-center justify-between text-[11px] text-white/40 pt-1">
-                      <Link href="/maintenance?preview=1" target="_blank" className="hover:text-white underline">
+                      <Link href="/maintenance" target="_blank" className="hover:text-white underline">
                         Xem thử trang bảo trì
                       </Link>
                       <Link href="/?bypass=hiphim_secret_2026" target="_blank" className="hover:text-brand-green underline">
@@ -3131,12 +3131,12 @@ export default function AdminDashboardPage() {
               {/* Quick Links */}
               <div className="pt-2 border-t border-white/10 flex items-center justify-between flex-wrap gap-2 text-xs">
                 <Link
-                  href="/maintenance?preview=1"
+                  href="/maintenance"
                   target="_blank"
                   className="inline-flex items-center gap-1.5 font-bold text-emerald-400 hover:text-emerald-300 hover:underline"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
-                  <span>Xem trước giao diện trang bảo trì (/maintenance?preview=1)</span>
+                  <span>Xem giao diện trang bảo trì (/maintenance)</span>
                 </Link>
                 <span className="text-white/40">
                   Trạng thái hiện tại: <strong className={config.maintenance.enabled ? "text-amber-400" : "text-emerald-400"}>{config.maintenance.enabled ? "Đang Khóa Web" : "Mở Bình Thường"}</strong>

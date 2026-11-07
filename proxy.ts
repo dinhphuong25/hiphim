@@ -419,11 +419,6 @@ export async function proxy(request: NextRequest) {
         }
     }
 
-    // When Maintenance is OFF: If visitor navigates to /maintenance, redirect back to /
-    if (pathname === '/maintenance' && !isMaintenanceActive && !request.nextUrl.searchParams.has('preview')) {
-        const homeUrl = new URL('/', request.url);
-        return NextResponse.redirect(homeUrl, 307);
-    }
 
     // If valid custom bypass token was passed in query, set cookie and redirect to clean URL
     if (hasCustomSecret && bypassToken === configuredSecret) {

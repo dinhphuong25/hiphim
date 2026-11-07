@@ -1,69 +1,54 @@
 "use client";
 
-import { useState, useEffect, useCallback, Suspense } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Wrench, RefreshCw } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
 const DEFAULT_REASON =
   "Hệ thống đang được nâng cấp định kỳ để cải thiện dịch vụ và nâng cấp máy chủ. Vui lòng quay lại sau, xin thông cảm vì sự bất tiện này.";
 
-function MaintenanceContent() {
-  const searchParams = useSearchParams();
-  const isPreview = searchParams.get("preview") === "1";
-
+export default function MaintenancePage() {
   const [reason, setReason] = useState<string>(DEFAULT_REASON);
   const [isChecking, setIsChecking] = useState(false);
 
   // Check maintenance status
-  const checkStatus = useCallback(
-    async (isManual = false) => {
-      if (isManual) setIsChecking(true);
-      try {
-        const res = await fetch("/api/system/maintenance", { cache: "no-store" });
-        if (res.ok) {
-          const data = await res.json();
-          if (data?.reason) {
-            const cleanReason = data.reason.replace(
-              /để cải thiện trải nghiệm xem phim\.?/gi,
-              "để cải thiện dịch vụ và nâng cấp máy chủ. Vui lòng quay lại sau, xin thông cảm vì sự bất tiện này."
-            );
-            setReason(cleanReason);
-          }
+  const checkStatus = useCallback(async (isManual = false) => {
+    if (isManual) setIsChecking(true);
+    try {
+      const res = await fetch("/api/system/maintenance", { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        if (data?.reason) {
+          const cleanReason = data.reason.replace(
+            /để cải thiện trải nghiệm xem phim\.?/gi,
+            "để cải thiện dịch vụ và nâng cấp máy chủ. Vui lòng quay lại sau, xin thông cảm vì sự bất tiện này."
+          );
+          setReason(cleanReason);
+        }
 
-          // If maintenance is turned OFF, automatically redirect back to home!
-          if (!data?.enabled && !isPreview) {
-            toast.success("Bảo trì hoàn tất! Đang chuyển hướng về trang chủ...");
+        if (isManual) {
+          if (!data?.enabled) {
+            toast.success("Bảo trì đã hoàn tất! Đang quay lại trang chủ...");
             setTimeout(() => {
               window.location.replace("/");
             }, 600);
             return;
           }
-
-          if (isManual) {
-            if (data?.enabled) {
-              toast.info("Hệ thống vẫn đang trong quá trình bảo trì.");
-            }
-          }
+          toast.info("Hệ thống vẫn đang trong quá trình bảo trì.");
         }
-      } catch {
-        if (isManual) {
-          toast.error("Không thể kết nối đến máy chủ.");
-        }
-      } finally {
-        if (isManual) setIsChecking(false);
       }
-    },
-    [isPreview]
-  );
+    } catch {
+      if (isManual) {
+        toast.error("Không thể kết nối đến máy chủ.");
+      }
+    } finally {
+      if (isManual) setIsChecking(false);
+    }
+  }, []);
 
-  // Run on mount and periodically every 5 seconds
+  // Fetch reason on mount
   useEffect(() => {
     checkStatus(false);
-    const interval = setInterval(() => {
-      checkStatus(false);
-    }, 5000);
-    return () => clearInterval(interval);
   }, [checkStatus]);
 
   return (
@@ -98,13 +83,5 @@ function MaintenanceContent() {
         </button>
       </div>
     </div>
-  );
-}
-
-export default function MaintenancePage() {
-  return (
-    <Suspense fallback={<div className="min-h-screen bg-black" />}>
-      <MaintenanceContent />
-    </Suspense>
   );
 }
