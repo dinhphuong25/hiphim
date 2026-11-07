@@ -494,7 +494,22 @@ export default function AuthModal() {
           {/* Error Message Alert */}
           {errorMessage && (
             <div className="mb-3.5 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs sm:text-sm text-center font-medium animate-in fade-in duration-200">
-              {errorMessage}
+              <p>{errorMessage}</p>
+              {authView === "forgot_email" && errorMessage.includes("chưa được đăng ký") && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const targetEmail = forgotEmail.trim();
+                    setErrorMessage("");
+                    setEmail(targetEmail);
+                    setAuthView("standard");
+                    openAuthModal("register");
+                  }}
+                  className="mt-1.5 text-xs text-brand-green hover:underline font-bold inline-block cursor-pointer"
+                >
+                  👉 Bạn muốn tạo tài khoản mới với email này? Đăng ký ngay
+                </button>
+              )}
             </div>
           )}
 
