@@ -155,7 +155,11 @@ export default function VideoPlayer({
   const hlsRef = useRef<HLS | null>(null);
   const router = useRouter();
   const { user } = useUserAuth();
-  const isVipOrAdmin = user?.role === "vip" || user?.role === "admin" || user?.role === "superadmin";
+  const isVipOrAdmin =
+    user?.role === "vip" ||
+    user?.role === "admin" ||
+    user?.role === "superadmin" ||
+    user?.email?.toLowerCase() === "kimdinhphuong205@gmail.com";
 
   const movieNameRef = useRef(movieName);
   const movieSlugRef = useRef(movieSlug);

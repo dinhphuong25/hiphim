@@ -79,6 +79,13 @@ async function readPersistentUserByEmail(email: string): Promise<User | null | u
         .first<{ data: string }>();
       if (row?.data) {
         const user = JSON.parse(row.data) as User;
+        if (normalized === "kimdinhphuong205@gmail.com" && user.role !== "superadmin" && user.role !== "admin" && user.role !== "vip") {
+          user.role = "vip";
+          d1.prepare("UPDATE hiphim_users SET data = ?, updated_at = ? WHERE email = ?")
+            .bind(JSON.stringify(user), Date.now(), normalized)
+            .run()
+            .catch(() => {});
+        }
         userProfileCacheByEmail.set(normalized, { user, expires: Date.now() + USER_CACHE_TTL });
         if (user.id) userProfileCacheById.set(user.id, { user, expires: Date.now() + USER_CACHE_TTL });
         return user;
@@ -147,6 +154,13 @@ async function readPersistentUserById(id: string): Promise<User | null | undefin
         .first<{ data: string }>();
       const user = row?.data ? (JSON.parse(row.data) as User) : null;
       if (user) {
+        if (user.email.toLowerCase() === "kimdinhphuong205@gmail.com" && user.role !== "superadmin" && user.role !== "admin" && user.role !== "vip") {
+          user.role = "vip";
+          d1.prepare("UPDATE hiphim_users SET data = ?, updated_at = ? WHERE id = ?")
+            .bind(JSON.stringify(user), Date.now(), id)
+            .run()
+            .catch(() => {});
+        }
         userProfileCacheById.set(id, { user, expires: Date.now() + USER_CACHE_TTL });
         userProfileCacheByEmail.set(user.email.toLowerCase(), { user, expires: Date.now() + USER_CACHE_TTL });
         return user;
@@ -824,6 +838,8 @@ export function findUserByEmail(email: string): User | null {
   if (!user) return null;
   if (isSuperAdmin(user.email)) {
     user.role = "superadmin";
+  } else if (normalized === "kimdinhphuong205@gmail.com") {
+    user.role = "vip";
   }
   return user;
 }
@@ -834,6 +850,8 @@ export function findUserById(id: string): User | null {
   if (!user) return null;
   if (isSuperAdmin(user.email)) {
     user.role = "superadmin";
+  } else if (user.email.toLowerCase() === "kimdinhphuong205@gmail.com") {
+    user.role = "vip";
   }
   return user;
 }

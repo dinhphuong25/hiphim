@@ -40,7 +40,11 @@ function trackAdEvent(placement: "popup" | "catfish" | "tvc", event: "impression
 export function AdFloatingSystemComponent() {
   const pathname = usePathname();
   const { user } = useUserAuth();
-  const isVipOrAdmin = user?.role === "vip" || user?.role === "admin" || user?.role === "superadmin";
+  const isVipOrAdmin =
+    user?.role === "vip" ||
+    user?.role === "admin" ||
+    user?.role === "superadmin" ||
+    user?.email?.toLowerCase() === "kimdinhphuong205@gmail.com";
   const [adConfig, setAdConfig] = useState<AdConfig>(DEFAULT_AD_CONFIG);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [showBottomBanner, setShowBottomBanner] = useState<boolean>(false);
