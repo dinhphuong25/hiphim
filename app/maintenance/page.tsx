@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, Suspense } from "react";
-import { Wrench, RefreshCw, KeyRound, ArrowRight, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { Wrench, RefreshCw, KeyRound, ArrowRight, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
@@ -11,7 +11,7 @@ function MaintenanceContent() {
   const isPreview = searchParams.get("preview") === "1";
 
   const [reason, setReason] = useState<string>(
-    "Hi Phim đang tiến hành nâng cấp cụm máy chủ và tối ưu hóa hệ thống phát video. Chúng tôi sẽ sớm quay trở lại phục vụ bạn!"
+    "Hệ thống đang được nâng cấp định kỳ để cải thiện trải nghiệm xem phim. Vui lòng quay lại sau ít phút."
   );
   const [isChecking, setIsChecking] = useState(false);
   const [lastChecked, setLastChecked] = useState<string>("");
@@ -33,7 +33,7 @@ function MaintenanceContent() {
 
           // If maintenance is turned OFF, automatically redirect back to home!
           if (!data?.enabled && !isPreview) {
-            toast.success("Bảo trì đã hoàn tất! Đang chuyển hướng về trang chủ...");
+            toast.success("Bảo trì hoàn tất! Đang chuyển hướng về trang chủ...");
             setTimeout(() => {
               window.location.replace("/");
             }, 600);
@@ -42,13 +42,13 @@ function MaintenanceContent() {
 
           if (isManual) {
             if (data?.enabled) {
-              toast.info("Hệ thống vẫn đang trong quá trình bảo trì. Vui lòng quay lại sau ít phút!");
+              toast.info("Hệ thống vẫn đang trong quá trình bảo trì.");
             }
           }
         }
       } catch {
         if (isManual) {
-          toast.error("Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại mạng!");
+          toast.error("Không thể kết nối đến máy chủ.");
         }
       } finally {
         setLastChecked(
@@ -87,7 +87,7 @@ function MaintenanceContent() {
       );
       const data = await res.json();
       if (data.success) {
-        toast.success("Xác thực quản trị viên thành công! Đang chuyển hướng...");
+        toast.success("Xác thực quản trị viên thành công!");
         setTimeout(() => {
           window.location.replace("/?bypass=" + encodeURIComponent(bypassToken.trim()));
         }, 600);
@@ -102,134 +102,134 @@ function MaintenanceContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#060A08] text-[#F3F4F6] flex flex-col justify-between p-4 sm:p-8 relative overflow-hidden select-none">
-      {/* Subtle Ambient Emerald Lighting */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-emerald-500/[0.08] rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-brand-green/[0.04] rounded-full blur-[120px] pointer-events-none" />
-
+    <div className="min-h-screen bg-black text-white flex flex-col justify-between p-4 sm:p-6 relative select-none font-sans">
       {/* Top Header / Branding */}
-      <header className="w-full max-w-4xl mx-auto flex items-center justify-between py-2 z-10">
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-green to-emerald-700 flex items-center justify-center text-black font-black text-xl shadow-[0_0_20px_rgba(32,214,107,0.35)] group-hover:scale-105 transition-transform">
+      <header className="w-full max-w-2xl mx-auto flex items-center justify-between py-2 z-10">
+        <Link href="/" className="flex items-center gap-2 group">
+          <div className="w-7 h-7 rounded-lg bg-white text-black font-black text-xs flex items-center justify-center transition-transform group-hover:scale-105">
             H
           </div>
-          <span className="font-extrabold text-xl tracking-tight text-white">
-            Hi <span className="text-brand-green">Phim</span>
+          <span className="font-bold text-sm tracking-tight text-white">
+            Hi Phim
           </span>
         </Link>
 
         <div className="flex items-center gap-2">
           {isPreview && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              Chế độ Xem trước
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-white/10 text-white/70 border border-white/15">
+              <ShieldCheck className="w-3 h-3 text-white" />
+              Xem trước
             </span>
           )}
-          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-500/10 border border-amber-500/30 text-amber-300">
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-            ĐANG BẢO TRÌ HỆ THỐNG
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-white/10 border border-white/20 text-white">
+            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+            BẢO TRÌ HỆ THỐNG
           </span>
         </div>
       </header>
 
-      {/* Main Focus Stage */}
-      <main className="w-full max-w-lg mx-auto my-auto text-center z-10 flex flex-col items-center py-6 sm:py-10">
-        {/* Minimalist Icon Squircle */}
-        <div className="relative mb-6">
-          <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-3xl bg-[#0D1410] border border-white/10 flex items-center justify-center shadow-[0_8px_32px_rgba(0,0,0,0.6)] backdrop-blur-xl relative">
-            <div className="absolute inset-0 rounded-3xl bg-emerald-500/10 blur-md pointer-events-none" />
-            <Wrench className="w-9 h-9 sm:w-10 sm:h-10 text-emerald-400 relative z-10" />
+      {/* Main Focus: Black & White Minimalist Notification Popup */}
+      <main className="w-full max-w-md mx-auto my-auto z-10 flex flex-col items-center py-6">
+        <div className="w-full rounded-2xl bg-[#0e0e0e] border border-white/15 p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.9)] backdrop-blur-xl text-center relative animate-in fade-in zoom-in-95 duration-200">
+          
+          {/* Top Icon */}
+          <div className="w-12 h-12 rounded-xl bg-white/[0.08] border border-white/15 flex items-center justify-center text-white mx-auto mb-4">
+            <Wrench className="w-5 h-5 text-white" strokeWidth={2} />
           </div>
-        </div>
 
-        {/* Heading & Clean Message */}
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight mb-3">
-          Hệ Thống Đang Nâng Cấp & Bảo Trì
-        </h1>
+          {/* Heading */}
+          <h1 className="text-lg sm:text-xl font-bold text-white tracking-tight mb-2">
+            Hệ Thống Đang Nâng Cấp & Bảo Trì
+          </h1>
 
-        <p className="text-white/65 text-sm sm:text-base leading-relaxed max-w-md mb-8">
-          {reason}
-        </p>
+          {/* Message / Reason */}
+          <p className="text-zinc-300 text-xs sm:text-sm leading-relaxed mb-5 font-normal">
+            {reason}
+          </p>
 
-        {/* Action Controls & Live Auto-Refresh */}
-        <div className="w-full max-w-md bg-[#0C130F]/80 border border-white/10 rounded-3xl p-5 sm:p-6 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] space-y-4">
-          <div className="flex items-center justify-between text-xs text-white/50 pb-1">
+          {/* Live Auto-Refresh Status Bar */}
+          <div className="flex items-center justify-between text-[11px] text-zinc-400 bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 mb-5">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
               <span>Tự động kiểm tra trạng thái</span>
             </div>
             {lastChecked && (
-              <span className="font-mono text-[11px] text-white/40">Cập nhật: {lastChecked}</span>
+              <span className="font-mono text-[10.5px] text-zinc-500">
+                {lastChecked}
+              </span>
             )}
           </div>
 
-          <div className="flex items-center gap-3">
+          {/* Action Buttons: Pure Black & White */}
+          <div className="flex items-center gap-2.5">
             <button
               type="button"
               onClick={() => checkStatus(true)}
               disabled={isChecking}
-              className="flex-1 flex items-center justify-center gap-2 py-3 px-5 rounded-2xl bg-gradient-to-r from-brand-green to-emerald-400 hover:from-emerald-400 hover:to-brand-green text-[#051309] font-black text-xs sm:text-sm shadow-[0_0_20px_rgba(32,214,107,0.3)] transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-white hover:bg-zinc-200 text-black font-bold text-xs sm:text-sm transition-all active:scale-95 disabled:opacity-50 cursor-pointer shadow-sm"
             >
-              <RefreshCw className={`w-4 h-4 ${isChecking ? "animate-spin" : ""}`} />
-              <span>{isChecking ? "Đang kiểm tra lại..." : "Tải Lại Trang"}</span>
+              <RefreshCw className={`w-3.5 h-3.5 text-black ${isChecking ? "animate-spin" : ""}`} />
+              <span>{isChecking ? "Đang kiểm tra..." : "Tải Lại Trang"}</span>
             </button>
 
             <Link
               href="/admin"
-              className="px-4 py-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] text-white/80 hover:text-white border border-white/10 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
-              title="Vào trang quản trị (Admin)"
+              className="px-3.5 py-2.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-white border border-white/15 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
+              title="Vào trang quản trị"
             >
-              <span>Admin</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <span>Quản Trị</span>
+              <ArrowRight className="w-3.5 h-3.5 text-white/80" />
             </Link>
           </div>
 
-          <div className="pt-2 border-t border-white/5 flex items-center justify-center">
+          {/* Admin Bypass Toggle */}
+          <div className="pt-4 mt-4 border-t border-white/10 flex flex-col items-center">
             <button
               type="button"
               onClick={() => setShowAdminBypass(!showAdminBypass)}
-              className="text-[11px] text-white/40 hover:text-emerald-400 transition-colors flex items-center gap-1.5 cursor-pointer py-1"
+              className="text-[11px] text-zinc-500 hover:text-white transition-colors flex items-center gap-1.5 cursor-pointer py-0.5"
             >
               <KeyRound className="w-3 h-3" />
-              <span>Nhập mã Bypass truy cập</span>
+              <span>Mã truy cập quản trị viên</span>
             </button>
-          </div>
-        </div>
 
-        {/* Compact Admin Bypass Form */}
-        {showAdminBypass && (
-          <form
-            onSubmit={handleAdminBypassSubmit}
-            className="mt-4 w-full max-w-md p-4 rounded-2xl bg-[#0C130F] border border-white/10 text-left animate-in fade-in zoom-in duration-200"
-          >
-            <label className="block text-[11px] font-bold text-white/70 mb-2">
-              Nhập mã Secret Token để truy cập kiểm thử website:
-            </label>
-            <div className="flex items-center gap-2">
-              <input
-                type="password"
-                value={bypassToken}
-                onChange={(e) => setBypassToken(e.target.value)}
-                placeholder="Nhập mã token bí mật..."
-                className="flex-1 bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-brand-green transition-colors"
-              />
-              <button
-                type="submit"
-                disabled={isSubmittingToken}
-                className="px-4 py-2.5 rounded-xl bg-brand-green hover:bg-brand-green-hover text-black font-bold text-xs flex items-center gap-1 transition-all disabled:opacity-50 cursor-pointer shrink-0"
+            {/* Expandable Bypass Form */}
+            {showAdminBypass && (
+              <form
+                onSubmit={handleAdminBypassSubmit}
+                className="mt-3 w-full p-3 rounded-xl bg-black/60 border border-white/15 text-left animate-in fade-in duration-150"
               >
-                <span>Vào</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </form>
-        )}
+                <label className="block text-[11px] font-medium text-zinc-400 mb-1.5">
+                  Nhập mã Token để truy cập:
+                </label>
+                <div className="flex items-center gap-1.5">
+                  <input
+                    type="password"
+                    value={bypassToken}
+                    onChange={(e) => setBypassToken(e.target.value)}
+                    placeholder="Mã bí mật..."
+                    className="flex-1 bg-black border border-white/20 rounded-lg px-3 py-1.5 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-colors font-mono"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isSubmittingToken}
+                    className="px-3 py-1.5 rounded-lg bg-white hover:bg-zinc-200 text-black font-bold text-xs flex items-center gap-1 transition-all disabled:opacity-50 cursor-pointer shrink-0"
+                  >
+                    <span>Vào</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+
+        </div>
       </main>
 
       {/* Footer */}
-      <footer className="w-full text-center py-3 z-10 border-t border-white/5">
-        <p className="text-xs text-white/40">
-          Hi Phim — Nền tảng xem phim chất lượng cao. Hẹn gặp lại bạn sớm nhất!
+      <footer className="w-full text-center py-2 z-10">
+        <p className="text-[11px] text-zinc-600">
+          Hi Phim — Hệ thống đang được bảo trì định kỳ. Cảm ơn sự kiên nhẫn của bạn.
         </p>
       </footer>
     </div>
@@ -238,7 +238,7 @@ function MaintenanceContent() {
 
 export default function MaintenancePage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#060A08]" />}>
+    <Suspense fallback={<div className="min-h-screen bg-black" />}>
       <MaintenanceContent />
     </Suspense>
   );
