@@ -20,7 +20,7 @@ declare global {
 export function getMaintenanceState(): MaintenanceState {
   const isEnvEnabled = process.env.MAINTENANCE_MODE === "true" || process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "true";
   let configMaintenance = false;
-  let reason = "Hệ thống đang được nâng cấp định kỳ để cải thiện trải nghiệm xem phim.";
+  let reason = "Hệ thống đang được nâng cấp định kỳ để cải thiện dịch vụ và nâng cấp máy chủ. Vui lòng quay lại sau, xin thông cảm vì sự bất tiện này.";
   let estimatedEndTime = "";
 
   try {
@@ -36,6 +36,13 @@ export function getMaintenanceState(): MaintenanceState {
     console.warn("Could not read site config in getMaintenanceState:", err);
   }
 
+  if (reason.includes("trải nghiệm xem phim")) {
+    reason = reason.replace(
+      /để cải thiện trải nghiệm xem phim\.?/gi,
+      "để cải thiện dịch vụ và nâng cấp máy chủ. Vui lòng quay lại sau, xin thông cảm vì sự bất tiện này."
+    );
+  }
+
   const isEnabled = isEnvEnabled || configMaintenance || Boolean(globalThis.__HIPHIM_MAINTENANCE__?.enabled);
 
   return {
@@ -49,7 +56,13 @@ export function getMaintenanceState(): MaintenanceState {
 export function setMaintenanceState(newState: Partial<MaintenanceState>): MaintenanceState {
   const current = getMaintenanceState();
   const isEnabled = newState.enabled !== undefined ? Boolean(newState.enabled) : current.enabled;
-  const reason = newState.reason || current.reason || "Hệ thống đang được nâng cấp định kỳ để cải thiện trải nghiệm xem phim.";
+  let reason = newState.reason || current.reason || "Hệ thống đang được nâng cấp định kỳ để cải thiện dịch vụ và nâng cấp máy chủ. Vui lòng quay lại sau, xin thông cảm vì sự bất tiện này.";
+  if (reason.includes("trải nghiệm xem phim")) {
+    reason = reason.replace(
+      /để cải thiện trải nghiệm xem phim\.?/gi,
+      "để cải thiện dịch vụ và nâng cấp máy chủ. Vui lòng quay lại sau, xin thông cảm vì sự bất tiện này."
+    );
+  }
   const estimatedEndTime = newState.estimatedEndTime || current.estimatedEndTime || "";
 
   // 1. Persist to disk via saveSiteConfig

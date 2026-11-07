@@ -73,7 +73,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
   autoPinLimit: 5,
   maintenance: {
     enabled: false,
-    reason: "Hệ thống đang được nâng cấp định kỳ để cải thiện trải nghiệm xem phim.",
+    reason: "Hệ thống đang được nâng cấp định kỳ để cải thiện dịch vụ và nâng cấp máy chủ. Vui lòng quay lại sau, xin thông cảm vì sự bất tiện này.",
     estimatedEndTime: "",
   },
   player: {

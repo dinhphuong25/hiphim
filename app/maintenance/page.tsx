@@ -5,13 +5,14 @@ import { Wrench, RefreshCw } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
+const DEFAULT_REASON =
+  "Hệ thống đang được nâng cấp định kỳ để cải thiện dịch vụ và nâng cấp máy chủ. Vui lòng quay lại sau, xin thông cảm vì sự bất tiện này.";
+
 function MaintenanceContent() {
   const searchParams = useSearchParams();
   const isPreview = searchParams.get("preview") === "1";
 
-  const [reason, setReason] = useState<string>(
-    "Hệ thống đang được bảo trì định kỳ. Vui lòng quay lại sau ít phút."
-  );
+  const [reason, setReason] = useState<string>(DEFAULT_REASON);
   const [isChecking, setIsChecking] = useState(false);
 
   // Check maintenance status
@@ -23,7 +24,11 @@ function MaintenanceContent() {
         if (res.ok) {
           const data = await res.json();
           if (data?.reason) {
-            setReason(data.reason);
+            const cleanReason = data.reason.replace(
+              /để cải thiện trải nghiệm xem phim\.?/gi,
+              "để cải thiện dịch vụ và nâng cấp máy chủ. Vui lòng quay lại sau, xin thông cảm vì sự bất tiện này."
+            );
+            setReason(cleanReason);
           }
 
           // If maintenance is turned OFF, automatically redirect back to home!
@@ -64,7 +69,7 @@ function MaintenanceContent() {
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-4 select-none font-sans">
       {/* Minimalist Centered Popup */}
-      <div className="w-full max-w-[380px] rounded-2xl bg-[#0d0d0d] border border-white/10 p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.95)] text-center animate-in fade-in zoom-in-95 duration-200">
+      <div className="w-full max-w-[390px] rounded-2xl bg-[#0d0d0d] border border-white/10 p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.95)] text-center animate-in fade-in zoom-in-95 duration-200">
         
         {/* Wrench Icon */}
         <div className="w-12 h-12 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center text-white mx-auto mb-4">
@@ -72,13 +77,13 @@ function MaintenanceContent() {
         </div>
 
         {/* Heading */}
-        <h1 className="text-lg font-bold text-white tracking-tight mb-2">
+        <h1 className="text-lg font-bold text-white tracking-tight mb-2.5">
           Máy Chủ Đang Bảo Trì
         </h1>
 
         {/* Message / Reason */}
         <p className="text-zinc-400 text-xs sm:text-[13px] leading-relaxed mb-6 font-normal">
-          {reason || "Hệ thống đang được bảo trì định kỳ. Vui lòng quay lại sau ít phút."}
+          {reason || DEFAULT_REASON}
         </p>
 
         {/* Single Action Button */}
