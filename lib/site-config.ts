@@ -25,6 +25,13 @@ export interface SiteConfig {
     autoplay: boolean;
     defaultVolume: number;
   };
+  autoRepair?: {
+    enabled?: boolean;
+    autoResolveReports?: boolean;
+    fallbackSources?: string[];
+    ignoreDatacenterFalseAlarm?: boolean;
+    notifyOnFix?: boolean;
+  };
   customFooterText?: string;
   ads?: {
     enabled?: boolean;
@@ -73,6 +80,13 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
     defaultMode: "m3u8",
     autoplay: true,
     defaultVolume: 1,
+  },
+  autoRepair: {
+    enabled: true,
+    autoResolveReports: true,
+    fallbackSources: ["phimapi", "nguonc", "ophim"],
+    ignoreDatacenterFalseAlarm: true,
+    notifyOnFix: true,
   },
   customFooterText: "Hi Phim — Nền tảng xem phim miễn phí.",
   ads: {
@@ -136,6 +150,10 @@ function mergeWithDefaults(parsed: any): SiteConfig {
     player: {
       ...DEFAULT_SITE_CONFIG.player,
       ...(parsed.player || {}),
+    },
+    autoRepair: {
+      ...DEFAULT_SITE_CONFIG.autoRepair,
+      ...(parsed.autoRepair || {}),
     },
     ads: resolvedAds,
   };

@@ -426,6 +426,118 @@ export default function AdminDashboardPage() {
     }
   };
 
+  // --- Auto-Repair States & Handlers ---
+  const [isAutoRepairing, setIsAutoRepairing] = useState(false);
+  const [isResolvingAll, setIsResolvingAll] = useState(false);
+  const [isClearingResolved, setIsClearingResolved] = useState(false);
+  const [showAutoRepairCard, setShowAutoRepairCard] = useState(false);
+  const [autoRepairConfig, setAutoRepairConfig] = useState({
+    enabled: true,
+    autoResolveReports: true,
+    ignoreDatacenterFalseAlarm: true,
+    notifyOnFix: true,
+  });
+  const [isSavingAutoRepair, setIsSavingAutoRepair] = useState(false);
+
+  const fetchAutoRepairConfig = async () => {
+    try {
+      const res = await fetch("/api/admin/reports/auto-fix");
+      const data = await res.json();
+      if (data.success && data.autoRepair) {
+        setAutoRepairConfig((prev) => ({ ...prev, ...data.autoRepair }));
+      }
+    } catch {}
+  };
+
+  const handleRunAutoRepair = async () => {
+    setIsAutoRepairing(true);
+    try {
+      const res = await fetch("/api/admin/reports/auto-fix", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "auto_repair" }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success(data.message || "Đã tự động kiểm tra và sửa lỗi báo cáo!");
+        await fetchReports();
+      } else {
+        toast.error(data.error || "Không thể thực hiện tự động sửa!");
+      }
+    } catch {
+      toast.error("Lỗi kết nối đến server tự động sửa!");
+    } finally {
+      setIsAutoRepairing(false);
+    }
+  };
+
+  const handleResolveAllReports = async () => {
+    if (!confirm("Bạn có chắc muốn đánh dấu TẤT CẢ báo cáo đang chờ xử lý thành ĐÃ SỬA?")) return;
+    setIsResolvingAll(true);
+    try {
+      const res = await fetch("/api/admin/reports/auto-fix", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "resolve_all" }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success(data.message || "Đã đánh dấu đã sửa cho tất cả báo cáo!");
+        await fetchReports();
+      } else {
+        toast.error(data.error || "Lỗi khi xử lý hàng loạt!");
+      }
+    } catch {
+      toast.error("Lỗi kết nối khi đánh dấu tất cả đã sửa!");
+    } finally {
+      setIsResolvingAll(false);
+    }
+  };
+
+  const handleClearResolvedReports = async () => {
+    if (!confirm("Bạn có chắc chắn muốn xóa tất cả các báo cáo đã hoàn thành sửa chữa không?")) return;
+    setIsClearingResolved(true);
+    try {
+      const res = await fetch("/api/admin/reports/auto-fix", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "clear_resolved" }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success(data.message || "Đã xóa toàn bộ báo cáo đã hoàn thành!");
+        await fetchReports();
+      } else {
+        toast.error(data.error || "Lỗi khi dọn dẹp báo cáo!");
+      }
+    } catch {
+      toast.error("Lỗi kết nối khi dọn dẹp báo cáo!");
+    } finally {
+      setIsClearingResolved(false);
+    }
+  };
+
+  const handleSaveAutoRepairConfig = async () => {
+    setIsSavingAutoRepair(true);
+    try {
+      const res = await fetch("/api/admin/reports/auto-fix", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "save_config", autoRepair: autoRepairConfig }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success("Đã lưu thành công cấu hình tự động sửa!");
+      } else {
+        toast.error(data.error || "Không thể lưu cấu hình!");
+      }
+    } catch {
+      toast.error("Lỗi kết nối khi lưu cấu hình!");
+    } finally {
+      setIsSavingAutoRepair(false);
+    }
+  };
+
   const fetchSystemNotifs = async () => {
     setIsLoadingNotifs(true);
     try {
@@ -510,6 +622,7 @@ export default function AdminDashboardPage() {
     }
     if (tab === "reports") {
       fetchReports();
+      fetchAutoRepairConfig();
     }
     if (tab === "announcement") {
       fetchSystemNotifs();
@@ -525,6 +638,7 @@ export default function AdminDashboardPage() {
     checkApiHealth();
     fetchUsers();
     fetchReports();
+    fetchAutoRepairConfig();
     fetchSystemNotifs();
     fetchAdsAnalytics();
 
@@ -4368,6 +4482,61 @@ export default function AdminDashboardPage() {
                   </div>
 
                   <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+                    {/* Master Auto-Repair Button */}
+                    <button
+                      type="button"
+                      onClick={handleRunAutoRepair}
+                      disabled={isAutoRepairing || pendingCount === 0}
+                      className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500/25 via-brand-green/30 to-amber-500/25 hover:from-emerald-500/35 hover:to-amber-500/35 text-white border border-brand-green/50 hover:border-brand-green text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-all shadow-[0_0_15px_rgba(32,214,107,0.25)] active:scale-95 disabled:opacity-50"
+                      title="Tự động kiểm tra nguồn dự phòng và sửa toàn bộ các báo cáo phim đang chờ xử lý"
+                    >
+                      <Zap className={`w-3.5 h-3.5 text-amber-300 ${isAutoRepairing ? "animate-spin" : ""}`} />
+                      <span>{isAutoRepairing ? "Đang tự động sửa..." : "⚡ Tự Động Sửa Tất Cả"}</span>
+                    </button>
+
+                    {/* Auto-Repair Settings Toggle */}
+                    <button
+                      type="button"
+                      onClick={() => setShowAutoRepairCard(!showAutoRepairCard)}
+                      className={`px-3 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 ${
+                        showAutoRepairCard
+                          ? "bg-amber-400/20 text-amber-300 border-amber-400/50 shadow-[0_0_12px_rgba(251,191,36,0.2)]"
+                          : "bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white border-white/[0.08]"
+                      }`}
+                      title="Cấu hình chế độ tự động sửa & khôi phục luồng phát"
+                    >
+                      <SlidersHorizontal className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Cấu Hình Tự Động Sửa</span>
+                    </button>
+
+                    {/* Quick Resolve All */}
+                    {pendingCount > 0 && (
+                      <button
+                        type="button"
+                        onClick={handleResolveAllReports}
+                        disabled={isResolvingAll}
+                        className="px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-emerald-500/15 text-white/80 hover:text-emerald-300 border border-white/[0.08] hover:border-emerald-500/30 text-xs font-medium flex items-center gap-1.5 cursor-pointer transition-all disabled:opacity-50"
+                        title="Đánh dấu tất cả báo cáo đang chờ xử lý thành Đã Sửa"
+                      >
+                        <CheckCheck className={`w-3.5 h-3.5 text-emerald-400 ${isResolvingAll ? "animate-spin" : ""}`} />
+                        <span>Đánh dấu tất cả đã sửa</span>
+                      </button>
+                    )}
+
+                    {/* Quick Clear Resolved */}
+                    {resolvedCount > 0 && (
+                      <button
+                        type="button"
+                        onClick={handleClearResolvedReports}
+                        disabled={isClearingResolved}
+                        className="px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-rose-500/15 text-white/80 hover:text-rose-300 border border-white/[0.08] hover:border-rose-500/30 text-xs font-medium flex items-center gap-1.5 cursor-pointer transition-all disabled:opacity-50"
+                        title="Xóa toàn bộ các báo cáo đã hoàn thành sửa chữa"
+                      >
+                        <Trash2 className={`w-3.5 h-3.5 text-rose-400 ${isClearingResolved ? "animate-spin" : ""}`} />
+                        <span>Dọn dẹp đã sửa</span>
+                      </button>
+                    )}
+
                     <button
                       type="button"
                       onClick={handleTriggerHealthCheck}
@@ -4390,6 +4559,111 @@ export default function AdminDashboardPage() {
                     </button>
                   </div>
                 </div>
+
+                {/* Auto-Repair Configuration Panel Card */}
+                {showAutoRepairCard && (
+                  <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-emerald-950/40 via-[#0e1611] to-black border border-emerald-500/30 shadow-[0_8px_30px_rgba(0,0,0,0.5),0_0_20px_rgba(34,197,94,0.1)] space-y-4 animate-in fade-in zoom-in-95 duration-200">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-xl bg-amber-400/15 border border-amber-400/30 flex items-center justify-center text-amber-400">
+                          <SlidersHorizontal className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                            <span>Cấu Hình Tự Động Sửa & Khôi Phục Luồng Phát</span>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">
+                              Auto-Repair v2.0
+                            </span>
+                          </h3>
+                          <p className="text-xs text-white/50">
+                            Tự động tìm kiếm nguồn phát dự phòng (PhimAPI, NguonC, KKPhim) và khôi phục khi có sự cố
+                          </p>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={handleSaveAutoRepairConfig}
+                        disabled={isSavingAutoRepair}
+                        className="self-start sm:self-auto px-4 py-2 rounded-xl bg-brand-green hover:bg-brand-green-hover text-black font-bold text-xs flex items-center gap-2 shadow-[0_0_15px_rgba(32,214,107,0.3)] transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+                      >
+                        <Save className={`w-3.5 h-3.5 ${isSavingAutoRepair ? "animate-spin" : ""}`} />
+                        <span>{isSavingAutoRepair ? "Đang lưu..." : "Lưu Cấu Hình"}</span>
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      {/* Toggle 1: Auto Repair Enabled */}
+                      <div
+                        onClick={() => setAutoRepairConfig((prev) => ({ ...prev, enabled: !prev.enabled }))}
+                        className={`p-3.5 rounded-xl border transition-all cursor-pointer flex items-start gap-3 select-none ${
+                          autoRepairConfig.enabled
+                            ? "bg-emerald-500/10 border-emerald-500/40 shadow-[0_0_15px_rgba(34,197,94,0.1)]"
+                            : "bg-white/[0.02] border-white/10 opacity-70"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={autoRepairConfig.enabled}
+                          onChange={() => {}}
+                          className="mt-1 h-4 w-4 rounded accent-brand-green cursor-pointer shrink-0"
+                        />
+                        <div>
+                          <p className="text-xs font-bold text-white">Bật Chế Độ Tự Động Sửa</p>
+                          <p className="text-[11px] text-white/50 leading-relaxed mt-0.5">
+                            Hệ thống tự động kích hoạt dò tìm nguồn thay thế khi phát hiện lỗi link die hoặc khi người dùng báo sự cố.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Toggle 2: Auto Resolve Reports */}
+                      <div
+                        onClick={() => setAutoRepairConfig((prev) => ({ ...prev, autoResolveReports: !prev.autoResolveReports }))}
+                        className={`p-3.5 rounded-xl border transition-all cursor-pointer flex items-start gap-3 select-none ${
+                          autoRepairConfig.autoResolveReports
+                            ? "bg-amber-500/10 border-amber-500/40 shadow-[0_0_15px_rgba(251,191,36,0.1)]"
+                            : "bg-white/[0.02] border-white/10 opacity-70"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={autoRepairConfig.autoResolveReports}
+                          onChange={() => {}}
+                          className="mt-1 h-4 w-4 rounded accent-amber-400 cursor-pointer shrink-0"
+                        />
+                        <div>
+                          <p className="text-xs font-bold text-white">Tự Động Đánh Dấu Đã Sửa</p>
+                          <p className="text-[11px] text-white/50 leading-relaxed mt-0.5">
+                            Khi đã xác minh có máy chủ dự phòng hoạt động, báo cáo được tự động chuyển thành &quot;Đã sửa&quot; mà không cần bấm thủ công.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Toggle 3: Ignore Datacenter False Alarm */}
+                      <div
+                        onClick={() => setAutoRepairConfig((prev) => ({ ...prev, ignoreDatacenterFalseAlarm: !prev.ignoreDatacenterFalseAlarm }))}
+                        className={`p-3.5 rounded-xl border transition-all cursor-pointer flex items-start gap-3 select-none ${
+                          autoRepairConfig.ignoreDatacenterFalseAlarm
+                            ? "bg-sky-500/10 border-sky-500/40 shadow-[0_0_15px_rgba(56,189,248,0.1)]"
+                            : "bg-white/[0.02] border-white/10 opacity-70"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={autoRepairConfig.ignoreDatacenterFalseAlarm}
+                          onChange={() => {}}
+                          className="mt-1 h-4 w-4 rounded accent-sky-400 cursor-pointer shrink-0"
+                        />
+                        <div>
+                          <p className="text-xs font-bold text-white">Lọc Báo Động Ảo (Smart CDN Filter)</p>
+                          <p className="text-[11px] text-white/50 leading-relaxed mt-0.5">
+                            Tự động phân biệt trường hợp CDN chặn IP Datacenter Cloudflare nhưng người xem ở trình duyệt vẫn xem tốt để tránh báo lỗi nhầm.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Filter Tabs */}
                 <div className="flex items-center gap-1.5">

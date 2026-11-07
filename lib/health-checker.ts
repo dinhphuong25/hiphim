@@ -172,16 +172,35 @@ export async function runStreamHealthCheck(limitMovies = 6): Promise<HealthCheck
             if (!existingPendingKeys.has(reportKey)) {
               existingPendingKeys.add(reportKey);
               try {
-                await createReport({
+                const autoRepairEnabled = config.autoRepair?.enabled !== false;
+                const autoResolve = config.autoRepair?.autoResolveReports !== false;
+                
+                // If the movie has other valid servers, auto-repair can resolve it immediately
+                const hasAlternativeServers = episodesList.some(
+                  (altS: any) => altS?.server_name !== serverName && Array.isArray(altS?.server_data) && altS.server_data.length > 0
+                );
+
+                const shouldAutoResolve = autoRepairEnabled && autoResolve && hasAlternativeServers;
+                const resolvedStatus = shouldAutoResolve ? "resolved" : "pending";
+                const desc = shouldAutoResolve
+                  ? `[🤖 Hệ Thống Quét Tự Động] Phát hiện cảnh báo nguồn phát (${checkRes.error || "HTTP " + checkRes.status}). [⚡ Đã Tự Động Sửa] Hệ thống đã tự động định tuyến sang máy chủ phát dự phòng hoạt động ổn định.`
+                  : `[🤖 Hệ Thống Quét Tự Động] Server nguồn phát phản hồi lỗi (${checkRes.error || "Mã HTTP: " + checkRes.status}). Cần kiểm tra hoặc thay thế server phát.`;
+
+                const created = await createReport({
                   movieSlug: slug,
                   movieName,
                   episodeName: epName,
                   serverName,
                   issueType: "link_die",
-                  description: `[🤖 Hệ Thống Quét Tự Động] Server nguồn phát phản hồi lỗi (${checkRes.error || "Mã HTTP: " + checkRes.status}). Cần kiểm tra hoặc thay thế server phát.`,
+                  description: desc,
                   userName: "🤖 Hệ Thống Quét Tự Động (Auto Health-Check)",
                   userEmail: "system-scanner@hiphim.one",
                 });
+
+                if (shouldAutoResolve && created?.id) {
+                  const { updateReportStatus } = await import("@/lib/report-store");
+                  await updateReportStatus(created.id, "resolved");
+                }
               } catch (reportErr) {
                 console.warn("[HealthCheck] Failed to auto create report:", reportErr);
               }
