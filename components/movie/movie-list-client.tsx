@@ -71,18 +71,15 @@ const MovieListClient = ({
     });
   }, [currentTypeList, currentCategory, topic, currentCountry, currentYear, index, sortField, sortType]);
 
-  // Seed cache with initial SSR movies if provided
-  if (initialMovies && initialMovies.length > 0) {
-    instantMovieStore.set(currentKey, {
-      items: initialMovies,
-      pagination: initialPageInfo,
-    });
-  }
-
   // Synchronous initialization: if SSR movies or memory cache has data, load with 0 delay!
   const [movies, setMovies] = useState<any[]>(() => {
     if (initialMovies && initialMovies.length > 0) {
-      return filterHiddenMovies(initialMovies);
+      const cleaned = filterHiddenMovies(initialMovies);
+      instantMovieStore.set(currentKey, {
+        items: cleaned,
+        pagination: initialPageInfo,
+      });
+      return cleaned;
     }
     const cached = instantMovieStore.get(currentKey);
     if (cached && cached.items.length > 0) {
@@ -135,7 +132,7 @@ const MovieListClient = ({
   const proxyFetch = (url: string) =>
     apiCache.fetchWithCache(url, async () => {
       try {
-        const res = await fetch(url);
+        const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
         if (res.ok) return await res.json();
       } catch {}
       return null;

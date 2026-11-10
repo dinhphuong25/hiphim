@@ -96,8 +96,40 @@ const DEFAULT_FALLBACK_NOTIFICATIONS: SystemNotificationItem[] = [
   },
 ];
 
+let sharedReportCache: { userId: string; data: any; ts: number } | null = null;
+let sharedReportInflight: Promise<any> | null = null;
+
+async function fetchReportsShared(userId: string, force = false): Promise<any> {
+  const now = Date.now();
+  if (!force && sharedReportCache && sharedReportCache.userId === userId && now - sharedReportCache.ts < 30_000) {
+    return sharedReportCache.data;
+  }
+  if (!force && sharedReportInflight) {
+    return sharedReportInflight;
+  }
+  sharedReportInflight = fetch("/api/report", {
+    method: "GET",
+    signal: AbortSignal.timeout(6000),
+  })
+    .then(async (res) => {
+      if (!res.ok) return null;
+      const data = await res.json();
+      if (data?.success) {
+        sharedReportCache = { userId, data, ts: Date.now() };
+      }
+      return data;
+    })
+    .catch(() => null)
+    .finally(() => {
+      sharedReportInflight = null;
+    });
+  return sharedReportInflight;
+}
+
 export default function NotificationBell({ className }: { className?: string }) {
   const { user, openAuthModal } = useUserAuth();
+  const userId = user?.id || "";
+  const userRole = user?.role || "";
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -233,8 +265,8 @@ export default function NotificationBell({ className }: { className?: string }) 
   }, []);
 
   // Fetch episode reports (Only if user logged in)
-  const fetchReports = useCallback(async (isSilent = false) => {
-    if (!user) {
+  const fetchReports = useCallback(async (isSilent = false, force = false) => {
+    if (!userId) {
       setReports([]);
       setPendingReportsCount(0);
       return;
@@ -242,14 +274,8 @@ export default function NotificationBell({ className }: { className?: string }) 
 
     if (!isSilent) setIsLoading(true);
     try {
-      const res = await fetch("/api/report", { method: "GET" });
-      if (!res.ok) {
-        if (!isSilent) setIsLoading(false);
-        return;
-      }
-
-      const data = await res.json();
-      if (data.success && Array.isArray(data.reports)) {
+      const data = await fetchReportsShared(userId, force);
+      if (data?.success && Array.isArray(data.reports)) {
         setReports(data.reports);
         if (data.isAdmin) {
           setPendingReportsCount(
@@ -267,7 +293,7 @@ export default function NotificationBell({ className }: { className?: string }) 
     } finally {
       if (!isSilent) setIsLoading(false);
     }
-  }, [user]);
+  }, [userId, userRole]);
 
   const lastRefreshRef = useRef<number>(Date.now());
 

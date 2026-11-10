@@ -151,6 +151,7 @@ export default class PhimApi {
           "User-Agent": USER_AGENT,
           Accept: "application/json",
         },
+        signal: AbortSignal.timeout(4000),
         next: { revalidate: 60, tags: ["movies", `movie-${slug}`] },
       });
       if (fbRes.ok) {
@@ -203,6 +204,7 @@ export default class PhimApi {
     const url = `${this.apiUrl}/the-loai`;
     const response = await fetch(url, {
       headers: this.fetchHeaders(),
+      signal: AbortSignal.timeout(4500),
       next: { revalidate: 86400 }, // Cache 24 giờ
     });
     if (!response.ok) throw new Error(`API error: ${response.status}`);
@@ -217,6 +219,7 @@ export default class PhimApi {
     const url = `${this.apiUrl}/quoc-gia`;
     const response = await fetch(url, {
       headers: this.fetchHeaders(),
+      signal: AbortSignal.timeout(4500),
       next: { revalidate: 86400 }, // Cache 24 giờ
     });
     if (!response.ok) throw new Error(`API error: ${response.status}`);
@@ -241,6 +244,7 @@ export default class PhimApi {
     const url = `${this.apiUrl}/v1/api/danh-sach/phim-moi-cap-nhat?page=${index}&limit=${limit}`;
     const response = await fetch(url, {
       headers: this.fetchHeaders(),
+      signal: AbortSignal.timeout(4500),
       next: { revalidate: 60, tags: ["new-updates", "movies"] }, // Cache 60s để luôn cập nhật tập mới
     });
     if (!response.ok) throw new Error(`API error: ${response.status}`);
@@ -380,6 +384,7 @@ export default class PhimApi {
     const url = `${this.apiUrl}/v1/api/the-loai/${slug}?page=${index}&limit=20`;
     const response = await fetch(url, {
       headers: this.fetchHeaders(),
+      signal: AbortSignal.timeout(4500),
       next: { revalidate: 3600 },
     });
     if (!response.ok) throw new Error(`API error: ${response.status}`);
@@ -392,6 +397,7 @@ export default class PhimApi {
     const url = `${this.apiUrl}/v1/api/quoc-gia/${slug}?page=${index}&limit=20`;
     const response = await fetch(url, {
       headers: this.fetchHeaders(),
+      signal: AbortSignal.timeout(4500),
       next: { revalidate: 3600 },
     });
     if (!response.ok) throw new Error(`API error: ${response.status}`);
@@ -404,6 +410,7 @@ export default class PhimApi {
     const url = `${this.apiUrl}/v1/api/danh-sach/${slug}?page=${index}&limit=20`;
     const response = await fetch(url, {
       headers: this.fetchHeaders(),
+      signal: AbortSignal.timeout(4500),
       next: { revalidate: 3600 },
     });
     if (!response.ok) throw new Error(`API error: ${response.status}`);
@@ -416,6 +423,7 @@ export default class PhimApi {
     const url = `${this.apiUrl}/v1/api/nam-phat-hanh/${year}?page=${index}&limit=20`;
     const response = await fetch(url, {
       headers: this.fetchHeaders(),
+      signal: AbortSignal.timeout(4500),
       next: { revalidate: 3600 },
     });
     if (!response.ok) throw new Error(`API error: ${response.status}`);
@@ -428,6 +436,7 @@ export default class PhimApi {
     const url = `${this.apiUrl}/v1/api/danh-sach/${slug}?page=1&limit=${limit}`;
     const response = await fetch(url, {
       headers: this.fetchHeaders(),
+      signal: AbortSignal.timeout(4500),
       next: { revalidate: 3600 },
     });
     if (!response.ok) throw new Error(`API error: ${response.status}`);
@@ -467,6 +476,7 @@ export default class PhimApi {
 
     const response = await fetch(url, {
       headers: this.fetchHeaders(),
+      signal: AbortSignal.timeout(4500),
       next: { revalidate: 900 }, // Cache 15 phút
     });
     if (!response.ok) throw new Error(`API error: ${response.status}`);

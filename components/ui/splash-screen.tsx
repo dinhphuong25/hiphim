@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import Image from "next/image";
+import BrandIcon from "@/components/ui/brand-icon";
 import { cn } from "@/lib/utils";
 
 export function SplashScreen() {
@@ -89,15 +89,7 @@ export function SplashScreen() {
                 : "opacity-0 -translate-x-6 sm:-translate-x-8 scale-90"
             )}
           >
-            <Image
-              src="/favicon.png"
-              alt="Hi Phim"
-              width={48}
-              height={48}
-              className="w-full h-full object-contain drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]"
-              priority
-              unoptimized
-            />
+            <BrandIcon size="lg" className="!w-full !h-full" />
           </div>
 
           {/* Phần Tên: HI PHIM. — Cỡ chữ nhỏ gọn thanh lịch */}

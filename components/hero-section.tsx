@@ -69,8 +69,17 @@ function getAgeRating(movie: HeroMovie): string {
 function getEpisodeDisplay(movie: HeroMovie): string {
   if (movie.episode_current) {
     const cur = movie.episode_current.trim();
-    if (cur.toLowerCase() === "full") return "Tập Hoàn Tất";
-    if (movie.episode_total) return `Tập Hoàn Tất (${cur}/${movie.episode_total})`;
+    const lower = cur.toLowerCase();
+    if (lower === "full") return "Tập Hoàn Tất";
+    if (
+      lower.includes("hoàn tất") ||
+      lower.includes("full") ||
+      lower.startsWith("tập") ||
+      cur.includes("(")
+    ) {
+      return cur;
+    }
+    if (movie.episode_total) return `Tập ${cur}/${movie.episode_total}`;
     return `Tập ${cur}`;
   }
   return "Bản Đẹp";
@@ -176,19 +185,21 @@ export default function HeroSection({ movies }: HeroSectionProps) {
     touchEndXRef.current = null;
   };
 
-  const thumbnailContainerRef = useRef<HTMLDivElement>(null);
+  const mobileThumbContainerRef = useRef<HTMLDivElement>(null);
+  const desktopThumbContainerRef = useRef<HTMLDivElement>(null);
 
   // Auto scroll active thumbnail into view (scrolls ONLY the thumbnail strip, never window/viewport)
   useEffect(() => {
-    const container = thumbnailContainerRef.current;
-    if (!container) return;
-    const activeEl = container.children[currentIndex] as HTMLElement;
-    if (activeEl) {
-      const scrollLeft =
-        activeEl.offsetLeft -
-        container.offsetWidth / 2 +
-        activeEl.offsetWidth / 2;
-      container.scrollTo({ left: Math.max(0, scrollLeft), behavior: "smooth" });
+    for (const container of [mobileThumbContainerRef.current, desktopThumbContainerRef.current]) {
+      if (!container || container.offsetWidth === 0) continue;
+      const activeEl = container.children[currentIndex] as HTMLElement;
+      if (activeEl) {
+        const scrollLeft =
+          activeEl.offsetLeft -
+          container.offsetWidth / 2 +
+          activeEl.offsetWidth / 2;
+        container.scrollTo({ left: Math.max(0, scrollLeft), behavior: "smooth" });
+      }
     }
   }, [currentIndex]);
 
@@ -472,11 +483,11 @@ export default function HeroSection({ movies }: HeroSectionProps) {
             {/* Mobile Thumbnails Row (Touch scrollable) */}
             <div className="sm:hidden pt-2 w-full">
               <div
-                ref={thumbnailContainerRef}
+                ref={mobileThumbContainerRef}
                 className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-0"
               >
                 {validMovies.map((movie, idx) => {
-                  const thumbCands = getMovieImageCandidates(movie, "backdrop");
+                  const thumbCands = getMovieImageCandidates(movie, "thumb");
                   const thumb = thumbCands[0] || movie.thumb_url || movie.poster_url || "";
                   const isActive = idx === currentIndex;
                   return (
@@ -536,11 +547,11 @@ export default function HeroSection({ movies }: HeroSectionProps) {
               </button>
 
               <div
-                ref={thumbnailContainerRef}
+                ref={desktopThumbContainerRef}
                 className="flex items-center gap-2 overflow-x-auto scrollbar-none py-1 px-0.5"
               >
                 {validMovies.map((movie, idx) => {
-                  const thumbCands = getMovieImageCandidates(movie, "backdrop");
+                  const thumbCands = getMovieImageCandidates(movie, "thumb");
                   const thumb = thumbCands[0] || movie.thumb_url || movie.poster_url || "";
                   const isActive = idx === currentIndex;
                   return (

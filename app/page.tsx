@@ -96,8 +96,8 @@ export default async function Home({ searchParams }: HomeProps) {
 
   // Fetch navigation data in parallel — all cached, near-instant after first request
   const [categories, countries] = await Promise.all([
-    getCachedCategories(),
-    getCachedCountries(),
+    getCachedCategories().catch(() => []),
+    getCachedCountries().catch(() => []),
   ]);
 
   // Only fetch home page data when no filters active
@@ -148,8 +148,6 @@ export default async function Home({ searchParams }: HomeProps) {
       }
     }
   }
-
-  const siteConfig = getSiteConfig();
 
   return (
     <>

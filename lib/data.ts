@@ -15,6 +15,47 @@ export const TRENDING_FEATURED_SLUGS = [
 
 const api = new PhimApi();
 
+function slimCardMovie(m: any): any {
+  if (!m || typeof m !== "object") return m;
+  return {
+    _id: m._id || m.slug,
+    slug: m.slug,
+    name: m.name,
+    origin_name: m.origin_name,
+    thumb_url: m.thumb_url,
+    poster_url: m.poster_url,
+    year: m.year,
+    quality: m.quality,
+    lang: m.lang,
+    time: m.time,
+    episode_current: m.episode_current,
+    episode_total: m.episode_total,
+    type: m.type,
+    sub_docquyen: m.sub_docquyen,
+    chieurap: m.chieurap,
+    imdb: m.imdb ? { rating: m.imdb.rating, vote_average: m.imdb.vote_average } : undefined,
+    tmdb: m.tmdb ? { vote_average: m.tmdb.vote_average, type: m.tmdb.type } : undefined,
+    category: Array.isArray(m.category)
+      ? m.category.slice(0, 4).map((c: any) => ({ name: c?.name, slug: c?.slug }))
+      : undefined,
+    country: Array.isArray(m.country)
+      ? m.country.slice(0, 2).map((c: any) => ({ name: c?.name, slug: c?.slug }))
+      : undefined,
+  };
+}
+
+function slimHeroMovie(m: any): any {
+  if (!m || typeof m !== "object") return m;
+  const base = slimCardMovie(m);
+  const rawContent = typeof m.content === "string" ? m.content.replace(/<[^>]*>/g, "").trim() : "";
+  return {
+    ...base,
+    content: rawContent.length > 420 ? `${rawContent.slice(0, 420)}...` : rawContent,
+    actor: Array.isArray(m.actor) ? m.actor.filter(Boolean).slice(0, 5) : undefined,
+    director: Array.isArray(m.director) ? m.director.filter(Boolean).slice(0, 2) : undefined,
+  };
+}
+
 /** Categories cached 24h */
 export const getCachedCategories = unstable_cache(
   () => api.listCategories(),
@@ -92,12 +133,12 @@ export const getCachedFeaturedMovies = unstable_cache(
         movies.unshift(spider);
       }
 
-      return movies.length > 0 ? filterHiddenMovies(movies) : [];
+      return movies.length > 0 ? filterHiddenMovies(movies).map(slimHeroMovie) : [];
     } catch {
       return [];
     }
   },
-  ["featured-movies-v8"],
+  ["featured-movies-v9"],
   { revalidate: 1800, tags: ["featured-movies"] }
 );
 
@@ -107,7 +148,7 @@ export const getCachedFeaturedMovie = unstable_cache(
     const movies = await getCachedFeaturedMovies();
     return movies[0] || null;
   },
-  ["featured-movie-v3"],
+  ["featured-movie-v4"],
   { revalidate: 3600, tags: ["featured-movie"] }
 );
 
@@ -116,12 +157,12 @@ export const getCachedNewUpdates = unstable_cache(
   async () => {
     try {
       const [movies] = await api.newAddingMultiPage(2, 24);
-      return filterHiddenMovies((movies as any[]) ?? []);
+      return filterHiddenMovies((movies as any[]) ?? []).slice(0, 24).map(slimCardMovie);
     } catch {
       return [];
     }
   },
-  ["new-updates-v5"],
+  ["new-updates-v6"],
   { revalidate: 60, tags: ["new-updates"] }
 );
 
@@ -130,12 +171,12 @@ export const getCachedTopicMovies = unstable_cache(
   async (slug: string, limit: number = 12) => {
     try {
       const items = await api.getTopicItems(slug, limit);
-      return filterHiddenMovies(items || []);
+      return filterHiddenMovies(items || []).map(slimCardMovie);
     } catch {
       return [];
     }
   },
-  ["topic-movies"],
+  ["topic-movies-v2"],
   { revalidate: 3600, tags: ["topic-movies"] }
 );
 

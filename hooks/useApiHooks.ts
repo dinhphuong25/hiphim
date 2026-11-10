@@ -10,26 +10,14 @@ interface NewUpdatesData {
 }
 
 const API_BASE = "https://phimapi.com";
-const REFRESH_INTERVAL = 60000; // 60s auto-refresh for real-time freshness
-const CACHE_TTL = 60000; // 1 minute client-side cache
+const REFRESH_INTERVAL = 300000; // 5m auto-refresh to avoid main-thread re-render jank
+const CACHE_TTL = 180000; // 3 minute client-side cache
 
 // Direct browser fetch to phimapi.com (CORS *) saves 100% of Cloudflare Worker request quota
-async function proxyFetch(url: string, timeoutMs = 6000): Promise<any> {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
-
+async function proxyFetch(url: string, timeoutMs = 5000): Promise<any> {
     try {
-        const directRes = await fetch(url, { signal: controller.signal });
-        clearTimeout(timer);
+        const directRes = await fetch(url, { signal: AbortSignal.timeout(timeoutMs) });
         if (directRes.ok) return await directRes.json();
-    } catch {
-        clearTimeout(timer);
-    }
-
-    // Secondary attempt directly from client before failing
-    try {
-        const retryRes = await fetch(url);
-        if (retryRes.ok) return await retryRes.json();
     } catch {}
 
     throw new Error(`Fetch failed: ${url}`);
@@ -264,13 +252,13 @@ export function useTopicsWithMovies(topics: any[], initialTopicsWithMovies: any[
         };
     }, [fetchData, initialTopicsWithMovies?.length]);
 
-    // Auto-refresh topics every 2 minutes
+    // Auto-refresh topics every 10 minutes
     useEffect(() => {
         const interval = setInterval(() => {
             if (document.visibilityState === "visible" && !fetchInProgress.current) {
                 fetchData();
             }
-        }, 120000);
+        }, 600000);
 
         return () => clearInterval(interval);
     }, [fetchData]);

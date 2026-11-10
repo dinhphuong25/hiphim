@@ -97,83 +97,32 @@ export default function SecurityGuard() {
 
     runConsoleWarning();
 
-    // 5. Chặn triệt để và triệt tiêu tiện ích download bên ngoài (IDM, Cốc Cốc, FetchV, CocoCut...)
-    const isDownloaderElement = (el: HTMLElement) => {
-      const id = (el.id || "").toLowerCase();
-      const cls = typeof el.className === "string" ? el.className.toLowerCase() : "";
-      return (
-        id.includes("idm") ||
-        id.includes("coccoc") ||
-        id.includes("download-helper") ||
-        id.includes("fetchv") ||
-        id.includes("cococut") ||
-        cls.includes("idm") ||
-        cls.includes("coccoc") ||
-        cls.includes("download-helper") ||
-        cls.includes("fetchv") ||
-        cls.includes("cococut")
-      );
-    };
-
-    const removeDownloaderElement = (el: HTMLElement) => {
+    // 5. Ẩn triệt để tiện ích download bên ngoài (IDM, Cốc Cốc, FetchV, CocoCut...) bằng CSS thuần
+    // Không dùng MutationObserver + querySelectorAll("*") hay .remove() để tránh xung đột vòng lặp gây đứng trang
+    const STYLE_ID = "hiphim-anti-downloader-css";
+    if (typeof document !== "undefined" && !document.getElementById(STYLE_ID)) {
       try {
-        el.remove();
-      } catch {
-        el.style.setProperty("display", "none", "important");
-        el.style.setProperty("visibility", "hidden", "important");
-        el.style.setProperty("pointer-events", "none", "important");
-      }
-    };
-
-    const purgeDownloaderElements = () => {
-      try {
-        const suspicious = document.querySelectorAll(
-          '#__idm_frm__, #__idm_rpc__, #idm_net_panel, #idm_net_panel_bar, .idm_net_panel, [id*="idm_net_panel"], [class*="idm_net_panel"], [id^="__idm_"], div[id^="idm_"], iframe[id^="__idm_"], embed[type*="idm"], .coccoc-video-downloader, [class*="coccoc-download"], [id*="coccoc-download"], [class*="video-download-helper"], [id*="video-download-helper"], [class*="vget-download"], [id*="vget-download"], [class*="fetchv-"], [id*="fetchv-"], [class*="cococut-"], [id*="cococut-"]'
-        );
-        suspicious.forEach((node) => removeDownloaderElement(node as HTMLElement));
-      } catch {}
-    };
-
-    const isMobileDevice =
-      typeof navigator !== "undefined" &&
-      (/Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent) ||
-        (typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches));
-
-    let domObserver: MutationObserver | null = null;
-    let intervalTimer: ReturnType<typeof setInterval> | null = null;
-
-    // Desktop only: check for extension downloaders (IDM, CocCoc, etc. do NOT exist on mobile browsers)
-    if (!isMobileDevice) {
-      purgeDownloaderElements();
-
-      domObserver = new MutationObserver((mutations) => {
-        for (const mutation of mutations) {
-          if (mutation.addedNodes.length > 0) {
-            for (let i = 0; i < mutation.addedNodes.length; i++) {
-              const node = mutation.addedNodes[i];
-              if (node.nodeType === 1) {
-                const el = node as HTMLElement;
-                if (isDownloaderElement(el)) {
-                  removeDownloaderElement(el);
-                } else {
-                  el.querySelectorAll<HTMLElement>("*").forEach((child) => {
-                    if (isDownloaderElement(child)) removeDownloaderElement(child);
-                  });
-                }
-              }
-            }
+        const styleEl = document.createElement("style");
+        styleEl.id = STYLE_ID;
+        styleEl.textContent = `
+          #__idm_frm__, #__idm_rpc__, #idm_net_panel, #idm_net_panel_bar, .idm_net_panel,
+          [id*="idm_net_panel"], [class*="idm_net_panel"], [id^="__idm_"], div[id^="idm_"],
+          iframe[id^="__idm_"], embed[type*="idm"], .coccoc-video-downloader,
+          [class*="coccoc-download"], [id*="coccoc-download"],
+          [class*="video-download-helper"], [id*="video-download-helper"],
+          [class*="vget-download"], [id*="vget-download"],
+          [class*="fetchv-"], [id*="fetchv-"],
+          [class*="cococut-"], [id*="cococut-"] {
+            display: none !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            opacity: 0 !important;
+            width: 0 !important;
+            height: 0 !important;
           }
-        }
-      });
-
-      try {
-        domObserver.observe(document.documentElement, {
-          childList: true,
-          subtree: true,
-        });
+        `;
+        document.head.appendChild(styleEl);
       } catch {}
-
-      intervalTimer = setInterval(purgeDownloaderElements, 5000);
     }
 
     document.addEventListener("contextmenu", handleContextMenu);
@@ -183,8 +132,6 @@ export default function SecurityGuard() {
     document.addEventListener("cut", handleCopy);
 
     return () => {
-      domObserver?.disconnect();
-      if (intervalTimer) clearInterval(intervalTimer);
       document.removeEventListener("contextmenu", handleContextMenu);
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("dragstart", handleDragStart);
