@@ -50,6 +50,11 @@ function mapNguonCToMovieListItem(item: any): MovieListItem {
   };
 }
 
+const movieDetailMemCache = new Map<
+  string,
+  { data: { movie: Movie; server: MovieEpisode[] }; expiresAt: number }
+>();
+
 export default class PhimApi {
   private apiUrl = "https://phimapi.com";
   private defaultCdnDomain = "https://phimimg.com";
@@ -62,6 +67,12 @@ export default class PhimApi {
   }
 
   async get(slug: string): Promise<{ movie: Movie; server: MovieEpisode[] }> {
+    const now = Date.now();
+    const cached = movieDetailMemCache.get(slug);
+    if (cached && now < cached.expiresAt) {
+      return cached.data;
+    }
+
     const url = `${this.apiUrl}/phim/${slug}`;
     let primaryData: any = null;
     let primaryErr: any = null;
@@ -137,10 +148,19 @@ export default class PhimApi {
         }
       }
 
-      return {
+      const result = {
         movie,
         server: allServers,
       };
+      if (movieDetailMemCache.size > 250) {
+        const firstKey = movieDetailMemCache.keys().next().value;
+        if (firstKey) movieDetailMemCache.delete(firstKey);
+      }
+      movieDetailMemCache.set(slug, {
+        data: result,
+        expiresAt: Date.now() + 900_000, // 15 minutes
+      });
+      return result;
     }
 
     // Automatic Multi-Source Fallback to NguonC if primary source completely fails

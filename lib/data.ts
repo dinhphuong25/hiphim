@@ -15,6 +15,68 @@ export const TRENDING_FEATURED_SLUGS = [
 
 const api = new PhimApi();
 
+interface MemCacheEntry<T> {
+  value: T;
+  expiresAt: number;
+  staleUntil: number;
+}
+
+const workerMemCache = new Map<string, MemCacheEntry<any>>();
+const workerInFlight = new Map<string, Promise<any>>();
+
+async function withMemCache<T>(
+  key: string,
+  ttlMs: number,
+  fetcher: () => Promise<T>,
+  isEmpty?: (val: T) => boolean
+): Promise<T> {
+  const now = Date.now();
+  const cached = workerMemCache.get(key);
+
+  if (cached && now < cached.expiresAt) {
+    return cached.value;
+  }
+
+  const refreshPromise = () => {
+    let inflight = workerInFlight.get(key);
+    if (!inflight) {
+      inflight = fetcher()
+        .then((res) => {
+          const empty = isEmpty ? isEmpty(res) : Array.isArray(res) && res.length === 0;
+          if (!empty) {
+            if (workerMemCache.size > 200) {
+              const firstKey = workerMemCache.keys().next().value;
+              if (firstKey) workerMemCache.delete(firstKey);
+            }
+            workerMemCache.set(key, {
+              value: res,
+              expiresAt: Date.now() + ttlMs,
+              staleUntil: Date.now() + ttlMs * 6,
+            });
+          }
+          return res;
+        })
+        .finally(() => {
+          workerInFlight.delete(key);
+        });
+      workerInFlight.set(key, inflight);
+    }
+    return inflight;
+  };
+
+  if (cached && now < cached.staleUntil) {
+    refreshPromise().catch(() => {});
+    return cached.value;
+  }
+
+  try {
+    return await refreshPromise();
+  } catch (err) {
+    if (cached) return cached.value;
+    throw err;
+  }
+}
+
 function slimCardMovie(m: any): any {
   if (!m || typeof m !== "object") return m;
   return {
@@ -57,43 +119,35 @@ function slimHeroMovie(m: any): any {
 }
 
 /** Categories cached 24h */
-export const getCachedCategories = unstable_cache(
-  () => api.listCategories(),
-  ["categories"],
-  { revalidate: 86400, tags: ["categories"] }
-);
+export const getCachedCategories = () =>
+  withMemCache("categories", 86400_000, () => api.listCategories());
 
 /** Countries cached 24h */
-export const getCachedCountries = unstable_cache(
-  () => api.listCountries(),
-  ["countries"],
-  { revalidate: 86400, tags: ["countries"] }
-);
+export const getCachedCountries = () =>
+  withMemCache("countries", 86400_000, () => api.listCountries());
 
 /** Multiple Featured movies cached 30m with full detailed metadata */
-export const getCachedFeaturedMovies = unstable_cache(
-  async () => {
+export const getCachedFeaturedMovies = async () => {
+  let slugs = TRENDING_FEATURED_SLUGS;
+  let autoPin = true;
+  let autoPinLimit = 5;
+
+  try {
+    const config = getSiteConfig();
+    if (config.featuredSlugs && config.featuredSlugs.length > 0) {
+      slugs = config.featuredSlugs;
+    }
+    if (typeof config.autoPinNewMovies === "boolean") {
+      autoPin = config.autoPinNewMovies;
+    }
+    if (typeof config.autoPinLimit === "number") {
+      autoPinLimit = config.autoPinLimit;
+    }
+  } catch {}
+
+  const memKey = `featured-v9:${slugs.join(",")}:${autoPin}:${autoPinLimit}`;
+  return withMemCache(memKey, 1800_000, async () => {
     try {
-      let slugs = TRENDING_FEATURED_SLUGS;
-      let autoPin = true;
-      let autoPinLimit = 5;
-
-      try {
-        const config = getSiteConfig();
-        if (config.featuredSlugs && config.featuredSlugs.length > 0) {
-          slugs = config.featuredSlugs;
-        }
-        if (typeof config.autoPinNewMovies === "boolean") {
-          autoPin = config.autoPinNewMovies;
-        }
-        if (typeof config.autoPinLimit === "number") {
-          autoPinLimit = config.autoPinLimit;
-        }
-      } catch (err) {
-        console.warn("Could not load featuredSlugs from config:", err);
-      }
-
-      // Tự động ghim các phim mới cập nhật nếu được cấu hình
       let extraSlugs: string[] = [];
       if (autoPin) {
         try {
@@ -104,13 +158,10 @@ export const getCachedFeaturedMovies = unstable_cache(
               .filter((s: string) => Boolean(s) && !slugs.includes(s))
               .slice(0, autoPinLimit);
           }
-        } catch (e) {
-          console.warn("Could not fetch new updates for auto-pin:", e);
-        }
+        } catch {}
       }
 
       const combinedSlugs = Array.from(new Set([...slugs, ...extraSlugs])).slice(0, 8);
-      // Luôn bảo đảm "nguoi-nhen-khoi-dau-moi" đứng vị trí #01
       const spiderPos = combinedSlugs.indexOf("nguoi-nhen-khoi-dau-moi");
       if (spiderPos > 0) {
         combinedSlugs.splice(spiderPos, 1);
@@ -126,7 +177,6 @@ export const getCachedFeaturedMovies = unstable_cache(
         .filter((r): r is PromiseFulfilledResult<{ movie: any; server: any[] }> => r.status === "fulfilled" && Boolean(r.value?.movie))
         .map((r) => r.value.movie);
 
-      // Bảo đảm Người Nhện Khởi Đầu Mới luôn ở vị trí đầu tiên
       const spiderIdx = movies.findIndex((m: any) => m?.slug === "nguoi-nhen-khoi-dau-moi");
       if (spiderIdx > 0) {
         const [spider] = movies.splice(spiderIdx, 1);
@@ -137,48 +187,36 @@ export const getCachedFeaturedMovies = unstable_cache(
     } catch {
       return [];
     }
-  },
-  ["featured-movies-v9"],
-  { revalidate: 1800, tags: ["featured-movies"] }
-);
+  });
+};
 
 /** Single featured movie fallback */
-export const getCachedFeaturedMovie = unstable_cache(
-  async () => {
-    const movies = await getCachedFeaturedMovies();
-    return movies[0] || null;
-  },
-  ["featured-movie-v4"],
-  { revalidate: 3600, tags: ["featured-movie"] }
-);
+export const getCachedFeaturedMovie = async () => {
+  const movies = await getCachedFeaturedMovies();
+  return movies[0] || null;
+};
 
 /** New updates cached 60 seconds for instant fresh movies - Multi-page deep fetch */
-export const getCachedNewUpdates = unstable_cache(
-  async () => {
+export const getCachedNewUpdates = () =>
+  withMemCache("new-updates-v6", 60_000, async () => {
     try {
       const [movies] = await api.newAddingMultiPage(2, 24);
       return filterHiddenMovies((movies as any[]) ?? []).slice(0, 24).map(slimCardMovie);
     } catch {
       return [];
     }
-  },
-  ["new-updates-v6"],
-  { revalidate: 60, tags: ["new-updates"] }
-);
+  });
 
 /** Topic movies cached 1h */
-export const getCachedTopicMovies = unstable_cache(
-  async (slug: string, limit: number = 12) => {
+export const getCachedTopicMovies = (slug: string, limit: number = 12) =>
+  withMemCache(`topic-movies-v2:${slug}:${limit}`, 3600_000, async () => {
     try {
       const items = await api.getTopicItems(slug, limit);
       return filterHiddenMovies(items || []).map(slimCardMovie);
     } catch {
       return [];
     }
-  },
-  ["topic-movies-v2"],
-  { revalidate: 3600, tags: ["topic-movies"] }
-);
+  });
 
 export type RankingPeriod = "day" | "week" | "month" | "views" | "rating";
 
@@ -220,8 +258,11 @@ export interface AllRankingsData {
 }
 
 /** All 5 Rankings cached for 15 minutes */
-export const getCachedAllRankings = unstable_cache(
-  async (): Promise<AllRankingsData> => {
+export const getCachedAllRankings = (): Promise<AllRankingsData> =>
+  withMemCache(
+    "all-rankings-v1",
+    900_000,
+    async (): Promise<AllRankingsData> => {
     try {
       const [
         [newItems],
@@ -284,16 +325,15 @@ export const getCachedAllRankings = unstable_cache(
         views: viewsList.slice(0, 20),
         rating: ratingList.slice(0, 20),
       };
-    } catch (err) {
-      console.error("Failed to fetch rankings:", err);
-      return { day: [], week: [], month: [], views: [], rating: [] };
-    }
-  },
-  ["all-rankings-v1"],
-  { revalidate: 900, tags: ["rankings"] }
-);
+      } catch (err) {
+        console.error("Failed to fetch rankings:", err);
+        return { day: [], week: [], month: [], views: [], rating: [] };
+      }
+    },
+    (val) => !val || val.day.length === 0
+  );
 
-/** Filtered/Topic movies cached for 15 minutes - instant SSR */
+/** Filtered/Topic movies cached for 10 minutes - instant SSR */
 export const getCachedFilteredMovies = async (params: {
   typeList?: string;
   category?: string;
@@ -321,7 +361,9 @@ export const getCachedFilteredMovies = async (params: {
 
   const cacheKey = `filter_${typeList || ""}_${category || ""}_${topic || ""}_${country || ""}_${year || ""}_p${page}_sf${sortField}_st${sortType}_l${limit}`;
 
-  return unstable_cache(
+  return withMemCache(
+    cacheKey,
+    600_000,
     async () => {
       try {
         let rawItems: any[] = [];
@@ -361,14 +403,13 @@ export const getCachedFilteredMovies = async (params: {
           rawItems = items || [];
           rawPagination = pagination || null;
         }
-        return { items: filterHiddenMovies(rawItems), pagination: rawPagination };
+        return { items: filterHiddenMovies(rawItems).map(slimCardMovie), pagination: rawPagination };
       } catch (err) {
         console.warn("Failed to fetch filtered movies in getCachedFilteredMovies:", err);
         return { items: [], pagination: null };
       }
     },
-    [cacheKey],
-    { revalidate: 600, tags: ["filtered-movies"] }
-  )();
+    (val) => !val || val.items.length === 0
+  );
 };
 
