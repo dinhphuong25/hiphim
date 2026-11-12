@@ -364,10 +364,6 @@ export default function VideoPlayer({
   const [adShieldMode, setAdShieldMode] = useState<'auto' | 'always' | 'off'>('off');
   const [isAdDetected, setIsAdDetected] = useState(false);
   const [isAdShieldSystemEnabled, setIsAdShieldSystemEnabled] = useState<boolean>(false);
-  const detectorCanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const consecutiveDetectionsRef = useRef(0);
-  const consecutiveMissesRef = useRef(0);
-  const prevFrameLuminanceRef = useRef<Uint8Array | null>(null);
   const isVisualAdDetectedRef = useRef(false);
 
   const handleAdShieldModeChange = useCallback((mode: 'auto' | 'always' | 'off') => {
@@ -1466,10 +1462,10 @@ export default function VideoPlayer({
           autoStartLoad: true,
           startPosition: targetStartPosition,
           
-          backBufferLength: isMobile ? 5 : 30,
-          maxBufferLength: isMobile ? 15 : 60,
-          maxMaxBufferLength: isMobile ? 25 : 120,
-          maxBufferSize: isMobile ? 20 * 1024 * 1024 : 80 * 1024 * 1024,
+          backBufferLength: isMobile ? 5 : 15,
+          maxBufferLength: isMobile ? 15 : 30,
+          maxMaxBufferLength: isMobile ? 25 : 60,
+          maxBufferSize: isMobile ? 15 * 1024 * 1024 : 40 * 1024 * 1024,
           maxBufferHole: 0.5, // Nhảy ngay qua khe hở timestamp gián đoạn (0.5s) thay vì chờ 8.5s
           highBufferWatchdogPeriod: 2,
           nudgeOffset: 0.1,
@@ -1750,7 +1746,9 @@ export default function VideoPlayer({
           setIsAdDetected(false);
         }
       } else if (adShieldMode === 'always') {
-        setIsAdDetected(true);
+        if (!isAdDetected) {
+          setIsAdDetected(true);
+        }
       } else if (adShieldMode === 'auto') {
         let isAdNow = false;
 
@@ -1764,17 +1762,15 @@ export default function VideoPlayer({
           }
         }
 
-        // Ưu tiên 2: Quét hình ảnh thời gian thực phát hiện text quảng cáo mép trên
-        if (!isAdNow && isVisualAdDetectedRef.current) {
-          isAdNow = true;
+        if (isAdDetected !== isAdNow) {
+          setIsAdDetected(isAdNow);
         }
-
-        setIsAdDetected(isAdNow);
       }
 
-
-      // Throttle UI currentTime state updates to ~250ms to save CPU & avoid frame drops on mobile
-      if (!isSeekingRef.current && (now - lastTimeUpdateRef.current >= (showControls ? 250 : 1000) || video.ended)) {
+      // Throttle UI currentTime state updates to save CPU & avoid frame drops
+      const isHidden = typeof document !== 'undefined' && document.visibilityState === 'hidden';
+      const throttleInterval = isHidden ? 5000 : (showControls ? 250 : 1000);
+      if (!isSeekingRef.current && (now - lastTimeUpdateRef.current >= throttleInterval || video.ended)) {
         lastTimeUpdateRef.current = now;
         setCurrentTime(cur);
       }
@@ -2163,7 +2159,7 @@ export default function VideoPlayer({
     };
   }, []);
 
-  // Intelligent Real-Time Ad Banner Detector Loop (Tự động nhận diện banner cờ bạc mép trên khi Admin bật)
+  // Intelligent Real-Time Ad Banner Detector Sync (0% CPU, 0 GPU stall, 0 memory churn)
   useEffect(() => {
     if (!isAdShieldSystemEnabled || adShieldMode === 'off') {
       setIsAdDetected(false);
@@ -2177,96 +2173,9 @@ export default function VideoPlayer({
       setIsAdDetected(true);
       return;
     }
-
-    // Chế độ 'auto': bắt đầu ở trạng thái không che, tự động quét video frame mép trên
-    const video = videoRef.current;
-    if (!video) return;
-
-    const checkInterval = setInterval(() => {
-      if (video.paused || video.ended || video.readyState < 2) return;
-      const cur = video.currentTime;
-      if (cur < 0.5) return;
-
-      // Kỹ thuật 1: Phân tích Luminance & Edge Transition trên 16% đỉnh video
-      let detected = false;
-      try {
-        if (!detectorCanvasRef.current) {
-          const canvas = document.createElement('canvas');
-          canvas.width = 160;
-          canvas.height = 36;
-          detectorCanvasRef.current = canvas;
-        }
-        const canvas = detectorCanvasRef.current;
-        const ctx = canvas.getContext('2d', { willReadFrequently: true });
-        if (ctx) {
-          ctx.drawImage(video, 0, 0, video.videoWidth || 640, (video.videoHeight || 360) * 0.17, 0, 0, 160, 36);
-          const imgData = ctx.getImageData(0, 0, 160, 36);
-          const data = imgData.data;
-
-          let highContrastPixels = 0;
-          let bannerColorCount = 0;
-          const totalSampled = 160 * 36;
-
-          for (let i = 0; i < data.length; i += 4) {
-            const r = data[i];
-            const g = data[i + 1];
-            const b = data[i + 2];
-            // Nhận diện dải màu vàng rực/đỏ rực/trắng sáng đặc trưng của watermark bài bạc
-            const isGamblingGold = r > 180 && g > 150 && b < 60;
-            const isGamblingRed = r > 190 && g < 50 && b < 50;
-            const isGamblingWhite = r > 230 && g > 230 && b > 230;
-            if (isGamblingGold || isGamblingRed || isGamblingWhite) {
-              bannerColorCount++;
-            }
-
-            const lum = 0.299 * r + 0.587 * g + 0.114 * b;
-            if (lum > 220 || lum < 20) {
-              highContrastPixels++;
-            }
-          }
-
-          // Tỷ lệ text/banner vượt ngưỡng đặc trưng
-          if (bannerColorCount / totalSampled > 0.08 || highContrastPixels / totalSampled > 0.35) {
-            detected = true;
-          }
-        }
-      } catch {
-        // Cross-origin canvas read fallback
-      }
-
-      // Kỹ thuật 2: Kiểm tra phân đoạn xác định từ m3u8 playlist (nếu có segment banner)
-      if (!detected && bannerRangesRef.current.length > 0) {
-        const cur = video.currentTime;
-        for (const range of bannerRangesRef.current) {
-          if (cur >= range.start - 0.5 && cur <= range.end + 0.5) {
-            detected = true;
-            break;
-          }
-        }
-      }
-
-      if (detected) {
-        consecutiveDetectionsRef.current++;
-        consecutiveMissesRef.current = 0;
-        if (consecutiveDetectionsRef.current >= 2) {
-          isVisualAdDetectedRef.current = true;
-          setIsAdDetected(true);
-        }
-      } else {
-        consecutiveMissesRef.current++;
-        consecutiveDetectionsRef.current = 0;
-        if (consecutiveMissesRef.current >= 2) {
-          isVisualAdDetectedRef.current = false;
-          setIsAdDetected(false);
-          prevFrameLuminanceRef.current = null;
-        }
-      }
-    }, 600);
-
-    return () => {
-      clearInterval(checkInterval);
-    };
-  }, [isAdShieldSystemEnabled, adShieldMode, videoUrl]);
+    // Chế độ 'auto': Nhận diện dải banner từ m3u8 playlist không tiêu hao CPU
+    setIsAdDetected(false);
+  }, [isAdShieldSystemEnabled, adShieldMode]);
 
   // Đảm bảo không tự bật PiP khi đổi tab
   useEffect(() => {

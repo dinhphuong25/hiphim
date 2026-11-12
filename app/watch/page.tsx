@@ -16,7 +16,7 @@ const getMovieData = cache(async (slug: string) => {
 });
 
 export async function generateMetadata({ searchParams }: any) {
-  const { slug } = await searchParams;
+  const { slug, ep } = await searchParams;
   if (!slug || isSlugHidden(slug)) {
     notFound();
   }
@@ -27,6 +27,13 @@ export async function generateMetadata({ searchParams }: any) {
     if (!movie?.name) return { title: "Xem phim | Hi Phim" };
     const watchUrl = `https://hiphim.one/watch?slug=${slug}`;
     const canonicalUrl = watchUrl;
+
+    let epSuffix = "";
+    if (ep) {
+      const epStr = String(ep).trim();
+      const cleanEp = epStr.toLowerCase().startsWith("tập") ? epStr : `Tập ${epStr.replace(/^tap-/i, "")}`;
+      epSuffix = ` - ${cleanEp}`;
+    }
 
     const posterUrl = normalizeImageUrl(movie.poster_url);
     const thumbUrl = normalizeImageUrl(movie.thumb_url);
@@ -42,7 +49,7 @@ export async function generateMetadata({ searchParams }: any) {
     const dynamicOgUrl = `https://hiphim.one/api/og?${ogParams.toString()}`;
 
     return {
-      title: `${movie.name} - Xem phim HD chất lượng cao | Hi Phim`,
+      title: `${movie.name}${epSuffix} - Xem phim HD chất lượng cao | Hi Phim`,
       description: movie.content
         ? movie.content.substring(0, 160) + "..."
         : `Xem phim ${movie.name} HD chất lượng cao miễn phí tại Hi Phim.`,

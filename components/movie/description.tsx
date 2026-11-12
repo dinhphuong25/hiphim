@@ -402,10 +402,14 @@ export default function Description({ movie, serverData: rawServerData }: any) {
   // Sync document.title with the active movie name and episode on client-side
   useEffect(() => {
     if (typeof window === "undefined" || !movie?.name) return;
-    const epName = currentServerData?.[currentEpisodeIndex.server]?.server_data?.[currentEpisodeIndex.episode]?.name;
-    const epSuffix = epName ? ` - Tập ${epName}` : "";
+    const rawEp = currentServerData?.[currentEpisodeIndex?.server]?.server_data?.[currentEpisodeIndex?.episode]?.name?.trim();
+    let epLabel = "";
+    if (rawEp) {
+      epLabel = rawEp.toLowerCase().startsWith("tập") ? rawEp : `Tập ${rawEp}`;
+    }
+    const epSuffix = epLabel ? ` - ${epLabel}` : "";
     document.title = `${movie.name}${epSuffix} - Xem phim HD chất lượng cao | Hi Phim`;
-  }, [movie?.name, currentEpisodeIndex, currentServerData]);
+  }, [movie?.name, currentEpisodeIndex?.server, currentEpisodeIndex?.episode, currentServerData]);
 
   const [completedEpisodes, setCompletedEpisodes] = useState<Record<number, boolean>>({});
   const { user, checkAuthOrPrompt, updateServerData } = useUserAuth();
@@ -417,6 +421,16 @@ export default function Description({ movie, serverData: rawServerData }: any) {
   const lastSavedDurationRef = useRef<number>(0);
   const initialResolvedRef = useRef<boolean>(false);
   const cloudSyncedRef = useRef<boolean>(false);
+  const lastFlushedProgressRef = useRef<number>(0);
+
+  const userRef = useRef(user);
+  userRef.current = user;
+  const movieRef = useRef(movie);
+  movieRef.current = movie;
+  const currentEpisodeIndexRef = useRef(currentEpisodeIndex);
+  currentEpisodeIndexRef.current = currentEpisodeIndex;
+  const currentServerDataRef = useRef(currentServerData);
+  currentServerDataRef.current = currentServerData;
 
   const isUserPermanentlyBanned = Boolean(user?.isLocked);
   const isUserTemporarilyBanned = Boolean(user?.bannedUntil && user.bannedUntil > Date.now());
@@ -871,25 +885,34 @@ export default function Description({ movie, serverData: rawServerData }: any) {
 
   // Immediate flush of latest progress to Cloud on tab switch / window leave
   useEffect(() => {
-    if (!user || !movie?.slug) return;
     const flushToCloud = () => {
+      const curUser = userRef.current;
+      const curMovie = movieRef.current;
+      const curEpIdx = currentEpisodeIndexRef.current;
+      const curServerData = currentServerDataRef.current;
+      if (!curUser || !curMovie?.slug || !curEpIdx || !curServerData) return;
+
       const curTime = lastSavedProgressRef.current;
       const curDur = lastSavedDurationRef.current;
-      if (curTime > 5 && currentEpisodeIndex && currentServerData) {
-        const { server, episode } = currentEpisodeIndex;
-        const epData = currentServerData[server]?.server_data?.[episode];
-        const epName = epData?.name || `Tập ${episode + 1}`;
+
+      // Avoid duplicate flushes if progress hasn't advanced by at least 5s
+      if (curTime > 5 && Math.abs(curTime - lastFlushedProgressRef.current) >= 5) {
+        lastFlushedProgressRef.current = curTime;
+        const { server, episode } = curEpIdx;
+        const epData = curServerData[server]?.server_data?.[episode];
+        const rawEp = epData?.name || `Tập ${episode + 1}`;
+        const epName = rawEp.toLowerCase().startsWith("tập") ? rawEp : `Tập ${rawEp}`;
         const epSlug = epData?.slug || "";
 
-        const updated = updateHistoryProgress(movie.slug, {
-          name: movie.name,
-          origin_name: movie.origin_name,
-          poster_url: movie.poster_url || "",
-          thumb_url: movie.thumb_url || "",
-          quality: movie.quality,
-          year: movie.year,
-          tmdb: movie.tmdb,
-          imdb: movie.imdb,
+        const updated = updateHistoryProgress(curMovie.slug, {
+          name: curMovie.name,
+          origin_name: curMovie.origin_name,
+          poster_url: curMovie.poster_url || "",
+          thumb_url: curMovie.thumb_url || "",
+          quality: curMovie.quality,
+          year: curMovie.year,
+          tmdb: curMovie.tmdb,
+          imdb: curMovie.imdb,
           serverIndex: server,
           episodeIndex: episode,
           episodeName: epName,
@@ -916,7 +939,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
       document.removeEventListener("visibilitychange", handleVisibility);
       flushToCloud();
     };
-  }, [user, movie, currentEpisodeIndex, currentServerData, updateHistoryProgress, updateServerData]);
+  }, [updateHistoryProgress, updateServerData]); // Stable handlers only — never re-runs on user or state change!
 
   // Save movie to recently watched only for authenticated account
   useEffect(() => {
