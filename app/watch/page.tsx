@@ -49,7 +49,7 @@ export async function generateMetadata({ searchParams }: any) {
     const dynamicOgUrl = `https://hiphim.one/api/og?${ogParams.toString()}`;
 
     return {
-      title: `${movie.name}${epSuffix} - Xem phim HD chất lượng cao | Hi Phim`,
+      title: `${movie.name}${epSuffix} - Xem phim HD chất lượng cao`,
       description: movie.content
         ? movie.content.substring(0, 160) + "..."
         : `Xem phim ${movie.name} HD chất lượng cao miễn phí tại Hi Phim.`,

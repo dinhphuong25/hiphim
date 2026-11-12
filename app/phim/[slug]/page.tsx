@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       : `https://phimimg.com/${movie.poster_url}`;
 
     return {
-      title: `${movie.name} - Thông Tin & Xem Phim HD | Hi Phim`,
+      title: `${movie.name} - Thông Tin & Xem Phim HD`,
       description: movie.content?.substring(0, 160) || `Xem phim ${movie.name} HD miễn phí tại Hi Phim`,
       openGraph: {
         title: `${movie.name} - Hi Phim`,
