@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, memo } from "react";
 import { cn } from "@/lib/utils";
 import { Search, Server, Film, Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -40,7 +40,7 @@ interface EpisodeProps {
 
 const ITEMS_PER_RANGE = 50;
 
-export default function Episode({
+function EpisodeComponent({
   serverData,
   currentServerIndex,
   currentEpisodeIndex,
@@ -438,5 +438,7 @@ export default function Episode({
   );
 }
 
+const Episode = memo(EpisodeComponent);
+export default Episode;
 // Keep export for backwards compatibility
 export { Episode as EpisodeList };

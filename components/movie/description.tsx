@@ -5,8 +5,8 @@ import Episode from "./episode";
 import WatchHeader from "../watch/watch-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Heart, ShieldAlert, Clock, AlertTriangle, Loader2 } from "lucide-react";
-import { useContinueWatching } from "@/hooks/useContinueWatching";
-import { useWatchHistory, useFavorites } from "@/hooks/useLocalStorage";
+import { updateContinueWatchingStandalone } from "@/hooks/useContinueWatching";
+import { addToHistoryStandalone, updateHistoryProgressStandalone, useFavorites } from "@/hooks/useLocalStorage";
 import { useUserAuth } from "@/context/user-auth-context";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -413,8 +413,6 @@ export default function Description({ movie, serverData: rawServerData }: any) {
 
   const [completedEpisodes, setCompletedEpisodes] = useState<Record<number, boolean>>({});
   const { user, checkAuthOrPrompt, updateServerData } = useUserAuth();
-  const { updateProgress } = useContinueWatching();
-  const { addToHistory, updateHistoryProgress } = useWatchHistory();
   const { toggleFavorite, isFavorite } = useFavorites();
   const prefetchedNextRef = useRef<string | null>(null);
   const lastSavedProgressRef = useRef<number>(0);
@@ -636,7 +634,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
     }
 
     // Update watch history
-    const updated = updateHistoryProgress(movie.slug, {
+    const updated = updateHistoryProgressStandalone(movie.slug, {
       name: movie.name,
       origin_name: movie.origin_name,
       poster_url: movie.poster_url || "",
@@ -652,9 +650,9 @@ export default function Description({ movie, serverData: rawServerData }: any) {
       currentTime: newResumeTime,
     });
     if (user && Array.isArray(updated) && updated.length > 0) {
-      updateServerData({ history: updated });
+      updateServerData({ history: updated }, { silent: true });
     }
-  }, [currentServerData, movie, getEpisodeProgressKey, updateHistoryProgress, updateServerData, user, playerMode]);
+  }, [currentServerData, movie, getEpisodeProgressKey, updateServerData, user, playerMode]);
 
   const handleServerChange = (serverIndex: number) => {
     const epIndex = 0;
@@ -904,7 +902,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
         const epName = rawEp.toLowerCase().startsWith("tập") ? rawEp : `Tập ${rawEp}`;
         const epSlug = epData?.slug || "";
 
-        const updated = updateHistoryProgress(curMovie.slug, {
+        const updated = updateHistoryProgressStandalone(curMovie.slug, {
           name: curMovie.name,
           origin_name: curMovie.origin_name,
           poster_url: curMovie.poster_url || "",
@@ -921,7 +919,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
           duration: curDur > 0 ? curDur : undefined,
         });
         if (Array.isArray(updated) && updated.length > 0) {
-          updateServerData({ history: updated });
+          updateServerData({ history: updated }, { silent: true });
         }
       }
     };
@@ -939,7 +937,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
       document.removeEventListener("visibilitychange", handleVisibility);
       flushToCloud();
     };
-  }, [updateHistoryProgress, updateServerData]); // Stable handlers only — never re-runs on user or state change!
+  }, [updateServerData]); // Stable handlers only — never re-runs on user or state change!
 
   // Save movie to recently watched only for authenticated account
   useEffect(() => {
@@ -993,7 +991,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
       if (effectiveTime > 0) lastSavedProgressRef.current = effectiveTime;
       if (effectiveDuration > 0) lastSavedDurationRef.current = effectiveDuration;
 
-      const updated = addToHistory({
+      const updated = addToHistoryStandalone({
         slug: movie.slug,
         name: movie.name,
         origin_name: movie.origin_name,
@@ -1012,7 +1010,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
         duration: effectiveDuration,
       });
       if (Array.isArray(updated) && updated.length > 0) {
-        updateServerData({ history: updated });
+        updateServerData({ history: updated }, { silent: true });
       }
     } catch (e) {
       console.error("Failed to add to watch history:", e);
@@ -1087,8 +1085,8 @@ export default function Description({ movie, serverData: rawServerData }: any) {
           duration: durInt,
         }));
 
-        // Update master continue watching list throttled to every 5s
-        updateProgress({
+        // Update master continue watching list without triggering unnecessary UI re-renders
+        updateContinueWatchingStandalone(user?.id, {
           slug: movie.slug,
           name: movie.name,
           poster_url: movie.poster_url,
@@ -1101,7 +1099,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
         });
 
         // Also update watch history with current episode and timestamp!
-        const updated = updateHistoryProgress(movie.slug, {
+        const updated = updateHistoryProgressStandalone(movie.slug, {
           name: movie.name,
           origin_name: movie.origin_name,
           poster_url: movie.poster_url || "",
@@ -1118,9 +1116,9 @@ export default function Description({ movie, serverData: rawServerData }: any) {
           duration: durInt,
         });
 
-        // Throttled sync to server for authenticated user (every 15s)
+        // Silent throttled sync to server for authenticated user (every 15s) without triggering app re-render
         if (user && Array.isArray(updated) && nowInt % 15 === 0) {
-          updateServerData({ history: updated });
+          updateServerData({ history: updated }, { silent: true });
         }
       }
     }
@@ -1133,7 +1131,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
         fetch(nextEp.link_m3u8, { mode: 'no-cors' }).catch(() => {});
       }
     }
-  }, [currentEpisodeIndex, playerMode, getEpisodeProgressKey, markEpisodeCompleted, updateProgress, updateHistoryProgress, updateServerData, movie, currentServerData, user, isUserBanned]);
+  }, [currentEpisodeIndex, playerMode, getEpisodeProgressKey, markEpisodeCompleted, updateServerData, movie, currentServerData, user, isUserBanned]);
 
   const handleNextEpisode = useCallback(() => {
     if (!currentServerData || !currentEpisodeIndex) return;

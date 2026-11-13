@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
@@ -11,7 +12,7 @@ interface WatchHeaderProps {
   episodeIndex?: number;
 }
 
-export default function WatchHeader({
+function WatchHeaderComponent({
   movieName,
   movieSlug,
   currentEpName,
@@ -92,3 +93,6 @@ export default function WatchHeader({
     </div>
   );
 }
+
+const WatchHeader = memo(WatchHeaderComponent);
+export default WatchHeader;

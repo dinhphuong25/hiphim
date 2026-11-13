@@ -261,6 +261,127 @@ if (typeof window !== "undefined") {
 // WATCH HISTORY HOOK
 // ============================================================
 
+export function addToHistoryStandalone(item: Omit<WatchHistoryItem, "watchedAt">): WatchHistoryItem[] {
+  if (!item?.slug) return getGlobalHistory();
+  const current = getGlobalHistory();
+  const existing = current.find((h) => h.slug === item.slug);
+
+  const isSameEpisode =
+    existing &&
+    (item.episodeIndex === undefined ||
+      existing.episodeIndex === undefined ||
+      item.episodeIndex === existing.episodeIndex);
+
+  const resolvedCurrentTime =
+    item.currentTime && item.currentTime > 0
+      ? item.currentTime
+      : isSameEpisode
+      ? existing?.currentTime || 0
+      : 0;
+
+  const resolvedDuration =
+    item.duration && item.duration > 0
+      ? item.duration
+      : isSameEpisode
+      ? existing?.duration || 0
+      : 0;
+
+  const mergedItem: WatchHistoryItem = {
+    ...existing,
+    ...item,
+    thumb_url: normalizeImageUrl(item.thumb_url || existing?.thumb_url || ""),
+    poster_url: normalizeImageUrl(item.poster_url || existing?.poster_url || ""),
+    origin_name: item.origin_name || existing?.origin_name || "",
+    episodeIndex: item.episodeIndex !== undefined ? item.episodeIndex : existing?.episodeIndex,
+    episodeName: item.episodeName || existing?.episodeName,
+    episodeSlug: item.episodeSlug || existing?.episodeSlug,
+    serverIndex: item.serverIndex !== undefined ? item.serverIndex : (existing?.serverIndex ?? 0),
+    currentTime: resolvedCurrentTime,
+    duration: resolvedDuration,
+    watchedAt: Date.now(),
+  };
+
+  const filtered = current.filter((h) => h.slug !== item.slug);
+  const updated = [mergedItem, ...filtered].slice(0, 50);
+  setGlobalHistory(updated);
+  return globalHistoryCache || updated;
+}
+
+export function updateHistoryProgressStandalone(
+  slug: string,
+  progress: {
+    name?: string;
+    origin_name?: string;
+    poster_url?: string;
+    thumb_url?: string;
+    quality?: string;
+    year?: number | string;
+    tmdb?: { vote_average?: number };
+    imdb?: { rating?: number };
+    episodeIndex?: number;
+    episodeName?: string;
+    episodeSlug?: string;
+    serverIndex?: number;
+    currentTime: number;
+    duration?: number;
+  }
+): WatchHistoryItem[] {
+  if (!slug) return getGlobalHistory();
+  const current = getGlobalHistory();
+  const existing = current.find((h) => h.slug === slug);
+
+  if (!existing && !progress.name) {
+    return current;
+  }
+
+  const isSameEpisode =
+    existing &&
+    (progress.episodeIndex === undefined ||
+      existing.episodeIndex === undefined ||
+      progress.episodeIndex === existing.episodeIndex);
+
+  const resolvedDuration =
+    progress.duration && progress.duration > 0
+      ? progress.duration
+      : isSameEpisode
+      ? existing?.duration || 0
+      : 0;
+
+  const updatedItem: WatchHistoryItem = {
+    ...(existing || {
+      slug,
+      name: progress.name || slug,
+      thumb_url: "",
+      currentTime: 0,
+      duration: 0,
+      watchedAt: Date.now(),
+    }),
+    ...progress,
+    name: progress.name || existing?.name || slug,
+    origin_name: progress.origin_name || existing?.origin_name || "",
+    thumb_url: normalizeImageUrl(progress.thumb_url || existing?.thumb_url || ""),
+    poster_url: normalizeImageUrl(progress.poster_url || existing?.poster_url || ""),
+    year:
+      typeof progress.year === "string"
+        ? parseInt(progress.year, 10) || existing?.year
+        : (progress.year ?? existing?.year),
+    episode_current: progress.episodeName || existing?.episode_current,
+    currentTime:
+      progress.currentTime > 0
+        ? progress.currentTime
+        : isSameEpisode
+        ? existing?.currentTime || 0
+        : 0,
+    duration: resolvedDuration,
+    watchedAt: Date.now(),
+  };
+
+  const filtered = current.filter((h) => h.slug !== slug);
+  const updated = [updatedItem, ...filtered].slice(0, 50);
+  setGlobalHistory(updated);
+  return globalHistoryCache || updated;
+}
+
 export function useWatchHistory() {
   const [history, setHistory] = useState<WatchHistoryItem[]>(() => getGlobalHistory());
   const [hydrated, setHydrated] = useState(() => typeof window !== "undefined");
@@ -278,129 +399,8 @@ export function useWatchHistory() {
     };
   }, []);
 
-  const addToHistory = useCallback((item: Omit<WatchHistoryItem, "watchedAt">): WatchHistoryItem[] => {
-    if (!item?.slug) return getGlobalHistory();
-    const current = getGlobalHistory();
-    const existing = current.find((h) => h.slug === item.slug);
-
-    const isSameEpisode =
-      existing &&
-      (item.episodeIndex === undefined ||
-        existing.episodeIndex === undefined ||
-        item.episodeIndex === existing.episodeIndex);
-
-    const resolvedCurrentTime =
-      item.currentTime && item.currentTime > 0
-        ? item.currentTime
-        : isSameEpisode
-        ? existing?.currentTime || 0
-        : 0;
-
-    const resolvedDuration =
-      item.duration && item.duration > 0
-        ? item.duration
-        : isSameEpisode
-        ? existing?.duration || 0
-        : 0;
-
-    const mergedItem: WatchHistoryItem = {
-      ...existing,
-      ...item,
-      thumb_url: normalizeImageUrl(item.thumb_url || existing?.thumb_url || ""),
-      poster_url: normalizeImageUrl(item.poster_url || existing?.poster_url || ""),
-      origin_name: item.origin_name || existing?.origin_name || "",
-      episodeIndex: item.episodeIndex !== undefined ? item.episodeIndex : existing?.episodeIndex,
-      episodeName: item.episodeName || existing?.episodeName,
-      episodeSlug: item.episodeSlug || existing?.episodeSlug,
-      serverIndex: item.serverIndex !== undefined ? item.serverIndex : (existing?.serverIndex ?? 0),
-      currentTime: resolvedCurrentTime,
-      duration: resolvedDuration,
-      watchedAt: Date.now(),
-    };
-
-    const filtered = current.filter((h) => h.slug !== item.slug);
-    const updated = [mergedItem, ...filtered].slice(0, 50);
-    setGlobalHistory(updated);
-    return globalHistoryCache || updated;
-  }, []);
-
-  const updateHistoryProgress = useCallback(
-    (
-      slug: string,
-      progress: {
-        name?: string;
-        origin_name?: string;
-        poster_url?: string;
-        thumb_url?: string;
-        quality?: string;
-        year?: number | string;
-        tmdb?: { vote_average?: number };
-        imdb?: { rating?: number };
-        episodeIndex?: number;
-        episodeName?: string;
-        episodeSlug?: string;
-        serverIndex?: number;
-        currentTime: number;
-        duration?: number;
-      }
-    ): WatchHistoryItem[] => {
-      if (!slug) return getGlobalHistory();
-      const current = getGlobalHistory();
-      const existing = current.find((h) => h.slug === slug);
-
-      if (!existing && !progress.name) {
-        return current;
-      }
-
-      const isSameEpisode =
-        existing &&
-        (progress.episodeIndex === undefined ||
-          existing.episodeIndex === undefined ||
-          progress.episodeIndex === existing.episodeIndex);
-
-      const resolvedDuration =
-        progress.duration && progress.duration > 0
-          ? progress.duration
-          : isSameEpisode
-          ? existing?.duration || 0
-          : 0;
-
-      const updatedItem: WatchHistoryItem = {
-        ...(existing || {
-          slug,
-          name: progress.name || slug,
-          thumb_url: "",
-          currentTime: 0,
-          duration: 0,
-          watchedAt: Date.now(),
-        }),
-        ...progress,
-        name: progress.name || existing?.name || slug,
-        origin_name: progress.origin_name || existing?.origin_name || "",
-        thumb_url: normalizeImageUrl(progress.thumb_url || existing?.thumb_url || ""),
-        poster_url: normalizeImageUrl(progress.poster_url || existing?.poster_url || ""),
-        year:
-          typeof progress.year === "string"
-            ? parseInt(progress.year, 10) || existing?.year
-            : (progress.year ?? existing?.year),
-        episode_current: progress.episodeName || existing?.episode_current,
-        currentTime:
-          progress.currentTime > 0
-            ? progress.currentTime
-            : isSameEpisode
-            ? existing?.currentTime || 0
-            : 0,
-        duration: resolvedDuration,
-        watchedAt: Date.now(),
-      };
-
-      const filtered = current.filter((h) => h.slug !== slug);
-      const updated = [updatedItem, ...filtered].slice(0, 50);
-      setGlobalHistory(updated);
-      return globalHistoryCache || updated;
-    },
-    []
-  );
+  const addToHistory = useCallback(addToHistoryStandalone, []);
+  const updateHistoryProgress = useCallback(updateHistoryProgressStandalone, []);
 
   const removeFromHistory = useCallback((slug: string): WatchHistoryItem[] => {
     const current = getGlobalHistory();

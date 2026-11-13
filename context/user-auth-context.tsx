@@ -42,7 +42,7 @@ interface UserAuthContextType {
   resendOtp: (email: string) => Promise<{ success: boolean; error?: string; devMode?: boolean; devCode?: string }>;
   logout: () => Promise<void>;
   syncWithServer: () => Promise<void>;
-  updateServerData: (data: { favorites?: any[]; history?: any[] }) => Promise<void>;
+  updateServerData: (data: { favorites?: any[]; history?: any[] }, options?: { silent?: boolean }) => Promise<void>;
   checkAuthOrPrompt: (actionName?: string) => boolean;
 }
 
@@ -240,7 +240,7 @@ export function UserAuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const updateServerData = useCallback(
-    async (data: { favorites?: any[]; history?: any[] }) => {
+    async (data: { favorites?: any[]; history?: any[] }, options?: { silent?: boolean }) => {
       const hasFavUpdate = Array.isArray(data.favorites);
       const hasHistUpdate = Array.isArray(data.history);
       if (!hasFavUpdate && !hasHistUpdate) return;
@@ -256,20 +256,35 @@ export function UserAuthProvider({ children }: { children: React.ReactNode }) {
         hydrateGlobalHistory(data.history!);
       }
 
-      setUser((prev) => {
-        if (!prev) return null;
-        const next = {
-          ...prev,
-          favorites: hasFavUpdate ? data.favorites! : prev.favorites,
-          history: hasHistUpdate ? data.history! : prev.history,
-          favoritesCount: hasFavUpdate ? data.favorites!.length : prev.favoritesCount,
-          historyCount: hasHistUpdate ? data.history!.length : prev.historyCount,
-        };
+      if (!options?.silent) {
+        setUser((prev) => {
+          if (!prev) return null;
+          const next = {
+            ...prev,
+            favorites: hasFavUpdate ? data.favorites! : prev.favorites,
+            history: hasHistUpdate ? data.history! : prev.history,
+            favoritesCount: hasFavUpdate ? data.favorites!.length : prev.favoritesCount,
+            historyCount: hasHistUpdate ? data.history!.length : prev.historyCount,
+          };
+          try {
+            localStorage.setItem(CACHED_USER_KEY, JSON.stringify(next));
+          } catch {}
+          return next;
+        });
+      } else {
+        // Silent background update (e.g. video watch progress): update cache without whole-tree re-render
         try {
-          localStorage.setItem(CACHED_USER_KEY, JSON.stringify(next));
+          const cached = localStorage.getItem(CACHED_USER_KEY);
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            if (parsed) {
+              if (hasFavUpdate) parsed.favorites = data.favorites;
+              if (hasHistUpdate) parsed.history = data.history;
+              localStorage.setItem(CACHED_USER_KEY, JSON.stringify(parsed));
+            }
+          }
         } catch {}
-        return next;
-      });
+      }
 
       // 2. Persist to server (Cloudflare D1 / Postgres)
       try {
@@ -295,7 +310,7 @@ export function UserAuthProvider({ children }: { children: React.ReactNode }) {
               hydrateGlobalHistory(resData.history);
             }
 
-            if (canApplyFav || canApplyHist) {
+            if (!options?.silent && (canApplyFav || canApplyHist)) {
               setUser((prev) => {
                 if (!prev) return null;
                 const next = {

@@ -1378,11 +1378,10 @@ export default function VideoPlayer({
       }
     }, 3500);
 
-    // Watchdog: If still loading after 7.5s, try recovery once and offer backup
+    // Watchdog: If still loading after 7.5s, trigger load retry without destroying media buffer
     if (initialFatalWatchdogRef.current) clearTimeout(initialFatalWatchdogRef.current);
     initialFatalWatchdogRef.current = setTimeout(() => {
       if (hlsRef.current) {
-        hlsRef.current.recoverMediaError();
         hlsRef.current.startLoad();
       }
       setIsSlowNetwork(true);
@@ -1580,23 +1579,20 @@ export default function VideoPlayer({
             setIsSlowNetwork(true);
             if (hlsRef.current) hlsRef.current.startLoad();
             const v = videoRef.current;
-            if (v && !v.paused) {
-              if (v.buffered.length > 0) {
-                const cur = v.currentTime;
-                const firstStart = v.buffered.start(0);
-                if (cur < firstStart && firstStart < 5) {
-                  v.currentTime = firstStart + 0.02;
+            if (v && !v.paused && v.buffered.length > 0) {
+              const cur = v.currentTime;
+              const firstStart = v.buffered.start(0);
+              if (cur < firstStart && firstStart < 5) {
+                v.currentTime = firstStart + 0.02;
+                return;
+              }
+              for (let i = 0; i < v.buffered.length; i++) {
+                const start = v.buffered.start(i);
+                if (start > cur && start - cur <= 1.5) {
+                  v.currentTime = start + 0.02;
                   return;
                 }
-                for (let i = 0; i < v.buffered.length; i++) {
-                  const start = v.buffered.start(i);
-                  if (start > cur && start - cur <= 8.5) {
-                    v.currentTime = start + 0.02;
-                    return;
-                  }
-                }
               }
-              v.currentTime += 0.5;
             }
             return;
           }
@@ -2377,6 +2373,7 @@ export default function VideoPlayer({
             ...getVideoTransformStyle(),
             backfaceVisibility: "hidden",
             filter: (() => {
+              if (visualFilter === 'normal' && brightness === 100) return undefined;
               const base = visualFilter === 'oled' 
                 ? 'contrast(1.20) saturate(1.24) brightness(0.96)' 
                 : visualFilter === 'vivid' 
@@ -2387,10 +2384,11 @@ export default function VideoPlayer({
               if (brightness !== 100) {
                 return (base ? `${base} ` : '') + `brightness(${brightness / 100})`;
               }
-              return base || 'none';
+              return base || undefined;
             })(),
-            transition: "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), filter 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
-            willChange: "transform, filter",
+            transition: videoFit !== 'contain' || visualFilter !== 'normal' 
+              ? "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), filter 0.35s cubic-bezier(0.4, 0, 0.2, 1)" 
+              : undefined,
           }}
           poster={poster} 
           playsInline 

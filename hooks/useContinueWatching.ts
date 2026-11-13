@@ -16,6 +16,34 @@ export interface ContinueWatchingItem {
   timestamp: number;
 }
 
+export function updateContinueWatchingStandalone(
+  userId: string | undefined,
+  item: Omit<ContinueWatchingItem, "timestamp">
+) {
+  if (!userId) return;
+  const userKey = `continue_watching_${userId}`;
+
+  try {
+    const raw = localStorage.getItem(userKey);
+    const prev: ContinueWatchingItem[] = raw ? JSON.parse(raw) : [];
+    const filtered = prev.filter((i) => i.slug !== item.slug);
+
+    // If watched more than 95% of duration or within last 15 seconds, consider done and remove
+    if (item.duration > 0 && item.currentTime >= item.duration - 15) {
+      localStorage.setItem(userKey, JSON.stringify(filtered));
+      return filtered;
+    }
+
+    // Only track if watched more than 5 seconds
+    if (item.currentTime < 5) return prev;
+
+    const newItem: ContinueWatchingItem = { ...item, timestamp: Date.now() };
+    const updated = [newItem, ...filtered].slice(0, 15);
+    localStorage.setItem(userKey, JSON.stringify(updated));
+    return updated;
+  } catch {}
+}
+
 export function useContinueWatching() {
   const { user, updateServerData } = useUserAuth();
   const [items, setItems] = useState<ContinueWatchingItem[]>([]);
