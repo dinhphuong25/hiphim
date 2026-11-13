@@ -374,9 +374,6 @@ export default function VideoPlayer({
       setIsAdDetected(false);
     } else {
       setIsAdDetected(false);
-      consecutiveDetectionsRef.current = 0;
-      consecutiveMissesRef.current = 0;
-      prevFrameLuminanceRef.current = null;
     }
     try {
       localStorage.setItem('cinema_ad_shield', mode);
@@ -1999,9 +1996,6 @@ export default function VideoPlayer({
       if (adShieldMode !== 'always') {
         isVisualAdDetectedRef.current = false;
         setIsAdDetected(false);
-        consecutiveDetectionsRef.current = 0;
-        consecutiveMissesRef.current = 0;
-        prevFrameLuminanceRef.current = null;
       }
 
       let isBuffered = false;
@@ -2164,9 +2158,6 @@ export default function VideoPlayer({
     if (!isAdShieldSystemEnabled || adShieldMode === 'off') {
       setIsAdDetected(false);
       isVisualAdDetectedRef.current = false;
-      consecutiveDetectionsRef.current = 0;
-      consecutiveMissesRef.current = 0;
-      prevFrameLuminanceRef.current = null;
       return;
     }
     if (adShieldMode === 'always') {

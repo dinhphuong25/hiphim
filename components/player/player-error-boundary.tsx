@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Component, ErrorInfo, ReactNode } from "react";
-import { AlertCircle, RotateCcw } from "lucide-react";
+import { AlertCircle, RotateCcw, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface Props {
@@ -54,7 +54,20 @@ export class PlayerErrorBoundary extends Component<Props, State> {
           <p className="text-xs sm:text-sm text-white/60 mb-5 max-w-md">
             Đã có sự cố trong quá trình khởi tạo trình phát. Vui lòng bấm thử lại để tiếp tục xem phim.
           </p>
-          <div className="flex items-center justify-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {this.props.onSwitchToEmbed && (
+              <Button
+                onClick={() => {
+                  this.setState({ hasError: false, error: null });
+                  this.props.onSwitchToEmbed?.();
+                }}
+                size="sm"
+                className="rounded-xl bg-brand-green hover:bg-brand-green/90 text-black font-extrabold cursor-pointer"
+              >
+                <Play className="w-4 h-4 mr-1.5 fill-current" />
+                Đổi sang Máy chủ Dự phòng
+              </Button>
+            )}
             <Button
               onClick={this.handleRetry}
               variant="outline"

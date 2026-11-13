@@ -1391,9 +1391,8 @@ export default function Description({ movie, serverData: rawServerData }: any) {
                     );
                   }
 
-                  // Priority #1: If stream has playable m3u8 (Mặc định or Dự phòng), ALWAYS use Hi Phim Cinema VideoPlayer
-                  // This eliminates broken third-party player.phimapi.com iframe freezes & CORS localStorage errors
-                  if (playableM3u8Url) {
+                  // Priority #1: If stream has playable m3u8 and not in embed mode, use Hi Phim Cinema VideoPlayer
+                  if (playerMode !== 'embed' && playableM3u8Url) {
                     return (
                       <SafePlayerErrorBoundary
                         onReset={() => {
@@ -1402,6 +1401,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
                           const m3u8 = extractPlayableM3u8(ep);
                           if (m3u8) setCurrentEpisodeUrl(m3u8);
                         }}
+                        onSwitchToEmbed={handleSwitchToEmbed}
                       >
                         <VideoPlayer
                           key={`${playerMode}-${currentEpisodeIndex?.server}-${currentEpisodeIndex?.episode}-${playableM3u8Url}`}
