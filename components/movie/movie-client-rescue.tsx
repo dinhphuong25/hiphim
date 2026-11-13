@@ -107,11 +107,7 @@ export function TrueNotFoundCard({ onRetry }: { onRetry?: () => void }) {
   );
 }
 
-export function MovieDetailClientRescue({ slug }: { slug: string }) {
-  if (isSlugHidden(slug)) {
-    return <TrueNotFoundCard />;
-  }
-
+function MovieDetailClientRescueContent({ slug }: { slug: string }) {
   const [data, setData] = useState<RescuedMovieData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -123,8 +119,17 @@ export function MovieDetailClientRescue({ slug }: { slug: string }) {
   }, [slug]);
 
   useEffect(() => {
-    loadMovie();
-  }, [loadMovie]);
+    let active = true;
+    fetchMovieClientSide(slug).then((res) => {
+      if (active) {
+        setData(res);
+        setLoading(false);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [slug]);
 
   if (loading) {
     return (
@@ -142,11 +147,14 @@ export function MovieDetailClientRescue({ slug }: { slug: string }) {
   return <DynamicMovieDetailView movie={data.movie} episodes={data.episodes} />;
 }
 
-export function WatchClientRescue({ slug }: { slug: string }) {
+export function MovieDetailClientRescue({ slug }: { slug: string }) {
   if (isSlugHidden(slug)) {
     return <TrueNotFoundCard />;
   }
+  return <MovieDetailClientRescueContent slug={slug} />;
+}
 
+function WatchClientRescueContent({ slug }: { slug: string }) {
   const [data, setData] = useState<RescuedMovieData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -158,8 +166,17 @@ export function WatchClientRescue({ slug }: { slug: string }) {
   }, [slug]);
 
   useEffect(() => {
-    loadMovie();
-  }, [loadMovie]);
+    let active = true;
+    fetchMovieClientSide(slug).then((res) => {
+      if (active) {
+        setData(res);
+        setLoading(false);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [slug]);
 
   if (loading) {
     return <LoadingWatch />;
@@ -183,4 +200,11 @@ export function WatchClientRescue({ slug }: { slug: string }) {
       </main>
     </div>
   );
+}
+
+export function WatchClientRescue({ slug }: { slug: string }) {
+  if (isSlugHidden(slug)) {
+    return <TrueNotFoundCard />;
+  }
+  return <WatchClientRescueContent slug={slug} />;
 }
