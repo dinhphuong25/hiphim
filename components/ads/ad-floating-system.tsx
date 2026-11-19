@@ -63,7 +63,12 @@ export function AdFloatingSystemComponent() {
       .then((data) => {
         if (data?.ads) {
           const ads = data.ads;
-          const isEnabled = ads.enabled === true;
+          const isGambling =
+            typeof ads.targetUrl === "string" &&
+            (ads.targetUrl.includes("154.82.109.157") ||
+             ads.targetUrl.includes("333xbet") ||
+             ads.targetUrl.includes("bet"));
+          const isEnabled = ads.enabled === true && !isGambling;
           const canShowBottom = isEnabled && ads.showBottomBanner === true && Boolean(ads.bottomBannerImage);
           const canShowPopup = isEnabled && ads.showPopup === true && Boolean(ads.popupImage);
 

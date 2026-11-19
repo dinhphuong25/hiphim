@@ -253,8 +253,22 @@ export default function VideoPlayer({
       .then((data) => {
         if (data?.ads) {
           const ads = data.ads;
+          const isGambling =
+            typeof ads.targetUrl === "string" &&
+            (ads.targetUrl.includes("154.82.109.157") ||
+             ads.targetUrl.includes("333xbet") ||
+             ads.targetUrl.includes("bet"));
+
+          const isGamblingTvc =
+            typeof ads.tvcVideoUrl === "string" &&
+            (ads.tvcVideoUrl.includes("333xbet") ||
+             ads.tvcVideoUrl.includes("9922") ||
+             ads.tvcVideoUrl.includes("bet"));
+
           const shouldEnableTvc =
             ads.enabled === true &&
+            !isGambling &&
+            !isGamblingTvc &&
             ads.tvcEnabled === true &&
             Boolean(ads.tvcVideoUrl) &&
             !isVipOrAdmin;
@@ -273,7 +287,7 @@ export default function VideoPlayer({
             showTVCRef.current = true;
           }
 
-          // Kích hoạt khiên che quảng cáo nếu Admin bật
+          // Kích hoạt khiên che quảng cáo nếu Admin bật (mặc định đã tắt toàn bộ tính năng che theo yêu cầu)
           const isShieldActive = ads.adShieldEnabled === true;
           setIsAdShieldSystemEnabled(isShieldActive);
           if (isShieldActive) {
@@ -285,6 +299,9 @@ export default function VideoPlayer({
           } else {
             setAdShieldMode('off');
             setIsAdDetected(false);
+            if (typeof window !== 'undefined') {
+              try { localStorage.removeItem('cinema_ad_shield'); } catch {}
+            }
           }
         }
       })

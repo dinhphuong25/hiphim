@@ -44,7 +44,7 @@ export interface SiteConfig {
     tvcVideoUrl?: string;
     tvcSkipAfterSeconds?: number;
     adShieldEnabled?: boolean;
-    adShieldMode?: "auto" | "always";
+    adShieldMode?: "auto" | "always" | "off";
     adDisclaimerEnabled?: boolean;
   };
 }
@@ -90,18 +90,18 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
   },
   customFooterText: "Hi Phim — Nền tảng xem phim miễn phí.",
   ads: {
-    enabled: true,
-    targetUrl: "https://154.82.109.157/2138063.html",
-    popupImage: "/ads/popup.jpg",
-    bottomBannerImage: "/ads/banner-bottom.gif",
-    showPopup: true,
-    showBottomBanner: true,
-    tvcEnabled: true,
-    tvcVideoUrl: "https://bf.333xbet.com/18881999/video9922.mp4",
+    enabled: false,
+    targetUrl: "",
+    popupImage: "",
+    bottomBannerImage: "",
+    showPopup: false,
+    showBottomBanner: false,
+    tvcEnabled: false,
+    tvcVideoUrl: "",
     tvcSkipAfterSeconds: 5,
     adShieldEnabled: false,
-    adShieldMode: "auto",
-    adDisclaimerEnabled: true,
+    adShieldMode: "off",
+    adDisclaimerEnabled: false,
   },
 };
 
@@ -120,20 +120,34 @@ function mergeWithDefaults(parsed: any): SiteConfig {
   if (!parsed || typeof parsed !== "object") return DEFAULT_SITE_CONFIG;
   const rawAds = parsed.ads || {};
 
-  // If ads in DB was disabled/emptied from previous sanitize, restore default gambling ads
-  const hadNoTarget = !rawAds.targetUrl;
+  // Strip any legacy gambling domains/IPs completely
+  const isGamblingTarget =
+    typeof rawAds.targetUrl === "string" &&
+    (rawAds.targetUrl.includes("154.82.109.157") ||
+      rawAds.targetUrl.includes("333xbet") ||
+      rawAds.targetUrl.includes("bet") ||
+      rawAds.targetUrl.includes("casino"));
+
+  const isGamblingTvc =
+    typeof rawAds.tvcVideoUrl === "string" &&
+    (rawAds.tvcVideoUrl.includes("333xbet") ||
+      rawAds.tvcVideoUrl.includes("9922") ||
+      rawAds.tvcVideoUrl.includes("bet"));
+
   const resolvedAds = {
     ...DEFAULT_SITE_CONFIG.ads,
     ...rawAds,
-    targetUrl: rawAds.targetUrl || DEFAULT_SITE_CONFIG.ads?.targetUrl,
-    popupImage: rawAds.popupImage || DEFAULT_SITE_CONFIG.ads?.popupImage,
-    bottomBannerImage: rawAds.bottomBannerImage || DEFAULT_SITE_CONFIG.ads?.bottomBannerImage,
-    tvcVideoUrl: rawAds.tvcVideoUrl || DEFAULT_SITE_CONFIG.ads?.tvcVideoUrl,
-    enabled: hadNoTarget ? true : (rawAds.enabled ?? true),
-    showPopup: hadNoTarget ? true : (rawAds.showPopup ?? true),
-    showBottomBanner: hadNoTarget ? true : (rawAds.showBottomBanner ?? true),
-    tvcEnabled: hadNoTarget ? true : (rawAds.tvcEnabled ?? true),
-    adDisclaimerEnabled: rawAds.adDisclaimerEnabled !== false,
+    targetUrl: isGamblingTarget ? "" : (rawAds.targetUrl || ""),
+    popupImage: isGamblingTarget ? "" : (rawAds.popupImage || ""),
+    bottomBannerImage: isGamblingTarget ? "" : (rawAds.bottomBannerImage || ""),
+    tvcVideoUrl: isGamblingTvc ? "" : (rawAds.tvcVideoUrl || ""),
+    enabled: isGamblingTarget ? false : (rawAds.enabled === true),
+    showPopup: isGamblingTarget ? false : (rawAds.showPopup === true),
+    showBottomBanner: isGamblingTarget ? false : (rawAds.showBottomBanner === true),
+    tvcEnabled: isGamblingTvc ? false : (rawAds.tvcEnabled === true),
+    adShieldEnabled: false,
+    adShieldMode: "off" as const,
+    adDisclaimerEnabled: false,
   };
 
   return {
@@ -202,6 +216,15 @@ export async function getSiteConfigAsync(forceRefresh = false): Promise<SiteConf
           const merged = mergeWithDefaults(parsed);
           globalThis.__HIPHIM_SITE_CONFIG__ = merged;
           globalThis.__HIPHIM_SITE_CONFIG_TS__ = Date.now();
+          if (
+            typeof row.data === "string" &&
+            (row.data.includes("154.82.109.157") ||
+              row.data.includes("333xbet") ||
+              row.data.includes("adShieldEnabled\":true") ||
+              row.data.includes("\"enabled\":true"))
+          ) {
+            saveSiteConfigAsync(merged).catch(() => {});
+          }
           return merged;
         }
         // D1 is bound and healthy; cache current state without hitting external Postgres
@@ -225,6 +248,15 @@ export async function getSiteConfigAsync(forceRefresh = false): Promise<SiteConf
           const merged = mergeWithDefaults(parsed);
           globalThis.__HIPHIM_SITE_CONFIG__ = merged;
           globalThis.__HIPHIM_SITE_CONFIG_TS__ = Date.now();
+          if (
+            typeof raw === "string" &&
+            (raw.includes("154.82.109.157") ||
+              raw.includes("333xbet") ||
+              raw.includes("adShieldEnabled\":true") ||
+              raw.includes("\"enabled\":true"))
+          ) {
+            saveSiteConfigAsync(merged).catch(() => {});
+          }
           return merged;
         }
       } catch {}

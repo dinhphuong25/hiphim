@@ -56,15 +56,15 @@ function EpisodeComponent({
   const [searchQuery, setSearchQuery] = useState("");
   const [activeRangeIndex, setActiveRangeIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
-  const [showAdDisclaimer, setShowAdDisclaimer] = useState(true);
+  const [showAdDisclaimer, setShowAdDisclaimer] = useState(false);
 
   useEffect(() => {
     fetchAnnouncementShared()
       .then((data) => {
-        if (data?.ads?.adDisclaimerEnabled === false) {
-          setShowAdDisclaimer(false);
-        } else {
+        if (data?.ads?.adDisclaimerEnabled === true) {
           setShowAdDisclaimer(true);
+        } else {
+          setShowAdDisclaimer(false);
         }
       })
       .catch(() => {});
