@@ -94,7 +94,7 @@ function FooterComponent({ customFooterText }: FooterProps = {}) {
         {/* Bottom Row: Copyright & Organization Info */}
         <div className="text-center space-y-1">
           <p className="text-[11px] sm:text-[11.5px] text-white/55 font-normal">
-            Dự án thuộc hệ sinh thái Hi Tech — Được thành lập và phát triển bởi Hi Tech.
+            Được thành lập và phát triển bởi Hi Tech.
           </p>
           <p className="text-[11.5px] sm:text-[12px] text-white/85 font-medium">
             © 2026 Hi Phim. Toàn quyền được bảo lưu.
