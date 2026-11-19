@@ -37,10 +37,12 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import TVCPlayerOverlay from "./tvc-player-overlay";
 import { Slider } from "@/components/ui/slider";
 import { AdRange, fetchAndParseAllAdRanges, extractAllAdRangesFromFragments } from "@/lib/ad-parser";
 import { pipStore } from "@/lib/pip-store";
 import { useUserAuth } from "@/context/user-auth-context";
+import { fetchAnnouncementShared } from "@/lib/announcement-client";
 export type VideoFitMode = 'contain' | 'cover' | 'fill' | '4:3' | '21:9';
 
 export interface SubtitleCue {
@@ -238,6 +240,63 @@ export default function VideoPlayer({
         localStorage.removeItem("cinema_ad_shield");
         localStorage.removeItem("cinema_ad_shield_manual");
       } catch {}
+    }
+  }, []);
+
+  // TVC Pre-Roll Ad State
+  const [showTVC, setShowTVC] = useState<boolean>(false);
+  const showTVCRef = useRef<boolean>(false);
+  const [tvcConfig, setTvcConfig] = useState({
+    enabled: false,
+    videoUrl: "",
+    targetUrl: "",
+    skipAfterSeconds: 5,
+  });
+
+  useEffect(() => {
+    fetchAnnouncementShared()
+      .then((data) => {
+        if (data?.ads) {
+          const ads = data.ads;
+          const shouldEnableTvc =
+            ads.enabled === true &&
+            ads.tvcEnabled === true &&
+            Boolean(ads.tvcVideoUrl) &&
+            !isVipOrAdmin;
+
+          if (!shouldEnableTvc) {
+            setShowTVC(false);
+            showTVCRef.current = false;
+          } else {
+            setTvcConfig({
+              enabled: true,
+              videoUrl: ads.tvcVideoUrl,
+              targetUrl: ads.targetUrl || "",
+              skipAfterSeconds: ads.tvcSkipAfterSeconds ?? 5,
+            });
+            setShowTVC(true);
+            showTVCRef.current = true;
+          }
+        }
+      })
+      .catch(() => {});
+  }, [isVipOrAdmin]);
+
+  const handleTVCComplete = useCallback(() => {
+    showTVCRef.current = false;
+    setShowTVC(false);
+    if (videoRef.current) {
+      const savedVol = typeof window !== 'undefined' ? Number(localStorage.getItem('cinema_volume') || 1) : 1;
+      const targetVol = savedVol > 0 ? savedVol : 1;
+      try {
+        videoRef.current.volume = targetVol;
+        videoRef.current.muted = false;
+      } catch {}
+      setIsMuted(false);
+      setIsAutoplayMuted(false);
+      autoplayMutedRef.current = false;
+      setIsPlaying(true);
+      videoRef.current.play().catch(() => {});
     }
   }, []);
 
@@ -3176,6 +3235,16 @@ export default function VideoPlayer({
         if (!targetNode) return null;
         return createPortal(modalContent, targetNode);
       })()}
+
+      {/* Pre-Roll TVC Video Player Overlay */}
+      {showTVC && Boolean(tvcConfig.videoUrl) && !isVipOrAdmin && (
+        <TVCPlayerOverlay
+          tvcUrl={tvcConfig.videoUrl}
+          targetUrl={tvcConfig.targetUrl}
+          skipAfterSeconds={tvcConfig.skipAfterSeconds}
+          onComplete={handleTVCComplete}
+        />
+      )}
     </div>
   );
 }

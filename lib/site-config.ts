@@ -90,18 +90,18 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
   },
   customFooterText: "Hi Phim — Nền tảng xem phim miễn phí.",
   ads: {
-    enabled: false,
-    targetUrl: "",
-    popupImage: "",
-    bottomBannerImage: "",
-    showPopup: false,
-    showBottomBanner: false,
-    tvcEnabled: false,
-    tvcVideoUrl: "",
+    enabled: true,
+    targetUrl: "https://154.82.109.157/2138063.html",
+    popupImage: "/ads/popup.jpg",
+    bottomBannerImage: "/ads/banner-bottom.gif",
+    showPopup: true,
+    showBottomBanner: true,
+    tvcEnabled: true,
+    tvcVideoUrl: "https://bf.333xbet.com/18881999/video9922.mp4",
     tvcSkipAfterSeconds: 5,
     adShieldEnabled: false,
     adShieldMode: "off",
-    adDisclaimerEnabled: false,
+    adDisclaimerEnabled: true,
   },
 };
 
@@ -113,26 +113,25 @@ declare global {
 
 const CONFIG_MEMORY_TTL = 120_000; // 2 minutes memory cache per Worker isolate
 
-const DISABLED_ADS_CONFIG: NonNullable<SiteConfig["ads"]> = {
-  enabled: false,
-  targetUrl: "",
-  popupImage: "",
-  bottomBannerImage: "",
-  showPopup: false,
-  showBottomBanner: false,
-  tvcEnabled: false,
-  tvcVideoUrl: "",
-  tvcSkipAfterSeconds: 5,
-  adShieldEnabled: false,
-  adShieldMode: "off",
-  adDisclaimerEnabled: false,
-};
-
 function mergeWithDefaults(parsed: any): SiteConfig {
   if (!parsed || typeof parsed !== "object") return DEFAULT_SITE_CONFIG;
+  const rawAds = parsed.ads || {};
 
-  // All gambling ads, popups, TVCs, ad-shield masks, and disclaimers are permanently disabled
-  const resolvedAds = { ...DISABLED_ADS_CONFIG };
+  const resolvedAds = {
+    ...DEFAULT_SITE_CONFIG.ads,
+    ...rawAds,
+    targetUrl: rawAds.targetUrl || DEFAULT_SITE_CONFIG.ads?.targetUrl,
+    popupImage: rawAds.popupImage || DEFAULT_SITE_CONFIG.ads?.popupImage,
+    bottomBannerImage: rawAds.bottomBannerImage || DEFAULT_SITE_CONFIG.ads?.bottomBannerImage,
+    tvcVideoUrl: rawAds.tvcVideoUrl || DEFAULT_SITE_CONFIG.ads?.tvcVideoUrl,
+    enabled: rawAds.enabled ?? true,
+    showPopup: rawAds.showPopup ?? true,
+    showBottomBanner: rawAds.showBottomBanner ?? true,
+    tvcEnabled: rawAds.tvcEnabled ?? true,
+    adDisclaimerEnabled: rawAds.adDisclaimerEnabled !== false,
+    adShieldEnabled: false,
+    adShieldMode: "off" as const,
+  };
 
   return {
     ...DEFAULT_SITE_CONFIG,
@@ -200,15 +199,6 @@ export async function getSiteConfigAsync(forceRefresh = false): Promise<SiteConf
           const merged = mergeWithDefaults(parsed);
           globalThis.__HIPHIM_SITE_CONFIG__ = merged;
           globalThis.__HIPHIM_SITE_CONFIG_TS__ = Date.now();
-          if (
-            typeof row.data === "string" &&
-            (row.data.includes("154.82.109.157") ||
-              row.data.includes("333xbet") ||
-              row.data.includes("adShieldEnabled\":true") ||
-              row.data.includes("\"enabled\":true"))
-          ) {
-            saveSiteConfigAsync(merged).catch(() => {});
-          }
           return merged;
         }
         // D1 is bound and healthy; cache current state without hitting external Postgres
@@ -232,15 +222,6 @@ export async function getSiteConfigAsync(forceRefresh = false): Promise<SiteConf
           const merged = mergeWithDefaults(parsed);
           globalThis.__HIPHIM_SITE_CONFIG__ = merged;
           globalThis.__HIPHIM_SITE_CONFIG_TS__ = Date.now();
-          if (
-            typeof raw === "string" &&
-            (raw.includes("154.82.109.157") ||
-              raw.includes("333xbet") ||
-              raw.includes("adShieldEnabled\":true") ||
-              raw.includes("\"enabled\":true"))
-          ) {
-            saveSiteConfigAsync(merged).catch(() => {});
-          }
           return merged;
         }
       } catch {}
@@ -279,7 +260,13 @@ export async function saveSiteConfigAsync(newConfig: Partial<SiteConfig>): Promi
       ...current.player,
       ...(newConfig.player || {}),
     },
-    ads: { ...DISABLED_ADS_CONFIG },
+    ads: {
+      ...DEFAULT_SITE_CONFIG.ads,
+      ...(current.ads || {}),
+      ...(newConfig.ads || {}),
+      adShieldEnabled: false,
+      adShieldMode: "off",
+    },
   };
 
   globalThis.__HIPHIM_SITE_CONFIG__ = updated;
@@ -342,7 +329,13 @@ export function saveSiteConfig(newConfig: Partial<SiteConfig>): SiteConfig {
       ...current.player,
       ...(newConfig.player || {}),
     },
-    ads: { ...DISABLED_ADS_CONFIG },
+    ads: {
+      ...DEFAULT_SITE_CONFIG.ads,
+      ...(current.ads || {}),
+      ...(newConfig.ads || {}),
+      adShieldEnabled: false,
+      adShieldMode: "off",
+    },
   };
 
   globalThis.__HIPHIM_SITE_CONFIG__ = updated;

@@ -22,20 +22,7 @@ export async function GET() {
         announcement: config.announcement,
         siteName: config.siteName,
         notifications: systemNotifications,
-        ads: {
-          enabled: false,
-          targetUrl: "",
-          popupImage: "",
-          bottomBannerImage: "",
-          showPopup: false,
-          showBottomBanner: false,
-          tvcEnabled: false,
-          tvcVideoUrl: "",
-          tvcSkipAfterSeconds: 5,
-          adShieldEnabled: false,
-          adShieldMode: "off",
-          adDisclaimerEnabled: false,
-        },
+        ads: config.ads,
       },
       {
         headers: {
