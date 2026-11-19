@@ -124,29 +124,43 @@ export const MovieSection = memo(function MovieSection({
             </div>
           </div>
 
-          {/* 4 Small Grid Cards Right */}
-          {filteredMovies.slice(1, 5).map((movie) => (
-            <div key={movie.slug} className="col-span-1">
+          {/* 4 Small Grid Cards Right (Responsive full-row alignment across all breakpoints) */}
+          {filteredMovies.slice(1, 5).map((movie, idx) => (
+            <div key={movie.slug} className={idx === 3 ? "col-span-1 lg:hidden xl:block" : "col-span-1"}>
               <MovieCardEditorial movie={movie} />
             </div>
           ))}
         </div>
       )}
 
-      {/* Variant 3: Standard Editorial Carousel (Default) */}
+      {/* Variant 3: Standard Editorial Grid — Always fills 2 full rows on Desktop/Tablet & 3 full rows on Mobile (Zero empty slots) */}
       {(variant === "carousel" || (variant === "featured" && filteredMovies.length < 5)) && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3.5 sm:gap-4 lg:gap-5">
-          {filteredMovies.slice(0, 6).map((movie) => (
-            <MovieCardEditorial key={movie.slug} movie={movie} />
-          ))}
+          {filteredMovies.slice(0, 12).map((movie, idx) => {
+            const visibilityClass =
+              idx >= 10
+                ? "hidden 2xl:block"
+                : idx >= 8
+                ? "hidden xl:block"
+                : idx >= 6
+                ? "hidden lg:block"
+                : "";
+            return (
+              <div key={movie.slug} className={visibilityClass}>
+                <MovieCardEditorial movie={movie} />
+              </div>
+            );
+          })}
         </div>
       )}
 
-      {/* Variant 4: Movie Grid */}
+      {/* Variant 4: Movie Grid — Full rows across every breakpoint (Zero orphan cards) */}
       {variant === "grid" && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3.5 sm:gap-4 lg:gap-5">
-          {filteredMovies.slice(0, 12).map((movie) => (
-            <MovieCardEditorial key={movie.slug} movie={movie} />
+          {filteredMovies.slice(0, 12).map((movie, idx) => (
+            <div key={movie.slug} className={idx >= 10 ? "xl:hidden 2xl:block" : ""}>
+              <MovieCardEditorial movie={movie} />
+            </div>
           ))}
         </div>
       )}

@@ -129,7 +129,7 @@ export default async function Home({ searchParams }: HomeProps) {
     const [newUpdates, featuredList, ...topicMoviesList] = await Promise.all([
       getCachedNewUpdates(),
       getCachedFeaturedMovies(),
-      ...TOPICS.map((t) => getCachedTopicMovies(t.slug, 12)),
+      ...TOPICS.map((t) => getCachedTopicMovies(t.slug, 16)),
     ]);
 
     initialMovies = newUpdates;

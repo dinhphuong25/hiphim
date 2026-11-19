@@ -217,7 +217,7 @@ export function useTopicsWithMovies(topics: any[], initialTopicsWithMovies: any[
             const results = await Promise.all(
                 topics.map(async (topic) => {
                     try {
-                        const movies = await fetchTopicMovies(topic.slug, 12);
+                        const movies = await fetchTopicMovies(topic.slug, 16);
                         return { ...topic, movies };
                     } catch {
                         return { ...topic, movies: [] };
