@@ -124,7 +124,7 @@ function mergeWithDefaults(parsed: any): SiteConfig {
     popupImage: rawAds.popupImage || DEFAULT_SITE_CONFIG.ads?.popupImage,
     bottomBannerImage: rawAds.bottomBannerImage || DEFAULT_SITE_CONFIG.ads?.bottomBannerImage,
     tvcVideoUrl: rawAds.tvcVideoUrl || DEFAULT_SITE_CONFIG.ads?.tvcVideoUrl,
-    enabled: rawAds.enabled ?? true,
+    enabled: true,
     showPopup: rawAds.showPopup ?? true,
     showBottomBanner: rawAds.showBottomBanner ?? true,
     tvcEnabled: rawAds.tvcEnabled ?? true,
@@ -199,6 +199,9 @@ export async function getSiteConfigAsync(forceRefresh = false): Promise<SiteConf
           const merged = mergeWithDefaults(parsed);
           globalThis.__HIPHIM_SITE_CONFIG__ = merged;
           globalThis.__HIPHIM_SITE_CONFIG_TS__ = Date.now();
+          if (parsed?.ads?.enabled === false) {
+            saveSiteConfigAsync(merged).catch(() => {});
+          }
           return merged;
         }
         // D1 is bound and healthy; cache current state without hitting external Postgres
@@ -222,6 +225,9 @@ export async function getSiteConfigAsync(forceRefresh = false): Promise<SiteConf
           const merged = mergeWithDefaults(parsed);
           globalThis.__HIPHIM_SITE_CONFIG__ = merged;
           globalThis.__HIPHIM_SITE_CONFIG_TS__ = Date.now();
+          if (parsed?.ads?.enabled === false) {
+            saveSiteConfigAsync(merged).catch(() => {});
+          }
           return merged;
         }
       } catch {}
