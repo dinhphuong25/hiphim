@@ -1,29 +1,24 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef, memo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
   Play,
   Star,
-  Clock,
   Flame,
   Heart,
   Info,
   ChevronLeft,
   ChevronRight,
-  Tv,
-  Users,
-  Clapperboard,
-  Volume2,
   X,
-  Sparkles,
+  Film,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { useFavorites } from "@/hooks/useLocalStorage";
+import { useIsFavorite, toggleFavoriteStandalone } from "@/hooks/useLocalStorage";
 import { useUserAuth } from "@/context/user-auth-context";
-import { getMovieImageCandidates } from "@/lib/image-helper";
+import { getMovieImageCandidates, STATIC_BLUR_DATA_URL } from "@/lib/image-helper";
 
 interface HeroMovie {
   slug: string;
@@ -51,7 +46,7 @@ interface HeroSectionProps {
   movies: HeroMovie[];
 }
 
-const AUTO_SLIDE_DURATION = 7000; // 7 seconds per slide
+const AUTO_SLIDE_DURATION = 7000;
 
 function getAgeRating(movie: HeroMovie): string {
   const cats = Array.isArray(movie.category)
@@ -85,14 +80,66 @@ function getEpisodeDisplay(movie: HeroMovie): string {
   return "Bản Đẹp";
 }
 
-export default function HeroSection({ movies }: HeroSectionProps) {
+const ResilientHeroImage = memo(function ResilientHeroImage({
+  movie,
+  type = "thumb",
+  alt,
+  sizes,
+  className,
+}: {
+  movie: HeroMovie;
+  type?: "thumb" | "poster";
+  alt: string;
+  sizes: string;
+  className?: string;
+}) {
+  const candidates = useMemo(
+    () => getMovieImageCandidates(movie, type),
+    [movie?.thumb_url, movie?.poster_url, type]
+  );
+  const [idx, setIdx] = useState(0);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    setIdx(0);
+    setFailed(false);
+  }, [movie?.slug, movie?.thumb_url, movie?.poster_url, type]);
+
+  const src = !failed && candidates.length > 0 ? candidates[idx] : null;
+  if (!src) {
+    return (
+      <div className="w-full h-full bg-[#0e1512] flex items-center justify-center">
+        <Film className="w-4 h-4 text-brand-green/50" />
+      </div>
+    );
+  }
+
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      loading="lazy"
+      decoding="async"
+      placeholder="blur"
+      blurDataURL={STATIC_BLUR_DATA_URL}
+      sizes={sizes}
+      className={className}
+      onError={() => {
+        if (idx + 1 < candidates.length) setIdx((i) => i + 1);
+        else setFailed(true);
+      }}
+    />
+  );
+});
+
+function HeroSectionComponent({ movies }: HeroSectionProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
 
   const { user, checkAuthOrPrompt, updateServerData } = useUserAuth();
-  const { toggleFavorite, isFavorite } = useFavorites();
 
   const validMovies = useMemo(() => {
     return (movies || [])
@@ -101,6 +148,7 @@ export default function HeroSection({ movies }: HeroSectionProps) {
   }, [movies]);
 
   const current = validMovies[currentIndex] || validMovies[0];
+  const isCurrentFav = useIsFavorite(current?.slug);
 
   const backdropCandidates = useMemo(
     () => getMovieImageCandidates(current, "backdrop"),
@@ -121,7 +169,7 @@ export default function HeroSection({ movies }: HeroSectionProps) {
       setTimeout(() => {
         setCurrentIndex(index);
         setIsTransitioning(false);
-      }, 250);
+      }, 220);
     },
     [isTransitioning, currentIndex]
   );
@@ -136,7 +184,7 @@ export default function HeroSection({ movies }: HeroSectionProps) {
     goTo((currentIndex - 1 + validMovies.length) % validMovies.length);
   }, [currentIndex, validMovies.length, goTo]);
 
-  // Auto-slide after AUTO_SLIDE_DURATION (Single one-shot timer, ZERO main-thread re-renders)
+  // Auto-slide single timer
   useEffect(() => {
     if (isPaused || validMovies.length <= 1) return;
 
@@ -175,10 +223,9 @@ export default function HeroSection({ movies }: HeroSectionProps) {
   const handleTouchEnd = () => {
     if (touchStartXRef.current === null || touchEndXRef.current === null) return;
     const distance = touchStartXRef.current - touchEndXRef.current;
-    const minSwipeDistance = 45;
-    if (distance > minSwipeDistance) {
+    if (distance > 45) {
       next();
-    } else if (distance < -minSwipeDistance) {
+    } else if (distance < -45) {
       prev();
     }
     touchStartXRef.current = null;
@@ -188,7 +235,6 @@ export default function HeroSection({ movies }: HeroSectionProps) {
   const mobileThumbContainerRef = useRef<HTMLDivElement>(null);
   const desktopThumbContainerRef = useRef<HTMLDivElement>(null);
 
-  // Auto scroll active thumbnail into view (scrolls ONLY the thumbnail strip, never window/viewport)
   useEffect(() => {
     for (const container of [mobileThumbContainerRef.current, desktopThumbContainerRef.current]) {
       if (!container || container.offsetWidth === 0) continue;
@@ -217,7 +263,6 @@ export default function HeroSection({ movies }: HeroSectionProps) {
   const rating = Number(rawRating);
   const displayRating = !isNaN(rating) && rating > 0 ? rating.toFixed(1) : "8.5";
 
-  // Clean HTML from content string
   const cleanContent = current.content
     ? current.content
         .replace(/<[^>]*>/g, "")
@@ -249,17 +294,18 @@ export default function HeroSection({ movies }: HeroSectionProps) {
   const handleFavorite = () => {
     if (!current) return;
     if (!checkAuthOrPrompt("lưu phim yêu thích")) return;
-    const isFav = isFavorite(current.slug);
-    const willBeFav = !isFav;
-    const updated = toggleFavorite({
+    const willBeFav = !isCurrentFav;
+    const updated = toggleFavoriteStandalone({
       slug: current.slug,
       name: current.name,
-      thumb_url: backdropUrl,
+      origin_name: current.origin_name,
+      thumb_url: backdropUrl || current.thumb_url || "",
+      poster_url: current.poster_url,
       year: current.year,
       quality: current.quality,
     });
     if (user && updated) {
-      updateServerData({ favorites: updated });
+      updateServerData({ favorites: updated }, { silent: true });
     }
     if (willBeFav) {
       toast.success(`Đã thêm "${current.name}" vào danh sách yêu thích!`);
@@ -279,17 +325,11 @@ export default function HeroSection({ movies }: HeroSectionProps) {
         onTouchEnd={handleTouchEnd}
         aria-label="Phim Nổi Bật Trên Trang Chủ"
       >
-        <style dangerouslySetInnerHTML={{ __html: `
-          @keyframes heroSlideProgress {
-            0% { width: 0%; }
-            100% { width: 100%; }
-          }
-        `}} />
         {/* 1. Backdrop Background Image with Smooth Cross-fade */}
         <div
           className={cn(
-            "absolute inset-0 w-full h-full transition-[opacity,transform] duration-700 ease-out transform-gpu will-change-transform will-change-opacity",
-            isTransitioning ? "opacity-0 scale-105" : "opacity-100 scale-100"
+            "absolute inset-0 w-full h-full transition-[opacity,transform] duration-500 ease-out transform-gpu",
+            isTransitioning ? "opacity-0 scale-103" : "opacity-100 scale-100"
           )}
         >
           {backdropUrl ? (
@@ -301,8 +341,8 @@ export default function HeroSection({ movies }: HeroSectionProps) {
               loading="eager"
               fetchPriority="high"
               className="object-cover object-center lg:object-[70%_center]"
-              sizes="(max-width: 768px) 100vw, (max-width: 1440px) 100vw, 1920px"
-              quality={90}
+              sizes="(max-width: 768px) 100vw, (max-width: 1440px) 100vw, 1440px"
+              quality={85}
               onError={() => {
                 if (backdropIdx + 1 < backdropCandidates.length) {
                   setBackdropIdx((i) => i + 1);
@@ -331,7 +371,6 @@ export default function HeroSection({ movies }: HeroSectionProps) {
         {/* 2. Main Content Container */}
         <div className="relative z-20 h-full w-full px-3.5 sm:px-6 lg:px-6 xl:px-8 flex flex-col justify-start lg:justify-center pt-20 sm:pt-24 lg:pt-24 pb-2 sm:pb-8 min-h-0 sm:min-h-[inherit]">
           <div className="w-full max-w-xl lg:max-w-2xl space-y-3.5 sm:space-y-4 relative z-30">
-            
             {/* Top Trending Ribbon Badge */}
             <div className="flex items-center gap-2">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-brand-green/12 border border-brand-green/30 text-brand-green text-[11px] font-bold uppercase tracking-wider shadow-[0_0_12px_rgba(32,214,107,0.2)]">
@@ -343,7 +382,7 @@ export default function HeroSection({ movies }: HeroSectionProps) {
             {/* Movie Title & Origin Name */}
             <div
               className={cn(
-                "transition-all duration-400 space-y-1",
+                "transition-[opacity,transform] duration-300 space-y-1",
                 isTransitioning ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"
               )}
             >
@@ -351,48 +390,42 @@ export default function HeroSection({ movies }: HeroSectionProps) {
                 {current.name}
               </h1>
               {current.origin_name && current.origin_name !== current.name && (
-                <p className="text-xs sm:text-[12px] text-white/50 font-medium tracking-wide drop-shadow-md italic line-clamp-1">
+                <p className="text-xs sm:text-[12px] text-white/55 font-medium tracking-wide drop-shadow-md italic line-clamp-1">
                   {current.origin_name}
                 </p>
               )}
             </div>
 
-            {/* Comprehensive Metadata Badges Strip (IMDb, 4K, T15, Year, Episode...) */}
+            {/* Metadata Badges Strip */}
             <div
               className={cn(
-                "flex flex-wrap items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-white/85 transition-all duration-400 font-medium",
+                "flex flex-wrap items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-white/85 transition-[opacity,transform] duration-300 font-medium",
                 isTransitioning ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"
               )}
             >
-              {/* IMDb Rating Badge */}
-              <div className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-400/15 border border-amber-400/30 text-amber-300 font-bold shadow-xs">
+              <div className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-400/15 border border-amber-400/30 text-amber-300 font-bold">
                 <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
                 <span>IMDb {displayRating}</span>
               </div>
 
-              {/* Quality Badge */}
               <span className="px-2 py-0.5 rounded-md bg-white/[0.08] border border-white/15 text-white font-bold tracking-wide">
-                {current.quality || "4K"}
+                {current.quality || "FHD"}
               </span>
 
-              {/* Age Classification Badge */}
               <span className="px-2 py-0.5 rounded-md bg-white/[0.08] border border-white/15 text-white/90 font-semibold">
                 {ageRating}
               </span>
 
-              {/* Year Badge */}
               {current.year && (
                 <span className="px-2 py-0.5 rounded-md bg-white/[0.08] border border-white/15 text-white/80">
                   {current.year}
                 </span>
               )}
 
-              {/* Episode Status Badge */}
               <span className="px-2 py-0.5 rounded-md bg-white/[0.08] border border-white/15 text-white/80">
                 {episodeStatus}
               </span>
 
-              {/* Lang/Audio Badge */}
               {current.lang && (
                 <span className="hidden sm:inline-block px-2 py-0.5 rounded-md bg-white/[0.08] border border-white/15 text-white/80">
                   {current.lang}
@@ -404,7 +437,7 @@ export default function HeroSection({ movies }: HeroSectionProps) {
             {categories.length > 0 && (
               <div
                 className={cn(
-                  "flex flex-wrap items-center gap-1.5 pt-0.5 transition-all duration-400",
+                  "flex flex-wrap items-center gap-1.5 pt-0.5 transition-[opacity,transform] duration-300",
                   isTransitioning ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"
                 )}
               >
@@ -412,7 +445,7 @@ export default function HeroSection({ movies }: HeroSectionProps) {
                   <Link
                     key={`${cat.slug}-${idx}`}
                     href={`/?category=${cat.slug}`}
-                    className="px-2.5 py-0.5 rounded-lg bg-white/[0.06] hover:bg-brand-green/20 hover:text-brand-green hover:border-brand-green/40 border border-white/10 text-white/70 text-[11.5px] font-medium transition-all"
+                    className="px-2.5 py-0.5 rounded-lg bg-white/[0.06] hover:bg-brand-green/20 hover:text-brand-green hover:border-brand-green/40 border border-white/10 text-white/75 text-[11.5px] font-medium transition-colors"
                   >
                     {cat.name}
                   </Link>
@@ -424,7 +457,7 @@ export default function HeroSection({ movies }: HeroSectionProps) {
             {cleanContent && (
               <p
                 className={cn(
-                  "text-xs sm:text-[13px] text-white/70 leading-relaxed line-clamp-2 sm:line-clamp-3 max-w-lg transition-all duration-400 font-normal drop-shadow-md pt-0.5",
+                  "text-xs sm:text-[13px] text-white/75 leading-relaxed line-clamp-2 sm:line-clamp-3 max-w-lg transition-[opacity,transform] duration-300 font-normal drop-shadow-md pt-0.5",
                   isTransitioning ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"
                 )}
               >
@@ -435,60 +468,57 @@ export default function HeroSection({ movies }: HeroSectionProps) {
             {/* Action Buttons Strip */}
             <div
               className={cn(
-                "flex items-center gap-3 pt-1.5 sm:pt-2 transition-all duration-400",
+                "flex items-center gap-3 pt-1.5 sm:pt-2 transition-[opacity,transform] duration-300",
                 isTransitioning ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"
               )}
             >
-              {/* Button 1: Circular Play Button (Hi Phim Emerald) */}
               <Link
                 href={`/watch?slug=${current.slug}`}
-                className="group w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-gradient-to-tr from-[#20D66B] via-[#2AE376] to-[#10B981] hover:brightness-110 text-black flex items-center justify-center shadow-[0_0_24px_rgba(32,214,107,0.5)] hover:scale-106 active:scale-95 transition-all shrink-0 cursor-pointer"
+                className="group w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-gradient-to-tr from-[#20D66B] via-[#2AE376] to-[#10B981] hover:brightness-110 text-black flex items-center justify-center shadow-[0_0_24px_rgba(32,214,107,0.5)] hover:scale-105 active:scale-95 transition-all shrink-0 cursor-pointer"
                 title="Xem phim ngay"
                 aria-label="Xem phim ngay"
               >
                 <Play className="w-5 h-5 fill-black text-black ml-0.5 group-hover:scale-110 transition-transform" />
               </Link>
 
-              {/* Button 2: Round Heart Favorite Button */}
               <button
+                type="button"
                 onClick={handleFavorite}
                 aria-label="Lưu phim yêu thích"
                 title="Lưu phim yêu thích"
                 className={cn(
                   "w-10 h-10 sm:w-11 sm:h-11 rounded-full border flex items-center justify-center transition-all active:scale-95 shrink-0 cursor-pointer",
-                  isFavorite(current.slug)
+                  isCurrentFav
                     ? "bg-brand-green/20 border-brand-green/60 text-brand-green shadow-[0_0_12px_rgba(32,214,107,0.3)]"
-                    : "bg-black/50 hover:bg-white/15 border-white/15 text-white/80"
+                    : "bg-black/60 hover:bg-white/15 border-white/15 text-white/80"
                 )}
               >
                 <Heart
                   className={cn(
                     "w-4.5 h-4.5",
-                    isFavorite(current.slug) ? "fill-brand-green text-brand-green" : "text-white/80"
+                    isCurrentFav ? "fill-brand-green text-brand-green" : "text-white/80"
                   )}
                 />
               </button>
 
-              {/* Button 3: Round Info Button */}
               <button
+                type="button"
                 onClick={() => setShowInfoModal(true)}
                 aria-label="Xem thông tin chi tiết phim"
                 title="Xem thông tin chi tiết phim"
-                className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/50 hover:bg-white/15 border border-white/15 text-white/80 flex items-center justify-center transition-all active:scale-95 shrink-0 cursor-pointer"
+                className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/60 hover:bg-white/15 border border-white/15 text-white/80 flex items-center justify-center transition-all active:scale-95 shrink-0 cursor-pointer"
               >
                 <Info className="w-4.5 h-4.5 text-white/80" />
               </button>
             </div>
 
-            {/* Mobile Thumbnails Row (Touch scrollable) */}
+            {/* Mobile Thumbnails Row */}
             <div className="sm:hidden pt-2 w-full">
               <div
                 ref={mobileThumbContainerRef}
                 className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-0"
               >
                 {validMovies.map((movie, idx) => {
-                  const thumbCands = getMovieImageCandidates(movie, "thumb");
-                  const thumb = thumbCands[0] || movie.thumb_url || movie.poster_url || "";
                   const isActive = idx === currentIndex;
                   return (
                     <button
@@ -496,23 +526,19 @@ export default function HeroSection({ movies }: HeroSectionProps) {
                       type="button"
                       onClick={() => goTo(idx)}
                       className={cn(
-                        "relative w-20 h-12 rounded-lg overflow-hidden shrink-0 border transition-all duration-300 text-left",
+                        "relative w-20 h-12 rounded-lg overflow-hidden shrink-0 border transition-all duration-200 text-left",
                         isActive
                           ? "ring-2 ring-brand-green border-brand-green opacity-100 scale-102 shadow-[0_0_12px_rgba(32,214,107,0.4)]"
                           : "border-white/20 opacity-55 hover:opacity-100"
                       )}
                     >
-                      {thumb ? (
-                        <Image
-                          src={thumb}
-                          alt={movie.name}
-                          fill
-                          className="object-cover"
-                          sizes="80px"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-[#111]" />
-                      )}
+                      <ResilientHeroImage
+                        movie={movie}
+                        type="thumb"
+                        alt={movie.name}
+                        sizes="80px"
+                        className="object-cover"
+                      />
                       {isActive && (
                         <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/60 overflow-hidden">
                           <div
@@ -531,12 +557,11 @@ export default function HeroSection({ movies }: HeroSectionProps) {
                 })}
               </div>
             </div>
-
           </div>
 
-          {/* 3. Bottom-Right Mini Preview Carousel Strip (Desktop exact Cobephim design) */}
+          {/* 3. Bottom-Right Mini Preview Carousel Strip (Desktop) */}
           {validMovies.length > 1 && (
-            <div className="hidden sm:flex absolute bottom-8 right-6 lg:right-12 z-30 items-center gap-2 max-w-[55%] xl:max-w-[48%] bg-black/40 backdrop-blur-xl p-2 rounded-2xl border border-white/10 shadow-2xl">
+            <div className="hidden sm:flex absolute bottom-8 right-6 lg:right-12 z-30 items-center gap-2 max-w-[55%] xl:max-w-[48%] bg-[#0B100E]/90 backdrop-blur-sm p-2 rounded-2xl border border-white/10 shadow-[0_12px_32px_rgba(0,0,0,0.75)]">
               <button
                 type="button"
                 onClick={prev}
@@ -551,8 +576,6 @@ export default function HeroSection({ movies }: HeroSectionProps) {
                 className="flex items-center gap-2 overflow-x-auto scrollbar-none py-1 px-0.5"
               >
                 {validMovies.map((movie, idx) => {
-                  const thumbCands = getMovieImageCandidates(movie, "thumb");
-                  const thumb = thumbCands[0] || movie.thumb_url || movie.poster_url || "";
                   const isActive = idx === currentIndex;
                   return (
                     <button
@@ -560,30 +583,25 @@ export default function HeroSection({ movies }: HeroSectionProps) {
                       type="button"
                       onClick={() => goTo(idx)}
                       className={cn(
-                        "group relative w-20 lg:w-22 xl:w-26 h-12 lg:h-13 xl:h-15 rounded-xl overflow-hidden shrink-0 border transition-all duration-300 cursor-pointer",
+                        "group relative w-20 lg:w-22 xl:w-26 h-12 lg:h-13 xl:h-15 rounded-xl overflow-hidden shrink-0 border transition-all duration-200 cursor-pointer",
                         isActive
-                          ? "ring-2 ring-brand-green border-brand-green opacity-100 scale-105 shadow-[0_0_16px_rgba(32,214,107,0.45)] z-10"
+                          ? "ring-2 ring-brand-green border-brand-green opacity-100 scale-105 shadow-[0_0_14px_rgba(32,214,107,0.4)] z-10"
                           : "border-white/15 opacity-55 hover:opacity-100 hover:scale-102"
                       )}
                       title={movie.name}
                     >
-                      {thumb ? (
-                        <Image
-                          src={thumb}
-                          alt={movie.name}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-110"
-                          sizes="(max-width: 1024px) 80px, 104px"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-[#111]" />
-                      )}
+                      <ResilientHeroImage
+                        movie={movie}
+                        type="thumb"
+                        alt={movie.name}
+                        sizes="(max-width: 1024px) 80px, 104px"
+                        className="object-cover transition-transform duration-300 group-hover:scale-110"
+                      />
 
-                      {/* Active timer progress line */}
                       {isActive && (
                         <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/60 overflow-hidden">
                           <div
-                            key={`hero-progress-m-${currentIndex}`}
+                            key={`hero-progress-d-${currentIndex}`}
                             className="h-full bg-brand-green"
                             style={{
                               animation: isPaused
@@ -611,15 +629,18 @@ export default function HeroSection({ movies }: HeroSectionProps) {
         </div>
       </section>
 
-      {/* 4. Quick Info Modal (Triggered by the Info circle button) */}
+      {/* 4. Quick Info Modal */}
       {showInfoModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+        <div
+          onClick={() => setShowInfoModal(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-fade-in"
+        >
           <div
             className="relative w-full max-w-2xl bg-[#0c120e] border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
             <button
+              type="button"
               onClick={() => setShowInfoModal(false)}
               className="absolute top-5 right-5 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
               aria-label="Đóng"
@@ -628,21 +649,16 @@ export default function HeroSection({ movies }: HeroSectionProps) {
             </button>
 
             <div className="flex flex-col sm:flex-row gap-6 items-start">
-              {/* Poster Thumbnail */}
               <div className="relative w-36 sm:w-44 aspect-[2/3] rounded-2xl overflow-hidden shrink-0 border border-white/10 shadow-lg mx-auto sm:mx-0">
-                <Image
-                  src={
-                    getMovieImageCandidates(current, "poster")[0] ||
-                    backdropUrl ||
-                    "/placeholder.svg"
-                  }
+                <ResilientHeroImage
+                  movie={current}
+                  type="poster"
                   alt={current.name}
-                  fill
+                  sizes="176px"
                   className="object-cover"
                 />
               </div>
 
-              {/* Movie Meta */}
               <div className="flex-1 space-y-3">
                 <div>
                   <h3 className="text-lg sm:text-xl font-bold text-white uppercase leading-snug">
@@ -660,7 +676,7 @@ export default function HeroSection({ movies }: HeroSectionProps) {
                     IMDb {displayRating}
                   </span>
                   <span className="px-2.5 py-1 rounded-md bg-white/10 text-white font-bold border border-white/20">
-                    {current.quality || "4K"}
+                    {current.quality || "FHD"}
                   </span>
                   <span className="px-2.5 py-1 rounded-md bg-white/10 text-white font-semibold border border-white/20">
                     {ageRating}
@@ -705,14 +721,15 @@ export default function HeroSection({ movies }: HeroSectionProps) {
                   </Link>
 
                   <button
+                    type="button"
                     onClick={handleFavorite}
-                    className="p-3 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-all active:scale-95"
+                    className="p-3 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-all active:scale-95 cursor-pointer"
                     title="Lưu yêu thích"
                   >
                     <Heart
                       className={cn(
                         "w-5 h-5",
-                        isFavorite(current.slug) && "fill-brand-green text-brand-green"
+                        isCurrentFav && "fill-brand-green text-brand-green"
                       )}
                     />
                   </button>
@@ -725,3 +742,5 @@ export default function HeroSection({ movies }: HeroSectionProps) {
     </>
   );
 }
+
+export default memo(HeroSectionComponent);

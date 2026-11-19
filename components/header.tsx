@@ -2,9 +2,8 @@
 
 import { useState, useEffect, memo, Suspense } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { Search, LayoutGrid, Smartphone, ChevronLeft } from "lucide-react";
+import { Search, LayoutGrid, ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import SearchOverlay from "@/components/search/search-overlay";
 import UserMenu from "@/components/auth/user-menu";
@@ -229,7 +228,7 @@ function HeaderComponent({}: HeaderProps) {
             type="button"
             onClick={() => setShowSearchOverlay(true)}
             aria-label="Tìm kiếm phim, diễn viên..."
-            className="pointer-events-auto flex items-center justify-between h-[48px] px-4 w-72 xl:w-80 rounded-2xl bg-[#0B100E]/95 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.65)] hover:border-brand-green/50 hover:bg-[#0E1512]/95 hover:shadow-[0_8px_30px_rgba(32,214,107,0.15)] transition-all duration-200 group cursor-pointer text-left"
+            className="pointer-events-auto flex items-center justify-between h-[48px] px-4 w-72 xl:w-80 rounded-2xl bg-[#0B100E]/[0.96] backdrop-blur-sm border border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_8px_28px_rgba(0,0,0,0.65)] hover:border-brand-green/50 hover:bg-[#0E1512] hover:shadow-[0_8px_28px_rgba(32,214,107,0.15)] transition-all duration-200 group cursor-pointer text-left"
           >
             <div className="flex items-center gap-2.5 min-w-0">
               <Search className="w-4 h-4 text-brand-green shrink-0 stroke-[2.2] group-hover:scale-110 transition-transform duration-200" />
@@ -244,8 +243,8 @@ function HeaderComponent({}: HeaderProps) {
 
           {/* Center Info: Hiện tên phim đang phát nếu có (hoặc để trống thoáng mắt) */}
           {activeMovieName ? (
-            <div className="pointer-events-auto hidden xl:flex items-center gap-2 h-[44px] px-4 rounded-2xl bg-[#0B100E]/90 backdrop-blur-xl border border-white/10 shadow-[0_8px_24px_rgba(0,0,0,0.5)]">
-              <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse shrink-0" />
+            <div className="pointer-events-auto hidden xl:flex items-center gap-2 h-[44px] px-4 rounded-2xl bg-[#0B100E]/[0.96] backdrop-blur-sm border border-white/10 shadow-[0_8px_24px_rgba(0,0,0,0.5)]">
+              <span className="w-2 h-2 rounded-full bg-brand-green shrink-0" />
               <span className="text-white/50 text-[11px] font-medium shrink-0">Đang phát:</span>
               <span className="text-white font-bold text-[12px] truncate max-w-[220px]">
                 {activeMovieName}
@@ -256,7 +255,7 @@ function HeaderComponent({}: HeaderProps) {
           )}
 
           {/* Ô 3: 2 CÁI CÒN LẠI (Notification Bell + User Menu Bento Island) */}
-          <div className="pointer-events-auto flex items-center gap-3 sm:gap-3.5 h-[48px] px-3.5 sm:px-4 rounded-2xl bg-[#0B100E]/95 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.65)] hover:border-brand-green/40 hover:bg-[#0E1512]/95 hover:shadow-[0_8px_30px_rgba(32,214,107,0.12)] transition-all duration-200">
+          <div className="pointer-events-auto flex items-center gap-3 sm:gap-3.5 h-[48px] px-3.5 sm:px-4 rounded-2xl bg-[#0B100E]/[0.96] backdrop-blur-sm border border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_8px_28px_rgba(0,0,0,0.65)] hover:border-brand-green/40 hover:bg-[#0E1512] hover:shadow-[0_8px_28px_rgba(32,214,107,0.12)] transition-all duration-200">
             <NotificationBell />
             <div className="h-5 w-px bg-white/15 shrink-0" />
             <UserMenu />

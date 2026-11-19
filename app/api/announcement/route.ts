@@ -22,13 +22,26 @@ export async function GET() {
         announcement: config.announcement,
         siteName: config.siteName,
         notifications: systemNotifications,
-        ads: config.ads,
+        ads: {
+          enabled: false,
+          targetUrl: "",
+          popupImage: "",
+          bottomBannerImage: "",
+          showPopup: false,
+          showBottomBanner: false,
+          tvcEnabled: false,
+          tvcVideoUrl: "",
+          tvcSkipAfterSeconds: 5,
+          adShieldEnabled: false,
+          adShieldMode: "off",
+          adDisclaimerEnabled: false,
+        },
       },
       {
         headers: {
-          "Cache-Control": "public, s-maxage=600, max-age=300, stale-while-revalidate=3600",
-          "CDN-Cache-Control": "public, max-age=600, stale-while-revalidate=3600",
-          "Cloudflare-CDN-Cache-Control": "public, max-age=600, stale-while-revalidate=3600",
+          "Cache-Control": "public, s-maxage=300, max-age=120, stale-while-revalidate=1800",
+          "CDN-Cache-Control": "public, max-age=300, stale-while-revalidate=1800",
+          "Cloudflare-CDN-Cache-Control": "public, max-age=300, stale-while-revalidate=1800",
         },
       }
     );

@@ -83,7 +83,7 @@ export function SplashScreen() {
           {/* Biểu tượng Logo — Kích thước nhỏ gọn, trượt vào tâm */}
           <div
             className={cn(
-              "w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 shrink-0 relative transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu",
+              "w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 shrink-0 relative transition-all duration-500 ease-out transform-gpu",
               isMerged
                 ? "opacity-100 translate-x-0 scale-100"
                 : "opacity-0 -translate-x-6 sm:-translate-x-8 scale-90"
@@ -95,7 +95,7 @@ export function SplashScreen() {
           {/* Phần Tên: HI PHIM. — Cỡ chữ nhỏ gọn thanh lịch */}
           <div
             className={cn(
-              "flex items-baseline tracking-tight font-[family-name:var(--font-oswald)] text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-bold uppercase select-none leading-none transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu",
+              "flex items-baseline tracking-tight font-[family-name:var(--font-oswald)] text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-bold uppercase select-none leading-none transition-all duration-500 ease-out transform-gpu",
               isMerged
                 ? "opacity-100 translate-x-0 scale-100"
                 : "opacity-0 translate-x-6 sm:translate-x-8 scale-95"
@@ -128,7 +128,7 @@ export function SplashScreen() {
         {/* Thanh Loading: Mỏng nhẹ, chạy nhanh gọn (~1s) */}
         <div className="mt-5 sm:mt-6 w-32 sm:w-40 h-[2px] rounded-full bg-white/10 overflow-hidden relative">
           <div
-            className="h-full bg-brand-green rounded-full transition-all duration-[1000ms] ease-out shadow-[0_0_8px_rgba(32,214,107,0.7)]"
+            className="h-full bg-brand-green rounded-full transition-all duration-1000 ease-out shadow-[0_0_8px_rgba(32,214,107,0.7)]"
             style={{ width: `${progress}%` }}
           />
         </div>

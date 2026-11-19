@@ -106,49 +106,33 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
 };
 
 declare global {
-  // eslint-disable-next-line no-var
   var __HIPHIM_SITE_CONFIG__: SiteConfig | undefined;
-  // eslint-disable-next-line no-var
   var __HIPHIM_SITE_CONFIG_TS__: number | undefined;
-  // eslint-disable-next-line no-var
   var __HIPHIM_SITE_CONFIG_PROMISE__: Promise<SiteConfig> | undefined;
 }
 
 const CONFIG_MEMORY_TTL = 120_000; // 2 minutes memory cache per Worker isolate
 
+const DISABLED_ADS_CONFIG: NonNullable<SiteConfig["ads"]> = {
+  enabled: false,
+  targetUrl: "",
+  popupImage: "",
+  bottomBannerImage: "",
+  showPopup: false,
+  showBottomBanner: false,
+  tvcEnabled: false,
+  tvcVideoUrl: "",
+  tvcSkipAfterSeconds: 5,
+  adShieldEnabled: false,
+  adShieldMode: "off",
+  adDisclaimerEnabled: false,
+};
+
 function mergeWithDefaults(parsed: any): SiteConfig {
   if (!parsed || typeof parsed !== "object") return DEFAULT_SITE_CONFIG;
-  const rawAds = parsed.ads || {};
 
-  // Strip any legacy gambling domains/IPs completely
-  const isGamblingTarget =
-    typeof rawAds.targetUrl === "string" &&
-    (rawAds.targetUrl.includes("154.82.109.157") ||
-      rawAds.targetUrl.includes("333xbet") ||
-      rawAds.targetUrl.includes("bet") ||
-      rawAds.targetUrl.includes("casino"));
-
-  const isGamblingTvc =
-    typeof rawAds.tvcVideoUrl === "string" &&
-    (rawAds.tvcVideoUrl.includes("333xbet") ||
-      rawAds.tvcVideoUrl.includes("9922") ||
-      rawAds.tvcVideoUrl.includes("bet"));
-
-  const resolvedAds = {
-    ...DEFAULT_SITE_CONFIG.ads,
-    ...rawAds,
-    targetUrl: isGamblingTarget ? "" : (rawAds.targetUrl || ""),
-    popupImage: isGamblingTarget ? "" : (rawAds.popupImage || ""),
-    bottomBannerImage: isGamblingTarget ? "" : (rawAds.bottomBannerImage || ""),
-    tvcVideoUrl: isGamblingTvc ? "" : (rawAds.tvcVideoUrl || ""),
-    enabled: isGamblingTarget ? false : (rawAds.enabled === true),
-    showPopup: isGamblingTarget ? false : (rawAds.showPopup === true),
-    showBottomBanner: isGamblingTarget ? false : (rawAds.showBottomBanner === true),
-    tvcEnabled: isGamblingTvc ? false : (rawAds.tvcEnabled === true),
-    adShieldEnabled: false,
-    adShieldMode: "off" as const,
-    adDisclaimerEnabled: false,
-  };
+  // All gambling ads, popups, TVCs, ad-shield masks, and disclaimers are permanently disabled
+  const resolvedAds = { ...DISABLED_ADS_CONFIG };
 
   return {
     ...DEFAULT_SITE_CONFIG,
@@ -295,11 +279,7 @@ export async function saveSiteConfigAsync(newConfig: Partial<SiteConfig>): Promi
       ...current.player,
       ...(newConfig.player || {}),
     },
-    ads: {
-      ...DEFAULT_SITE_CONFIG.ads,
-      ...(current.ads || {}),
-      ...(newConfig.ads || {}),
-    },
+    ads: { ...DISABLED_ADS_CONFIG },
   };
 
   globalThis.__HIPHIM_SITE_CONFIG__ = updated;
@@ -362,11 +342,7 @@ export function saveSiteConfig(newConfig: Partial<SiteConfig>): SiteConfig {
       ...current.player,
       ...(newConfig.player || {}),
     },
-    ads: {
-      ...DEFAULT_SITE_CONFIG.ads,
-      ...(current.ads || {}),
-      ...(newConfig.ads || {}),
-    },
+    ads: { ...DISABLED_ADS_CONFIG },
   };
 
   globalThis.__HIPHIM_SITE_CONFIG__ = updated;

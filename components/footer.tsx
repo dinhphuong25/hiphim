@@ -28,7 +28,7 @@ function FooterComponent({ customFooterText }: FooterProps = {}) {
   return (
     <footer className="w-full mt-auto mb-0 select-none text-cinema-text px-4 sm:px-8 lg:px-12 pb-20 sm:pb-24 lg:pb-6 pt-1 sm:pt-2">
       {/* Footer Card Container matching Hi Download - Compact & Centered */}
-      <div className="w-full max-w-[760px] mx-auto rounded-2xl border border-white/10 bg-[#0C130F]/90 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.5)] py-3.5 px-4 sm:py-4 sm:px-5">
+      <div className="w-full max-w-[760px] mx-auto rounded-2xl border border-white/10 bg-[#0C130F]/[0.96] shadow-[0_8px_28px_rgba(0,0,0,0.5)] py-3.5 px-4 sm:py-4 sm:px-5">
         {/* Top Row: Brand Info (Left) + Quick Navigation Links (Right) */}
         <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-3 text-center sm:text-left">
           {/* Left: Brand Identity & Tagline */}

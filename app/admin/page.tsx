@@ -627,9 +627,6 @@ export default function AdminDashboardPage() {
     if (tab === "announcement") {
       fetchSystemNotifs();
     }
-    if (tab === "ads") {
-      fetchAdsAnalytics();
-    }
   };
 
   // Load config on mount
@@ -640,7 +637,6 @@ export default function AdminDashboardPage() {
     fetchReports();
     fetchAutoRepairConfig();
     fetchSystemNotifs();
-    fetchAdsAnalytics();
 
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
@@ -1182,21 +1178,6 @@ export default function AdminDashboardPage() {
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 ml-auto" />
                     )}
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => switchTab("ads")}
-                    className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs transition-colors ${
-                      activeTab === "ads"
-                        ? "bg-white/[0.08] text-white font-medium border border-white/[0.08]"
-                        : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
-                    }`}
-                  >
-                    <DollarSign className="w-4 h-4 text-zinc-400" />
-                    <span>Quảng Cáo (Ads)</span>
-                    {config.ads?.enabled && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 ml-auto" />
-                    )}
-                  </button>
                 </div>
 
                 {/* Group 4: HỆ THỐNG & BẢO MẬT */}
@@ -1387,24 +1368,9 @@ export default function AdminDashboardPage() {
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 ml-auto" />
               )}
             </button>
-            <button
-              type="button"
-              onClick={() => switchTab("ads")}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs transition-colors cursor-pointer ${
-                activeTab === "ads"
-                  ? "bg-white/[0.08] text-white font-medium border border-white/[0.08]"
-                  : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] border border-transparent"
-              }`}
-            >
-              <DollarSign className="w-4 h-4 text-zinc-400" />
-              <span>Quảng Cáo (Ads)</span>
-              {config.ads?.enabled && (
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 ml-auto" />
-              )}
-            </button>
           </div>
 
-          {/* Group 4: HỆ THỐNG & CẤU HÌNH */}
+          {/* Group 4: HỆ THỐNG & BẢO MẬT */}
           <div className="space-y-0.5">
             <div className="px-3 pt-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
               Hệ Thống & Cấu Hình

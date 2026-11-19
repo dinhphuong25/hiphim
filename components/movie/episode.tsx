@@ -2,9 +2,8 @@
 
 import { useState, useMemo, useEffect, memo } from "react";
 import { cn } from "@/lib/utils";
-import { Search, Server, Film, Info } from "lucide-react";
+import { Search, Server, Film } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { fetchAnnouncementShared } from "@/lib/announcement-client";
 
 interface EpisodeData {
   name: string;
@@ -56,19 +55,6 @@ function EpisodeComponent({
   const [searchQuery, setSearchQuery] = useState("");
   const [activeRangeIndex, setActiveRangeIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
-  const [showAdDisclaimer, setShowAdDisclaimer] = useState(false);
-
-  useEffect(() => {
-    fetchAnnouncementShared()
-      .then((data) => {
-        if (data?.ads?.adDisclaimerEnabled === true) {
-          setShowAdDisclaimer(true);
-        } else {
-          setShowAdDisclaimer(false);
-        }
-      })
-      .catch(() => {});
-  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -421,18 +407,6 @@ function EpisodeComponent({
             {children}
           </div>
         )}
-
-        {/* Ad Notice / Disclaimer (Bật/Tắt từ Quản trị Admin) */}
-        {showAdDisclaimer && (
-          <div className="pt-2.5 border-t border-white/[0.06] flex items-start gap-2 select-none animate-in fade-in duration-300">
-            <Info className="w-3.5 h-3.5 text-zinc-500 shrink-0 mt-0.5" />
-            <p className="text-[11.5px] font-normal text-zinc-400/80 leading-relaxed text-justify">
-              Quảng cáo trong video được nhúng cố định từ nguồn phát gốc. Đội ngũ kỹ thuật đã nỗ lực can thiệp để che chắn tối đa, rất mong mọi người thông cảm cho sự bất tiện này.
-            </p>
-          </div>
-        )}
-
-
       </div>
     </div>
   );

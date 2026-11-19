@@ -1,7 +1,8 @@
-import { memo } from "react";
+"use client";
+
+import { memo, useMemo, useRef, useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { ChevronRight, Play, Star } from "lucide-react";
+import { ChevronRight, Play } from "lucide-react";
 import MovieCardEditorial from "@/components/movie/movie-card-editorial";
 import Top10Card from "@/components/movie/top10-card";
 import FeaturedFocusImage from "@/components/movie/featured-focus-image";
@@ -22,9 +23,26 @@ export const MovieSection = memo(function MovieSection({
   movies = [],
   viewAllLink,
   variant = "carousel",
-  emptyMessage = "Chưa có phim nào trong chuyên mục này",
 }: MovieSectionProps) {
-  const filteredMovies = filterHiddenMovies(movies || []);
+  const filteredMovies = useMemo(() => filterHiddenMovies(movies || []), [movies]);
+  const marqueeRef = useRef<HTMLDivElement>(null);
+  const [isMarqueeInView, setIsMarqueeInView] = useState(true);
+
+  // Pause Top 10 infinite marquee GPU animation whenever scrolled out of viewport
+  useEffect(() => {
+    if (variant !== "top10") return;
+    const el = marqueeRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        setIsMarqueeInView(entry.isIntersecting);
+      },
+      { rootMargin: "120px 0px" }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [variant]);
 
   if (!filteredMovies || filteredMovies.length === 0) return null;
 
@@ -51,12 +69,15 @@ export const MovieSection = memo(function MovieSection({
         </Link>
       </div>
 
-      {/* Variant 1: Top 10 Magazine Layout (Auto-Scrolling Marquee) */}
+      {/* Variant 1: Top 10 Magazine Layout (Viewport-Aware Marquee — 0% GPU burn when offscreen) */}
       {variant === "top10" && (
-        <div className="flex items-center overflow-hidden pb-4 group/marquee relative w-full mask-edges">
-          <div className="flex items-center gap-4 w-max animate-marquee hover:[animation-play-state:paused] transform-gpu will-change-transform">
+        <div ref={marqueeRef} className="flex items-center overflow-hidden pb-4 group/marquee relative w-full mask-edges">
+          <div
+            className="flex items-center gap-4 w-max animate-marquee hover:[animation-play-state:paused] transform-gpu"
+            style={{ animationPlayState: isMarqueeInView ? "running" : "paused" }}
+          >
             {[...filteredMovies.slice(0, 10), ...filteredMovies.slice(0, 10)].map((movie, idx) => (
-              <div key={`${movie.slug}-${idx}`} className="w-[180px] sm:w-[210px] shrink-0 transform-gpu">
+              <div key={`${movie.slug}-${idx}`} className="w-[180px] sm:w-[210px] shrink-0">
                 <Top10Card movie={movie} rank={(idx % 10) + 1} lazy={idx >= 6} />
               </div>
             ))}
@@ -72,17 +93,17 @@ export const MovieSection = memo(function MovieSection({
             <Link
               href={`/watch?slug=${filteredMovies[0].slug}`}
               aria-label={`Xem phim tiêu điểm ${filteredMovies[0].name}`}
-              className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-cinema-surface border border-brand-green/30 group-hover:border-brand-green/60 transition-[transform,border-color,box-shadow] duration-300 group-hover:-translate-y-2 group-hover:scale-[1.02] shadow-xl group-hover:shadow-[0_10px_30px_rgba(32,214,107,0.25)] block transform-gpu"
+              className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-cinema-surface border border-brand-green/30 group-hover:border-brand-green/60 transition-[transform,border-color,box-shadow] duration-200 group-hover:-translate-y-1.5 group-hover:scale-[1.015] shadow-xl group-hover:shadow-[0_10px_28px_rgba(32,214,107,0.22)] block"
             >
               <FeaturedFocusImage movie={filteredMovies[0]} />
-              <div className="absolute inset-0 bg-gradient-to-t from-cinema-bg via-transparent to-transparent opacity-80 group-hover:opacity-40 transition-opacity" />
-              
+              <div className="absolute inset-0 bg-gradient-to-t from-cinema-bg via-transparent to-transparent opacity-80 group-hover:opacity-45 transition-opacity" />
+
               <span className="absolute top-3 left-3 z-10 px-2.5 py-1 rounded text-[10px] font-black bg-brand-green text-cinema-bg shadow-lg tracking-widest uppercase">
                 TIÊU ĐIỂM
               </span>
 
               {/* Hover Play Button */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40">
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/45">
                 <div className="w-14 h-14 rounded-full bg-brand-green flex items-center justify-center text-cinema-bg shadow-xl shadow-brand-green/30 scale-90 group-hover:scale-100 transition-transform">
                   <Play className="w-6 h-6 fill-cinema-bg ml-1" />
                 </div>
@@ -91,14 +112,12 @@ export const MovieSection = memo(function MovieSection({
 
             <div className="mt-3 flex flex-col px-1">
               <h3 className="text-sm sm:text-base font-bold text-white hover:text-brand-green transition-colors line-clamp-1">
-                <Link
-                  href={`/watch?slug=${filteredMovies[0].slug}`}
-                >
+                <Link href={`/watch?slug=${filteredMovies[0].slug}`}>
                   {filteredMovies[0].name}
                 </Link>
               </h3>
               <div className="flex items-center text-xs text-cinema-text-dim mt-1">
-                <span>{filteredMovies[0].year || "2025"}</span>
+                <span>{filteredMovies[0].year || "2026"}</span>
                 {filteredMovies[0].origin_name && <span className="mx-2 text-white/20">•</span>}
                 {filteredMovies[0].origin_name && <span className="truncate max-w-[200px]">{filteredMovies[0].origin_name}</span>}
               </div>

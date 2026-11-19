@@ -6,9 +6,8 @@ import Link from "next/link";
 import { Play, Star, Heart, Film } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { useFavorites } from "@/hooks/useLocalStorage";
+import { useIsFavorite, toggleFavoriteStandalone } from "@/hooks/useLocalStorage";
 import { useUserAuth } from "@/context/user-auth-context";
-import { useInView } from "react-intersection-observer";
 import { getMovieImageCandidates, STATIC_BLUR_DATA_URL } from "@/lib/image-helper";
 import { recordMovieReferrer } from "@/lib/navigation-history";
 
@@ -49,14 +48,68 @@ function formatShortWatchTime(sec: number): string {
   return `${s}s`;
 }
 
+/**
+ * Isolated Favorite toggle button — subscribes ONLY to its own movie slug via useIsFavorite,
+ * preventing all sibling MovieCards from re-rendering when favorites or auth modal state changes.
+ */
+const CardFavoriteButton = memo(function CardFavoriteButton({
+  movie,
+  currentSrc,
+}: {
+  movie: MovieCardEditorialProps["movie"];
+  currentSrc: string | null;
+}) {
+  const { user, checkAuthOrPrompt, updateServerData } = useUserAuth();
+  const isFav = useIsFavorite(movie.slug);
+
+  return (
+    <button
+      type="button"
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!checkAuthOrPrompt("lưu phim yêu thích")) return;
+        const willBeFav = !isFav;
+        const updated = toggleFavoriteStandalone({
+          slug: movie.slug,
+          name: movie.name,
+          origin_name: movie.origin_name,
+          thumb_url: currentSrc || movie.thumb_url || movie.poster_url || "",
+          poster_url: movie.poster_url,
+          year: typeof movie.year === "string" ? parseInt(movie.year, 10) : movie.year,
+          quality: movie.quality,
+          episode_current: movie.episode_current,
+          tmdb: movie.tmdb,
+          imdb: movie.imdb,
+        });
+        if (user && updated) {
+          updateServerData({ favorites: updated }, { silent: true });
+        }
+        if (willBeFav) {
+          toast.success(`Đã thêm "${movie.name}" vào yêu thích!`);
+        } else {
+          toast.info(`Đã xóa "${movie.name}" khỏi yêu thích`);
+        }
+      }}
+      aria-label="Yêu thích"
+      className={cn(
+        "absolute bottom-2.5 right-2.5 z-20 p-2 rounded-full border transition-colors active:scale-90 cursor-pointer",
+        isFav
+          ? "bg-brand-green/20 border-brand-green text-brand-green opacity-100"
+          : "bg-black/65 border-white/15 text-white/75 hover:text-white opacity-85 sm:opacity-0 sm:group-hover:opacity-100"
+      )}
+    >
+      <Heart className={cn("w-3.5 h-3.5", isFav && "fill-brand-green")} />
+    </button>
+  );
+});
+
 export const MovieCardEditorial = memo(function MovieCardEditorial({
   movie,
   priority = false,
   hideFavoriteButton = false,
   isHistoryCard = false,
 }: MovieCardEditorialProps) {
-  const { user, checkAuthOrPrompt, updateServerData } = useUserAuth();
-  const { toggleFavorite, isFavorite } = useFavorites();
   const [candidateIndex, setCandidateIndex] = useState(0);
   const [hasError, setHasError] = useState(false);
 
@@ -69,13 +122,6 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
     () => getMovieImageCandidates(movie, "poster"),
     [movie?.thumb_url, movie?.poster_url]
   );
-
-  const { ref: inViewRef, inView } = useInView({
-    triggerOnce: true,
-    rootMargin: "80px 0px",
-    skip: priority,
-  });
-  const shouldLoad = priority || inView;
 
   if (!movie || !movie.slug) return null;
 
@@ -92,7 +138,6 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
   const rawRating = movie.imdb?.rating || movie.tmdb?.vote_average;
   const rating = Number(rawRating);
   const isValidRating = !isNaN(rating) && rating > 0;
-  const isFav = isFavorite(movie.slug);
 
   const hasTimeProgress = Boolean(movie.currentTime && movie.currentTime > 5);
   const hasFullDuration = Boolean(movie.duration && movie.duration > 0);
@@ -114,7 +159,6 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
   const timeParam =
     movie.currentTime && movie.currentTime > 5 ? `&t=${Math.floor(movie.currentTime)}` : "";
   const watchHref = `/watch?slug=${movie.slug}${svParam}${epParam}${timeParam}`;
-  // Only dedicated history cards jump straight into the player; regular catalog cards go to movie detail page
   const movieHref = isHistoryCard ? watchHref : `/phim/${movie.slug}`;
 
   const handleCardClick = () => {
@@ -154,11 +198,11 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
 
   return (
     <div
-      ref={inViewRef}
-      className="group relative flex flex-col h-full select-none transition-transform duration-200 ease-out sm:hover:-translate-y-1.5 sm:hover:scale-[1.02] active:scale-[0.98] transform-gpu"
+      style={{ contain: "layout style" }}
+      className="group relative flex flex-col h-full select-none transition-transform duration-200 ease-out sm:hover:-translate-y-1.5 sm:hover:scale-[1.02] active:scale-[0.98]"
     >
       {/* Poster Image Container Wrapper */}
-      <div className="relative w-full aspect-[2/3] rounded-xl overflow-hidden bg-cinema-surface border border-white/10 group-hover:border-brand-green/60 transition-[border-color,box-shadow] duration-300 shadow-xl group-hover:shadow-[0_12px_32px_rgba(32,214,107,0.25)]">
+      <div className="relative w-full aspect-[2/3] rounded-xl overflow-hidden bg-cinema-surface border border-white/10 group-hover:border-brand-green/60 transition-[border-color,box-shadow] duration-200 shadow-lg group-hover:shadow-[0_12px_28px_rgba(32,214,107,0.22)]">
         <Link
           href={movieHref}
           onClick={handleCardClick}
@@ -166,12 +210,13 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
           aria-label={`Xem phim ${movie.name}`}
           className="absolute inset-0 z-0 block"
         >
-          {shouldLoad && currentSrc ? (
+          {currentSrc ? (
             <Image
               src={currentSrc}
               alt={movie.name}
               fill
               priority={priority}
+              loading={priority ? "eager" : "lazy"}
               placeholder="blur"
               blurDataURL={STATIC_BLUR_DATA_URL}
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
@@ -182,7 +227,7 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
             />
           ) : (
             <div className="absolute inset-0 bg-[#0c1310] flex flex-col items-center justify-center p-4 text-center select-none">
-              <div className="w-12 h-12 rounded-full bg-brand-green/10 border border-brand-green/30 flex items-center justify-center mb-2 text-brand-green shadow-[0_0_15px_rgba(32,214,107,0.15)]">
+              <div className="w-12 h-12 rounded-full bg-brand-green/10 border border-brand-green/30 flex items-center justify-center mb-2 text-brand-green">
                 <Film className="w-6 h-6" />
               </div>
               <span className="text-xs font-bold text-white/90 line-clamp-2 leading-tight mb-1">
@@ -195,17 +240,17 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
           )}
 
           {/* Poster Gradient Mask */}
-          <div className="absolute inset-0 bg-gradient-to-t from-cinema-bg via-transparent to-transparent opacity-80 group-hover:opacity-40 transition-opacity" />
+          <div className="absolute inset-0 bg-gradient-to-t from-cinema-bg via-transparent to-transparent opacity-80 group-hover:opacity-45 transition-opacity" />
 
           {/* Quality & Lang Badges Top Left */}
           <div className="absolute top-2.5 left-2.5 z-10 flex items-center gap-1.5 flex-wrap max-w-[80%]">
             {movie.quality && (
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold tracking-wider uppercase bg-black/80 text-white border border-white/15 shadow-sm">
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold tracking-wider uppercase bg-black/80 text-white border border-white/15">
                 {movie.quality}
               </span>
             )}
             {movie.lang && (
-              <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold tracking-wide uppercase bg-emerald-950/80 text-brand-green border border-brand-green/30 shadow-sm">
+              <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold tracking-wide uppercase bg-emerald-950/85 text-brand-green border border-brand-green/30">
                 {movie.lang.includes("Thuyết")
                   ? "Thuyết Minh"
                   : movie.lang.includes("Lồng")
@@ -215,11 +260,11 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
             )}
           </div>
 
-          {/* Rating Badge Top Right (Shifted to right-11 when delete/trash button is present) */}
+          {/* Rating Badge Top Right */}
           {isValidRating && (
             <span
               className={cn(
-                "absolute top-2.5 z-10 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-black/80 text-cinema-gold border border-white/15 flex items-center gap-1 shadow-sm",
+                "absolute top-2.5 z-10 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-black/80 text-cinema-gold border border-white/15 flex items-center gap-1",
                 isHistoryCard || hideFavoriteButton ? "right-11" : "right-2.5"
               )}
             >
@@ -229,8 +274,8 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
           )}
 
           {/* Center Hover Play Button */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/50">
-            <div className="w-12 h-12 rounded-full bg-brand-green flex items-center justify-center text-cinema-bg shadow-[0_0_22px_rgba(32,214,107,0.6)] scale-90 group-hover:scale-100 transition-transform duration-200">
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/45">
+            <div className="w-12 h-12 rounded-full bg-brand-green flex items-center justify-center text-cinema-bg shadow-[0_0_20px_rgba(32,214,107,0.5)] scale-90 group-hover:scale-100 transition-transform duration-200">
               <Play className="w-5 h-5 fill-cinema-bg ml-0.5" />
             </div>
           </div>
@@ -241,8 +286,8 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
               className={cn(
                 "absolute bottom-2.5 left-2.5 z-10 text-[10px] font-mono font-semibold px-2 py-0.5 rounded border truncate max-w-[82%]",
                 hasTimeProgress || isHistoryCard
-                  ? "bg-black/90 text-brand-green border-brand-green/40 shadow-[0_0_10px_rgba(34,197,94,0.2)]"
-                  : "text-white/80 bg-black/80 border-white/10"
+                  ? "bg-black/90 text-brand-green border-brand-green/40"
+                  : "text-white/85 bg-black/80 border-white/10"
               )}
             >
               {badgeText}
@@ -253,52 +298,16 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
           {hasProgress && (
             <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/60 z-20 overflow-hidden">
               <div
-                className="h-full bg-brand-green shadow-[0_0_8px_rgba(34,197,94,0.8)] transition-all duration-300"
+                className="h-full bg-brand-green transition-all duration-300"
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
           )}
         </Link>
 
-        {/* Favorite Toggle Button */}
+        {/* Isolated Favorite Toggle Button */}
         {!hideFavoriteButton && (
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              if (!checkAuthOrPrompt("lưu phim yêu thích")) return;
-              const willBeFav = !isFav;
-              const updated = toggleFavorite({
-                slug: movie.slug,
-                name: movie.name,
-                origin_name: movie.origin_name,
-                thumb_url: currentSrc || movie.thumb_url || movie.poster_url || "",
-                poster_url: movie.poster_url,
-                year: typeof movie.year === "string" ? parseInt(movie.year, 10) : movie.year,
-                quality: movie.quality,
-                episode_current: movie.episode_current,
-                tmdb: movie.tmdb,
-                imdb: movie.imdb,
-              });
-              if (user && updated) {
-                updateServerData({ favorites: updated });
-              }
-              if (willBeFav) {
-                toast.success(`Đã thêm "${movie.name}" vào yêu thích!`);
-              } else {
-                toast.info(`Đã xóa "${movie.name}" khỏi yêu thích`);
-              }
-            }}
-            aria-label="Yêu thích"
-            className={cn(
-              "absolute bottom-2.5 right-2.5 z-20 p-2 rounded-full border transition-colors active:scale-90 cursor-pointer",
-              isFav
-                ? "bg-brand-green/20 border-brand-green text-brand-green opacity-100"
-                : "bg-black/60 border-white/15 text-white/70 hover:text-white opacity-85 sm:opacity-0 sm:group-hover:opacity-100"
-            )}
-          >
-            <Heart className={cn("w-3.5 h-3.5", isFav && "fill-brand-green")} />
-          </button>
+          <CardFavoriteButton movie={movie} currentSrc={currentSrc} />
         )}
       </div>
 

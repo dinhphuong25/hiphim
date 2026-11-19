@@ -33,17 +33,14 @@ import {
   PictureInPicture2,
   Clock,
   AlertTriangle,
-  Shield,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import TVCPlayerOverlay from "./tvc-player-overlay";
 import { Slider } from "@/components/ui/slider";
 import { AdRange, fetchAndParseAllAdRanges, extractAllAdRangesFromFragments } from "@/lib/ad-parser";
 import { pipStore } from "@/lib/pip-store";
 import { useUserAuth } from "@/context/user-auth-context";
-import { fetchAnnouncementShared } from "@/lib/announcement-client";
 export type VideoFitMode = 'contain' | 'cover' | 'fill' | '4:3' | '21:9';
 
 export interface SubtitleCue {
@@ -236,93 +233,11 @@ export default function VideoPlayer({
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
     setIsMounted(true);
-  }, []);
-
-  // TVC Pre-Roll Ad State (Disabled by default)
-  const [showTVC, setShowTVC] = useState<boolean>(false);
-  const showTVCRef = useRef<boolean>(false);
-  const [tvcConfig, setTvcConfig] = useState({
-    enabled: false,
-    videoUrl: "",
-    targetUrl: "",
-    skipAfterSeconds: 5,
-  });
-
-  useEffect(() => {
-    fetchAnnouncementShared()
-      .then((data) => {
-        if (data?.ads) {
-          const ads = data.ads;
-          const isGambling =
-            typeof ads.targetUrl === "string" &&
-            (ads.targetUrl.includes("154.82.109.157") ||
-             ads.targetUrl.includes("333xbet") ||
-             ads.targetUrl.includes("bet"));
-
-          const isGamblingTvc =
-            typeof ads.tvcVideoUrl === "string" &&
-            (ads.tvcVideoUrl.includes("333xbet") ||
-             ads.tvcVideoUrl.includes("9922") ||
-             ads.tvcVideoUrl.includes("bet"));
-
-          const shouldEnableTvc =
-            ads.enabled === true &&
-            !isGambling &&
-            !isGamblingTvc &&
-            ads.tvcEnabled === true &&
-            Boolean(ads.tvcVideoUrl) &&
-            !isVipOrAdmin;
-
-          if (!shouldEnableTvc) {
-            setShowTVC(false);
-            showTVCRef.current = false;
-          } else {
-            setTvcConfig({
-              enabled: true,
-              videoUrl: ads.tvcVideoUrl,
-              targetUrl: ads.targetUrl || "",
-              skipAfterSeconds: ads.tvcSkipAfterSeconds ?? 5,
-            });
-            setShowTVC(true);
-            showTVCRef.current = true;
-          }
-
-          // Kích hoạt khiên che quảng cáo nếu Admin bật (mặc định đã tắt toàn bộ tính năng che theo yêu cầu)
-          const isShieldActive = ads.adShieldEnabled === true;
-          setIsAdShieldSystemEnabled(isShieldActive);
-          if (isShieldActive) {
-            const systemMode = (ads.adShieldMode as 'auto' | 'always') || 'auto';
-            const savedShield = typeof window !== 'undefined' ? (localStorage.getItem('cinema_ad_shield') as 'auto' | 'always' | 'off') : null;
-            const effectiveMode = savedShield && ['auto', 'always', 'off'].includes(savedShield) ? savedShield : systemMode;
-            setAdShieldMode(effectiveMode);
-            setIsAdDetected(effectiveMode === 'always');
-          } else {
-            setAdShieldMode('off');
-            setIsAdDetected(false);
-            if (typeof window !== 'undefined') {
-              try { localStorage.removeItem('cinema_ad_shield'); } catch {}
-            }
-          }
-        }
-      })
-      .catch(() => {});
-  }, []);
-
-  const handleTVCComplete = useCallback(() => {
-    showTVCRef.current = false;
-    setShowTVC(false);
-    if (videoRef.current) {
-      const savedVol = typeof window !== 'undefined' ? Number(localStorage.getItem('cinema_volume') || 1) : 1;
-      const targetVol = savedVol > 0 ? savedVol : 1;
+    if (typeof window !== "undefined") {
       try {
-        videoRef.current.volume = targetVol;
-        videoRef.current.muted = false;
+        localStorage.removeItem("cinema_ad_shield");
+        localStorage.removeItem("cinema_ad_shield_manual");
       } catch {}
-      setIsMuted(false);
-      setIsAutoplayMuted(false);
-      autoplayMutedRef.current = false;
-      setIsPlaying(true);
-      videoRef.current.play().catch(() => {});
     }
   }, []);
 
@@ -359,12 +274,32 @@ export default function VideoPlayer({
   const [currentLevelPlaying, setCurrentLevelPlaying] = useState<number>(-1);
   const [isSlowNetwork, setIsSlowNetwork] = useState(false);
   const [hasRenderedFirstFrame, setHasRenderedFirstFrame] = useState(false);
+  const isLoadingRef = useRef(true);
+  const showControlsRef = useRef(true);
+  const isSlowNetworkRef = useRef(false);
+  const hasRenderedFirstFrameRef = useRef(false);
   const slowNetworkTimerRef = useRef<NodeJS.Timeout | null>(null);
   const settingsMenuRef = useRef<HTMLDivElement | null>(null);
   const waitingTimerRef = useRef<NodeJS.Timeout | null>(null);
   const initialSlowWatchdogRef = useRef<NodeJS.Timeout | null>(null);
   const initialFatalWatchdogRef = useRef<NodeJS.Timeout | null>(null);
   const lastBufferedRef = useRef<number>(0);
+
+  useEffect(() => {
+    isLoadingRef.current = isLoading;
+  }, [isLoading]);
+
+  useEffect(() => {
+    showControlsRef.current = showControls;
+  }, [showControls]);
+
+  useEffect(() => {
+    isSlowNetworkRef.current = isSlowNetwork;
+  }, [isSlowNetwork]);
+
+  useEffect(() => {
+    hasRenderedFirstFrameRef.current = hasRenderedFirstFrame;
+  }, [hasRenderedFirstFrame]);
 
   const clearInitialWatchdogs = useCallback(() => {
     if (initialSlowWatchdogRef.current) {
@@ -375,44 +310,15 @@ export default function VideoPlayer({
       clearTimeout(initialFatalWatchdogRef.current);
       initialFatalWatchdogRef.current = null;
     }
-    setIsSlowNetwork(false);
-  }, []);
-  // Anti-Ad Banner Shield (Tự động phát hiện & chỉ che dải quảng cáo bài bạc khi có quảng cáo)
-  const [adShieldMode, setAdShieldMode] = useState<'auto' | 'always' | 'off'>('off');
-  const [isAdDetected, setIsAdDetected] = useState(false);
-  const [isAdShieldSystemEnabled, setIsAdShieldSystemEnabled] = useState<boolean>(false);
-  const isVisualAdDetectedRef = useRef(false);
-
-  const handleAdShieldModeChange = useCallback((mode: 'auto' | 'always' | 'off') => {
-    setAdShieldMode(mode);
-    if (mode === 'always') {
-      setIsAdDetected(true);
-    } else if (mode === 'off') {
-      setIsAdDetected(false);
-    } else {
-      setIsAdDetected(false);
+    if (isSlowNetworkRef.current) {
+      isSlowNetworkRef.current = false;
+      setIsSlowNetwork(false);
     }
-    try {
-      localStorage.setItem('cinema_ad_shield', mode);
-      localStorage.setItem('cinema_ad_shield_manual', 'true');
-    } catch (e) {}
   }, []);
-
-
-
-  // Auto-Skip Video Ads (Tự động phát hiện & bỏ qua các đoạn video clip quảng cáo nổ hũ/cá độ chèn cắt ngang phim)
+  // Auto-Skip Video Ads (Tự động phát hiện & bỏ qua ngầm các đoạn clip quảng cáo nổ hũ/cá độ chèn ngang phim)
   const [autoSkipAds, setAutoSkipAds] = useState<boolean>(true);
   const adRangesRef = useRef<AdRange[]>([]);
-  const bannerRangesRef = useRef<AdRange[]>([]);
   const hasExtractedFromHlsRef = useRef<boolean>(false);
-  const [adRanges, setAdRanges] = useState<AdRange[]>([]);
-
-  const handleToggleAutoSkipAds = useCallback((enabled: boolean) => {
-    setAutoSkipAds(enabled);
-    try {
-      localStorage.setItem('cinema_auto_skip_ads', String(enabled));
-    } catch (e) {}
-  }, []);
 
   const handleCancelCountdown = useCallback(() => {
     if (countdownIntervalRef.current) {
@@ -530,17 +436,10 @@ export default function VideoPlayer({
         setVideoFit(savedFit);
       }
 
-      // Khiên chắn quảng cáo mép trên: mặc định 'auto' (chỉ che khi thực tế phát hiện có quảng cáo, không che phim sạch)
-      const isManual = localStorage.getItem('cinema_ad_shield_manual');
-      const savedShield = localStorage.getItem('cinema_ad_shield') as 'auto' | 'always' | 'off';
-      if (isManual && (savedShield === 'off' || savedShield === 'always' || savedShield === 'auto')) {
-        setAdShieldMode(savedShield);
-        setIsAdDetected(savedShield === 'always');
-      } else {
-        setAdShieldMode('off');
-        setIsAdDetected(false);
-        try { localStorage.setItem('cinema_ad_shield', 'auto'); } catch (e) {}
-      }
+      try {
+        localStorage.removeItem('cinema_ad_shield');
+        localStorage.removeItem('cinema_ad_shield_manual');
+      } catch (e) {}
 
       // Tải cấu hình tự động bỏ qua video quảng cáo cờ bạc (mặc định luôn BẬT)
       const savedAutoSkip = localStorage.getItem('cinema_auto_skip_ads');
@@ -1142,27 +1041,24 @@ export default function VideoPlayer({
     } catch {}
   }, [videoUrl]);
 
-  // Tự động phân tích luồng phát m3u8 để trích xuất dải thời gian các video quảng cáo cờ bạc & banner che
+  // Tự động phân tích luồng phát m3u8 để trích xuất dải thời gian các video quảng cáo cờ bạc (để tự động bỏ qua)
   // Tối ưu băng thông: Nếu Hls.js đang chạy, LEVEL_LOADED sẽ trích xuất trực tiếp từ RAM mà không tốn request mạng.
   // Không fetch lại qua mạng nếu Hls.js đã trích xuất, bảo vệ tuyệt đối băng thông và giới hạn của máy chủ nguồn.
   useEffect(() => {
     adRangesRef.current = [];
-    bannerRangesRef.current = [];
     hasExtractedFromHlsRef.current = false;
-    setAdRanges([]);
 
     if (!videoUrl) return;
 
     let isCancelled = false;
     const fetchTimer = setTimeout(() => {
       // Nếu Hls.js đã trích xuất xong từ fragments trong RAM, không cần fetch lại qua mạng
-      if (hasExtractedFromHlsRef.current || adRangesRef.current.length > 0 || bannerRangesRef.current.length > 0) return;
+      if (hasExtractedFromHlsRef.current || adRangesRef.current.length > 0) return;
 
       fetchAndParseAllAdRanges(videoUrl).then((data) => {
         if (!isCancelled) {
           if (data.commercialRanges.length > 0) {
             adRangesRef.current = data.commercialRanges;
-            setAdRanges(data.commercialRanges);
             if (videoRef.current && autoSkipAds) {
               const current = videoRef.current.currentTime;
               for (const range of data.commercialRanges) {
@@ -1172,9 +1068,6 @@ export default function VideoPlayer({
                 }
               }
             }
-          }
-          if (data.bannerRanges.length > 0) {
-            bannerRangesRef.current = data.bannerRanges;
           }
         }
       }).catch(() => {});
@@ -1277,9 +1170,6 @@ export default function VideoPlayer({
     const playWithAutoplayFallback = () => {
       clearInitialWatchdogs();
       setIsLoading(false);
-      if (showTVCRef.current) {
-        return;
-      }
       if (!autoplayRef.current || isUserPausedRef.current || !video) return;
 
       const savedVol = typeof window !== 'undefined' ? Number(localStorage.getItem('cinema_volume') || 1) : 1;
@@ -1563,7 +1453,6 @@ export default function VideoPlayer({
               const parsedData = extractAllAdRangesFromFragments(data.details.fragments);
               if (parsedData?.commercialRanges?.length > 0) {
                 adRangesRef.current = parsedData.commercialRanges;
-                setAdRanges(parsedData.commercialRanges);
                 if (videoRef.current && autoSkipAds) {
                   const current = videoRef.current.currentTime;
                   for (const range of parsedData.commercialRanges) {
@@ -1573,9 +1462,6 @@ export default function VideoPlayer({
                     }
                   }
                 }
-              }
-              if (parsedData?.bannerRanges?.length > 0) {
-                bannerRangesRef.current = parsedData.bannerRanges;
               }
             }
           } catch (err) {
@@ -1731,11 +1617,12 @@ export default function VideoPlayer({
       currentTimeRef.current = cur;
       const now = performance.now();
       if (cur > 0.05) {
-        if (!hasRenderedFirstFrame) {
+        if (!hasRenderedFirstFrameRef.current) {
+          hasRenderedFirstFrameRef.current = true;
           setHasRenderedFirstFrame(true);
+          clearInitialWatchdogs();
         }
-        clearInitialWatchdogs();
-        if (!video.paused) {
+        if (!video.paused && (isLoadingRef.current || isSlowNetworkRef.current)) {
           hideLoading();
         }
       }
@@ -1750,43 +1637,16 @@ export default function VideoPlayer({
         }
       }
 
-      // Tự động kích hoạt khiên che quảng cáo thông minh khi Admin bật
-      if (!isAdShieldSystemEnabled || adShieldMode === 'off') {
-        if (isAdDetected) {
-          setIsAdDetected(false);
-        }
-      } else if (adShieldMode === 'always') {
-        if (!isAdDetected) {
-          setIsAdDetected(true);
-        }
-      } else if (adShieldMode === 'auto') {
-        let isAdNow = false;
-
-        // Ưu tiên 1: Dải banner từ playlist m3u8 nếu segment chứa từ khóa banner
-        if (bannerRangesRef.current.length > 0) {
-          for (const range of bannerRangesRef.current) {
-            if (cur >= range.start - 0.5 && cur <= range.end + 0.5) {
-              isAdNow = true;
-              break;
-            }
-          }
-        }
-
-        if (isAdDetected !== isAdNow) {
-          setIsAdDetected(isAdNow);
-        }
-      }
-
       // Throttle UI currentTime state updates to save CPU & avoid frame drops
       const isHidden = typeof document !== 'undefined' && document.visibilityState === 'hidden';
-      const throttleInterval = isHidden ? 5000 : (showControls ? 250 : 1000);
+      const throttleInterval = isHidden ? 5000 : (showControlsRef.current ? 250 : 1000);
       if (!isSeekingRef.current && (now - lastTimeUpdateRef.current >= throttleInterval || video.ended)) {
         lastTimeUpdateRef.current = now;
         setCurrentTime(cur);
       }
-      if (video.buffered.length > 0) {
+      if (video.buffered.length > 0 && showControlsRef.current) {
         const end = video.buffered.end(video.buffered.length - 1);
-        if (Math.abs(end - lastBufferedRef.current) >= 1) {
+        if (Math.abs(end - lastBufferedRef.current) >= 1.5) {
           lastBufferedRef.current = end;
           setBuffered(end);
         }
@@ -1824,7 +1684,10 @@ export default function VideoPlayer({
         slowNetworkTimerRef.current = null;
       }
       clearInitialWatchdogs();
-      setIsLoading(false);
+      if (isLoadingRef.current) {
+        isLoadingRef.current = false;
+        setIsLoading(false);
+      }
     };
 
     const onWaiting = () => {
@@ -1860,6 +1723,7 @@ export default function VideoPlayer({
       waitingTimerRef.current = setTimeout(() => {
         // Only trigger loading if the video is genuinely stuck and not playing frames
         if (!video.paused && !video.ended && video.readyState < 3) {
+          isLoadingRef.current = true;
           setIsLoading(true);
         }
       }, 600);
@@ -1867,23 +1731,31 @@ export default function VideoPlayer({
       if (slowNetworkTimerRef.current) clearTimeout(slowNetworkTimerRef.current);
       slowNetworkTimerRef.current = setTimeout(() => {
         if (!video.paused && !video.ended && video.readyState < 3) {
+          isSlowNetworkRef.current = true;
           setIsSlowNetwork(true);
         }
       }, 4000);
 
-      // Safe recovery: if stalled for 2.0s, trigger HLS load or nudge playhead past hole
+      // Safe non-destructive recovery: resume HLS segment loading without corrupting playhead or wiping buffer
       const stallTimeout = setTimeout(() => {
         if (video.paused || isUserPausedRef.current) return;
         if (hlsRef.current) {
           hlsRef.current.startLoad();
           if (video.buffered.length > 0) {
+            const cur = video.currentTime;
             const firstStart = video.buffered.start(0);
-            if (video.currentTime < firstStart && firstStart < 5) {
+            if (cur < firstStart && firstStart < 5) {
               video.currentTime = firstStart + 0.02;
               return;
             }
+            for (let i = 0; i < video.buffered.length; i++) {
+              const start = video.buffered.start(i);
+              if (start > cur && start - cur <= 8.5) {
+                video.currentTime = start + 0.02;
+                return;
+              }
+            }
           }
-          video.currentTime += 0.5;
         } else {
           try {
             if (video.buffered.length > 0 && video.currentTime < video.buffered.start(0)) {
@@ -1897,17 +1769,18 @@ export default function VideoPlayer({
         }
       }, 2500);
 
-      // Smart Auto-Failover: If stalled for > 6.5s continuously
+      // Gentle network notice if stalled > 6.5s (do NOT call recoverMediaError which flushes entire buffer)
       if (failoverTimeoutRef.current) clearTimeout(failoverTimeoutRef.current);
       failoverTimeoutRef.current = setTimeout(() => {
         if (video.paused) return;
         stallCountRef.current += 1;
         if (hlsRef.current) {
           try {
-            hlsRef.current.recoverMediaError();
+            hlsRef.current.startLoad();
           } catch {}
         }
         if (stallCountRef.current >= 2) {
+          isSlowNetworkRef.current = true;
           setIsSlowNetwork(true);
         }
       }, 6500);
@@ -2006,11 +1879,6 @@ export default function VideoPlayer({
     };
 
     const onSeekingEvent = () => {
-      if (adShieldMode !== 'always') {
-        isVisualAdDetectedRef.current = false;
-        setIsAdDetected(false);
-      }
-
       let isBuffered = false;
       if (video.buffered.length > 0) {
         const cur = video.currentTime;
@@ -2074,6 +1942,7 @@ export default function VideoPlayer({
     const onLeavePiP = () => setIsPiPActive(false);
 
     video.addEventListener('canplay', hideLoading);
+    const onDurationChange = () => setDuration(video.duration);
     video.addEventListener('canplaythrough', hideLoading);
     video.addEventListener('loadeddata', hideLoading);
     video.addEventListener('playing', hideLoading);
@@ -2084,7 +1953,7 @@ export default function VideoPlayer({
     video.addEventListener('ended', onEndedEvent);
     video.addEventListener('play', onPlayEvent);
     video.addEventListener('pause', onPauseEvent);
-    video.addEventListener('durationchange', () => setDuration(video.duration));
+    video.addEventListener('durationchange', onDurationChange);
     video.addEventListener('volumechange', onVolumeChangeEvent);
     video.addEventListener('waiting', onWaiting);
     video.addEventListener('error', onErrorEvent);
@@ -2110,6 +1979,7 @@ export default function VideoPlayer({
       video.removeEventListener('timeupdate', onTimeUpdate); 
       video.removeEventListener('progress', onProgressBufferCheck);
       video.removeEventListener('ended', onEndedEvent);
+      video.removeEventListener('durationchange', onDurationChange);
       video.removeEventListener('volumechange', onVolumeChangeEvent);
       video.removeEventListener('waiting', onWaiting);
       video.removeEventListener('error', onErrorEvent);
@@ -2165,21 +2035,6 @@ export default function VideoPlayer({
       document.removeEventListener('msfullscreenchange', handleFullscreenChange);
     };
   }, []);
-
-  // Intelligent Real-Time Ad Banner Detector Sync (0% CPU, 0 GPU stall, 0 memory churn)
-  useEffect(() => {
-    if (!isAdShieldSystemEnabled || adShieldMode === 'off') {
-      setIsAdDetected(false);
-      isVisualAdDetectedRef.current = false;
-      return;
-    }
-    if (adShieldMode === 'always') {
-      setIsAdDetected(true);
-      return;
-    }
-    // Chế độ 'auto': Nhận diện dải banner từ m3u8 playlist không tiêu hao CPU
-    setIsAdDetected(false);
-  }, [isAdShieldSystemEnabled, adShieldMode]);
 
   // Đảm bảo không tự bật PiP khi đổi tab
   useEffect(() => {
@@ -2429,22 +2284,6 @@ export default function VideoPlayer({
         </div>
       )}
 
-      {/* Intelligent Anti-Ad Banner Shield (Che sạch dải watermark quảng cáo cờ bạc mép trên khi Admin bật) */}
-      {isAdShieldSystemEnabled && (
-        <div 
-          className={cn(
-            "absolute top-0 left-0 right-0 z-[28] transition-all duration-300 overflow-hidden pointer-events-none select-none",
-            isAdDetected
-              ? "opacity-100 h-[17.5%] sm:h-[16.5%]" 
-              : "opacity-0 h-0 pointer-events-none"
-          )}
-        >
-          {/* Cinematic gradient mask with frosted blur to obliterate gambling text */}
-          <div className="w-full h-full bg-gradient-to-b from-black via-black/95 via-55% to-transparent backdrop-blur-[6px]" />
-        </div>
-      )}
-
-
       <div 
         className="absolute inset-0 flex z-10 touch-none"
         onTouchStart={handleTouchStart}
@@ -2477,7 +2316,7 @@ export default function VideoPlayer({
       {/* Mobile Touch Gesture HUD Overlay */}
       {gestureHUD && (
         <div className="absolute inset-0 flex items-center justify-center z-[58] pointer-events-none select-none">
-          <div className="flex flex-col items-center gap-2 p-4 sm:p-5 rounded-2xl bg-black/85 backdrop-blur-xl border border-white/20 shadow-2xl min-w-[130px] animate-in fade-in zoom-in-95 duration-150">
+          <div className="flex flex-col items-center gap-2 p-4 sm:p-5 rounded-2xl bg-black/90 border border-white/20 shadow-2xl min-w-[130px] animate-in fade-in zoom-in-95 duration-150">
             {gestureHUD.type === 'brightness' && (
               <>
                 <Sun className="w-8 h-8 text-amber-400" />
@@ -2542,7 +2381,7 @@ export default function VideoPlayer({
                 subtitleSize === 'md' && "text-sm sm:text-base md:text-lg",
                 subtitleSize === 'lg' && "text-base sm:text-lg md:text-xl font-bold",
                 subtitleBg === 'transparent' && "bg-transparent drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]",
-                subtitleBg === 'dim' && "bg-black/75 backdrop-blur-xs",
+                subtitleBg === 'dim' && "bg-black/80",
                 subtitleBg === 'black' && "bg-black/95 border border-white/20"
               )}
             >
@@ -2554,7 +2393,7 @@ export default function VideoPlayer({
 
       {shortcutFeedback && (
         <div key={shortcutFeedback.id} className="absolute inset-0 flex items-center justify-center z-[55] pointer-events-none">
-          <div className="bg-black/60 backdrop-blur-md rounded-2xl p-6 flex flex-col items-center gap-3 animate-in fade-in zoom-in duration-300 fill-mode-forwards">
+          <div className="bg-black/80 border border-white/15 rounded-2xl p-6 flex flex-col items-center gap-3 animate-in fade-in zoom-in duration-300 fill-mode-forwards">
             <div className="p-4 bg-white/10 rounded-full">
               {shortcutFeedback.icon === 'play' && <Play className="w-8 h-8 text-white fill-white" />}
               {shortcutFeedback.icon === 'pause' && <Pause className="w-8 h-8 text-white fill-white" />}
@@ -2593,7 +2432,7 @@ export default function VideoPlayer({
             togglePlay();
           }}
           className={cn(
-            "w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-black/55 hover:bg-black/75 backdrop-blur-md border border-white/20 text-white flex items-center justify-center shadow-2xl active:scale-90 transition-all cursor-pointer",
+            "w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-black/70 hover:bg-black/85 border border-white/20 text-white flex items-center justify-center shadow-2xl active:scale-90 transition-all cursor-pointer",
             showControls && countdown === null && !error && !isLoading ? "pointer-events-auto" : "pointer-events-none"
           )}
           aria-label={isPlaying ? "Tạm dừng" : "Phát"}
@@ -2614,7 +2453,7 @@ export default function VideoPlayer({
           }}
           className={cn(
             "absolute inset-0 flex flex-col items-center justify-center z-30 cursor-pointer pointer-events-auto transition-opacity duration-300",
-            hasRenderedFirstFrame ? "bg-black/35 backdrop-blur-[2px]" : "bg-black/60 backdrop-blur-xs"
+            hasRenderedFirstFrame ? "bg-black/45" : "bg-black/70"
           )}
         >
           <Loader2 className="w-11 h-11 sm:w-12 sm:h-12 text-brand-green animate-spin mb-3" />
@@ -2768,23 +2607,6 @@ export default function VideoPlayer({
 
           {/* Timeline Slider Track */}
           <div className="flex-1 relative flex items-center">
-            {/* Ad range markers on timeline */}
-            {duration > 0 && adRanges.length > 0 && (
-              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-1 pointer-events-none overflow-hidden z-0 rounded-full">
-                {adRanges.map((range, idx) => {
-                  const leftPercent = Math.max(0, Math.min(100, (range.start / duration) * 100));
-                  const widthPercent = Math.max(0.5, Math.min(100 - leftPercent, (range.duration / duration) * 100));
-                  return (
-                    <div
-                      key={idx}
-                      className="absolute top-0 bottom-0 bg-amber-400/70 rounded-full"
-                      style={{ left: `${leftPercent}%`, width: `${widthPercent}%` }}
-                      title={`Video quảng cáo (${Math.round(range.duration)}s)`}
-                    />
-                  );
-                })}
-              </div>
-            )}
             <Slider 
               value={[seekTime !== null ? seekTime : currentTime]} 
               min={0} 
@@ -3313,53 +3135,6 @@ export default function VideoPlayer({
                       className="w-full cursor-pointer"
                     />
                   </div>
-
-                  {/* Anti-Ad Shield Control (Chỉ hiện khi Admin đã bật tính năng Khiên Che) */}
-                  {isAdShieldSystemEnabled && (
-                    <div className="pt-3 px-1 space-y-2 border-t border-white/10 mt-1">
-                      <div className="flex items-center justify-between text-xs text-white/80">
-                        <span className="flex items-center gap-1.5 font-bold">
-                          <Shield className="w-3.5 h-3.5 text-brand-green" />
-                          Khiên che quảng cáo mép trên
-                        </span>
-                        <span className="text-[10px] text-brand-green font-bold bg-brand-green/10 border border-brand-green/20 px-2 py-0.5 rounded-full">
-                          {adShieldMode === 'auto' ? (isAdDetected ? 'Đang che QC' : 'Tự động (Sạch)') : adShieldMode === 'always' ? 'Luôn che' : 'Đã tắt'}
-                        </span>
-                      </div>
-                      <div className="grid grid-cols-3 gap-1.5">
-                        {[
-                          { id: 'auto', label: 'Tự động', desc: 'Chỉ che khi có QC' },
-                          { id: 'always', label: 'Luôn che', desc: 'Che cố định mép trên' },
-                          { id: 'off', label: 'Tắt khiên', desc: 'Xem nguyên bản' },
-                        ].map((item) => (
-                          <button
-                            key={item.id}
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleAdShieldModeChange(item.id as any);
-                            }}
-                            className={cn(
-                              "py-2 px-1.5 rounded-xl text-center flex flex-col items-center justify-center transition-all cursor-pointer border",
-                              adShieldMode === item.id
-                                ? "bg-brand-green text-black font-extrabold border-brand-green shadow-sm"
-                                : "bg-white/5 hover:bg-white/10 text-white/70 border-white/5"
-                            )}
-                          >
-                            <span className="text-xs font-bold leading-tight">{item.label}</span>
-                            <span className={cn(
-                              "text-[9px] leading-tight mt-0.5",
-                              adShieldMode === item.id ? "text-black/80 font-semibold" : "text-white/40"
-                            )}>
-                              {item.desc}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-
                 </div>
               )}
 
@@ -3401,16 +3176,6 @@ export default function VideoPlayer({
         if (!targetNode) return null;
         return createPortal(modalContent, targetNode);
       })()}
-
-      {/* Pre-Roll TVC Video Player Overlay */}
-      {showTVC && Boolean(tvcConfig.videoUrl) && !isVipOrAdmin && (
-        <TVCPlayerOverlay
-          tvcUrl={tvcConfig.videoUrl}
-          targetUrl={tvcConfig.targetUrl}
-          skipAfterSeconds={tvcConfig.skipAfterSeconds}
-          onComplete={handleTVCComplete}
-        />
-      )}
     </div>
   );
 }

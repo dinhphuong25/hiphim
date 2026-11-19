@@ -4,7 +4,6 @@ import { useState, useMemo, memo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Play, Film } from "lucide-react";
-import { useInView } from "react-intersection-observer";
 import { getMovieImageCandidates, STATIC_BLUR_DATA_URL } from "@/lib/image-helper";
 import { recordMovieReferrer } from "@/lib/navigation-history";
 
@@ -21,13 +20,9 @@ interface Top10CardProps {
   lazy?: boolean;
 }
 
-export const Top10Card = memo(function Top10Card({ movie, rank }: Top10CardProps) {
+export const Top10Card = memo(function Top10Card({ movie, rank, lazy = true }: Top10CardProps) {
   const [candidateIndex, setCandidateIndex] = useState(0);
   const [hasError, setHasError] = useState(false);
-  const { ref: inViewRef, inView } = useInView({
-    triggerOnce: true,
-    rootMargin: "50px 0px",
-  });
 
   const candidates = useMemo(
     () => getMovieImageCandidates(movie, "poster"),
@@ -45,7 +40,7 @@ export const Top10Card = memo(function Top10Card({ movie, rank }: Top10CardProps
   };
 
   return (
-    <div ref={inViewRef} className="group relative flex items-center select-none pl-6 pr-2">
+    <div style={{ contain: "layout style" }} className="group relative flex items-center select-none pl-6 pr-2">
       {/* Giant Condensed Rank Number behind poster */}
       <span className="absolute left-0 bottom-2 text-7xl sm:text-8xl font-black italic tracking-tighter text-white/12 group-hover:text-brand-green/20 transition-colors pointer-events-none font-mono">
         {rank}
@@ -57,13 +52,15 @@ export const Top10Card = memo(function Top10Card({ movie, rank }: Top10CardProps
         onClick={() => recordMovieReferrer(movie.slug)}
         prefetch={false}
         aria-label={`Xem phim ${movie.name} - Top ${rank}`}
-        className="relative z-10 w-full aspect-[2/3] rounded-xl overflow-hidden bg-cinema-surface border border-white/10 group-hover:border-brand-green/50 transition-[transform,border-color,box-shadow] duration-300 group-hover:-translate-y-2 group-hover:scale-[1.02] shadow-xl group-hover:shadow-[0_10px_30px_rgba(32,214,107,0.25)] ml-8 transform-gpu"
+        className="relative z-10 w-full aspect-[2/3] rounded-xl overflow-hidden bg-cinema-surface border border-white/10 group-hover:border-brand-green/50 transition-[transform,border-color,box-shadow] duration-200 group-hover:-translate-y-1.5 group-hover:scale-[1.02] shadow-lg group-hover:shadow-[0_10px_24px_rgba(32,214,107,0.22)] ml-8"
       >
-        {inView && currentSrc ? (
+        {currentSrc ? (
           <Image
             src={currentSrc}
             alt={movie.name}
             fill
+            loading={lazy ? "lazy" : "eager"}
+            decoding="async"
             sizes="(max-width: 640px) 45vw, 20vw"
             quality={75}
             placeholder="blur"
@@ -85,8 +82,8 @@ export const Top10Card = memo(function Top10Card({ movie, rank }: Top10CardProps
           TOP {rank}
         </span>
 
-        {/* Hover Play Button */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-[2px]">
+        {/* Hover Play Button (no backdrop-blur over animating marquee) */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/50">
           <div className="w-10 h-10 rounded-full bg-brand-green flex items-center justify-center text-cinema-bg shadow-lg scale-90 group-hover:scale-100 transition-transform">
             <Play className="w-4 h-4 fill-cinema-bg ml-0.5" />
           </div>

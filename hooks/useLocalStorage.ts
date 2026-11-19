@@ -5,7 +5,7 @@
  * Real-time in-memory singleton cache synchronized with localStorage & UserAuthContext
  */
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useSyncExternalStore } from "react";
 import type { WatchHistoryItem, FavoriteItem, WatchProgress, UserPreferences } from "@/lib/types";
 import { normalizeImageUrl } from "@/lib/image-helper";
 
@@ -551,6 +551,57 @@ export function useFavorites() {
     batchUpdateFavorites,
     hydrated,
   };
+}
+
+/**
+ * Standalone favorite toggle that does NOT subscribe the caller to the full favorites array.
+ */
+export function toggleFavoriteStandalone(item: Omit<FavoriteItem, "addedAt">): FavoriteItem[] {
+  if (!item?.slug) return getGlobalFavorites();
+  const current = getGlobalFavorites();
+  const exists = globalFavoriteSlugs.has(item.slug);
+  let updated: FavoriteItem[];
+  if (exists) {
+    updated = current.filter((f) => f.slug !== item.slug);
+  } else {
+    updated = [
+      {
+        ...item,
+        thumb_url: normalizeImageUrl(item.thumb_url || item.poster_url || ""),
+        poster_url: normalizeImageUrl(item.poster_url || item.thumb_url || ""),
+        addedAt: Date.now(),
+      },
+      ...current,
+    ];
+  }
+  setGlobalFavorites(updated);
+  return globalFavoritesCache || updated;
+}
+
+function subscribeFavoritesStore(onStoreChange: () => void): () => void {
+  const listener = () => onStoreChange();
+  favoriteListeners.add(listener);
+  return () => {
+    favoriteListeners.delete(listener);
+  };
+}
+
+/**
+ * Ultra-fast per-slug favorite subscription via useSyncExternalStore.
+ * Only re-renders the exact MovieCard whose favorite boolean actually flipped.
+ */
+export function useIsFavorite(slug?: string): boolean {
+  const getSnapshot = useCallback(() => {
+    if (!slug || typeof window === "undefined") return false;
+    getGlobalFavorites();
+    return globalFavoriteSlugs.has(slug);
+  }, [slug]);
+
+  return useSyncExternalStore(
+    subscribeFavoritesStore,
+    getSnapshot,
+    () => false
+  );
 }
 
 // ============================================================

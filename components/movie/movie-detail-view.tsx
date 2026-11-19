@@ -28,7 +28,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { useFavorites, useWatchHistory } from "@/hooks/useLocalStorage";
+import { useIsFavorite, toggleFavoriteStandalone, useWatchHistory } from "@/hooks/useLocalStorage";
 import { useUserAuth } from "@/context/user-auth-context";
 import { getMovieImageCandidates, STATIC_BLUR_DATA_URL } from "@/lib/image-helper";
 
@@ -76,7 +76,7 @@ const EPISODES_PER_RANGE = 50;
 export default function MovieDetailView({ movie, episodes = [] }: MovieDetailViewProps) {
   const router = useRouter();
   const { user, checkAuthOrPrompt, updateServerData } = useUserAuth();
-  const { toggleFavorite, isFavorite } = useFavorites();
+  const isFav = useIsFavorite(movie.slug);
   const { history } = useWatchHistory();
 
   const [selectedServerIdx, setSelectedServerIdx] = useState(0);
@@ -84,16 +84,28 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
   const [shareCopied, setShareCopied] = useState(false);
   const [epSearchQuery, setEpSearchQuery] = useState("");
   const [activeRangeIdx, setActiveRangeIdx] = useState(0);
+  const [heroImgIdx, setHeroImgIdx] = useState(0);
+  const [posterImgIdx, setPosterImgIdx] = useState(0);
 
-  const isFav = isFavorite(movie.slug);
+  // Poster (2:3 vertical) & Backdrop (16:9 horizontal) image candidates with automatic fallback
+  const posterCandidates = useMemo(
+    () => getMovieImageCandidates(movie, "poster"),
+    [movie?.poster_url, movie?.thumb_url]
+  );
+  const backdropCandidates = useMemo(
+    () => getMovieImageCandidates(movie, "backdrop"),
+    [movie?.poster_url, movie?.thumb_url]
+  );
 
-  // Poster (2:3 vertical) & Backdrop (16:9 horizontal) image candidates
-  const posterCandidates = getMovieImageCandidates(movie, "poster");
-  const backdropCandidates = getMovieImageCandidates(movie, "backdrop");
+  useEffect(() => {
+    setHeroImgIdx(0);
+    setPosterImgIdx(0);
+  }, [movie?.slug, movie?.poster_url, movie?.thumb_url]);
+
   const posterImage =
-    posterCandidates[0] || backdropCandidates[0] || movie.poster_url || movie.thumb_url || "/placeholder.svg";
+    posterCandidates[posterImgIdx] || backdropCandidates[0] || movie.poster_url || movie.thumb_url || "/placeholder.svg";
   const heroImage =
-    backdropCandidates[0] || posterCandidates[0] || movie.thumb_url || movie.poster_url || "/placeholder.svg";
+    backdropCandidates[heroImgIdx] || posterCandidates[0] || movie.thumb_url || movie.poster_url || "/placeholder.svg";
 
   // Smart title splitting for long multi-alias titles separated by "/"
   const { primaryTitle, altTitles } = useMemo(() => {
@@ -221,7 +233,7 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
     if (!checkAuthOrPrompt("lưu phim yêu thích")) return;
 
     const willBeFav = !isFav;
-    const updated = toggleFavorite({
+    const updated = toggleFavoriteStandalone({
       slug: movie.slug,
       name: movie.name,
       origin_name: movie.origin_name,
@@ -235,7 +247,7 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
     });
 
     if (user && updated) {
-      updateServerData({ favorites: updated });
+      updateServerData({ favorites: updated }, { silent: true });
     }
 
     if (willBeFav) {
@@ -336,8 +348,13 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
             priority
             placeholder="blur"
             blurDataURL={STATIC_BLUR_DATA_URL}
-            sizes="(max-width: 768px) 100vw, 1600px"
-            className="object-cover object-[center_20%] scale-105 opacity-45 sm:opacity-40 blur-[1px] sm:blur-0 transition-transform duration-700"
+            sizes="(max-width: 768px) 100vw, 1440px"
+            onError={() => {
+              if (heroImgIdx + 1 < backdropCandidates.length) {
+                setHeroImgIdx((i) => i + 1);
+              }
+            }}
+            className="object-cover object-[center_20%] scale-103 opacity-45 sm:opacity-40 transition-transform duration-500"
           />
           {/* Top Gradient */}
           <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#050807]/90 via-[#050807]/40 to-transparent" />
@@ -345,8 +362,8 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
           <div className="hidden md:block absolute inset-y-0 left-0 w-3/4 bg-gradient-to-r from-[#050807] via-[#050807]/85 to-transparent" />
           {/* Bottom Deep Fade into #050807 */}
           <div className="absolute inset-x-0 bottom-0 h-44 sm:h-56 md:h-64 bg-gradient-to-t from-[#050807] via-[#050807]/95 to-transparent" />
-          {/* Subtle Emerald Ambient Glow */}
-          <div className="hidden lg:block absolute -left-24 top-1/3 w-96 h-96 rounded-full bg-brand-green/[0.07] blur-[120px]" />
+          {/* Subtle Emerald Ambient Glow (Zero-cost radial gradient, no GPU blur) */}
+          <div className="hidden lg:block absolute -left-24 top-1/3 w-96 h-96 rounded-full bg-[radial-gradient(circle,rgba(32,214,107,0.09)_0%,transparent_70%)]" />
         </div>
 
         {/* Hero Foreground Container */}
@@ -356,7 +373,7 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
             <button
               type="button"
               onClick={handleBack}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-black/55 hover:bg-white/10 active:scale-95 backdrop-blur-md border border-white/15 hover:border-brand-green/40 text-xs sm:text-[13px] font-semibold text-white/90 hover:text-brand-green transition-all cursor-pointer shadow-lg"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-[#0B100E]/90 hover:bg-white/10 active:scale-95 border border-white/15 hover:border-brand-green/40 text-xs sm:text-[13px] font-semibold text-white/90 hover:text-brand-green transition-all cursor-pointer shadow-lg"
               aria-label="Quay lại"
             >
               <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
@@ -377,7 +394,12 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
                   placeholder="blur"
                   blurDataURL={STATIC_BLUR_DATA_URL}
                   sizes="(max-width: 640px) 160px, 245px"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  onError={() => {
+                    if (posterImgIdx + 1 < posterCandidates.length) {
+                      setPosterImgIdx((i) => i + 1);
+                    }
+                  }}
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 {/* Subtle bottom gradient inside poster */}
                 <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none" />
@@ -385,7 +407,7 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
                 {/* Poster Bottom Episode Status Badge */}
                 {movie.episode_current && (
                   <div className="absolute bottom-2.5 inset-x-2.5 flex justify-center">
-                    <span className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-brand-green/90 text-[#050807] shadow-lg backdrop-blur-md truncate max-w-full">
+                    <span className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-brand-green text-[#050807] shadow-lg truncate max-w-full">
                       {movie.episode_current}
                     </span>
                   </div>

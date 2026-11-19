@@ -890,3 +890,8 @@ video::-internal-media-controls-download-button {
 video::-webkit-media-controls-download-button {
   display: none !important;
 }
+
+@keyframes heroSlideProgress {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}

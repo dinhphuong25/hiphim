@@ -162,40 +162,7 @@ export function parseAllAdRangesFromM3U8Text(m3u8Text: string): ParsedAdData {
       }
     }
 
-    // 2. Group banner ranges
-    const bannerRanges: AdRange[] = [];
-    let inBanner = false;
-    let bannerStart = 0;
-    let bannerEnd = 0;
-
-    for (let i = 0; i < segments.length; i++) {
-      const s = segments[i];
-      const isBanner = isBannerSegment(s.seg);
-
-      if (isBanner) {
-        if (!inBanner) {
-          inBanner = true;
-          bannerStart = s.start;
-        }
-        bannerEnd = s.end;
-      } else {
-        if (inBanner) {
-          inBanner = false;
-          const dur = bannerEnd - bannerStart;
-          if (dur >= 3) {
-            bannerRanges.push({ start: bannerStart, end: bannerEnd, duration: dur, type: 'banner' });
-          }
-        }
-      }
-    }
-    if (inBanner) {
-      const dur = bannerEnd - bannerStart;
-      if (dur >= 3) {
-        bannerRanges.push({ start: bannerStart, end: bannerEnd, duration: dur, type: 'banner' });
-      }
-    }
-
-    return { commercialRanges, bannerRanges };
+    return { commercialRanges, bannerRanges: [] };
   } catch {
     return { commercialRanges: [], bannerRanges: [] };
   }
@@ -209,7 +176,7 @@ export function parseAdRangesFromM3U8Text(m3u8Text: string): AdRange[] {
 }
 
 /**
- * Extracts all ad ranges directly from Hls.js fragment objects (zero network latency).
+ * Extracts commercial ad ranges directly from Hls.js fragment objects (zero network latency).
  */
 export function extractAllAdRangesFromFragments(fragments: any[]): ParsedAdData {
   try {
@@ -222,52 +189,27 @@ export function extractAllAdRangesFromFragments(fragments: any[]): ParsedAdData 
     let commStart = 0;
     let commEnd = 0;
 
-    const bannerRanges: AdRange[] = [];
-    let inBanner = false;
-    let bannerStart = 0;
-    let bannerEnd = 0;
-
     for (let i = 0; i < fragments.length; i++) {
       const f = fragments[i];
       if (!f || typeof f !== 'object') continue;
 
-      const url = typeof f.relurl === 'string' && f.relurl 
-        ? f.relurl 
+      const url = typeof f.relurl === 'string' && f.relurl
+        ? f.relurl
         : (typeof f.url === 'string' && f.url ? f.url : '');
       const dur = typeof f.duration === 'number' && !isNaN(f.duration) ? f.duration : 0;
       const start = typeof f.start === 'number' && !isNaN(f.start) ? f.start : 0;
 
-      // Commercial check
       if (isCommercialSegment(url, dur)) {
         if (!inComm) {
           inComm = true;
           commStart = start;
         }
         commEnd = start + dur;
-      } else {
-        if (inComm) {
-          inComm = false;
-          const duration = commEnd - commStart;
-          if (duration >= 4 && duration <= 90) {
-            commercialRanges.push({ start: commStart, end: commEnd, duration, type: 'commercial' });
-          }
-        }
-      }
-
-      // Banner check
-      if (isBannerSegment(url)) {
-        if (!inBanner) {
-          inBanner = true;
-          bannerStart = start;
-        }
-        bannerEnd = start + dur;
-      } else {
-        if (inBanner) {
-          inBanner = false;
-          const duration = bannerEnd - bannerStart;
-          if (duration >= 3) {
-            bannerRanges.push({ start: bannerStart, end: bannerEnd, duration, type: 'banner' });
-          }
+      } else if (inComm) {
+        inComm = false;
+        const duration = commEnd - commStart;
+        if (duration >= 4 && duration <= 90) {
+          commercialRanges.push({ start: commStart, end: commEnd, duration, type: 'commercial' });
         }
       }
     }
@@ -279,14 +221,7 @@ export function extractAllAdRangesFromFragments(fragments: any[]): ParsedAdData 
       }
     }
 
-    if (inBanner) {
-      const duration = bannerEnd - bannerStart;
-      if (duration >= 3) {
-        bannerRanges.push({ start: bannerStart, end: bannerEnd, duration, type: 'banner' });
-      }
-    }
-
-    return { commercialRanges, bannerRanges };
+    return { commercialRanges, bannerRanges: [] };
   } catch {
     return { commercialRanges: [], bannerRanges: [] };
   }
@@ -341,6 +276,10 @@ export async function fetchAndParseAllAdRanges(videoUrl: string): Promise<Parsed
     }
 
     const data = parseAllAdRangesFromM3U8Text(targetText);
+    if (adRangesCache.size >= 60) {
+      const oldestKey = adRangesCache.keys().next().value;
+      if (oldestKey) adRangesCache.delete(oldestKey);
+    }
     adRangesCache.set(videoUrl, data);
     return data;
   } catch {

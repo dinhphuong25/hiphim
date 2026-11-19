@@ -288,12 +288,7 @@ export function useSearchMovies(query: string, page: number = 1) {
             const data = await apiCache.fetchWithCache(cacheKey, async () => {
                 const res = await fetch(
                     `${API_BASE}/v1/api/tim-kiem?keyword=${encodeURIComponent(query)}&limit=20&page=${page}`,
-                    {
-                        headers: {
-                            Referer: "https://phimanh.netlify.app",
-                            "User-Agent": "phimanh-bot/1.0",
-                        },
-                    }
+                    { signal: AbortSignal.timeout(6000) }
                 );
 
                 if (!res.ok) throw new Error("Search failed");

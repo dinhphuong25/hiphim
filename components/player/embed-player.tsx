@@ -159,15 +159,13 @@ const EmbedPlayer = ({
       }}
       onDragStart={(e) => e.preventDefault()}
     >
-      {/* Ambient Cinema Backdrop Glow matching Hi Phim default player */}
-      <div className="absolute -inset-1 bg-gradient-to-r from-brand-green/10 via-transparent to-brand-green/10 rounded-2xl blur-xl opacity-30 pointer-events-none" />
-
-      {/* Main Video Iframe */}
+      {/* Main Video Iframe — Strict sandbox blocks all third-party gambling popups & redirects */}
       <iframe
         key={iframeKey}
         src={videoUrl}
         className="w-full h-full absolute inset-0 rounded-2xl border-0 z-10"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
         allowFullScreen
         referrerPolicy="no-referrer"
         title="Hi Phim Video Player"
@@ -201,7 +199,7 @@ const EmbedPlayer = ({
           {/* Quick Reload Button */}
           <button
             onClick={handleReload}
-            className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-black/60 hover:bg-black/90 hover:text-brand-green backdrop-blur-md text-white/80 border border-white/10 transition-all cursor-pointer shadow-lg active:scale-95"
+            className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-black/75 hover:bg-black/95 hover:text-brand-green text-white/85 border border-white/15 transition-all cursor-pointer shadow-lg active:scale-95"
             title="Tải lại luồng phát"
             aria-label="Tải lại luồng phát"
           >
@@ -212,7 +210,7 @@ const EmbedPlayer = ({
           {onReportError && (
             <button
               onClick={onReportError}
-              className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-black/60 hover:bg-black/90 backdrop-blur-md text-amber-400 hover:text-amber-300 border border-white/10 transition-all cursor-pointer shadow-lg active:scale-95"
+              className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-black/75 hover:bg-black/95 text-amber-400 hover:text-amber-300 border border-white/15 transition-all cursor-pointer shadow-lg active:scale-95"
               title="Báo lỗi video"
               aria-label="Báo lỗi video"
             >
@@ -231,9 +229,8 @@ const EmbedPlayer = ({
       >
         {/* Left Cluster: Live Stream Indicator */}
         <div className="flex items-center gap-2 pointer-events-auto">
-          <div className="flex items-center gap-2 text-xs bg-black/55 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10">
+          <div className="flex items-center gap-2 text-xs bg-black/75 px-3 py-1.5 rounded-xl border border-white/15">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-green opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-green"></span>
             </span>
             <span className="text-white/90 font-mono font-bold text-[11px] sm:text-xs">
@@ -248,7 +245,7 @@ const EmbedPlayer = ({
             <button
               type="button"
               onClick={onNextEpisode}
-              className="text-white hover:text-brand-green hover:bg-white/10 active:scale-90 transition-all cursor-pointer p-2 sm:p-2.5 rounded-full flex items-center justify-center bg-black/50 backdrop-blur-md border border-white/10"
+              className="text-white hover:text-brand-green hover:bg-white/10 active:scale-90 transition-all cursor-pointer p-2 sm:p-2.5 rounded-full flex items-center justify-center bg-black/75 border border-white/15"
               title="Tập tiếp theo"
               aria-label="Tập tiếp theo"
             >

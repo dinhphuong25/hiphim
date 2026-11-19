@@ -13,7 +13,7 @@ export default function GlobalPipPlayer() {
   const dragRef = useRef({ dragging: false, startX: 0, startY: 0, initX: 0, initY: 0 });
   const posRef = useRef({ x: 0, y: 0 });
 
-  const [data, setData] = useState<PipData | null>(null);
+  const [data, setData] = useState<PipData | null>(() => pipStore.get());
   const [isPlaying, setIsPlaying] = useState(false);
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [initialized, setInitialized] = useState(false);
@@ -52,7 +52,7 @@ export default function GlobalPipPlayer() {
 
       if (HLS.isSupported()) {
         hls = new HLS({
-          enableWorker: false,
+          enableWorker: true,
           maxBufferLength: 15,
           maxMaxBufferLength: 30,
         });

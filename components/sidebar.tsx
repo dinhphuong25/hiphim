@@ -592,7 +592,7 @@ function SidebarContent({
         className={cn(
           "lg:hidden fixed bottom-0 left-0 right-0 z-[140] w-full select-none touch-manipulation pointer-events-none",
           "px-3 pb-2 pb-[max(0.6rem,env(safe-area-inset-bottom,0px))]",
-          "transition-all duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)] will-change-transform",
+          "transition-[transform,opacity] duration-300 ease-out",
           isPlayerFullscreen && "hidden",
           isMovieDetailPage && isDetailNavCollapsed
             ? "translate-y-full opacity-0 pointer-events-none"
@@ -782,7 +782,7 @@ function SidebarContent({
           type="button"
           onClick={() => setIsDetailNavCollapsed((prev) => !prev)}
           className={cn(
-            "lg:hidden fixed z-[141] transition-all duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)]",
+            "lg:hidden fixed z-[141] transition-[transform,opacity,bottom] duration-300 ease-out",
             "flex items-center gap-1.5 active:scale-95 cursor-pointer touch-manipulation select-none",
             isDetailNavCollapsed
               ? "bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] right-3.5 px-3 py-2 rounded-2xl bg-[#121518] border border-white/15 text-white shadow-[0_8px_24px_rgba(0,0,0,0.85)] hover:border-brand-green/40 hover:text-brand-green"
@@ -1081,7 +1081,7 @@ function SidebarContent({
           "top-0 left-0 bottom-0 w-[280px] bg-cinema-sub border-r border-white/10 rounded-none shadow-none",
           isMobileOpen ? "translate-x-0 z-[130]" : "-translate-x-full lg:translate-x-0 z-[100]",
           // Desktop state: floating island card matching bento / cut-out style (rounded corners, detached borders)
-          "lg:top-3 lg:bottom-auto lg:left-3 lg:w-[245px] lg:h-fit lg:max-h-[calc(100vh-24px)] lg:rounded-2xl lg:border lg:border-white/10 lg:bg-[#0B100E]/95 lg:backdrop-blur-xl lg:shadow-[0_12px_40px_rgba(0,0,0,0.65)] lg:overflow-hidden"
+          "lg:top-3 lg:bottom-auto lg:left-3 lg:w-[245px] lg:h-fit lg:max-h-[calc(100vh-24px)] lg:rounded-2xl lg:border lg:border-white/10 lg:bg-[#0B100E]/[0.97] lg:backdrop-blur-sm lg:shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_12px_36px_rgba(0,0,0,0.65)] lg:overflow-hidden"
         )}
       >
         {/* Sidebar Header / Brand Logo (Desktop & Mobile) */}

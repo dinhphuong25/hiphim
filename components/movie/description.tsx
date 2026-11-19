@@ -6,7 +6,7 @@ import WatchHeader from "../watch/watch-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Heart, ShieldAlert, Clock, AlertTriangle, Loader2 } from "lucide-react";
 import { updateContinueWatchingStandalone } from "@/hooks/useContinueWatching";
-import { addToHistoryStandalone, updateHistoryProgressStandalone, useFavorites } from "@/hooks/useLocalStorage";
+import { addToHistoryStandalone, updateHistoryProgressStandalone, useIsFavorite, toggleFavoriteStandalone } from "@/hooks/useLocalStorage";
 import { useUserAuth } from "@/context/user-auth-context";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -413,7 +413,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
 
   const [completedEpisodes, setCompletedEpisodes] = useState<Record<number, boolean>>({});
   const { user, checkAuthOrPrompt, updateServerData } = useUserAuth();
-  const { toggleFavorite, isFavorite } = useFavorites();
+  const isFav = useIsFavorite(movie?.slug);
   const prefetchedNextRef = useRef<string | null>(null);
   const lastSavedProgressRef = useRef<number>(0);
   const lastSavedDurationRef = useRef<number>(0);
@@ -473,11 +473,9 @@ export default function Description({ movie, serverData: rawServerData }: any) {
     return () => clearInterval(timer);
   }, [isUserTemporarilyBanned, user?.bannedUntil]);
 
-  const isFav = isFavorite(movie.slug);
-
   const handleToggleFavorite = useCallback(() => {
     if (!checkAuthOrPrompt("lưu phim yêu thích")) return;
-    const updated = toggleFavorite({
+    const updated = toggleFavoriteStandalone({
       slug: movie.slug,
       name: movie.name,
       origin_name: movie.origin_name,
@@ -491,7 +489,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
     });
 
     if (user && updated) {
-      updateServerData({ favorites: updated });
+      updateServerData({ favorites: updated }, { silent: true });
     }
 
     if (!isFav) {
@@ -499,7 +497,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
     } else {
       toast.info(`Đã xóa "${movie.name}" khỏi danh sách yêu thích`);
     }
-  }, [checkAuthOrPrompt, isFav, movie, toggleFavorite, updateServerData, user]);
+  }, [checkAuthOrPrompt, isFav, movie, updateServerData, user]);
 
   const [showReportModal, setShowReportModal] = useState(false);
 

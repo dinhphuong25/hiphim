@@ -455,14 +455,14 @@ function MobilePodiumColumn({ movie, rank, theme, isChampion }: MobilePodiumColu
         {/* Bottom Poster Tag: Rating or Quality */}
         <div className="absolute bottom-1 left-1 right-1 flex items-center justify-between z-10 px-0.5 pointer-events-none">
           {rating ? (
-            <span className="flex items-center gap-0.5 px-1 py-0.2 rounded bg-black/85 backdrop-blur-sm text-amber-400 text-[8.5px] font-black">
+            <span className="flex items-center gap-0.5 px-1 py-0.2 rounded bg-black/85 text-amber-400 text-[8.5px] font-black">
               <Star className="w-2.5 h-2.5 fill-amber-400" />
               {rating}
             </span>
           ) : <span />}
 
           {movie.quality && (
-            <span className="px-1 py-0.2 rounded bg-black/85 backdrop-blur-sm text-[#20D66B] text-[8px] font-bold">
+            <span className="px-1 py-0.2 rounded bg-black/85 text-[#20D66B] text-[8px] font-bold">
               {movie.quality}
             </span>
           )}
@@ -576,19 +576,19 @@ function DesktopPodiumCard({ movie, rank, theme, isChampion }: DesktopPodiumCard
         {/* Quality and Year Badges */}
         <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5 z-10">
           {movie.quality && (
-            <span className="px-2 py-0.5 rounded bg-black/75 backdrop-blur-md text-[10px] font-bold text-[#20D66B] border border-[#20D66B]/30">
+            <span className="px-2 py-0.5 rounded bg-black/80 text-[10px] font-bold text-[#20D66B] border border-[#20D66B]/30">
               {movie.quality}
             </span>
           )}
           {movie.year && (
-            <span className="px-2 py-0.5 rounded bg-black/75 backdrop-blur-md text-[10px] font-bold text-white border border-white/10">
+            <span className="px-2 py-0.5 rounded bg-black/80 text-[10px] font-bold text-white border border-white/10">
               {movie.year}
             </span>
           )}
         </div>
 
         {/* Play Icon Overlay */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/40 backdrop-blur-[2px]">
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/50">
           <div className="w-12 h-12 rounded-full bg-[#20D66B] flex items-center justify-center text-[#050807] shadow-xl scale-90 group-hover:scale-100 transition-transform">
             <Play className="w-5 h-5 fill-[#050807] ml-0.5" />
           </div>
