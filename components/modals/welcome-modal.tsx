@@ -79,8 +79,8 @@ export default function WelcomeModal() {
             <div className="text-[10.5px] text-white/50 font-medium uppercase tracking-wider">
               Đơn vị phát triển
             </div>
-            <div className="text-[14px] text-white font-bold leading-snug">
-              Hi Tech - All In One.
+            <div className="text-[13.5px] text-white font-medium leading-snug">
+              Được thành lập và phát triển bởi Hi Tech
             </div>
           </div>
         </div>
