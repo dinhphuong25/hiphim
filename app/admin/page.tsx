@@ -2978,7 +2978,7 @@ export default function AdminDashboardPage() {
                           <Info className="w-3 h-3" />
                           5. Lưu Ý Miễn Trừ
                         </span>
-                        <h4 className="text-sm font-bold text-white">Dưới Danh Sách Tập</h4>
+                        <h4 className="text-sm font-bold text-white">Đầu Máy Chủ Phát (Trang Xem)</h4>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
@@ -2991,10 +2991,10 @@ export default function AdminDashboardPage() {
                       </label>
                     </div>
                     <p className="text-[11px] text-white/40 leading-relaxed">
-                      Hiển thị dòng chữ giải thích minh bạch bên dưới danh sách tập phim để người xem thông cảm cho quảng cáo nhúng từ nguồn gốc.
+                      Hiển thị dòng chữ lưu ý minh bạch ở đầu danh sách máy chủ phát bên phải trang xem phim để người xem biết quảng cáo chèn từ nguồn thứ 3.
                     </p>
                     <div className="p-3 rounded-xl bg-black/40 border border-white/10 text-[11px] text-white/60 leading-relaxed italic">
-                      &quot;Quảng cáo trong video được nhúng cố định từ nguồn phát gốc. Đội ngũ kỹ thuật đã nỗ lực can thiệp để che chắn tối đa, rất mong mọi người thông cảm cho sự bất tiện này.&quot;
+                      &quot;Lưu ý: Các quảng cáo trong video được chèn vào từ nguồn thứ 3. Hi Phim không quản lý và không chịu trách nhiệm về nội dung này.&quot;
                     </div>
                   </div>
                   <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[11px]">

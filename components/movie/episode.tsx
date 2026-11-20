@@ -2,8 +2,9 @@
 
 import { useState, useMemo, useEffect, memo } from "react";
 import { cn } from "@/lib/utils";
-import { Search, Server, Film } from "lucide-react";
+import { Search, Server, Film, Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { fetchAnnouncementShared } from "@/lib/announcement-client";
 
 interface EpisodeData {
   name: string;
@@ -55,6 +56,19 @@ function EpisodeComponent({
   const [searchQuery, setSearchQuery] = useState("");
   const [activeRangeIndex, setActiveRangeIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [showAdDisclaimer, setShowAdDisclaimer] = useState(true);
+
+  useEffect(() => {
+    fetchAnnouncementShared()
+      .then((data) => {
+        if (data?.ads?.adDisclaimerEnabled === false) {
+          setShowAdDisclaimer(false);
+        } else {
+          setShowAdDisclaimer(true);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -154,6 +168,17 @@ function EpisodeComponent({
   return (
     <div className="flex flex-col gap-4 w-full">
       <div className="bg-[#0b0e0c]/90 backdrop-blur-md rounded-2xl border border-white/[0.05] p-5 flex flex-col gap-5 relative shadow-lg">
+        {/* Lưu ý quảng cáo chèn từ nguồn thứ 3 */}
+        {showAdDisclaimer && (
+          <div className="flex items-start gap-2.5 p-3 rounded-xl bg-amber-500/[0.08] border border-amber-500/20 text-zinc-300 text-[12px] leading-relaxed select-none">
+            <Info className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+            <p className="text-zinc-300 text-[12px] leading-relaxed">
+              <span className="font-bold text-amber-300 mr-1">Lưu ý:</span>
+              Các quảng cáo trong video được chèn vào từ nguồn thứ 3. Hi Phim không quản lý và không chịu trách nhiệm về nội dung này.
+            </p>
+          </div>
+        )}
+
         {/* Máy Chủ Phát Section */}
         <div className="space-y-3 min-w-0 z-10 relative">
           <h4 className="text-white/80 text-[12px] font-extrabold uppercase tracking-widest flex items-center gap-2 whitespace-nowrap">
