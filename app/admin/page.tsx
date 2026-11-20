@@ -2994,7 +2994,7 @@ export default function AdminDashboardPage() {
                       Hiển thị dòng chữ lưu ý minh bạch ở đầu danh sách máy chủ phát bên phải trang xem phim để người xem biết quảng cáo chèn từ nguồn thứ 3.
                     </p>
                     <div className="p-3 rounded-xl bg-black/40 border border-white/10 text-[11px] text-white/60 leading-relaxed italic">
-                      &quot;Lưu ý: Quảng cáo trong video được chèn từ nguồn thứ 3. Đội ngũ đã cố gắng gỡ bỏ quảng cáo, nếu vẫn còn mong mọi người thông cảm.&quot;
+                      &quot;Lưu ý: Quảng cáo trong video được chèn từ nguồn thứ 3. Hi Phim không quản lý và không chịu trách nhiệm về nội dung quảng cáo. Đội ngũ đã cố gắng gỡ bỏ quảng cáo, nếu vẫn còn mong mọi người thông cảm.&quot;
                     </div>
                   </div>
                   <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[11px]">
