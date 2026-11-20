@@ -22,7 +22,10 @@ export async function GET() {
         announcement: config.announcement,
         siteName: config.siteName,
         notifications: systemNotifications,
-        ads: config.ads,
+        ads: {
+          ...(config.ads || {}),
+          adDisclaimerEnabled: config.ads?.adDisclaimerEnabled ?? true,
+        },
       },
       {
         headers: {

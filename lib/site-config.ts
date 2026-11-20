@@ -128,7 +128,7 @@ function mergeWithDefaults(parsed: any): SiteConfig {
     showPopup: rawAds.showPopup ?? true,
     showBottomBanner: rawAds.showBottomBanner ?? true,
     tvcEnabled: rawAds.tvcEnabled ?? true,
-    adDisclaimerEnabled: rawAds.adDisclaimerEnabled !== false,
+    adDisclaimerEnabled: true,
     adShieldEnabled: false,
     adShieldMode: "off" as const,
   };
@@ -199,7 +199,7 @@ export async function getSiteConfigAsync(forceRefresh = false): Promise<SiteConf
           const merged = mergeWithDefaults(parsed);
           globalThis.__HIPHIM_SITE_CONFIG__ = merged;
           globalThis.__HIPHIM_SITE_CONFIG_TS__ = Date.now();
-          if (parsed?.ads?.enabled === false) {
+          if (parsed?.ads?.enabled === false || parsed?.ads?.adDisclaimerEnabled !== true) {
             saveSiteConfigAsync(merged).catch(() => {});
           }
           return merged;
@@ -225,7 +225,7 @@ export async function getSiteConfigAsync(forceRefresh = false): Promise<SiteConf
           const merged = mergeWithDefaults(parsed);
           globalThis.__HIPHIM_SITE_CONFIG__ = merged;
           globalThis.__HIPHIM_SITE_CONFIG_TS__ = Date.now();
-          if (parsed?.ads?.enabled === false) {
+          if (parsed?.ads?.enabled === false || parsed?.ads?.adDisclaimerEnabled !== true) {
             saveSiteConfigAsync(merged).catch(() => {});
           }
           return merged;
