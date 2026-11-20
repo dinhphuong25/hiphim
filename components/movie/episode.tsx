@@ -157,7 +157,7 @@ function EpisodeComponent({
         {/* Lưu ý quảng cáo chèn từ nguồn thứ 3 */}
         <div className="flex items-start gap-2.5 p-3 rounded-xl bg-amber-500/[0.08] border border-amber-500/20 text-zinc-300 text-[12px] leading-relaxed select-none">
           <Info className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-          <p className="text-zinc-300 text-[12px] leading-relaxed">
+          <p className="text-zinc-300 text-[12px] leading-relaxed text-justify">
             <span className="font-bold text-amber-300 mr-1">Lưu ý:</span>
             Quảng cáo trong video được chèn từ nguồn thứ 3. Hi Phim không quản lý và không chịu trách nhiệm về nội dung quảng cáo. Đội ngũ đã cố gắng gỡ bỏ quảng cáo, nếu vẫn còn mong mọi người thông cảm.
           </p>
