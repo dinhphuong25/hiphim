@@ -461,33 +461,9 @@ function SidebarContent({
     );
   }, [currentYearNum]);
 
-  const filteredCategories = useMemo(() => {
-    if (!categorySearchQuery.trim()) return categories;
-    return categories.filter((c) =>
-      c.name.toLowerCase().includes(categorySearchQuery.toLowerCase())
-    );
-  }, [categories, categorySearchQuery]);
-
   const displayedCategories = useMemo(() => {
-    if (categorySearchQuery.trim()) return filteredCategories;
-    if (categoryThematicFilter === "popular") {
-      const popularSlugs = new Set(["hanh-dong", "co-trang", "tinh-cam", "kinh-di", "hai-huoc", "vien-tuong", "hoat-hinh", "tam-ly", "vo-thuat", "hinh-su", "phieu-luu", "gia-dinh"]);
-      return categories.filter((c) => popularSlugs.has(c.slug));
-    }
-    if (categoryThematicFilter === "action") {
-      const slugs = new Set(["hanh-dong", "vo-thuat", "vien-tuong", "khoa-hoc-vien-tuong", "hinh-su", "phieu-luu", "chien-tranh", "gay-can", "kich-tinh", "kinh-di"]);
-      return categories.filter((c) => slugs.has(c.slug) || c.name.toLowerCase().includes("hành động") || c.name.toLowerCase().includes("võ thuật"));
-    }
-    if (categoryThematicFilter === "romance") {
-      const slugs = new Set(["tinh-cam", "co-trang", "tam-ly", "gia-dinh", "hoc-duong", "hai-huoc", "am-nhac", "chinh-kich"]);
-      return categories.filter((c) => slugs.has(c.slug) || c.name.toLowerCase().includes("tình cảm") || c.name.toLowerCase().includes("cổ trang"));
-    }
-    if (categoryThematicFilter === "anime") {
-      const slugs = new Set(["hoat-hinh", "anime", "than-thoai", "bi-an", "tai-lieu", "the-thao", "lich-su", "mien-tay", "phim-18"]);
-      return categories.filter((c) => slugs.has(c.slug) || c.name.toLowerCase().includes("hoạt hình") || c.name.toLowerCase().includes("thần thoại"));
-    }
     return categories;
-  }, [categories, categorySearchQuery, filteredCategories, categoryThematicFilter]);
+  }, [categories]);
 
   const filteredCountries = useMemo(() => {
     if (!countrySearchQuery.trim()) return sortedCountries;
@@ -1412,60 +1388,7 @@ function SidebarContent({
                   </div>
                 </div>
 
-                {/* Search & Sub-filters inside Sticky Header */}
-                {activeModal === "categories" && (
-                  <div className="space-y-2.5">
-                    <div className="relative flex items-center">
-                      <Search className="w-4 h-4 sm:w-5 sm:h-5 absolute left-4 text-brand-green stroke-[2.4] pointer-events-none" />
-                      <input
-                        type="text"
-                        aria-label="Lọc thể loại phim"
-                        value={categorySearchQuery}
-                        onChange={(e) => setCategorySearchQuery(e.target.value)}
-                        placeholder="Lọc nhanh thể loại (Hành động, Cổ trang, Tình cảm...)"
-                        className="w-full h-11 sm:h-12 bg-white/[0.05] hover:bg-white/[0.07] focus:bg-white/[0.09] border border-white/10 focus:border-brand-green/60 text-white placeholder-white/40 text-sm sm:text-base rounded-2xl pl-12 pr-10 outline-none transition-all duration-200"
-                        autoComplete="off"
-                        spellCheck={false}
-                      />
-                      {categorySearchQuery && (
-                        <button
-                          type="button"
-                          onClick={() => setCategorySearchQuery("")}
-                          aria-label="Xóa tìm kiếm"
-                          className="absolute right-3 p-1 rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      )}
-                    </div>
-
-                    {!categorySearchQuery.trim() && (
-                      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-                        {[
-                          { id: "all", label: "Tất Cả" },
-                          { id: "popular", label: "Phổ Biến" },
-                          { id: "action", label: "Hành Động & Kịch Tính" },
-                          { id: "romance", label: "Tình Cảm & Cổ Trang" },
-                          { id: "anime", label: "Hoạt Hình & Khác" },
-                        ].map((f) => (
-                          <button
-                            key={f.id}
-                            type="button"
-                            onClick={() => setCategoryThematicFilter(f.id as any)}
-                            className={cn(
-                              "px-3.5 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all select-none active:scale-95 cursor-pointer",
-                              categoryThematicFilter === f.id
-                                ? "bg-brand-green/15 text-brand-green border border-brand-green/45 font-extrabold shadow-[0_0_12px_rgba(32,214,107,0.15)]"
-                                : "bg-white/[0.04] hover:bg-white/[0.08] text-white/60 hover:text-white border border-white/[0.08]"
-                            )}
-                          >
-                            {f.label}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
+                {/* Categories modal now renders directly into the clean grid without search / filter header */}
 
                 {activeModal === "countries" && (
                   <div className="space-y-2.5">

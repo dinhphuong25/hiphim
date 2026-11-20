@@ -17,6 +17,7 @@ import AppShell from "@/components/layout/app-shell";
 import { UserAuthProvider } from "@/context/user-auth-context";
 import { NavigationTabProvider } from "@/context/navigation-tab-context";
 import AuthModal from "@/components/auth/auth-modal";
+import WelcomeModal from "@/components/modals/welcome-modal";
 import AdFloatingSystem from "@/components/ads/ad-floating-system";
 import PipWrapper from "@/components/player/pip-wrapper";
 import ScrollToTop from "@/components/ui/scroll-to-top";
@@ -255,6 +256,7 @@ export default function RootLayout({
             </NavigationTabProvider>
           </LoadingProvider>
           <AuthModal />
+          <WelcomeModal />
           <PipWrapper />
           <AdFloatingSystem />
         </UserAuthProvider>
