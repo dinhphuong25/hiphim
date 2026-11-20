@@ -465,43 +465,13 @@ function SidebarContent({
     return categories;
   }, [categories]);
 
-  const filteredCountries = useMemo(() => {
-    if (!countrySearchQuery.trim()) return sortedCountries;
-    return sortedCountries.filter((c) =>
-      c.name.toLowerCase().includes(countrySearchQuery.toLowerCase())
-    );
-  }, [sortedCountries, countrySearchQuery]);
-
   const displayedCountries = useMemo(() => {
-    if (countrySearchQuery.trim()) return filteredCountries;
-    if (countryRegionFilter === "popular") {
-      const popularSlugs = new Set(["trung-quoc", "han-quoc", "au-my", "nhat-ban", "thai-lan", "viet-nam", "hong-kong", "an-do", "dai-loan", "phap", "anh", "duc"]);
-      return sortedCountries.filter((c) => popularSlugs.has(c.slug));
-    }
-    if (countryRegionFilter === "asia") {
-      const asiaSlugs = new Set(["trung-quoc", "han-quoc", "nhat-ban", "thai-lan", "viet-nam", "hong-kong", "an-do", "dai-loan", "tai-wan", "philippines", "malaysia", "indonesia", "singapore", "tho-nhi-ky", "trieu-tien", "campuchia", "lao", "myanmar"]);
-      return sortedCountries.filter((c) => asiaSlugs.has(c.slug) || ["CN", "KR", "JP", "VN", "TH", "HK", "IN", "TW"].includes(getCountryCode(c.slug) || ""));
-    }
-    if (countryRegionFilter === "west") {
-      const westSlugs = new Set(["au-my", "phap", "anh", "duc", "tay-ban-nha", "canada", "uc", "y", "nga", "na-uy", "thuy-dien", "ha-lan", "ba-lan", "bi", "thuy-si", "dan-mach", "brazil", "mexico"]);
-      return sortedCountries.filter((c) => westSlugs.has(c.slug) || !["trung-quoc", "han-quoc", "nhat-ban", "thai-lan", "viet-nam", "hong-kong", "an-do", "dai-loan"].includes(c.slug));
-    }
     return sortedCountries;
-  }, [sortedCountries, countrySearchQuery, filteredCountries, countryRegionFilter]);
-
-  const filteredYears = useMemo(() => {
-    if (!yearSearchQuery.trim()) return YEARS_LIST;
-    return YEARS_LIST.filter((y) => String(y).includes(yearSearchQuery.trim()));
-  }, [YEARS_LIST, yearSearchQuery]);
+  }, [sortedCountries]);
 
   const displayedYears = useMemo(() => {
-    if (yearSearchQuery.trim()) return filteredYears;
-    if (yearDecade === "2020s") return filteredYears.filter((y) => y >= 2020);
-    if (yearDecade === "2010s") return filteredYears.filter((y) => y >= 2010 && y <= 2019);
-    if (yearDecade === "2000s") return filteredYears.filter((y) => y >= 2000 && y <= 2009);
-    if (yearDecade === "classic") return filteredYears.filter((y) => y < 2000);
-    return filteredYears;
-  }, [filteredYears, yearSearchQuery, yearDecade]);
+    return YEARS_LIST;
+  }, [YEARS_LIST]);
 
   const [isClosing, setIsClosing] = useState(false);
   const [isSelecting, setIsSelecting] = useState(false);
@@ -1388,114 +1358,7 @@ function SidebarContent({
                   </div>
                 </div>
 
-                {/* Categories modal now renders directly into the clean grid without search / filter header */}
-
-                {activeModal === "countries" && (
-                  <div className="space-y-2.5">
-                    <div className="relative flex items-center">
-                      <Search className="w-4 h-4 sm:w-5 sm:h-5 absolute left-4 text-brand-green stroke-[2.4] pointer-events-none" />
-                      <input
-                        type="text"
-                        aria-label="Lọc quốc gia phim"
-                        value={countrySearchQuery}
-                        onChange={(e) => setCountrySearchQuery(e.target.value)}
-                        placeholder="Lọc nhanh quốc gia (Hàn Quốc, Âu Mỹ, Trung Quốc...)"
-                        className="w-full h-11 sm:h-12 bg-white/[0.05] hover:bg-white/[0.07] focus:bg-white/[0.09] border border-white/10 focus:border-brand-green/60 text-white placeholder-white/40 text-sm sm:text-base rounded-2xl pl-12 pr-10 outline-none transition-all duration-200"
-                        autoComplete="off"
-                        spellCheck={false}
-                      />
-                      {countrySearchQuery && (
-                        <button
-                          type="button"
-                          onClick={() => setCountrySearchQuery("")}
-                          aria-label="Xóa tìm kiếm"
-                          className="absolute right-3 p-1 rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      )}
-                    </div>
-
-                    {!countrySearchQuery.trim() && (
-                      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-                        {[
-                          { id: "all", label: "Tất Cả" },
-                          { id: "popular", label: "Nổi Bật" },
-                          { id: "asia", label: "Châu Á" },
-                          { id: "west", label: "Âu Mỹ & Toàn Cầu" },
-                        ].map((f) => (
-                          <button
-                            key={f.id}
-                            type="button"
-                            onClick={() => setCountryRegionFilter(f.id as any)}
-                            className={cn(
-                              "px-3.5 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all select-none active:scale-95 cursor-pointer",
-                              countryRegionFilter === f.id
-                                ? "bg-brand-green/15 text-brand-green border border-brand-green/45 font-extrabold shadow-[0_0_12px_rgba(32,214,107,0.15)]"
-                                : "bg-white/[0.04] hover:bg-white/[0.08] text-white/60 hover:text-white border border-white/[0.08]"
-                            )}
-                          >
-                            {f.label}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {activeModal === "years" && (
-                  <div className="space-y-2.5">
-                    <div className="relative flex items-center">
-                      <Search className="w-4 h-4 sm:w-5 sm:h-5 absolute left-4 text-brand-green stroke-[2.4] pointer-events-none" />
-                      <input
-                        type="text"
-                        aria-label="Nhập năm phát hành"
-                        value={yearSearchQuery}
-                        onChange={(e) => setYearSearchQuery(e.target.value)}
-                        placeholder="Lọc nhanh năm phát hành (2026, 2025, 2024...)"
-                        className="w-full h-11 sm:h-12 bg-white/[0.05] hover:bg-white/[0.07] focus:bg-white/[0.09] border border-white/10 focus:border-brand-green/60 text-white placeholder-white/40 text-sm sm:text-base rounded-2xl pl-12 pr-10 outline-none transition-all duration-200"
-                        autoComplete="off"
-                        spellCheck={false}
-                      />
-                      {yearSearchQuery && (
-                        <button
-                          type="button"
-                          onClick={() => setYearSearchQuery("")}
-                          aria-label="Xóa tìm kiếm"
-                          className="absolute right-3 p-1 rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      )}
-                    </div>
-
-                    {!yearSearchQuery.trim() && (
-                      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-                        {[
-                          { id: "all", label: "Tất Cả Năm" },
-                          { id: "2020s", label: "2020s Mới" },
-                          { id: "2010s", label: "2010s" },
-                          { id: "2000s", label: "2000s" },
-                          { id: "classic", label: "Kinh Điển" },
-                        ].map((f) => (
-                          <button
-                            key={f.id}
-                            type="button"
-                            onClick={() => setYearDecade(f.id as any)}
-                            className={cn(
-                              "px-3.5 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all select-none active:scale-95 cursor-pointer",
-                              yearDecade === f.id
-                                ? "bg-brand-green/15 text-brand-green border border-brand-green/45 font-extrabold shadow-[0_0_12px_rgba(32,214,107,0.15)]"
-                                : "bg-white/[0.04] hover:bg-white/[0.08] text-white/60 hover:text-white border border-white/[0.08]"
-                            )}
-                          >
-                            {f.label}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
+                {/* Modals (Categories, Countries, Years) render directly into clean grids without search/filter bars */}
 
               </div>
             </div>
