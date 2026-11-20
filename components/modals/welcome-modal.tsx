@@ -70,7 +70,7 @@ export default function WelcomeModal() {
           Hi Phim là sản phẩm web xem phim trực tuyến miễn phí với kho phim phong phú chất lượng cao.
         </p>
 
-        {/* Đơn vị phát triển Hi Tech (không in đậm Hi Tech) */}
+        {/* Đơn vị phát triển Hi Tech */}
         <div className="w-full mt-4 p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center gap-3 text-left">
           <div className="w-9 h-9 rounded-xl bg-brand-green/15 border border-brand-green/30 flex items-center justify-center shrink-0">
             <Building2 className="w-4 h-4 text-brand-green" />
@@ -79,8 +79,8 @@ export default function WelcomeModal() {
             <div className="text-[10.5px] text-white/50 font-medium uppercase tracking-wider">
               Đơn vị phát triển
             </div>
-            <div className="text-[13px] text-white/90 font-normal leading-snug">
-              Được thành lập và phát triển bởi <span className="text-brand-green font-normal">Hi Tech</span>
+            <div className="text-[14px] text-white font-bold leading-snug">
+              Hi Tech - All In One.
             </div>
           </div>
         </div>
