@@ -223,22 +223,19 @@ function HeaderComponent({}: HeaderProps) {
         {/* DESKTOP HEADER: 3 BENTO ISLAND BOXES (3 Ô BO TRÒN RIÊNG) */}
         {/* ======================================================== */}
         <div className="hidden lg:flex w-full items-center justify-between pointer-events-none">
-          {/* Ô 1: TÌM KIẾM (Search Bento Island - Thu gọn, bỏ diễn viên, thêm loại, giữ Ctrl K) */}
+          {/* Ô 1: TÌM KIẾM (Search Bento Island - 240px, Tìm phim, thể loại..., bỏ Ctrl K) */}
           <button
             type="button"
             onClick={() => setShowSearchOverlay(true)}
             aria-label="Tìm phim, thể loại..."
-            className="pointer-events-auto flex items-center justify-between h-[48px] px-3.5 w-56 xl:w-64 rounded-2xl bg-[#0B100E]/[0.96] backdrop-blur-sm border border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_8px_28px_rgba(0,0,0,0.65)] hover:border-brand-green/50 hover:bg-[#0E1512] hover:shadow-[0_8px_28px_rgba(32,214,107,0.15)] transition-all duration-200 group cursor-pointer text-left"
+            className="pointer-events-auto flex items-center h-[48px] px-4 w-[240px] rounded-2xl bg-[#0B100E]/[0.96] backdrop-blur-sm border border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_8px_28px_rgba(0,0,0,0.65)] hover:border-brand-green/50 hover:bg-[#0E1512] hover:shadow-[0_8px_28px_rgba(32,214,107,0.15)] transition-all duration-200 group cursor-pointer text-left"
           >
-            <div className="flex items-center gap-2 min-w-0">
+            <div className="flex items-center gap-2.5 min-w-0 flex-1">
               <Search className="w-4 h-4 text-brand-green shrink-0 stroke-[2.2] group-hover:scale-110 transition-transform duration-200" />
-              <span className="text-[12.5px] font-medium text-white/60 group-hover:text-white/95 select-none truncate transition-colors">
+              <span className="text-[13px] font-medium text-white/60 group-hover:text-white/95 select-none truncate transition-colors">
                 Tìm phim, thể loại...
               </span>
             </div>
-            <kbd className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-white/[0.06] border border-white/10 text-[10px] text-white/50 font-mono font-semibold uppercase group-hover:border-brand-green/40 group-hover:text-brand-green group-hover:bg-brand-green/10 shadow-sm transition-all duration-200 shrink-0 ml-1.5">
-              <span>Ctrl</span>K
-            </kbd>
           </button>
 
           {/* Center Info: Hiện tên phim đang phát nếu có (hoặc để trống thoáng mắt) */}
