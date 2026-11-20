@@ -1,7 +1,7 @@
-import { unstable_cache } from "next/cache";
 import PhimApi from "@/libs/phimapi.com";
 import { getSiteConfig } from "@/lib/site-config";
 import { filterHiddenMovies } from "@/lib/hidden-movies";
+import { withEdgeCache } from "@/lib/kv-cache";
 
 export const TRENDING_FEATURED_SLUGS = [
   "nguoi-nhen-khoi-dau-moi",
@@ -15,66 +15,13 @@ export const TRENDING_FEATURED_SLUGS = [
 
 const api = new PhimApi();
 
-interface MemCacheEntry<T> {
-  value: T;
-  expiresAt: number;
-  staleUntil: number;
-}
-
-const workerMemCache = new Map<string, MemCacheEntry<any>>();
-const workerInFlight = new Map<string, Promise<any>>();
-
-async function withMemCache<T>(
+function withMemCache<T>(
   key: string,
   ttlMs: number,
   fetcher: () => Promise<T>,
   isEmpty?: (val: T) => boolean
 ): Promise<T> {
-  const now = Date.now();
-  const cached = workerMemCache.get(key);
-
-  if (cached && now < cached.expiresAt) {
-    return cached.value;
-  }
-
-  const refreshPromise = () => {
-    let inflight = workerInFlight.get(key);
-    if (!inflight) {
-      inflight = fetcher()
-        .then((res) => {
-          const empty = isEmpty ? isEmpty(res) : Array.isArray(res) && res.length === 0;
-          if (!empty) {
-            if (workerMemCache.size > 200) {
-              const firstKey = workerMemCache.keys().next().value;
-              if (firstKey) workerMemCache.delete(firstKey);
-            }
-            workerMemCache.set(key, {
-              value: res,
-              expiresAt: Date.now() + ttlMs,
-              staleUntil: Date.now() + ttlMs * 6,
-            });
-          }
-          return res;
-        })
-        .finally(() => {
-          workerInFlight.delete(key);
-        });
-      workerInFlight.set(key, inflight);
-    }
-    return inflight;
-  };
-
-  if (cached && now < cached.staleUntil) {
-    refreshPromise().catch(() => {});
-    return cached.value;
-  }
-
-  try {
-    return await refreshPromise();
-  } catch (err) {
-    if (cached) return cached.value;
-    throw err;
-  }
+  return withEdgeCache(key, ttlMs, fetcher, isEmpty);
 }
 
 function slimCardMovie(m: any): any {

@@ -5,6 +5,7 @@ const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
 const REFERER = APP_URL;
 
 import { normalizeImageUrl } from "@/lib/image-helper";
+import { withEdgeCache } from "@/lib/kv-cache";
 
 function normalizeCdnUrl(url: string | undefined, cdnDomain: string): string {
   return normalizeImageUrl(url, cdnDomain);
@@ -67,23 +68,27 @@ export default class PhimApi {
   }
 
   async get(slug: string): Promise<{ movie: Movie; server: MovieEpisode[] }> {
-    const now = Date.now();
-    const cached = movieDetailMemCache.get(slug);
-    if (cached && now < cached.expiresAt) {
-      return cached.data;
-    }
+    return withEdgeCache(
+      `movie-detail-v2:${slug}`,
+      900_000, // 15m fresh, 3h stale-while-revalidate at Cloudflare Edge
+      () => this.fetchMovieDetailUpstream(slug),
+      (val) => !val || !val.movie || !val.movie.slug
+    );
+  }
 
+  private async fetchMovieDetailUpstream(slug: string): Promise<{ movie: Movie; server: MovieEpisode[] }> {
     const url = `${this.apiUrl}/phim/${slug}`;
     let primaryData: any = null;
     let primaryErr: any = null;
 
-    // Fast single-attempt primary fetch (4s timeout) to preserve Cloudflare Worker CPU & wall-time limits
+    // Fast single-attempt primary fetch (4s timeout) with Cloudflare Edge subrequest caching
     try {
       const response = await fetch(url, {
         signal: AbortSignal.timeout(4000),
         headers: this.fetchHeaders(),
         next: { revalidate: 1800, tags: ["movies", `movie-${slug}`] },
-      });
+        cf: { cacheTtl: 900, cacheEverything: true },
+      } as any);
       if (response.ok) {
         const data = await response.json();
         if (data?.status && data?.movie?.slug) {
@@ -95,7 +100,6 @@ export default class PhimApi {
     }
 
     if (primaryData) {
-      // Normalize movie image URLs
       const cdnDomain = this.defaultCdnDomain;
       const movie = {
         ...primaryData.movie,
@@ -113,7 +117,8 @@ export default class PhimApi {
               headers: { "User-Agent": USER_AGENT, Accept: "application/json" },
               signal: AbortSignal.timeout(3000),
               next: { revalidate: 1800 },
-            });
+              cf: { cacheTtl: 900, cacheEverything: true },
+            } as any);
             if (nSearchRes.ok) {
               const nSearchData = await nSearchRes.json();
               const matchedItem = nSearchData.items?.[0];
@@ -122,7 +127,8 @@ export default class PhimApi {
                   headers: { "User-Agent": USER_AGENT, Accept: "application/json" },
                   signal: AbortSignal.timeout(3000),
                   next: { revalidate: 1800 },
-                });
+                  cf: { cacheTtl: 900, cacheEverything: true },
+                } as any);
                 if (nFilmRes.ok) {
                   const nFilmData = await nFilmRes.json();
                   const nEpisodes = nFilmData.movie?.episodes || [];
@@ -143,24 +149,15 @@ export default class PhimApi {
               }
             }
           }
-        } catch (backupErr) {
+        } catch {
           // Non-blocking fallback
         }
       }
 
-      const result = {
+      return {
         movie,
         server: allServers,
       };
-      if (movieDetailMemCache.size > 250) {
-        const firstKey = movieDetailMemCache.keys().next().value;
-        if (firstKey) movieDetailMemCache.delete(firstKey);
-      }
-      movieDetailMemCache.set(slug, {
-        data: result,
-        expiresAt: Date.now() + 900_000, // 15 minutes
-      });
-      return result;
     }
 
     // Automatic Multi-Source Fallback to NguonC if primary source completely fails
@@ -173,7 +170,8 @@ export default class PhimApi {
         },
         signal: AbortSignal.timeout(4000),
         next: { revalidate: 60, tags: ["movies", `movie-${slug}`] },
-      });
+        cf: { cacheTtl: 300, cacheEverything: true },
+      } as any);
       if (fbRes.ok) {
         const fbData = await fbRes.json();
         const fbMovie = fbData.movie;
@@ -265,8 +263,9 @@ export default class PhimApi {
     const response = await fetch(url, {
       headers: this.fetchHeaders(),
       signal: AbortSignal.timeout(4500),
-      next: { revalidate: 60, tags: ["new-updates", "movies"] }, // Cache 60s để luôn cập nhật tập mới
-    });
+      next: { revalidate: 60, tags: ["new-updates", "movies"] },
+      cf: { cacheTtl: 60, cacheEverything: true },
+    } as any);
     if (!response.ok) throw new Error(`API error: ${response.status}`);
     const data = await response.json();
     const cdnDomain = data?.data?.APP_DOMAIN_CDN_IMAGE || this.defaultCdnDomain;
@@ -497,8 +496,9 @@ export default class PhimApi {
     const response = await fetch(url, {
       headers: this.fetchHeaders(),
       signal: AbortSignal.timeout(4500),
-      next: { revalidate: 900 }, // Cache 15 phút
-    });
+      next: { revalidate: 900 },
+      cf: { cacheTtl: 900, cacheEverything: true },
+    } as any);
     if (!response.ok) throw new Error(`API error: ${response.status}`);
     const data = await response.json();
     const cdnDomain = data?.data?.APP_DOMAIN_CDN_IMAGE || this.defaultCdnDomain;

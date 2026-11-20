@@ -39,7 +39,12 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import TVCPlayerOverlay from "./tvc-player-overlay";
 import { Slider } from "@/components/ui/slider";
-import { AdRange, fetchAndParseAllAdRanges, extractAllAdRangesFromFragments } from "@/lib/ad-parser";
+import {
+  AdRange,
+  fetchAndParseAllAdRanges,
+  extractAllAdRangesFromFragments,
+  createAdStrippingHlsLoader,
+} from "@/lib/ad-parser";
 import { pipStore } from "@/lib/pip-store";
 import { useUserAuth } from "@/context/user-auth-context";
 import { fetchAnnouncementShared } from "@/lib/announcement-client";
@@ -1110,8 +1115,14 @@ export default function VideoPlayer({
     if (!videoUrl) return;
 
     let isCancelled = false;
+    const isIosDevice =
+      typeof navigator !== "undefined" &&
+      (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1));
+    // Trên iOS Safari dùng Native HLS, phân tích ad-ranges sớm (500ms); trên Hls.js, pLoader đã cắt trực tiếp từ manifest
+    const fetchDelayMs = isIosDevice ? 500 : 5000;
     const fetchTimer = setTimeout(() => {
-      // Nếu Hls.js đã trích xuất xong từ fragments trong RAM, không cần fetch lại qua mạng
+      // Nếu Hls.js đã trích xuất/cắt xong từ manifest trong RAM, không cần fetch lại qua mạng
       if (hasExtractedFromHlsRef.current || adRangesRef.current.length > 0) return;
 
       fetchAndParseAllAdRanges(videoUrl).then((data) => {
@@ -1130,7 +1141,7 @@ export default function VideoPlayer({
           }
         }
       }).catch(() => {});
-    }, 6000);
+    }, fetchDelayMs);
 
     return () => {
       isCancelled = true;
@@ -1416,7 +1427,15 @@ export default function VideoPlayer({
           video.removeEventListener('error', handleNativeError);
         };
       } else if (HLS.isSupported()) {
+        const AdStrippingLoader = createAdStrippingHlsLoader(
+          HLS.DefaultConfig.loader,
+          () => {
+            hasExtractedFromHlsRef.current = true;
+          }
+        );
+
         const hls = new HLS({
+          ...(AdStrippingLoader ? { pLoader: AdStrippingLoader as any } : {}),
           enableWorker: true,
           lowLatencyMode: false,
           progressive: false,

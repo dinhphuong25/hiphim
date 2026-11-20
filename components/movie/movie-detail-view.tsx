@@ -154,20 +154,47 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
   const episodeList = currentServer?.server_data || [];
   const firstEpisodeSlug = episodeList[0]?.slug || "tap-01";
 
-  // Check if user has a saved watch history entry for this movie
+  // Check if user has a saved watch history entry for this movie (merges local + cloud history, picking newest)
   const savedHistoryItem = useMemo(() => {
-    if (!Array.isArray(history) || !movie?.slug) return null;
-    return history.find((item) => item.slug === movie.slug) || null;
-  }, [history, movie?.slug]);
+    if (!movie?.slug) return null;
+    const localItem = Array.isArray(history) ? history.find((item) => item?.slug === movie.slug) : null;
+    const cloudItem = Array.isArray(user?.history)
+      ? user.history.find((item: any) => item?.slug === movie.slug)
+      : null;
+
+    if (localItem && cloudItem) {
+      const localWatched = Number(localItem.watchedAt || 0);
+      const cloudWatched = Number(cloudItem.watchedAt || cloudItem.timestamp || 0);
+      return cloudWatched >= localWatched ? cloudItem : localItem;
+    }
+    return cloudItem || localItem || null;
+  }, [history, user?.history, movie?.slug]);
 
   const resumeWatchInfo = useMemo(() => {
     if (!savedHistoryItem || episodeList.length === 0) return null;
+    const currentTime = Number(savedHistoryItem.currentTime) || 0;
+    const duration = Number(savedHistoryItem.duration) || 0;
+    // If episode was already completed (>= 95% or within 15s of end), check if next episode exists
+    const isCompleted = duration > 30 && currentTime >= duration - 15;
+
     if (savedHistoryItem.episodeSlug) {
-      const matched = episodeList.find((ep) => ep.slug === savedHistoryItem.episodeSlug);
-      if (matched) {
+      const matchedIdx = episodeList.findIndex((ep) => ep.slug === savedHistoryItem.episodeSlug);
+      if (matchedIdx !== -1) {
+        if (isCompleted && matchedIdx + 1 < episodeList.length) {
+          const nextEp = episodeList[matchedIdx + 1];
+          return {
+            slug: nextEp.slug || String(matchedIdx + 2),
+            label: nextEp.name || `Tập ${matchedIdx + 2}`,
+            currentTime: 0,
+            episodeIndex: matchedIdx + 1,
+          };
+        }
+        const matched = episodeList[matchedIdx];
         return {
           slug: matched.slug,
           label: savedHistoryItem.episodeName || matched.name,
+          currentTime: isCompleted ? 0 : currentTime,
+          episodeIndex: matchedIdx,
         };
       }
     }
@@ -176,17 +203,31 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
       savedHistoryItem.episodeIndex >= 0 &&
       savedHistoryItem.episodeIndex < episodeList.length
     ) {
-      const matched = episodeList[savedHistoryItem.episodeIndex];
+      const idx = savedHistoryItem.episodeIndex;
+      if (isCompleted && idx + 1 < episodeList.length) {
+        const nextEp = episodeList[idx + 1];
+        return {
+          slug: nextEp.slug || String(idx + 2),
+          label: nextEp.name || `Tập ${idx + 2}`,
+          currentTime: 0,
+          episodeIndex: idx + 1,
+        };
+      }
+      const matched = episodeList[idx];
       return {
-        slug: matched.slug || String(savedHistoryItem.episodeIndex + 1),
+        slug: matched.slug || String(idx + 1),
         label: savedHistoryItem.episodeName || matched.name,
+        currentTime: isCompleted ? 0 : currentTime,
+        episodeIndex: idx,
       };
     }
     return null;
   }, [savedHistoryItem, episodeList]);
 
   const primaryWatchHref = resumeWatchInfo
-    ? `/watch?slug=${movie.slug}&ep=${resumeWatchInfo.slug}&server=${selectedServerIdx}`
+    ? `/watch?slug=${movie.slug}&ep=${resumeWatchInfo.slug}&server=${selectedServerIdx}${
+        resumeWatchInfo.currentTime > 5 ? `&t=${Math.floor(resumeWatchInfo.currentTime)}` : ""
+      }`
     : `/watch?slug=${movie.slug}&ep=${firstEpisodeSlug}&server=${selectedServerIdx}`;
 
   // Episode ranges & search filter for long series
@@ -333,6 +374,27 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
     return `Tập ${clean.padStart(2, "0")}`;
   };
 
+  const formatResumeEpLabel = (name: string) => {
+    if (!name) return "Tập 1";
+    const clean = name.trim();
+    if (clean.toLowerCase() === "full") return "Full";
+    const numMatch = clean.match(/^tập\s*0*(\d+)$/i) || clean.match(/^0*(\d+)$/);
+    if (numMatch) return `Tập ${numMatch[1]}`;
+    if (clean.toLowerCase().startsWith("tập")) return clean;
+    return `Tập ${clean}`;
+  };
+
+  const formatWatchTimestamp = (seconds: number) => {
+    const total = Math.max(0, Math.floor(seconds));
+    const h = Math.floor(total / 3600);
+    const m = Math.floor((total % 3600) / 60);
+    const s = total % 60;
+    if (h > 0) {
+      return `${h}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+    }
+    return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+  };
+
   return (
     <div className="min-h-screen bg-[#050807] text-white pb-24 lg:pb-16 selection:bg-brand-green selection:text-black">
       {/* ======================================================== */}
@@ -451,12 +513,17 @@ export default function MovieDetailView({ movie, episodes = [] }: MovieDetailVie
                 <div className="flex items-center gap-2 sm:gap-2.5 flex-1 sm:flex-initial min-w-0">
                   <Link
                     href={primaryWatchHref}
-                    className="flex-1 sm:flex-initial sm:min-w-[200px] h-11 sm:h-12 px-3.5 sm:px-7 rounded-xl bg-gradient-to-r from-[#20D66B] to-[#10B981] hover:brightness-110 active:scale-[0.98] text-[#050807] font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-[0_8px_28px_rgba(32,214,107,0.35)] transition-all cursor-pointer uppercase tracking-wide whitespace-nowrap"
+                    className={cn(
+                      "flex-1 sm:flex-initial sm:min-w-[200px] h-11 sm:h-12 px-3.5 sm:px-7 rounded-xl bg-gradient-to-r from-[#20D66B] to-[#10B981] hover:brightness-110 active:scale-[0.98] text-[#050807] font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-[0_8px_28px_rgba(32,214,107,0.35)] transition-all cursor-pointer tracking-wide whitespace-nowrap",
+                      !resumeWatchInfo && "uppercase"
+                    )}
                   >
                     <Play className="w-4 h-4 sm:w-4.5 sm:h-4.5 fill-current text-[#050807] shrink-0" />
                     <span className="whitespace-nowrap">
                       {resumeWatchInfo
-                        ? `TIẾP TỤC XEM (${formatEpName(resumeWatchInfo.label)})`
+                        ? resumeWatchInfo.currentTime > 5
+                          ? `Xem tiếp ${formatResumeEpLabel(resumeWatchInfo.label)} (${formatWatchTimestamp(resumeWatchInfo.currentTime)})`
+                          : `Xem tiếp ${formatResumeEpLabel(resumeWatchInfo.label)}`
                         : `XEM PHIM ${movie.episode_current ? `(${movie.episode_current})` : "NGAY"}`}
                     </span>
                   </Link>

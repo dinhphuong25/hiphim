@@ -42,7 +42,10 @@ interface UserAuthContextType {
   resendOtp: (email: string) => Promise<{ success: boolean; error?: string; devMode?: boolean; devCode?: string }>;
   logout: () => Promise<void>;
   syncWithServer: () => Promise<void>;
-  updateServerData: (data: { favorites?: any[]; history?: any[] }, options?: { silent?: boolean }) => Promise<void>;
+  updateServerData: (
+    data: { favorites?: any[]; history?: any[] },
+    options?: { silent?: boolean; mode?: "merge" | "replace"; keepalive?: boolean }
+  ) => Promise<void>;
   checkAuthOrPrompt: (actionName?: string) => boolean;
 }
 
@@ -208,6 +211,74 @@ function TempBanModal({
 
 const CACHED_USER_KEY = "hiphim_cached_user_profile";
 
+/**
+ * Hydrates per-episode localStorage keys (watchProgress_* & lastWatchedEpisode_*) from cloud history
+ * whenever cloud history contains newer or further watch progress from another device.
+ */
+function syncCloudHistoryToLocalEpisodeStorage(historyList: any[]) {
+  if (typeof window === "undefined" || !Array.isArray(historyList)) return;
+  try {
+    for (const item of historyList) {
+      const slug = (item?.slug || item?.movieSlug || "").trim();
+      if (!slug) continue;
+      const cloudTime = Number(item.currentTime) || 0;
+      const cloudDur = Number(item.duration) || 0;
+      const cloudEpIdx = typeof item.episodeIndex === "number" && item.episodeIndex >= 0 ? item.episodeIndex : 0;
+      const cloudSvIdx = typeof item.serverIndex === "number" && item.serverIndex >= 0 ? item.serverIndex : 0;
+      const cloudWatchedAt = Number(item.watchedAt || item.timestamp || 0);
+
+      if (cloudTime <= 5) continue;
+
+      const lastKey = `lastWatchedEpisode_${slug}`;
+      let shouldUpdateLast = true;
+      try {
+        const rawLast = localStorage.getItem(lastKey);
+        if (rawLast) {
+          const parsedLast = JSON.parse(rawLast);
+          const localWatchedAt = Number(parsedLast?.watchedAt || 0);
+          if (localWatchedAt > cloudWatchedAt && cloudWatchedAt > 0) {
+            shouldUpdateLast = false;
+          } else if (
+            !cloudWatchedAt &&
+            parsedLast?.episodeIndex === cloudEpIdx &&
+            Number(parsedLast?.currentTime) > cloudTime
+          ) {
+            shouldUpdateLast = false;
+          }
+        }
+      } catch {}
+
+      if (shouldUpdateLast) {
+        localStorage.setItem(
+          lastKey,
+          JSON.stringify({
+            serverIndex: cloudSvIdx,
+            episodeIndex: cloudEpIdx,
+            episodeName: item.episodeName || `Tập ${cloudEpIdx + 1}`,
+            episodeSlug: item.episodeSlug || "",
+            currentTime: Math.floor(cloudTime),
+            duration: Math.floor(cloudDur),
+            watchedAt: cloudWatchedAt || Date.now(),
+          })
+        );
+        const epKey = `watchProgress_${slug}_${cloudSvIdx}_${cloudEpIdx}`;
+        const existingEpTime = Number(localStorage.getItem(epKey) || 0);
+        if (!existingEpTime || cloudTime >= existingEpTime || cloudWatchedAt > 0) {
+          localStorage.setItem(epKey, String(Math.floor(cloudTime)));
+        }
+        // Also mirror onto server 0 key so Default server always resumes at the cloud timestamp
+        if (cloudSvIdx !== 0) {
+          const sv0Key = `watchProgress_${slug}_0_${cloudEpIdx}`;
+          const existingSv0Time = Number(localStorage.getItem(sv0Key) || 0);
+          if (!existingSv0Time || cloudTime >= existingSv0Time) {
+            localStorage.setItem(sv0Key, String(Math.floor(cloudTime)));
+          }
+        }
+      }
+    }
+  } catch {}
+}
+
 export function UserAuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -240,7 +311,10 @@ export function UserAuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const updateServerData = useCallback(
-    async (data: { favorites?: any[]; history?: any[] }, options?: { silent?: boolean }) => {
+    async (
+      data: { favorites?: any[]; history?: any[] },
+      options?: { silent?: boolean; mode?: "merge" | "replace"; keepalive?: boolean }
+    ) => {
       const hasFavUpdate = Array.isArray(data.favorites);
       const hasHistUpdate = Array.isArray(data.history);
       if (!hasFavUpdate && !hasHistUpdate) return;
@@ -288,14 +362,18 @@ export function UserAuthProvider({ children }: { children: React.ReactNode }) {
 
       // 2. Persist to server (Cloudflare D1 / Postgres)
       try {
-        const payload: any = { mode: "replace" };
+        const payload: any = { mode: options?.mode || "replace" };
         if (hasFavUpdate) payload.favorites = data.favorites;
         if (hasHistUpdate) payload.history = data.history;
+
+        const bodyStr = JSON.stringify(payload);
+        const useKeepalive = Boolean((options?.keepalive || options?.silent) && bodyStr.length < 60_000);
 
         const res = await fetch("/api/auth/sync", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
+          body: bodyStr,
+          keepalive: useKeepalive,
         });
         if (res.ok) {
           const resData = await res.json();
@@ -308,6 +386,7 @@ export function UserAuthProvider({ children }: { children: React.ReactNode }) {
             }
             if (canApplyHist) {
               hydrateGlobalHistory(resData.history);
+              syncCloudHistoryToLocalEpisodeStorage(resData.history);
             }
 
             if (!options?.silent && (canApplyFav || canApplyHist)) {
@@ -507,6 +586,7 @@ export function UserAuthProvider({ children }: { children: React.ReactNode }) {
           }
           if (histMutationVersionRef.current === initHistVer) {
             hydrateGlobalHistory(finalHistory);
+            syncCloudHistoryToLocalEpisodeStorage(finalHistory);
           }
 
           const hydratedUser = {
@@ -551,7 +631,7 @@ export function UserAuthProvider({ children }: { children: React.ReactNode }) {
     fetchCurrentUser();
   }, [fetchCurrentUser]);
 
-  // --- Real-time Ban Heartbeat ---
+  // --- Real-time Cloud Sync & Ban Heartbeat ---
   useEffect(() => {
     if (heartbeatIntervalRef.current) {
       clearInterval(heartbeatIntervalRef.current);
@@ -560,12 +640,15 @@ export function UserAuthProvider({ children }: { children: React.ReactNode }) {
 
     if (!user) return;
 
-    // Admin accounts are never banned
-    if (user.role === "superadmin" || user.role === "admin") return;
+    const isAdminAccount = user.role === "superadmin" || user.role === "admin";
+    let lastCheckTs = 0;
 
-    const checkBanStatus = async () => {
+    const checkCloudAndBanStatus = async () => {
       // Only poll when tab is visible to avoid unnecessary requests
       if (document.visibilityState !== "visible") return;
+      const now = Date.now();
+      if (now - lastCheckTs < 4000) return;
+      lastCheckTs = now;
 
       try {
         const res = await fetch("/api/auth/me", {
@@ -584,6 +667,62 @@ export function UserAuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         const freshUser = data.user;
+
+        // --- Cross-Device Cloud Sync: Merge newer watch history & favorites from other devices ---
+        if (Array.isArray(freshUser.history) && freshUser.history.length > 0) {
+          let localHist: any[] = [];
+          try {
+            const rawHist = localStorage.getItem(STORAGE_KEYS.HISTORY);
+            if (rawHist) localHist = JSON.parse(rawHist);
+          } catch {}
+
+          const localMap = new Map<string, any>(
+            (Array.isArray(localHist) ? localHist : []).map((h: any) => [h?.slug || h?.movieSlug, h])
+          );
+          let hasNewerCloudProgress = false;
+
+          for (const ch of freshUser.history) {
+            const s = ch?.slug || ch?.movieSlug;
+            if (!s) continue;
+            const lh = localMap.get(s);
+            const cWatched = Number(ch?.watchedAt || ch?.timestamp || 0);
+            const lWatched = lh ? Number(lh?.watchedAt || lh?.timestamp || 0) : 0;
+            const cTime = Number(ch?.currentTime || 0);
+            const lTime = lh ? Number(lh?.currentTime || 0) : 0;
+            if (
+              !lh ||
+              cWatched > lWatched + 1000 ||
+              ch?.episodeIndex !== lh?.episodeIndex ||
+              Math.abs(cTime - lTime) >= 5
+            ) {
+              hasNewerCloudProgress = true;
+              break;
+            }
+          }
+
+          if (hasNewerCloudProgress) {
+            const combinedHistory = [...freshUser.history, ...(Array.isArray(localHist) ? localHist : [])];
+            hydrateGlobalHistory(combinedHistory);
+            syncCloudHistoryToLocalEpisodeStorage(freshUser.history);
+            setUser((prev) => {
+              if (!prev) return null;
+              const next = {
+                ...prev,
+                history: freshUser.history,
+                historyCount: freshUser.history.length,
+                favorites: Array.isArray(freshUser.favorites) ? freshUser.favorites : prev.favorites,
+                favoritesCount: Array.isArray(freshUser.favorites) ? freshUser.favorites.length : prev.favoritesCount,
+              };
+              try {
+                localStorage.setItem(CACHED_USER_KEY, JSON.stringify(next));
+              } catch {}
+              return next;
+            });
+          }
+        }
+
+        if (isAdminAccount) return;
+
         const prev = prevBanStateRef.current;
 
         const isNowPermLocked = Boolean(freshUser.isLocked);
@@ -591,18 +730,11 @@ export function UserAuthProvider({ children }: { children: React.ReactNode }) {
 
         // --- Case 1: Permanent ban detected ---
         if (isNowPermLocked && !prev.isLocked) {
-          // Stop any playing video immediately via DOM
           document.querySelectorAll("video").forEach((v) => {
             try { v.pause(); v.src = ""; } catch {}
           });
-
-          // Show full-screen modal, then auto-logout after user dismisses
           setPermBanModal({ open: true, reason: freshUser.banReason || "" });
-
-          // Update prev so we don't fire twice
           prevBanStateRef.current = { isLocked: true, bannedUntil: Number(freshUser.bannedUntil) || 0 };
-
-          // Stop heartbeat while modal is showing
           if (heartbeatIntervalRef.current) {
             clearInterval(heartbeatIntervalRef.current);
             heartbeatIntervalRef.current = null;
@@ -615,20 +747,14 @@ export function UserAuthProvider({ children }: { children: React.ReactNode }) {
         const newBannedUntil = Number(freshUser.bannedUntil) || 0;
 
         if (isNowTempBanned && newBannedUntil !== prevBannedUntil) {
-          // Stop any playing video immediately
           document.querySelectorAll("video").forEach((v) => {
             try { v.pause(); } catch {}
           });
-
-          // Show popup modal instead of toast
           setTempBanModal({ open: true, reason: freshUser.banReason || "", bannedUntil: newBannedUntil });
-
-          // Update user state so description.tsx isUserBanned becomes true
           setUser((prev) => prev ? { ...prev, ...freshUser } : freshUser);
           prevBanStateRef.current = { isLocked: false, bannedUntil: newBannedUntil };
           return;
         }
-
 
         // --- Case 3: Temp ban expired (server auto-unblocked) ---
         if (prevBannedUntil > 0 && !isNowTempBanned && !isNowPermLocked) {
@@ -638,7 +764,6 @@ export function UserAuthProvider({ children }: { children: React.ReactNode }) {
           return;
         }
 
-        // Update ban ref quietly
         prevBanStateRef.current = {
           isLocked: isNowPermLocked,
           bannedUntil: newBannedUntil,
@@ -648,19 +773,23 @@ export function UserAuthProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
-    // Check on visibility change (when tab is reopened or focused)
+    // Check on visibility change or window focus (when user switches from phone to computer tab)
     const handleVis = () => {
       if (document.visibilityState === "visible") {
-        checkBanStatus();
+        checkCloudAndBanStatus();
       }
     };
+    const handleFocus = () => {
+      checkCloudAndBanStatus();
+    };
     document.addEventListener("visibilitychange", handleVis);
+    window.addEventListener("focus", handleFocus);
 
-    // Poll every 3 minutes (180,000ms) instead of 3.5s to protect Vercel limits
-    heartbeatIntervalRef.current = setInterval(checkBanStatus, 180000);
+    heartbeatIntervalRef.current = setInterval(checkCloudAndBanStatus, 180000);
 
     return () => {
       document.removeEventListener("visibilitychange", handleVis);
+      window.removeEventListener("focus", handleFocus);
       if (heartbeatIntervalRef.current) {
         clearInterval(heartbeatIntervalRef.current);
         heartbeatIntervalRef.current = null;

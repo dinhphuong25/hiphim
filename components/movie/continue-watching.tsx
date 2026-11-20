@@ -44,6 +44,29 @@ const ContinueWatchingImage = memo(function ContinueWatchingImage({ item }: { it
   );
 });
 
+function formatWatchTimestamp(seconds: number): string {
+  const total = Math.max(0, Math.floor(seconds || 0));
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = total % 60;
+  if (h > 0) {
+    return `${h}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+  }
+  return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+}
+
+function formatEpisodeLabel(epName?: string, epIndex?: number): string {
+  if (epName) {
+    const clean = epName.trim();
+    if (clean.toLowerCase() === "full") return "Full";
+    const numMatch = clean.match(/^tập\s*0*(\d+)$/i) || clean.match(/^0*(\d+)$/);
+    if (numMatch) return `Tập ${numMatch[1]}`;
+    if (clean.toLowerCase().startsWith("tập")) return clean;
+    return `Tập ${clean}`;
+  }
+  return `Tập ${(epIndex ?? 0) + 1}`;
+}
+
 function ContinueWatchingComponent() {
   const { user } = useUserAuth();
   const { items, removeItem } = useContinueWatching();
@@ -104,9 +127,15 @@ function ContinueWatchingComponent() {
                   <h3 className="text-sm font-bold text-white line-clamp-1 group-hover:text-brand-green transition-colors">
                     {item.name}
                   </h3>
-                  <p className="text-xs text-cinema-text-dim mt-1">
-                    {item.episodeName || `Tập ${(item.episodeIndex ?? 0) + 1}`}
-                  </p>
+                  <div className="mt-2 flex items-center justify-between gap-2">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-brand-green/15 border border-brand-green/30 text-[11.5px] font-bold text-brand-green group-hover:bg-brand-green group-hover:text-[#050807] transition-colors">
+                      <Play className="w-3 h-3 fill-current shrink-0" />
+                      <span>
+                        Xem tiếp {formatEpisodeLabel(item.episodeName, item.episodeIndex)}
+                        {item.currentTime > 0 ? ` (${formatWatchTimestamp(item.currentTime)})` : ""}
+                      </span>
+                    </span>
+                  </div>
                 </div>
               </Link>
 

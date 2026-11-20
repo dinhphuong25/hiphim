@@ -2,20 +2,34 @@
 
 import { useEffect, useRef } from "react";
 import HLS from "hls.js";
+import { createAdStrippingHlsLoader } from "@/lib/ad-parser";
 
 const HLSPlayer = ({ videoUrl }: { videoUrl: string }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
-    if (videoRef.current) {
-      const hls = new HLS();
-      hls.loadSource(videoUrl);
-      hls.attachMedia(videoRef.current);
-      hls.on(HLS.Events.MANIFEST_LOADED, () => {
-        videoRef.current?.play();
+    const video = videoRef.current;
+    if (!video || !videoUrl) return;
+
+    if (HLS.isSupported()) {
+      const AdStrippingLoader = createAdStrippingHlsLoader(HLS.DefaultConfig.loader);
+      const hls = new HLS({
+        ...(AdStrippingLoader ? { pLoader: AdStrippingLoader as any } : {}),
+        enableWorker: true,
       });
+      hls.loadSource(videoUrl);
+      hls.attachMedia(video);
+      hls.on(HLS.Events.MANIFEST_LOADED, () => {
+        video.play().catch(() => {});
+      });
+      return () => {
+        hls.destroy();
+      };
+    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+      video.src = videoUrl;
+      video.play().catch(() => {});
     }
-  }, []);
+  }, [videoUrl]);
 
   return (
     <div>

@@ -420,6 +420,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
   const initialResolvedRef = useRef<boolean>(false);
   const cloudSyncedRef = useRef<boolean>(false);
   const lastFlushedProgressRef = useRef<number>(0);
+  const lastCloudSyncTsRef = useRef<number>(0);
 
   const userRef = useRef(user);
   userRef.current = user;
@@ -806,11 +807,11 @@ export default function Description({ movie, serverData: rawServerData }: any) {
     }
   }, [movie?.name, movie?.slug]);
 
-  // Cloud Resume Playback: Synchronize watch progress from Neon DB / User Account across devices
+  // Cloud Resume Playback: Synchronize watch progress from Cloudflare D1 / User Account across devices
   useEffect(() => {
     if (typeof window === "undefined" || !user || !movie?.slug || !serverData || cloudSyncedRef.current) return;
 
-    // If the URL explicitly specified ep or t query params, respect user's explicit link
+    // If the URL explicitly specified both ep and t query params, respect user's explicit deep-link
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has("ep") && urlParams.has("t")) {
       cloudSyncedRef.current = true;
@@ -836,50 +837,79 @@ export default function Description({ movie, serverData: rawServerData }: any) {
     const cloudTime = typeof cloudItem.currentTime === "number" && cloudItem.currentTime > 0
       ? cloudItem.currentTime
       : 0;
+    const cloudWatchedAt = Number(cloudItem.watchedAt || cloudItem.timestamp || 0);
 
-    // Compare with local device progress
+    // Compare with local device progress & lastWatchedEpisode
     let localTime = 0;
+    let localWatchedAt = 0;
+    let localEpIdx = currentEpisodeIndex?.episode ?? 0;
     try {
       const localProgress = Number(localStorage.getItem(`watchProgress_${movie.slug}_${sv}_${epIdx}`) || 0);
       if (Number.isFinite(localProgress) && localProgress > 0) localTime = localProgress;
+      const rawLast = localStorage.getItem(`lastWatchedEpisode_${movie.slug}`);
+      if (rawLast) {
+        const parsedLast = JSON.parse(rawLast);
+        localWatchedAt = Number(parsedLast?.watchedAt || 0);
+        if (typeof parsedLast?.episodeIndex === "number") {
+          localEpIdx = parsedLast.episodeIndex;
+        }
+      }
     } catch {}
 
-    // If cloud has valid progress and local is empty or cloud is ahead by >10s
-    if (cloudTime > 5 && (!localTime || cloudTime > localTime + 10)) {
+    const isCloudNewerDevice =
+      (cloudWatchedAt > 0 && cloudWatchedAt > localWatchedAt + 2000) ||
+      (!urlParams.has("ep") && epIdx !== localEpIdx) ||
+      !localTime ||
+      cloudTime > localTime + 5;
+
+    if (cloudTime > 5 && isCloudNewerDevice) {
       cloudSyncedRef.current = true;
       lastSavedProgressRef.current = Math.floor(cloudTime);
       if (Number(cloudItem.duration) > 0) {
         lastSavedDurationRef.current = Math.floor(Number(cloudItem.duration));
       }
       const targetEp = episodes[epIdx];
-      const link = playerMode === 'm3u8' 
-        ? (targetEp?.link_m3u8 || targetEp?.link_embed || "") 
+      const link = playerMode === "m3u8"
+        ? (targetEp?.link_m3u8 || targetEp?.link_embed || "")
         : (targetEp?.link_embed || targetEp?.link_m3u8 || "");
-      
+
       if (link) {
         setCurrentEpisodeIndex({ server: sv, episode: epIdx });
         setCurrentEpisodeUrl(link);
         setResumeTime(cloudTime);
-        
+
         try {
           localStorage.setItem(`watchProgress_${movie.slug}_${sv}_${epIdx}`, String(Math.floor(cloudTime)));
+          const url = new URL(window.location.href);
+          url.searchParams.set("ep", String(epIdx + 1));
+          url.searchParams.set("t", String(Math.floor(cloudTime)));
+          window.history.replaceState(null, "", url.toString());
         } catch {}
 
-        const minutes = Math.floor(cloudTime / 60);
-        const seconds = Math.floor(cloudTime % 60);
-        const timeStr = minutes > 0 ? `${minutes}p${seconds.toString().padStart(2, '0')}s` : `${seconds}s`;
-        const epLabel = targetEp?.name
-          ? (targetEp.name.toLowerCase().startsWith("tập") ? targetEp.name : `Tập ${targetEp.name}`)
-          : `Tập ${epIdx + 1}`;
-        
-        toast.success(`☁️ Tiếp tục xem từ tài khoản: ${epLabel} (${timeStr})`, {
+        const totalSec = Math.floor(cloudTime);
+        const h = Math.floor(totalSec / 3600);
+        const m = Math.floor((totalSec % 3600) / 60);
+        const s = totalSec % 60;
+        const timeStr = h > 0
+          ? `${h}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`
+          : `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+
+        const rawName = targetEp?.name?.trim() || `${epIdx + 1}`;
+        const numMatch = rawName.match(/^tập\s*0*(\d+)$/i) || rawName.match(/^0*(\d+)$/);
+        const epLabel = numMatch
+          ? `Tập ${numMatch[1]}`
+          : rawName.toLowerCase().startsWith("tập")
+          ? rawName
+          : `Tập ${rawName}`;
+
+        toast.success(`☁️ Xem tiếp ${epLabel} (${timeStr})`, {
           duration: 4500,
         });
       }
     }
   }, [user, movie?.slug, serverData, playerMode]);
 
-  // Immediate flush of latest progress to Cloud on tab switch / window leave
+  // Immediate flush of latest progress to Cloud on tab switch / window leave / mobile pagehide
   useEffect(() => {
     const flushToCloud = () => {
       const curUser = userRef.current;
@@ -891,9 +921,10 @@ export default function Description({ movie, serverData: rawServerData }: any) {
       const curTime = lastSavedProgressRef.current;
       const curDur = lastSavedDurationRef.current;
 
-      // Avoid duplicate flushes if progress hasn't advanced by at least 5s
-      if (curTime > 5 && Math.abs(curTime - lastFlushedProgressRef.current) >= 5) {
+      // Avoid duplicate flushes if progress hasn't changed by at least 2s
+      if (curTime > 5 && Math.abs(curTime - lastFlushedProgressRef.current) >= 2) {
         lastFlushedProgressRef.current = curTime;
+        lastCloudSyncTsRef.current = Date.now();
         const { server, episode } = curEpIdx;
         const epData = curServerData[server]?.server_data?.[episode];
         const rawEp = epData?.name || `Tập ${episode + 1}`;
@@ -917,7 +948,7 @@ export default function Description({ movie, serverData: rawServerData }: any) {
           duration: curDur > 0 ? curDur : undefined,
         });
         if (Array.isArray(updated) && updated.length > 0) {
-          updateServerData({ history: updated }, { silent: true });
+          updateServerData({ history: updated }, { silent: true, keepalive: true });
         }
       }
     };
@@ -929,9 +960,11 @@ export default function Description({ movie, serverData: rawServerData }: any) {
     };
 
     window.addEventListener("beforeunload", flushToCloud);
+    window.addEventListener("pagehide", flushToCloud);
     document.addEventListener("visibilitychange", handleVisibility);
     return () => {
       window.removeEventListener("beforeunload", flushToCloud);
+      window.removeEventListener("pagehide", flushToCloud);
       document.removeEventListener("visibilitychange", handleVisibility);
       flushToCloud();
     };
@@ -1065,23 +1098,27 @@ export default function Description({ movie, serverData: rawServerData }: any) {
       if (durInt > 0) {
         lastSavedDurationRef.current = durInt;
       }
-      if (nowInt > 5 && Math.abs(nowInt - lastSavedProgressRef.current) >= 10) {
+      if (nowInt > 5 && Math.abs(nowInt - lastSavedProgressRef.current) >= 5) {
         lastSavedProgressRef.current = nowInt;
         localStorage.setItem(key, String(nowInt));
-        
+
         const epData = currentServerData?.[server]?.server_data?.[episode];
         const epName = epData?.name || movie.episode_current || `Tập ${episode + 1}`;
         const epSlug = epData?.slug || "";
 
-        // Save last watched episode
-        localStorage.setItem(`lastWatchedEpisode_${movie.slug}`, JSON.stringify({
-          serverIndex: server,
-          episodeIndex: episode,
-          episodeName: epName,
-          episodeSlug: epSlug,
-          currentTime: nowInt,
-          duration: durInt,
-        }));
+        // Save last watched episode with watchedAt timestamp
+        localStorage.setItem(
+          `lastWatchedEpisode_${movie.slug}`,
+          JSON.stringify({
+            serverIndex: server,
+            episodeIndex: episode,
+            episodeName: epName,
+            episodeSlug: epSlug,
+            currentTime: nowInt,
+            duration: durInt,
+            watchedAt: Date.now(),
+          })
+        );
 
         // Update master continue watching list without triggering unnecessary UI re-renders
         updateContinueWatchingStandalone(user?.id, {
@@ -1114,9 +1151,12 @@ export default function Description({ movie, serverData: rawServerData }: any) {
           duration: durInt,
         });
 
-        // Silent throttled sync to server for authenticated user (every 15s) without triggering app re-render
-        if (user && Array.isArray(updated) && nowInt % 15 === 0) {
-          updateServerData({ history: updated }, { silent: true });
+        // Reliable wall-clock throttled sync to Cloudflare D1 every 12s for real-time multi-device resume
+        const nowTs = Date.now();
+        if (user && Array.isArray(updated) && nowTs - lastCloudSyncTsRef.current >= 12_000) {
+          lastCloudSyncTsRef.current = nowTs;
+          lastFlushedProgressRef.current = nowInt;
+          updateServerData({ history: updated }, { silent: true, keepalive: true });
         }
       }
     }

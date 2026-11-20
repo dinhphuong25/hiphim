@@ -50,7 +50,7 @@ interface CachedUser {
 }
 const userProfileCacheById = new Map<string, CachedUser>();
 const userProfileCacheByEmail = new Map<string, CachedUser>();
-const USER_CACHE_TTL = 30_000; // 30 seconds
+const USER_CACHE_TTL = 3_000; // 3 seconds for real-time cross-device sync
 
 export function invalidateUserProfileCache(idOrEmail?: string): void {
   if (!idOrEmail) {
@@ -683,7 +683,24 @@ export async function syncUserDataPersistent(
       mergedFavorites = dedupeAndSortFavorites(localFavorites);
     }
     if (Array.isArray(localHistory)) {
-      mergedHistory = dedupeAndSortHistory(localHistory);
+      // If replacing history (e.g. from one device's updateServerData), preserve any newer progress
+      // from another device for slugs that still exist in localHistory (unless explicitly cleared to currentTime === 0)
+      const localSlugs = new Map<string, any>();
+      for (const lh of localHistory) {
+        const s = (lh?.slug || lh?.movieSlug || "").trim();
+        if (s) localSlugs.set(s, lh);
+      }
+      const preservedFromOtherDevices = mergedHistory.filter((sh: any) => {
+        const s = (sh?.slug || sh?.movieSlug || "").trim();
+        if (!s || !localSlugs.has(s)) return false;
+        const lh = localSlugs.get(s);
+        // If user explicitly reset currentTime to 0 (removeItem from continue watching), allow reset
+        if (lh?.currentTime === 0) return false;
+        const sTime = Number(sh?.watchedAt || sh?.timestamp || 0);
+        const lTime = Number(lh?.watchedAt || lh?.timestamp || 0);
+        return sTime > lTime;
+      });
+      mergedHistory = dedupeAndSortHistory([...preservedFromOtherDevices, ...localHistory]);
     }
   } else {
     if (Array.isArray(localFavorites)) {
