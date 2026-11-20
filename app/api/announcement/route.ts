@@ -23,15 +23,25 @@ export async function GET() {
         siteName: config.siteName,
         notifications: systemNotifications,
         ads: {
-          ...(config.ads || {}),
-          adDisclaimerEnabled: config.ads?.adDisclaimerEnabled ?? true,
+          enabled: false,
+          targetUrl: "",
+          popupImage: "",
+          bottomBannerImage: "",
+          showPopup: false,
+          showBottomBanner: false,
+          tvcEnabled: false,
+          tvcVideoUrl: "",
+          tvcSkipAfterSeconds: 5,
+          adShieldEnabled: false,
+          adShieldMode: "off",
+          adDisclaimerEnabled: true,
         },
       },
       {
         headers: {
-          "Cache-Control": "public, s-maxage=300, max-age=120, stale-while-revalidate=1800",
-          "CDN-Cache-Control": "public, max-age=300, stale-while-revalidate=1800",
-          "Cloudflare-CDN-Cache-Control": "public, max-age=300, stale-while-revalidate=1800",
+          "Cache-Control": "public, s-maxage=60, max-age=30, stale-while-revalidate=120",
+          "CDN-Cache-Control": "public, max-age=60, stale-while-revalidate=120",
+          "Cloudflare-CDN-Cache-Control": "public, max-age=60, stale-while-revalidate=120",
         },
       }
     );
