@@ -1419,39 +1419,39 @@ export default function VideoPlayer({
         const hls = new HLS({
           enableWorker: true,
           lowLatencyMode: false,
-          progressive: true,
+          progressive: false,
           startFragPrefetch: true,
           autoStartLoad: true,
           startPosition: targetStartPosition,
           
-          backBufferLength: isMobile ? 5 : 15,
-          maxBufferLength: isMobile ? 15 : 30,
-          maxMaxBufferLength: isMobile ? 25 : 60,
-          maxBufferSize: isMobile ? 15 * 1024 * 1024 : 40 * 1024 * 1024,
-          maxBufferHole: 0.5, // Nhảy ngay qua khe hở timestamp gián đoạn (0.5s) thay vì chờ 8.5s
-          highBufferWatchdogPeriod: 2,
-          nudgeOffset: 0.1,
-          nudgeMaxRetry: 15,
+          backBufferLength: isMobile ? 15 : 30,
+          maxBufferLength: isMobile ? 60 : 120,
+          maxMaxBufferLength: isMobile ? 120 : 240,
+          maxBufferSize: isMobile ? 50 * 1024 * 1024 : 100 * 1024 * 1024,
+          maxBufferHole: 1.0,
+          highBufferWatchdogPeriod: 10,
+          nudgeOffset: 0.15,
+          nudgeMaxRetry: 8,
           
           startLevel: -1,
           capLevelToPlayerSize: true,
-          testBandwidth: false,
+          testBandwidth: true,
           
-          abrEwmaDefaultEstimate: isMobile ? 1_800_000 : 3_500_000, // Tải cực nhanh phân đoạn đầu tiên, phát ngay không chờ đợi
-          abrBandWidthFactor: 0.85,
-          abrBandWidthUpFactor: 0.75,
+          abrEwmaDefaultEstimate: isMobile ? 1_500_000 : 2_500_000,
+          abrBandWidthFactor: 0.9,
+          abrBandWidthUpFactor: 0.8,
           
           manifestLoadingMaxRetry: 3,
           manifestLoadingRetryDelay: 500,
           levelLoadingMaxRetry: 3,
           levelLoadingRetryDelay: 500,
-          fragLoadingMaxRetry: 4,
-          fragLoadingRetryDelay: 500,
-          fragLoadingMaxRetryTimeout: 20_000,
+          fragLoadingMaxRetry: 5,
+          fragLoadingRetryDelay: 300,
+          fragLoadingMaxRetryTimeout: 15_000,
           
-          manifestLoadingTimeOut: 15_000,
-          levelLoadingTimeOut: 15_000,
-          fragLoadingTimeOut: 20_000,
+          manifestLoadingTimeOut: 10_000,
+          levelLoadingTimeOut: 10_000,
+          fragLoadingTimeOut: 8_000,
           
           xhrSetup: (xhr) => {
             xhr.withCredentials = false;
@@ -1538,7 +1538,6 @@ export default function VideoPlayer({
             data.details === HLS.ErrorDetails.BUFFER_NUDGE_ON_STALL ||
             data.details === HLS.ErrorDetails.BUFFER_SEEK_OVER_HOLE
           ) {
-            setIsSlowNetwork(true);
             if (hlsRef.current) hlsRef.current.startLoad();
             const v = videoRef.current;
             if (v && !v.paused && v.buffered.length > 0) {
@@ -1546,14 +1545,6 @@ export default function VideoPlayer({
               const firstStart = v.buffered.start(0);
               if (cur < firstStart && firstStart < 5) {
                 v.currentTime = firstStart + 0.02;
-                return;
-              }
-              for (let i = 0; i < v.buffered.length; i++) {
-                const start = v.buffered.start(i);
-                if (start > cur && start - cur <= 1.5) {
-                  v.currentTime = start + 0.02;
-                  return;
-                }
               }
             }
             return;
@@ -1698,14 +1689,14 @@ export default function VideoPlayer({
 
       // Throttle UI currentTime state updates to save CPU & avoid frame drops
       const isHidden = typeof document !== 'undefined' && document.visibilityState === 'hidden';
-      const throttleInterval = isHidden ? 5000 : (showControlsRef.current ? 250 : 1000);
+      const throttleInterval = isHidden ? 5000 : (showControlsRef.current ? 350 : 1500);
       if (!isSeekingRef.current && (now - lastTimeUpdateRef.current >= throttleInterval || video.ended)) {
         lastTimeUpdateRef.current = now;
         setCurrentTime(cur);
       }
       if (video.buffered.length > 0 && showControlsRef.current) {
         const end = video.buffered.end(video.buffered.length - 1);
-        if (Math.abs(end - lastBufferedRef.current) >= 1.5) {
+        if (Math.abs(end - lastBufferedRef.current) >= 2.5) {
           lastBufferedRef.current = end;
           setBuffered(end);
         }
