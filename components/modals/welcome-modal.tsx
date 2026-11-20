@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { X, Play, Building2 } from "lucide-react";
+import { X, Play, Users } from "lucide-react";
 
 export default function WelcomeModal() {
   const pathname = usePathname();
@@ -73,14 +73,14 @@ export default function WelcomeModal() {
         {/* Đơn vị phát triển Hi Tech */}
         <div className="w-full mt-4 p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center gap-3 text-left">
           <div className="w-9 h-9 rounded-xl bg-brand-green/15 border border-brand-green/30 flex items-center justify-center shrink-0">
-            <Building2 className="w-4 h-4 text-brand-green" />
+            <Users className="w-4 h-4 text-brand-green" />
           </div>
           <div className="min-w-0 flex-1">
             <div className="text-[10.5px] text-white/50 font-medium uppercase tracking-wider">
               Đơn vị phát triển
             </div>
-            <div className="text-[13.5px] text-white font-medium leading-snug">
-              Được thành lập và phát triển bởi Hi Tech
+            <div className="text-[14px] text-white font-semibold leading-snug">
+              Đội ngũ Hi Tech
             </div>
           </div>
         </div>
