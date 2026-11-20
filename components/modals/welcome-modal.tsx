@@ -4,8 +4,6 @@ import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { X, Play, Building2 } from "lucide-react";
 
-const WELCOME_STORAGE_KEY = "hiphim_welcome_modal_v2";
-
 export default function WelcomeModal() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -18,26 +16,16 @@ export default function WelcomeModal() {
       return;
     }
 
-    try {
-      const hasSeen = localStorage.getItem(WELCOME_STORAGE_KEY);
-      if (!hasSeen) {
-        const timer = setTimeout(() => {
-          setIsOpen(true);
-        }, 500);
-        return () => clearTimeout(timer);
-      }
-    } catch {
-      // ignore storage access errors
-    }
-  }, [pathname]);
+    // Luôn hiển thị khi reload / mở trang
+    const timer = setTimeout(() => {
+      setIsOpen(true);
+    }, 450);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleClose = () => {
     setIsOpen(false);
-    try {
-      localStorage.setItem(WELCOME_STORAGE_KEY, "true");
-    } catch {
-      // ignore
-    }
   };
 
   if (!isMounted || !isOpen) return null;
@@ -82,17 +70,17 @@ export default function WelcomeModal() {
           Hi Phim là sản phẩm web xem phim trực tuyến miễn phí với kho phim phong phú chất lượng cao.
         </p>
 
-        {/* Đơn vị phát triển Hi Tech */}
+        {/* Đơn vị phát triển Hi Tech (không in đậm Hi Tech) */}
         <div className="w-full mt-4 p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center gap-3 text-left">
           <div className="w-9 h-9 rounded-xl bg-brand-green/15 border border-brand-green/30 flex items-center justify-center shrink-0">
             <Building2 className="w-4 h-4 text-brand-green" />
           </div>
           <div className="min-w-0 flex-1">
-            <div className="text-[10.5px] text-white/50 font-semibold uppercase tracking-wider">
+            <div className="text-[10.5px] text-white/50 font-medium uppercase tracking-wider">
               Đơn vị phát triển
             </div>
-            <div className="text-[13px] font-bold text-white leading-snug">
-              Được thành lập và phát triển bởi <span className="text-brand-green font-black">Hi Tech</span>
+            <div className="text-[13px] text-white/90 font-normal leading-snug">
+              Được thành lập và phát triển bởi <span className="text-brand-green font-normal">Hi Tech</span>
             </div>
           </div>
         </div>
