@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Wrench, RefreshCw } from "lucide-react";
+import { Wrench } from "lucide-react";
 import { toast } from "sonner";
 
 const DEFAULT_REASON =
@@ -26,6 +26,11 @@ export default function MaintenancePage() {
           setReason(cleanReason);
         }
 
+        if (data && data.enabled === false) {
+          window.location.replace("/");
+          return;
+        }
+
         if (isManual) {
           if (!data?.enabled) {
             toast.success("Bảo trì đã hoàn tất! Đang quay lại trang chủ...");
@@ -46,9 +51,13 @@ export default function MaintenancePage() {
     }
   }, []);
 
-  // Fetch reason on mount
+  // Fetch reason on mount and auto-refresh when maintenance completes
   useEffect(() => {
     checkStatus(false);
+    const interval = setInterval(() => {
+      checkStatus(false);
+    }, 20000);
+    return () => clearInterval(interval);
   }, [checkStatus]);
 
   return (
@@ -116,28 +125,8 @@ export default function MaintenancePage() {
               font-size: 14.5px !important;
               line-height: 1.65 !important;
               color: #a1a1aa !important;
-              margin: 0 0 28px 0 !important;
+              margin: 0 !important;
               font-weight: 400 !important;
-            }
-            .m-btn {
-              width: 100% !important;
-              display: flex !important;
-              align-items: center !important;
-              justify-content: center !important;
-              gap: 9px !important;
-              padding: 14px 22px !important;
-              border-radius: 14px !important;
-              background-color: #ffffff !important;
-              color: #000000 !important;
-              font-weight: 700 !important;
-              font-size: 15px !important;
-              border: none !important;
-              cursor: pointer !important;
-              box-shadow: 0 4px 16px rgba(255, 255, 255, 0.18) !important;
-            }
-            .m-btn:disabled {
-              opacity: 0.5 !important;
-              cursor: not-allowed !important;
             }
           `,
         }}
@@ -196,40 +185,11 @@ export default function MaintenancePage() {
 
           {/* Message / Reason */}
           <p
-            className="m-desc text-zinc-400 text-sm sm:text-[15px] leading-relaxed mb-7 font-normal"
-            style={{ fontSize: "14.5px", lineHeight: "1.65", color: "#a1a1aa", margin: "0 0 28px 0" }}
+            className="m-desc text-zinc-400 text-sm sm:text-[15px] leading-relaxed font-normal"
+            style={{ fontSize: "14.5px", lineHeight: "1.65", color: "#a1a1aa", margin: "0" }}
           >
             {reason || DEFAULT_REASON}
           </p>
-
-          {/* Single Action Button */}
-          <button
-            type="button"
-            onClick={() => checkStatus(true)}
-            disabled={isChecking}
-            className="m-btn w-full flex items-center justify-center gap-2 py-3 px-5 rounded-2xl bg-white hover:bg-zinc-200 text-black font-bold text-sm sm:text-base transition-all active:scale-95 disabled:opacity-50 cursor-pointer shadow-md"
-            style={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "9px",
-              padding: "14px 22px",
-              borderRadius: "14px",
-              backgroundColor: "#ffffff",
-              color: "#000000",
-              fontWeight: 700,
-              fontSize: "15px",
-              border: "none",
-              cursor: isChecking ? "not-allowed" : "pointer",
-            }}
-          >
-            <RefreshCw
-              className={`w-4 h-4 text-black ${isChecking ? "animate-spin" : ""}`}
-              style={{ width: 16, height: 16, color: "#000" }}
-            />
-            <span>{isChecking ? "Đang kiểm tra..." : "Tải Lại Trang"}</span>
-          </button>
         </div>
       </div>
     </>
