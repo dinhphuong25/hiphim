@@ -57,6 +57,14 @@ export default function MaintenancePage() {
         dangerouslySetInnerHTML={{
           __html: `
             * { box-sizing: border-box; }
+            a[href="#main-content"], .sr-only {
+              display: none !important;
+              visibility: hidden !important;
+              position: absolute !important;
+              width: 0 !important;
+              height: 0 !important;
+              overflow: hidden !important;
+            }
             html, body {
               margin: 0 !important;
               padding: 0 !important;

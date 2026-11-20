@@ -220,6 +220,17 @@ export default function RootLayout({
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[99999] focus:px-4 focus:py-2.5 focus:bg-emerald-500 focus:text-black focus:font-bold focus:rounded-xl focus:shadow-2xl focus:outline-none focus:ring-2 focus:ring-white transition-transform"
+          style={{
+            position: "absolute",
+            width: "1px",
+            height: "1px",
+            padding: 0,
+            margin: "-1px",
+            overflow: "hidden",
+            clip: "rect(0, 0, 0, 0)",
+            whiteSpace: "nowrap",
+            border: 0,
+          }}
         >
           Chuyển đến nội dung chính
         </a>
