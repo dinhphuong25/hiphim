@@ -17,16 +17,20 @@ const EXTENSION_ATTRS = [
 export default function HydrationFix() {
   useEffect(() => {
     const cleanup = () => {
-      EXTENSION_ATTRS.forEach((attr) => {
-        document.querySelectorAll(`[${attr}]`).forEach((el) => el.removeAttribute(attr));
-      });
+      try {
+        EXTENSION_ATTRS.forEach((attr) => {
+          document.querySelectorAll(`[${attr}]`).forEach((el) => el.removeAttribute(attr));
+        });
+      } catch {}
     };
 
-    // Run immediately and a few times during initial hydration window
-    cleanup();
-    const timers = [50, 200, 500].map((d) => setTimeout(cleanup, d));
-
-    return () => timers.forEach(clearTimeout);
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      const id = (window as any).requestIdleCallback(cleanup, { timeout: 2500 });
+      return () => (window as any).cancelIdleCallback?.(id);
+    } else {
+      const timer = setTimeout(cleanup, 1200);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   return null;

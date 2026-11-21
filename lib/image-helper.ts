@@ -52,8 +52,15 @@ export function getOptimizedImageUrl(
   type: ImageVariantType = "poster"
 ): string {
   if (!url || typeof url !== "string") return "";
-  if (url.includes("phimimg.com/")) {
-    const clean = url.replace(/^https?:\/\//i, "");
+
+  // Normalize img.phimapi.com to phimimg.com for Automattic edge CDN compatibility
+  let normalizedUrl = url;
+  if (normalizedUrl.includes("img.phimapi.com/")) {
+    normalizedUrl = normalizedUrl.replace("img.phimapi.com", "phimimg.com");
+  }
+
+  if (normalizedUrl.includes("phimimg.com/")) {
+    const clean = normalizedUrl.replace(/^https?:\/\//i, "");
     let params = "strip=all";
     if (type === "poster") {
       params += "&w=340&quality=75";
@@ -62,7 +69,7 @@ export function getOptimizedImageUrl(
     } else if (type === "card-wide") {
       params += "&w=480&quality=75";
     } else {
-      params += "&w=1440&quality=82";
+      params += "&w=1280&quality=80";
     }
     return `https://i0.wp.com/${clean}?${params}`;
   }
