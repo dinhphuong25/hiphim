@@ -419,6 +419,11 @@ export async function proxy(request: NextRequest) {
         }
     }
 
+    // Tự động chuyển hướng về trang chủ nếu bảo trì đã tắt mà người dùng truy cập /maintenance
+    if (pathname === '/maintenance' && !isMaintenanceActive) {
+        return NextResponse.redirect(new URL('/', request.url), 302);
+    }
+
 
     // If valid custom bypass token was passed in query, set cookie and redirect to clean URL
     if (hasCustomSecret && bypassToken === configuredSecret) {

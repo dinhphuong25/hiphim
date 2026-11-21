@@ -12,11 +12,21 @@ export default function WelcomeModal() {
   useEffect(() => {
     setIsMounted(true);
 
-    if (pathname?.startsWith("/admin") || pathname?.startsWith("/maintenance")) {
+    if (typeof window === "undefined") return;
+
+    // Chỉ hiển thị duy nhất khi tải lại / mở ở đúng trang chủ gốc ("/")
+    // Không hiển thị ở các trang lọc/tham số tìm kiếm (ví dụ: ?typeList=..., ?page=...)
+    // Không hiển thị ở các trang xem phim, chi tiết, quản trị (/watch, /phim, /admin, ...)
+    const isPureHomepage =
+      pathname === "/" &&
+      window.location.pathname === "/" &&
+      (!window.location.search || window.location.search.trim() === "");
+
+    if (!isPureHomepage) {
       return;
     }
 
-    // Luôn hiển thị khi reload / mở trang
+    // Hiển thị khi reload / mở trang chủ
     const timer = setTimeout(() => {
       setIsOpen(true);
     }, 450);
