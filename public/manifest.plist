@@ -19,7 +19,7 @@
                     <key>needs-shine</key>
                     <true/>
                     <key>url</key>
-                    <string><![CDATA[https://raw.githubusercontent.com/dinhphuong25/rapphimchill-main/main/public/icon-192x192.png]]></string>
+                    <string><![CDATA[https://hiphim.one/icon-192.png]]></string>
                 </dict>
                 <dict>
                     <key>kind</key>
@@ -27,7 +27,7 @@
                     <key>needs-shine</key>
                     <true/>
                     <key>url</key>
-                    <string><![CDATA[https://raw.githubusercontent.com/dinhphuong25/rapphimchill-main/main/public/icon-192x192.png]]></string>
+                    <string><![CDATA[https://hiphim.one/icon-192.png]]></string>
                 </dict>
             </array>
             <key>metadata</key>

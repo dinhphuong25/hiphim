@@ -79,7 +79,7 @@ async function readPersistentUserByEmail(email: string): Promise<User | null | u
         .first<{ data: string }>();
       if (row?.data) {
         const user = JSON.parse(row.data) as User;
-        if (normalized === "kimdinhphuong205@gmail.com" && user.role !== "superadmin") {
+        if (normalized === SUPER_ADMIN_EMAIL.toLowerCase() && user.role !== "superadmin") {
           user.role = "superadmin";
           d1.prepare("UPDATE hiphim_users SET data = ?, updated_at = ? WHERE email = ?")
             .bind(JSON.stringify(user), Date.now(), normalized)
@@ -154,7 +154,7 @@ async function readPersistentUserById(id: string): Promise<User | null | undefin
         .first<{ data: string }>();
       const user = row?.data ? (JSON.parse(row.data) as User) : null;
       if (user) {
-        if (user.email.toLowerCase() === "kimdinhphuong205@gmail.com" && user.role !== "superadmin") {
+        if (user.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase() && user.role !== "superadmin") {
           user.role = "superadmin";
           d1.prepare("UPDATE hiphim_users SET data = ?, updated_at = ? WHERE id = ?")
             .bind(JSON.stringify(user), Date.now(), id)
@@ -841,10 +841,10 @@ export function isSuperAdmin(emailOrUser: string | UserProfile | User | null | u
   if (!emailOrUser) return false;
   if (typeof emailOrUser === "string") {
     const norm = emailOrUser.trim().toLowerCase();
-    return norm === SUPER_ADMIN_EMAIL.toLowerCase() || norm === "kimdinhphuong205@gmail.com";
+    return norm === SUPER_ADMIN_EMAIL.toLowerCase();
   }
   const email = emailOrUser.email ? emailOrUser.email.trim().toLowerCase() : "";
-  if (email === SUPER_ADMIN_EMAIL.toLowerCase() || email === "kimdinhphuong205@gmail.com") {
+  if (email === SUPER_ADMIN_EMAIL.toLowerCase()) {
     return true;
   }
   return emailOrUser.role === "superadmin";

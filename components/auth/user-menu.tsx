@@ -76,11 +76,8 @@ export default function UserMenu() {
 
   // Logged in -> Show User Avatar & Dropdown Menu
   const initial = (user.name || user.email || "U").charAt(0).toUpperCase();
-  const isSuperAdmin =
-    user.role === "superadmin" ||
-    user.role === "admin" ||
-    user.email?.toLowerCase() === "kimdinhphuong205@gmail.com";
-  const isVip = user.role === "vip" || user.email?.toLowerCase() === "kimdinhphuong205@gmail.com";
+  const isSuperAdmin = user.role === "superadmin" || user.role === "admin";
+  const isVip = user.role === "vip" || user.role === "admin" || user.role === "superadmin";
 
   return (
     <div className="relative shrink-0 pointer-events-auto" ref={dropdownRef}>

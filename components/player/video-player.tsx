@@ -162,8 +162,7 @@ export default function VideoPlayer({
   const isVipOrAdmin =
     user?.role === "vip" ||
     user?.role === "admin" ||
-    user?.role === "superadmin" ||
-    user?.email?.toLowerCase() === "kimdinhphuong205@gmail.com";
+    user?.role === "superadmin";
 
   const movieNameRef = useRef(movieName);
   const movieSlugRef = useRef(movieSlug);

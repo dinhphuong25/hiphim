@@ -43,8 +43,7 @@ export function AdFloatingSystemComponent() {
   const isVipOrAdmin =
     user?.role === "vip" ||
     user?.role === "admin" ||
-    user?.role === "superadmin" ||
-    user?.email?.toLowerCase() === "kimdinhphuong205@gmail.com";
+    user?.role === "superadmin";
   const [adConfig, setAdConfig] = useState<AdConfig>(DEFAULT_AD_CONFIG);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [showBottomBanner, setShowBottomBanner] = useState<boolean>(false);

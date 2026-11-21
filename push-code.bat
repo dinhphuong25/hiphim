@@ -4,9 +4,7 @@ cd /d "%~dp0"
 set "PATH=C:\Program Files\Git\cmd;C:\Program Files\Git\bin;%PATH%"
 
 echo ========================================================
-echo   DANG PUSH CODE LEN 2 REPOSITORY GITHUB:
-echo   1. https://github.com/dinhphuong25/hiphim
-echo   2. https://github.com/dinhphuong25/rapphimchill-main
+echo   DANG DONG BO VA PUSH CODE LEN REPOSITORIES...
 echo ========================================================
 echo.
 git push origin main

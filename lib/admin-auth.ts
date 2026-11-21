@@ -22,7 +22,6 @@ export async function isAuthorizedAdminRequest(req: NextRequest): Promise<boolea
     const userPayload = await verifyUserSessionToken(userToken);
     if (
       userPayload?.email?.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase() ||
-      userPayload?.email?.toLowerCase() === "kimdinhphuong205@gmail.com" ||
       userPayload?.role === "superadmin" ||
       userPayload?.role === "admin"
     ) {
