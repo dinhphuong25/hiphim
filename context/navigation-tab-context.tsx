@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, startTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { recordCatalogUrl } from "@/lib/navigation-history";
 
@@ -39,19 +39,42 @@ export function NavigationTabProvider({ children }: { children: React.ReactNode 
     }
   }, [pathname]);
 
+  // Pre-warm Next.js router cache for primary navigation tabs (instant 0ms transitions)
+  useEffect(() => {
+    try {
+      router.prefetch("/");
+      router.prefetch("/recently");
+      router.prefetch("/favorites");
+      router.prefetch("/new-updates");
+    } catch {
+      // ignore
+    }
+  }, [router]);
+
   const navigateToTab = useCallback(
     (targetTab: string) => {
+      // Optimistic 0ms UI tab highlight
+      setActiveTab(targetTab);
+
+      const isCurrentRoute =
+        pathname === targetTab &&
+        (targetTab !== "/" || (typeof window !== "undefined" && !window.location.search));
+
+      if (isCurrentRoute) {
+        if (typeof window !== "undefined") {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+        return;
+      }
+
       if (typeof window !== "undefined") {
         window.scrollTo({ top: 0, behavior: "instant" });
       }
 
-      // Optimistic 0ms UI tab highlight
-      setActiveTab(targetTab);
-
-      // Perform real Next.js routing
-      if (pathname !== targetTab || (targetTab === "/" && typeof window !== "undefined" && window.location.search)) {
+      // Perform non-blocking Next.js client routing via startTransition
+      startTransition(() => {
         router.push(targetTab);
-      }
+      });
     },
     [pathname, router]
   );

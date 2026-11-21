@@ -25,7 +25,7 @@ export default function RecentlyWatchedClient({}: RecentlyWatchedClientProps) {
     ? history
     : ((user?.history || []) as WatchHistoryItem[]);
 
-  // Auto-enrich any items in history that miss origin_name or poster/thumb (once per slug, no infinite loop)
+  // Auto-enrich any items in history that miss origin_name or poster/thumb (deferred to background after smooth mount)
   useEffect(() => {
     if (!hydrated || !history || history.length === 0) return;
 
@@ -37,50 +37,53 @@ export default function RecentlyWatchedClient({}: RecentlyWatchedClientProps) {
     );
     if (itemsToEnrich.length === 0) return;
 
-    itemsToEnrich.forEach((m) => enrichedSlugsRef.current.add(m.slug));
-
     let isMounted = true;
-    Promise.all(
-      itemsToEnrich.map(async (item) => {
-        try {
-          const res = await fetch(`https://phimapi.com/phim/${encodeURIComponent(item.slug)}`);
-          if (!res.ok) return null;
-          const data = await res.json();
-          const m = data?.movie;
-          if (!m) return null;
-          return {
-            slug: item.slug,
-            origin_name: m.origin_name || item.origin_name,
-            year: typeof m.year === "string" ? parseInt(m.year, 10) : (m.year || item.year),
-            quality: m.quality || item.quality,
-            poster_url: normalizeImageUrl(m.poster_url) || item.poster_url,
-            thumb_url: normalizeImageUrl(m.thumb_url) || item.thumb_url,
-            tmdb: m.tmdb?.vote_average ? { vote_average: m.tmdb.vote_average } : item.tmdb,
-            imdb:
-              m.imdb?.vote_average || m.imdb?.rating
-                ? { rating: m.imdb.vote_average || m.imdb.rating }
-                : item.imdb,
-          };
-        } catch {
-          return null;
-        }
-      })
-    ).then((results) => {
-      if (!isMounted) return;
-      const validPatches = results.filter(Boolean) as (Partial<WatchHistoryItem> & { slug: string })[];
-      if (validPatches.length > 0) {
-        batchUpdateHistory(validPatches);
-        if (user) {
-          const latestHistory = getWatchHistory();
-          if (latestHistory.length > 0) {
-            updateServerData({ history: latestHistory });
+    const timer = setTimeout(() => {
+      itemsToEnrich.forEach((m) => enrichedSlugsRef.current.add(m.slug));
+
+      Promise.all(
+        itemsToEnrich.map(async (item) => {
+          try {
+            const res = await fetch(`https://phimapi.com/phim/${encodeURIComponent(item.slug)}`);
+            if (!res.ok) return null;
+            const data = await res.json();
+            const m = data?.movie;
+            if (!m) return null;
+            return {
+              slug: item.slug,
+              origin_name: m.origin_name || item.origin_name,
+              year: typeof m.year === "string" ? parseInt(m.year, 10) : (m.year || item.year),
+              quality: m.quality || item.quality,
+              poster_url: normalizeImageUrl(m.poster_url) || item.poster_url,
+              thumb_url: normalizeImageUrl(m.thumb_url) || item.thumb_url,
+              tmdb: m.tmdb?.vote_average ? { vote_average: m.tmdb.vote_average } : item.tmdb,
+              imdb:
+                m.imdb?.vote_average || m.imdb?.rating
+                  ? { rating: m.imdb.vote_average || m.imdb.rating }
+                  : item.imdb,
+            };
+          } catch {
+            return null;
+          }
+        })
+      ).then((results) => {
+        if (!isMounted) return;
+        const validPatches = results.filter(Boolean) as (Partial<WatchHistoryItem> & { slug: string })[];
+        if (validPatches.length > 0) {
+          batchUpdateHistory(validPatches);
+          if (user) {
+            const latestHistory = getWatchHistory();
+            if (latestHistory.length > 0) {
+              updateServerData({ history: latestHistory });
+            }
           }
         }
-      }
-    });
+      });
+    }, 1200);
 
     return () => {
       isMounted = false;
+      clearTimeout(timer);
     };
   }, [hydrated, history, batchUpdateHistory, user, updateServerData]);
 

@@ -93,7 +93,7 @@ function SidebarMainNavItem({
 }: {
   item: NavMainItem;
   active: boolean;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent) => void;
   onPrefetch?: () => void;
 }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -102,7 +102,7 @@ function SidebarMainNavItem({
     <Link
       href={item.href}
       scroll={false}
-      prefetch={false}
+      prefetch={true}
       onClick={onClick}
       onMouseEnter={() => {
         setIsHovered(true);
@@ -146,7 +146,7 @@ function SidebarPersonalNavItem({
   return (
     <Link
       href={item.href}
-      prefetch={false}
+      prefetch={true}
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -378,14 +378,19 @@ function SidebarContent({
     setCategoryThematicFilter("all");
     setCountryRegionFilter("all");
 
-    if (typeof window !== "undefined") {
-      window.scrollTo({ top: 0, behavior: "instant" });
-    }
-
-    navigateToTab(href);
+    // Optimistic instant visual highlight
+    setActiveTab(href);
 
     if (pathname === href && !hasActiveFilters) {
       if (e) e.preventDefault();
+      if (typeof window !== "undefined") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      return;
+    }
+
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "instant" });
     }
   };
 
@@ -556,7 +561,7 @@ function SidebarContent({
             return (
               <Link
                 href="/"
-                prefetch={false}
+                prefetch={true}
                 onClick={(e) => handleBottomNavNavigate("/", e)}
                 className="flex-1 h-full flex items-center justify-center select-none touch-manipulation active:scale-95 transition-transform"
                 aria-label="Trang Chủ"
@@ -586,7 +591,7 @@ function SidebarContent({
             return (
               <Link
                 href="/recently"
-                prefetch={false}
+                prefetch={true}
                 onClick={(e) => handleBottomNavNavigate("/recently", e)}
                 className="flex-1 h-full flex items-center justify-center select-none touch-manipulation active:scale-95 transition-transform"
                 aria-label="Lịch Sử Xem"
@@ -616,7 +621,7 @@ function SidebarContent({
             return (
               <Link
                 href="/favorites"
-                prefetch={false}
+                prefetch={true}
                 onClick={(e) => handleBottomNavNavigate("/favorites", e)}
                 className="flex-1 h-full flex items-center justify-center select-none touch-manipulation active:scale-95 transition-transform"
                 aria-label="Yêu Thích"
@@ -1061,9 +1066,16 @@ function SidebarContent({
                 key={item.href}
                 item={item}
                 active={isLinkActive(item.href, item.typeList)}
-                onClick={() => {
+                onClick={(e) => {
                   setIsMobileOpen(false);
-                  navigateToTab(item.href);
+                  if (isLinkActive(item.href, item.typeList)) {
+                    e.preventDefault();
+                    if (typeof window !== "undefined") {
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }
+                  } else {
+                    setActiveTab(item.href);
+                  }
                 }}
                 onPrefetch={() => {
                   if (item.typeList) instantMovieStore.prefetch(item.typeList);
@@ -1224,11 +1236,19 @@ function SidebarContent({
         <div className="shrink-0 p-2 lg:p-2 border-t border-white/[0.08] bg-[#080D0B]/95 backdrop-blur-md">
           <div className="grid grid-cols-2 gap-2 lg:gap-1.5">
             {/* Ô 1: Lịch Sử */}
-            <button
-              type="button"
-              onClick={() => {
+            <Link
+              href="/recently"
+              prefetch={true}
+              onClick={(e) => {
                 setIsMobileOpen(false);
-                navigateToTab("/recently");
+                if (pathname === "/recently") {
+                  e.preventDefault();
+                  if (typeof window !== "undefined") {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }
+                } else {
+                  setActiveTab("/recently");
+                }
               }}
               className={cn(
                 "flex items-center justify-center gap-1.5 h-9 lg:h-8.5 px-2 rounded-xl text-xs lg:text-[11.5px] font-bold transition-all border select-none cursor-pointer active:scale-95",
@@ -1241,14 +1261,22 @@ function SidebarContent({
             >
               <Clock className={cn("w-3.5 h-3.5 shrink-0", currentActiveTab === "/recently" ? "text-brand-green" : "text-white/60")} />
               <span className="truncate">Lịch sử</span>
-            </button>
+            </Link>
 
             {/* Ô 2: Yêu Thích */}
-            <button
-              type="button"
-              onClick={() => {
+            <Link
+              href="/favorites"
+              prefetch={true}
+              onClick={(e) => {
                 setIsMobileOpen(false);
-                navigateToTab("/favorites");
+                if (pathname === "/favorites") {
+                  e.preventDefault();
+                  if (typeof window !== "undefined") {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }
+                } else {
+                  setActiveTab("/favorites");
+                }
               }}
               className={cn(
                 "flex items-center justify-center gap-1.5 h-9 lg:h-8.5 px-2 rounded-xl text-xs lg:text-[11.5px] font-bold transition-all border select-none cursor-pointer active:scale-95",
@@ -1261,7 +1289,7 @@ function SidebarContent({
             >
               <Heart className={cn("w-3.5 h-3.5 shrink-0", currentActiveTab === "/favorites" ? "fill-brand-green text-brand-green" : "text-white/60")} />
               <span className="truncate">Yêu thích</span>
-            </button>
+            </Link>
           </div>
         </div>
       </aside>

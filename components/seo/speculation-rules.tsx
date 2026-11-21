@@ -21,8 +21,8 @@ export default function SpeculationRules() {
         prefetch: [
           {
             source: "list",
-            urls: ["/recently", "/favorites"],
-            eagerness: "conservative",
+            urls: ["/", "/recently", "/favorites", "/new-updates"],
+            eagerness: "moderate",
           },
         ],
       };
