@@ -45,7 +45,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { sortCountriesByPopularity, getCountryCode, POPULAR_COUNTRIES } from "@/lib/countries";
-import { openVietnamCopyrightModal } from "@/lib/vietnam-copyright";
+import { openVietnamCopyrightModal, isClientAdmin } from "@/lib/vietnam-copyright";
 import { sortCategoriesByPopularity, POPULAR_CATEGORIES } from "@/lib/categories";
 import CategoryIcon from "@/components/ui/category-icon";
 import { instantMovieStore } from "@/lib/instant-movie-store";
@@ -179,7 +179,7 @@ function SidebarContent({
 }: SidebarProps) {
   const { user, openAuthModal, logout, syncWithServer } = useUserAuth();
   const isSuperAdmin = Boolean(
-    user && (user.role === "superadmin" || user.role === "admin")
+    (user && (user.role === "superadmin" || user.role === "admin")) || isClientAdmin()
   );
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -1513,23 +1513,16 @@ function SidebarContent({
                               </div>
 
                               <div className="min-w-0 flex-1">
-                                <div className="flex items-center gap-1.5 min-w-0">
-                                  <span
-                                    className={cn(
-                                      "text-sm sm:text-base font-extrabold tracking-tight truncate block group-hover:text-brand-green transition-colors",
-                                      active ? "text-brand-green font-black" : "text-white"
-                                    )}
-                                  >
-                                    {c.name}
-                                  </span>
-                                  {c.slug === "viet-nam" && (
-                                    <span className="px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wider rounded bg-amber-400/15 text-amber-300 border border-amber-400/30 shrink-0">
-                                      {isSuperAdmin ? "Admin xem" : "Bản quyền"}
-                                    </span>
+                                <span
+                                  className={cn(
+                                    "text-sm sm:text-base font-extrabold tracking-tight truncate block group-hover:text-brand-green transition-colors",
+                                    active ? "text-brand-green font-black" : "text-white"
                                   )}
-                                </div>
+                                >
+                                  {c.name}
+                                </span>
                                 <span className="text-[11px] font-semibold text-white/40 block truncate mt-0.5">
-                                  {c.slug === "viet-nam" ? (isSuperAdmin ? "Kho phim Việt Nam (Admin)" : "Bảo hộ bản quyền") : `Điện ảnh ${c.name}`}
+                                  Điện ảnh {c.name}
                                 </span>
                               </div>
                             </div>

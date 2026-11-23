@@ -143,7 +143,7 @@ export default function AdvancedSearchFilter({ categories, countries }: FilterPr
                 <option value="">Tất cả</option>
                 {sortedCountries.map((c) => (
                   <option key={c.slug} value={c.slug}>
-                    {c.slug === "viet-nam" ? `🇻🇳 ${c.name} (Bản quyền)` : c.name}
+                    {c.name}
                   </option>
                 ))}
               </select>

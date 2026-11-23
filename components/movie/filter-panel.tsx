@@ -212,7 +212,7 @@ const FilterPanel = ({ categories = [], countries = [] }: FilterPanelProps) => {
                   { value: "", label: "Tất cả" },
                   ...sortCountriesByPopularity(countries).map((c) => ({
                     value: c.slug,
-                    label: c.slug === "viet-nam" ? `🇻🇳 ${c.name} (Bản quyền)` : c.name,
+                    label: c.name,
                   })),
                 ]}
               />
