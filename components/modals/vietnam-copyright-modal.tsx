@@ -4,11 +4,15 @@ import React, { useState, useEffect, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { ShieldAlert, X, Film, CheckCircle2, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { isClientAdmin } from "@/lib/vietnam-copyright";
+import { useUserAuth } from "@/context/user-auth-context";
 
 function VietnamCopyrightModalContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const { user } = useUserAuth();
+  const isAdmin = Boolean(user && (user.role === "admin" || user.role === "superadmin")) || isClientAdmin();
   const [isOpen, setIsOpen] = useState(false);
   const [targetMovieName, setTargetMovieName] = useState<string | null>(null);
 
@@ -28,13 +32,14 @@ function VietnamCopyrightModalContent() {
     return () => window.removeEventListener("open-vietnam-copyright-modal", handleOpen);
   }, []);
 
-  // Tự động mở khi URL có country=viet-nam
+  // Tự động mở khi URL có country=viet-nam (chỉ áp dụng cho người dùng thông thường, không mở cho Admin)
   useEffect(() => {
+    if (isAdmin) return;
     const country = searchParams?.get("country");
     if (country === "viet-nam") {
       setIsOpen(true);
     }
-  }, [searchParams]);
+  }, [searchParams, isAdmin]);
 
   // Đóng khi nhấn phím Escape
   useEffect(() => {

@@ -10,7 +10,7 @@ import { useIsFavorite, toggleFavoriteStandalone } from "@/hooks/useLocalStorage
 import { useUserAuth } from "@/context/user-auth-context";
 import { getMovieImageCandidates, STATIC_BLUR_DATA_URL } from "@/lib/image-helper";
 import { recordMovieReferrer } from "@/lib/navigation-history";
-import { isVietnameseSlug, isVietnameseMovie, openVietnamCopyrightModal } from "@/lib/vietnam-copyright";
+import { isVietnameseSlug, isVietnameseMovie, openVietnamCopyrightModal, isClientAdmin } from "@/lib/vietnam-copyright";
 
 export interface MovieCardEditorialProps {
   movie: {
@@ -113,6 +113,8 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
 }: MovieCardEditorialProps) {
   const [candidateIndex, setCandidateIndex] = useState(0);
   const [hasError, setHasError] = useState(false);
+  const { user } = useUserAuth();
+  const isAdmin = Boolean(user && (user.role === "admin" || user.role === "superadmin")) || isClientAdmin();
 
   useEffect(() => {
     setCandidateIndex(0);
@@ -163,7 +165,7 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
   const movieHref = isHistoryCard ? watchHref : `/phim/${movie.slug}`;
 
   const handleCardClick = (e: React.MouseEvent) => {
-    if (isVietnameseSlug(movie.slug) || isVietnameseMovie(movie)) {
+    if (!isAdmin && (isVietnameseSlug(movie.slug) || isVietnameseMovie(movie))) {
       e.preventDefault();
       e.stopPropagation();
       openVietnamCopyrightModal({ movieName: movie.name });

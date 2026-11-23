@@ -4,7 +4,8 @@ import { useState, useEffect, useRef, useMemo, useTransition, memo } from "react
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { isSlugHidden } from "@/lib/hidden-movies";
-import { isVietnameseQuery, isVietnameseMovie, openVietnamCopyrightModal } from "@/lib/vietnam-copyright";
+import { isVietnameseQuery, isVietnameseMovie, openVietnamCopyrightModal, isClientAdmin } from "@/lib/vietnam-copyright";
+import { useUserAuth } from "@/context/user-auth-context";
 import {
   Search,
   X,
@@ -305,6 +306,8 @@ const SearchListCard = memo(function SearchListCard({
 
 export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   const router = useRouter();
+  const { user } = useUserAuth();
+  const isAdmin = Boolean(user && (user.role === "admin" || user.role === "superadmin")) || isClientAdmin();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<any[]>([]);
   const [totalItems, setTotalItems] = useState(0);
@@ -360,7 +363,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   // Live search debounced 250ms with in-memory caching
   useEffect(() => {
     const trimmed = query.trim();
-    if (isVietnameseQuery(trimmed)) {
+    if (!isAdmin && isVietnameseQuery(trimmed)) {
       startTransition(() => {
         setResults([]);
         setTotalItems(0);
@@ -512,7 +515,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (isVietnameseQuery(query.trim())) {
+    if (!isAdmin && isVietnameseQuery(query.trim())) {
       openVietnamCopyrightModal();
       onClose();
       return;
@@ -585,7 +588,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
 
         {/* Results / Suggestions Container */}
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex-1">
-          {isVietnameseQuery(query.trim()) && (
+          {!isAdmin && isVietnameseQuery(query.trim()) && (
             <div className="mb-6 p-4 sm:p-5 rounded-2xl bg-[#0B120E] border border-amber-500/35 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-[0_8px_30px_rgba(0,0,0,0.6)]">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center shrink-0">

@@ -519,7 +519,7 @@ function SidebarContent({
     setIsMobileOpen(false);
     setIsExploreOpen(false);
     setIsSelecting(false);
-    if (slug === "viet-nam") {
+    if (slug === "viet-nam" && !isSuperAdmin) {
       openVietnamCopyrightModal();
       return;
     }
@@ -1524,12 +1524,12 @@ function SidebarContent({
                                   </span>
                                   {c.slug === "viet-nam" && (
                                     <span className="px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wider rounded bg-amber-400/15 text-amber-300 border border-amber-400/30 shrink-0">
-                                      Bản quyền
+                                      {isSuperAdmin ? "Admin xem" : "Bản quyền"}
                                     </span>
                                   )}
                                 </div>
                                 <span className="text-[11px] font-semibold text-white/40 block truncate mt-0.5">
-                                  {c.slug === "viet-nam" ? "Bảo hộ bản quyền" : `Điện ảnh ${c.name}`}
+                                  {c.slug === "viet-nam" ? (isSuperAdmin ? "Kho phim Việt Nam (Admin)" : "Bảo hộ bản quyền") : `Điện ảnh ${c.name}`}
                                 </span>
                               </div>
                             </div>

@@ -11,6 +11,7 @@ import MovieCardEditorial from "@/components/movie/movie-card-editorial";
 import { normalizeImageUrl } from "@/lib/image-helper";
 import type { WatchHistoryItem } from "@/lib/types";
 import { filterHiddenMovies } from "@/lib/hidden-movies";
+import { isClientAdmin } from "@/lib/vietnam-copyright";
 
 interface RecentlyWatchedClientProps {
   categories?: any[];
@@ -22,10 +23,11 @@ export default function RecentlyWatchedClient({}: RecentlyWatchedClientProps) {
   const { history, removeFromHistory, clearHistory, batchUpdateHistory, hydrated } = useWatchHistory();
   const enrichedSlugsRef = useRef<Set<string>>(new Set());
 
+  const isAdmin = Boolean(user && (user.role === "admin" || user.role === "superadmin")) || isClientAdmin();
   const rawMovies: WatchHistoryItem[] = hydrated
     ? history
     : ((user?.history || []) as WatchHistoryItem[]);
-  const movies: WatchHistoryItem[] = filterHiddenMovies(rawMovies);
+  const movies: WatchHistoryItem[] = filterHiddenMovies(rawMovies, { isAdmin });
 
   // Auto-enrich any items in history that miss origin_name or poster/thumb (deferred to background after smooth mount)
   useEffect(() => {

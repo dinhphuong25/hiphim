@@ -8,7 +8,7 @@ import { Film, Home, RefreshCw, Search, ArrowLeft } from "lucide-react";
 import { LoadingWatch } from "@/components/ui/page-loaders";
 import { getMovieReferrer } from "@/lib/navigation-history";
 import { isSlugHidden } from "@/lib/hidden-movies";
-import { isVietnameseSlug, isVietnameseMovie } from "@/lib/vietnam-copyright";
+import { isVietnameseSlug, isVietnameseMovie, isClientAdmin } from "@/lib/vietnam-copyright";
 import VietnamMovieBlockedScreen from "@/components/movie/vietnam-movie-blocked-screen";
 import {
   fetchMovieClientSide,
@@ -146,7 +146,7 @@ function MovieDetailClientRescueContent({ slug }: { slug: string }) {
     return <TrueNotFoundCard onRetry={loadMovie} />;
   }
 
-  if (isVietnameseMovie(data.movie)) {
+  if (!isClientAdmin() && isVietnameseMovie(data.movie)) {
     return <VietnamMovieBlockedScreen slug={slug} movie={data.movie} />;
   }
 
@@ -154,7 +154,7 @@ function MovieDetailClientRescueContent({ slug }: { slug: string }) {
 }
 
 export function MovieDetailClientRescue({ slug }: { slug: string }) {
-  if (isVietnameseSlug(slug)) {
+  if (!isClientAdmin() && isVietnameseSlug(slug)) {
     return <VietnamMovieBlockedScreen slug={slug} />;
   }
   if (isSlugHidden(slug)) {
@@ -195,7 +195,7 @@ function WatchClientRescueContent({ slug }: { slug: string }) {
     return <TrueNotFoundCard onRetry={loadMovie} />;
   }
 
-  if (isVietnameseMovie(data.movie)) {
+  if (!isClientAdmin() && isVietnameseMovie(data.movie)) {
     return <VietnamMovieBlockedScreen slug={slug} movie={data.movie} />;
   }
 
@@ -216,7 +216,7 @@ function WatchClientRescueContent({ slug }: { slug: string }) {
 }
 
 export function WatchClientRescue({ slug }: { slug: string }) {
-  if (isVietnameseSlug(slug)) {
+  if (!isClientAdmin() && isVietnameseSlug(slug)) {
     return <VietnamMovieBlockedScreen slug={slug} />;
   }
   if (isSlugHidden(slug)) {

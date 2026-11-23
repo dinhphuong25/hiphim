@@ -8,7 +8,8 @@ import { apiCache } from "@/lib/api-cache";
 import { instantMovieStore } from "@/lib/instant-movie-store";
 import { getCategoryDisplayName } from "@/lib/categories";
 import { getCountryDisplayName } from "@/lib/countries";
-import { openVietnamCopyrightModal } from "@/lib/vietnam-copyright";
+import { openVietnamCopyrightModal, isClientAdmin } from "@/lib/vietnam-copyright";
+import { useUserAuth } from "@/context/user-auth-context";
 import { ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -50,6 +51,8 @@ const MovieListClient = ({
 }: MovieListClientProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { user } = useUserAuth();
+  const isAdmin = Boolean(user && (user.role === "admin" || user.role === "superadmin")) || isClientAdmin();
 
   // Compute cache key for current filter combination
   const currentCountry = searchParams.get("country");
@@ -142,7 +145,7 @@ const MovieListClient = ({
     }, 60000);
 
   const fetchMovies = async (targetKey: string, isSilent = false) => {
-    if (currentCountry === "viet-nam") {
+    if (currentCountry === "viet-nam" && !isAdmin) {
       setMovies([]);
       setLoading(false);
       setIsTransitioning(false);
@@ -186,7 +189,7 @@ const MovieListClient = ({
 
       const items = data?.data?.items || data?.items || [];
       const pagination = data?.data?.params?.pagination || data?.pagination || null;
-      const filtered = filterHiddenMovies(items);
+      const filtered = filterHiddenMovies(items, { isAdmin });
 
       // Save to instant memory store
       instantMovieStore.set(targetKey, { items: filtered, pagination });
@@ -262,7 +265,7 @@ const MovieListClient = ({
   }
 
   if (!loading && movies.length === 0) {
-    if (currentCountry === "viet-nam") {
+    if (currentCountry === "viet-nam" && !isAdmin) {
       return (
         <div className="min-h-[60vh] flex items-center justify-center pt-8 px-4">
           <div className="w-full max-w-xl text-center p-6 sm:p-9 rounded-3xl bg-[#0B120E] border border-amber-500/35 shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_25px_rgba(245,158,11,0.15)] flex flex-col items-center">

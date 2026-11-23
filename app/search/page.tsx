@@ -8,6 +8,7 @@ import Link from "next/link";
 import { getCachedCategories, getCachedCountries } from "@/lib/data";
 import { filterHiddenMovies } from "@/lib/hidden-movies";
 import { isVietnameseQuery } from "@/lib/vietnam-copyright";
+import { isServerAdmin } from "@/lib/server-admin";
 import type { MovieListItem, Pagination as PaginationInfo } from "@/lib/types";
 
 type SearchPageProps = {
@@ -69,9 +70,10 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     getCachedCountries(),
   ]);
 
+  const isAdmin = await isServerAdmin();
   let movies: MovieListItem[] = [];
   let pageInfo: PaginationInfo | null = null;
-  const isVnBlocked = country === "viet-nam" || isVietnameseQuery(query);
+  const isVnBlocked = !isAdmin && (country === "viet-nam" || isVietnameseQuery(query));
 
   try {
     if (isVnBlocked) {
@@ -79,7 +81,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       pageInfo = null;
     } else if (query) {
       const [rawMovies, rawInfo] = await api.search(query, index);
-      movies = filterHiddenMovies(rawMovies);
+      movies = filterHiddenMovies(rawMovies, { isAdmin });
       pageInfo = rawInfo;
     } else if (category || country || typeList || year) {
       const [rawMovies, rawInfo] = await api.getFilteredList({
@@ -92,12 +94,12 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         sortType: sortType || "desc",
         limit: 20
       });
-      movies = filterHiddenMovies(rawMovies);
+      movies = filterHiddenMovies(rawMovies, { isAdmin });
       pageInfo = rawInfo;
     } else {
       // Default fallback
       const [rawMovies, rawInfo] = await api.newAdding(index);
-      movies = filterHiddenMovies(rawMovies);
+      movies = filterHiddenMovies(rawMovies, { isAdmin });
       pageInfo = rawInfo;
     }
   } catch (err) {
@@ -115,7 +117,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   }
   const categories = categoriesResult.status === "fulfilled" ? categoriesResult.value : [];
   const countries = countriesResult.status === "fulfilled" ? countriesResult.value : [];
-  movies = filterHiddenMovies(movies).slice(0, 20);
+  movies = filterHiddenMovies(movies, { isAdmin }).slice(0, 20);
 
   return (
     <>

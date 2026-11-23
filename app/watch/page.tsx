@@ -5,6 +5,7 @@ import Description from "@/components/movie/description";
 import { MovieStructuredData, BreadcrumbStructuredData } from "@/components/seo/structured-data";
 import { HIDDEN_MOVIE_SLUGS, isSlugHidden } from "@/lib/hidden-movies";
 import { isVietnameseSlug, isVietnameseMovie } from "@/lib/vietnam-copyright";
+import { isServerAdmin } from "@/lib/server-admin";
 import VietnamMovieBlockedScreen from "@/components/movie/vietnam-movie-blocked-screen";
 import { LoadingWatch } from "@/components/ui/page-loaders";
 import { normalizeImageUrl } from "@/lib/image-helper";
@@ -23,14 +24,16 @@ export async function generateMetadata({ searchParams }: any) {
     notFound();
   }
 
-  if (isVietnameseSlug(slug)) {
+  const isAdmin = await isServerAdmin();
+
+  if (!isAdmin && isVietnameseSlug(slug)) {
     return {
       title: "Thông Báo Bản Quyền Điện Ảnh Việt Nam - Hi Phim",
       description: "Hi Phim không phát sóng phim Việt Nam nhằm tôn trọng và bảo vệ bản quyền điện ảnh nước nhà.",
     };
   }
 
-  if (isSlugHidden(slug)) {
+  if (isSlugHidden(slug, { isAdmin })) {
     notFound();
   }
 
@@ -105,26 +108,28 @@ export default async function WatchPage({ searchParams }: any) {
     notFound();
   }
 
-  if (isVietnameseSlug(slug)) {
+  const isAdmin = await isServerAdmin();
+
+  if (!isAdmin && isVietnameseSlug(slug)) {
     return <VietnamMovieBlockedScreen slug={slug} />;
   }
 
-  if (isSlugHidden(slug)) {
+  if (isSlugHidden(slug, { isAdmin })) {
     notFound();
   }
 
   return (
     <Suspense fallback={<LoadingWatch />}>
-      <WatchContent slug={slug} ep={ep} sv={sv} />
+      <WatchContent slug={slug} ep={ep} sv={sv} isAdmin={isAdmin} />
     </Suspense>
   );
 }
 
-async function WatchContent({ slug, ep, sv }: { slug: string; ep?: string; sv?: string }) {
-  if (isVietnameseSlug(slug)) {
+async function WatchContent({ slug, ep, sv, isAdmin }: { slug: string; ep?: string; sv?: string; isAdmin?: boolean }) {
+  if (!isAdmin && isVietnameseSlug(slug)) {
     return <VietnamMovieBlockedScreen slug={slug} />;
   }
-  if (isSlugHidden(slug)) {
+  if (isSlugHidden(slug, { isAdmin })) {
     notFound();
   }
   let movie: any = null;
@@ -138,7 +143,7 @@ async function WatchContent({ slug, ep, sv }: { slug: string; ep?: string; sv?: 
     return <WatchClientRescue slug={slug} />;
   }
 
-  if (isVietnameseMovie(movie)) {
+  if (!isAdmin && isVietnameseMovie(movie)) {
     return <VietnamMovieBlockedScreen slug={slug} movie={movie} />;
   }
 

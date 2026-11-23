@@ -8,7 +8,8 @@ import PhimApi from "@/libs/phimapi.com";
 import { createPortal } from "react-dom";
 import { getMovieImageCandidates } from "@/lib/image-helper";
 import { isSlugHidden, isMovieHidden } from "@/lib/hidden-movies";
-import { isVietnameseQuery, openVietnamCopyrightModal } from "@/lib/vietnam-copyright";
+import { isVietnameseQuery, openVietnamCopyrightModal, isClientAdmin } from "@/lib/vietnam-copyright";
+import { useUserAuth } from "@/context/user-auth-context";
 
 function AutocompleteImage({ src, title }: { src?: string; title: string }) {
   const [hasError, setHasError] = useState(false);
@@ -62,6 +63,8 @@ const TRENDING_SEARCHES = [
 
 function SearchPanel({ open, onClose, categories = [] }: SearchPanelProps) {
   const router = useRouter();
+  const { user } = useUserAuth();
+  const isAdmin = Boolean(user && (user.role === "admin" || user.role === "superadmin")) || isClientAdmin();
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -109,7 +112,7 @@ function SearchPanel({ open, onClose, categories = [] }: SearchPanelProps) {
 
     const cached = cacheRef.current.get(searchQuery);
     if (cached) { setSuggestions(cached); return; }
-    if (isVietnameseQuery(searchQuery)) { setSuggestions([]); setIsLoading(false); return; }
+    if (!isAdmin && isVietnameseQuery(searchQuery)) { setSuggestions([]); setIsLoading(false); return; }
 
     abortRef.current?.abort();
     abortRef.current = new AbortController();
@@ -140,7 +143,7 @@ function SearchPanel({ open, onClose, categories = [] }: SearchPanelProps) {
         });
 
         sortedMovies
-          .filter((movie: any) => !isSlugHidden(movie?.slug) && !isMovieHidden(movie))
+          .filter((movie: any) => !isSlugHidden(movie?.slug, { isAdmin }) && !isMovieHidden(movie, { isAdmin }))
           .slice(0, 6)
           .forEach((movie: any) => {
           const candidates = getMovieImageCandidates(movie, "poster");
@@ -207,7 +210,7 @@ function SearchPanel({ open, onClose, categories = [] }: SearchPanelProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (isVietnameseQuery(query.trim())) {
+    if (!isAdmin && isVietnameseQuery(query.trim())) {
       openVietnamCopyrightModal();
       onClose();
       return;

@@ -141,6 +141,21 @@ export function isVietnameseQuery(query?: string | null): boolean {
   return VN_SEARCH_TERMS.some((term) => clean.includes(term));
 }
 
+export function isClientAdmin(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const raw = localStorage.getItem("hiphim_cached_user_profile");
+    if (raw) {
+      const u = JSON.parse(raw);
+      if (u?.role === "admin" || u?.role === "superadmin") return true;
+    }
+  } catch {}
+  if (typeof document !== "undefined" && document.cookie.includes("hiphim_admin_session")) {
+    return true;
+  }
+  return false;
+}
+
 export function openVietnamCopyrightModal(options?: { movieName?: string }) {
   if (typeof window === "undefined") return;
   window.dispatchEvent(

@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import MovieCardEditorial from "@/components/movie/movie-card-editorial";
 import type { FavoriteItem } from "@/lib/types";
 import { filterHiddenMovies } from "@/lib/hidden-movies";
+import { isClientAdmin } from "@/lib/vietnam-copyright";
 
 interface FavoritesClientProps {
   categories?: any[];
@@ -21,10 +22,11 @@ export default function FavoritesClient({}: FavoritesClientProps) {
   const { favorites, removeFavorite, clearFavorites, batchUpdateFavorites, hydrated } = useFavorites();
   const enrichedSlugsRef = useRef<Set<string>>(new Set());
 
+  const isAdmin = Boolean(user && (user.role === "admin" || user.role === "superadmin")) || isClientAdmin();
   const rawMovies: FavoriteItem[] = hydrated
     ? favorites
     : ((user?.favorites || []) as FavoriteItem[]);
-  const movies: FavoriteItem[] = filterHiddenMovies(rawMovies);
+  const movies: FavoriteItem[] = filterHiddenMovies(rawMovies, { isAdmin });
 
   // Auto-enrich any items in favorites that miss origin_name or poster/thumb (deferred to background after smooth mount)
   useEffect(() => {

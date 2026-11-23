@@ -4,7 +4,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition, useMemo } from "react";
 import { SlidersHorizontal, X, Search } from "lucide-react";
 import { sortCountriesByPopularity } from "@/lib/countries";
-import { openVietnamCopyrightModal } from "@/lib/vietnam-copyright";
+import { openVietnamCopyrightModal, isClientAdmin } from "@/lib/vietnam-copyright";
+import { useUserAuth } from "@/context/user-auth-context";
 
 interface FilterProps {
   categories: { name: string; slug: string }[];
@@ -30,6 +31,8 @@ const YEARS = Array.from({ length: 30 }, (_, i) => currentYear - i);
 export default function AdvancedSearchFilter({ categories, countries }: FilterProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { user } = useUserAuth();
+  const isAdmin = Boolean(user && (user.role === "admin" || user.role === "superadmin")) || isClientAdmin();
   const [isPending, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -129,7 +132,7 @@ export default function AdvancedSearchFilter({ categories, countries }: FilterPr
                 value={country}
                 onChange={(e) => {
                   const val = e.target.value;
-                  if (val === "viet-nam") {
+                  if (!isAdmin && val === "viet-nam") {
                     openVietnamCopyrightModal();
                     return;
                   }

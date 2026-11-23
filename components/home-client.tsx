@@ -5,6 +5,8 @@ import { useNewUpdates, useTopicsWithMovies } from "@/hooks/useApiHooks";
 import HeroSection from "@/components/hero-section";
 import MovieSection from "@/components/movie-section";
 import { filterHiddenMovies } from "@/lib/hidden-movies";
+import { isClientAdmin } from "@/lib/vietnam-copyright";
+import { useUserAuth } from "@/context/user-auth-context";
 import { instantMovieStore } from "@/lib/instant-movie-store";
 import dynamic from "next/dynamic";
 
@@ -29,6 +31,8 @@ function HomeClientComponent({
   featuredMovie,
   featuredMovies = [],
 }: HomeClientProps) {
+  const { user } = useUserAuth();
+  const isAdmin = Boolean(user && (user.role === "admin" || user.role === "superadmin")) || isClientAdmin();
   // Prime cache and prefetch main tabs in background for instant navigation
   useEffect(() => {
     const primeMap: Record<string, any[]> = {
@@ -80,8 +84,8 @@ function HomeClientComponent({
       const [spider] = unique.splice(spiderIdx, 1);
       unique.unshift(spider);
     }
-    return filterHiddenMovies(unique);
-  }, [featuredMovies, featuredMovie, heroMovie, displayMovies]);
+    return filterHiddenMovies(unique, { isAdmin });
+  }, [featuredMovies, featuredMovie, heroMovie, displayMovies, isAdmin]);
 
   const displayTopicsMap = useMemo(() => {
     const map: Record<string, any[]> = {};
@@ -90,10 +94,10 @@ function HomeClientComponent({
       const rawMovies = (clientTopic?.movies && clientTopic.movies.length > 0)
         ? clientTopic.movies
         : item.movies || [];
-      map[item.slug] = filterHiddenMovies(rawMovies);
+      map[item.slug] = filterHiddenMovies(rawMovies, { isAdmin });
     });
     return map;
-  }, [initialTopicsWithMovies, topicsData]);
+  }, [initialTopicsWithMovies, topicsData, isAdmin]);
 
   return (
     <main className="pb-6 sm:pb-8">

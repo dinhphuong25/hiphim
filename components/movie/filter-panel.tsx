@@ -4,7 +4,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useMemo, memo } from "react";
 import { SlidersHorizontal, X, RotateCcw, Check, ChevronDown } from "lucide-react";
 import { sortCountriesByPopularity } from "@/lib/countries";
-import { openVietnamCopyrightModal } from "@/lib/vietnam-copyright";
+import { openVietnamCopyrightModal, isClientAdmin } from "@/lib/vietnam-copyright";
+import { useUserAuth } from "@/context/user-auth-context";
 
 interface FilterPanelProps {
   categories?: { slug: string; name: string }[];
@@ -78,6 +79,8 @@ function NativeSelect({
 const FilterPanel = ({ categories = [], countries = [] }: FilterPanelProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { user } = useUserAuth();
+  const isAdmin = Boolean(user && (user.role === "admin" || user.role === "superadmin")) || isClientAdmin();
 
   const [filters, setFilters] = useState({
     typeList: searchParams.get("typeList") || "",
@@ -199,7 +202,7 @@ const FilterPanel = ({ categories = [], countries = [] }: FilterPanelProps) => {
                 label="Quốc Gia"
                 value={filters.country}
                 onChange={(v) => {
-                  if (v === "viet-nam") {
+                  if (!isAdmin && v === "viet-nam") {
                     openVietnamCopyrightModal();
                     return;
                   }
