@@ -88,19 +88,12 @@ function VietnamCopyrightModalContent() {
         </div>
 
         {/* Title */}
-        <div className="space-y-1">
-          <h2
-            id="vn-copyright-title"
-            className="text-base sm:text-lg font-bold text-white tracking-tight"
-          >
-            Không Chiếu Phim Việt Nam
-          </h2>
-          {targetMovieName && (
-            <p className="text-xs text-amber-300/90 font-medium truncate max-w-[300px]">
-              &quot;{targetMovieName}&quot;
-            </p>
-          )}
-        </div>
+        <h2
+          id="vn-copyright-title"
+          className="text-base sm:text-lg font-bold text-white tracking-tight"
+        >
+          Thông Báo Bản Quyền
+        </h2>
 
         {/* Concise Description */}
         <p className="text-xs sm:text-[13px] text-white/70 leading-relaxed px-1">
