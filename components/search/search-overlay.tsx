@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useMemo, useTransition, memo } from "react
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { isSlugHidden } from "@/lib/hidden-movies";
+import { isVietnameseQuery, isVietnameseMovie, openVietnamCopyrightModal } from "@/lib/vietnam-copyright";
 import {
   Search,
   X,
@@ -14,6 +15,7 @@ import {
   Loader2,
   Play,
   TrendingUp,
+  ShieldAlert,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { recordMovieReferrer } from "@/lib/navigation-history";
@@ -358,6 +360,14 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   // Live search debounced 250ms with in-memory caching
   useEffect(() => {
     const trimmed = query.trim();
+    if (isVietnameseQuery(trimmed)) {
+      startTransition(() => {
+        setResults([]);
+        setTotalItems(0);
+      });
+      setIsLoading(false);
+      return;
+    }
     if (!trimmed || trimmed.length < 2) {
       startTransition(() => {
         setResults([]);
@@ -502,6 +512,11 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (isVietnameseQuery(query.trim())) {
+      openVietnamCopyrightModal();
+      onClose();
+      return;
+    }
     if (selectedIndex >= 0 && results[selectedIndex]) {
       router.push(`/watch?slug=${results[selectedIndex].slug}`);
       onClose();
@@ -570,6 +585,33 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
 
         {/* Results / Suggestions Container */}
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex-1">
+          {isVietnameseQuery(query.trim()) && (
+            <div className="mb-6 p-4 sm:p-5 rounded-2xl bg-[#0B120E] border border-amber-500/35 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-[0_8px_30px_rgba(0,0,0,0.6)]">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center shrink-0">
+                  <ShieldAlert className="w-5 h-5 text-amber-400" />
+                </div>
+                <div>
+                  <div className="text-amber-300 font-extrabold text-sm tracking-tight">
+                    Bản Quyền Điện Ảnh Việt Nam
+                  </div>
+                  <p className="text-white/70 text-xs mt-0.5">
+                    Hi Phim không phát sóng hoặc lưu trữ phim Việt Nam nhằm tôn trọng quyền tác giả nước nhà.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  openVietnamCopyrightModal();
+                  onClose();
+                }}
+                className="px-4 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs border border-amber-500/35 transition-colors cursor-pointer shrink-0"
+              >
+                Xem Chi Tiết Chính Sách
+              </button>
+            </div>
+          )}
           {query.trim().length === 0 ? null : results.length > 0 ? (
             /* Live Results */
             <div className="space-y-6 pb-12">

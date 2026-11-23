@@ -10,6 +10,7 @@ import { useIsFavorite, toggleFavoriteStandalone } from "@/hooks/useLocalStorage
 import { useUserAuth } from "@/context/user-auth-context";
 import { getMovieImageCandidates, STATIC_BLUR_DATA_URL } from "@/lib/image-helper";
 import { recordMovieReferrer } from "@/lib/navigation-history";
+import { isVietnameseSlug, isVietnameseMovie, openVietnamCopyrightModal } from "@/lib/vietnam-copyright";
 
 export interface MovieCardEditorialProps {
   movie: {
@@ -161,7 +162,13 @@ export const MovieCardEditorial = memo(function MovieCardEditorial({
   const watchHref = `/watch?slug=${movie.slug}${svParam}${epParam}${timeParam}`;
   const movieHref = isHistoryCard ? watchHref : `/phim/${movie.slug}`;
 
-  const handleCardClick = () => {
+  const handleCardClick = (e: React.MouseEvent) => {
+    if (isVietnameseSlug(movie.slug) || isVietnameseMovie(movie)) {
+      e.preventDefault();
+      e.stopPropagation();
+      openVietnamCopyrightModal({ movieName: movie.name });
+      return;
+    }
     if (typeof window !== "undefined" && !isHistoryCard) {
       recordMovieReferrer(movie.slug, window.location.pathname + window.location.search);
     }

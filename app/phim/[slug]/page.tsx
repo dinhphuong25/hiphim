@@ -2,6 +2,8 @@ import { cache } from "react";
 import { notFound } from "next/navigation";
 import PhimApi from "@/libs/phimapi.com";
 import { HIDDEN_MOVIE_SLUGS, isSlugHidden } from "@/lib/hidden-movies";
+import { isVietnameseSlug, isVietnameseMovie } from "@/lib/vietnam-copyright";
+import VietnamMovieBlockedScreen from "@/components/movie/vietnam-movie-blocked-screen";
 import { MovieStructuredData, BreadcrumbStructuredData } from "@/components/seo/structured-data";
 import MovieDetailView from "@/components/movie/movie-detail-view";
 import { MovieDetailClientRescue, TrueNotFoundCard } from "@/components/movie/movie-client-rescue";
@@ -14,7 +16,18 @@ const getMovie = cache(async (slug: string) => {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  if (!slug || isSlugHidden(slug)) {
+  if (!slug) {
+    notFound();
+  }
+
+  if (isVietnameseSlug(slug)) {
+    return {
+      title: "Thông Báo Bản Quyền Điện Ảnh Việt Nam - Hi Phim",
+      description: "Hi Phim không phát sóng phim Việt Nam nhằm tôn trọng và bảo vệ bản quyền điện ảnh nước nhà.",
+    };
+  }
+
+  if (isSlugHidden(slug)) {
     notFound();
   }
 
@@ -43,7 +56,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function PhimDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
-  if (!slug || isSlugHidden(slug)) {
+  if (!slug) {
+    notFound();
+  }
+
+  if (isVietnameseSlug(slug)) {
+    return <VietnamMovieBlockedScreen slug={slug} />;
+  }
+
+  if (isSlugHidden(slug)) {
     notFound();
   }
 
@@ -56,6 +77,10 @@ export default async function PhimDetailPage({ params }: { params: Promise<{ slu
   } catch {
     // Server fetch timed out or rate-limited on Worker — hand off to Client Rescue
     return <MovieDetailClientRescue slug={slug} />;
+  }
+
+  if (isVietnameseMovie(movie)) {
+    return <VietnamMovieBlockedScreen slug={slug} movie={movie} />;
   }
 
   if (!movie) {

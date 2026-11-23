@@ -3,6 +3,8 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useMemo, memo } from "react";
 import { SlidersHorizontal, X, RotateCcw, Check, ChevronDown } from "lucide-react";
+import { sortCountriesByPopularity } from "@/lib/countries";
+import { openVietnamCopyrightModal } from "@/lib/vietnam-copyright";
 
 interface FilterPanelProps {
   categories?: { slug: string; name: string }[];
@@ -196,8 +198,20 @@ const FilterPanel = ({ categories = [], countries = [] }: FilterPanelProps) => {
               <NativeSelect
                 label="Quốc Gia"
                 value={filters.country}
-                onChange={(v) => set("country", v)}
-                options={[{ value: "", label: "Tất cả" }, ...countries.map((c) => ({ value: c.slug, label: c.name }))]}
+                onChange={(v) => {
+                  if (v === "viet-nam") {
+                    openVietnamCopyrightModal();
+                    return;
+                  }
+                  set("country", v);
+                }}
+                options={[
+                  { value: "", label: "Tất cả" },
+                  ...sortCountriesByPopularity(countries).map((c) => ({
+                    value: c.slug,
+                    label: c.slug === "viet-nam" ? `🇻🇳 ${c.name} (Bản quyền)` : c.name,
+                  })),
+                ]}
               />
               <div className="col-span-2">
                 <NativeSelect label="Năm Phát Hành" value={filters.year} onChange={(v) => set("year", v)} options={YEAR_OPTIONS} />

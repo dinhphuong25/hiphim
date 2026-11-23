@@ -8,6 +8,8 @@ import { Film, Home, RefreshCw, Search, ArrowLeft } from "lucide-react";
 import { LoadingWatch } from "@/components/ui/page-loaders";
 import { getMovieReferrer } from "@/lib/navigation-history";
 import { isSlugHidden } from "@/lib/hidden-movies";
+import { isVietnameseSlug, isVietnameseMovie } from "@/lib/vietnam-copyright";
+import VietnamMovieBlockedScreen from "@/components/movie/vietnam-movie-blocked-screen";
 import {
   fetchMovieClientSide,
   fetchPrimaryPhimApiClient,
@@ -144,10 +146,17 @@ function MovieDetailClientRescueContent({ slug }: { slug: string }) {
     return <TrueNotFoundCard onRetry={loadMovie} />;
   }
 
+  if (isVietnameseMovie(data.movie)) {
+    return <VietnamMovieBlockedScreen slug={slug} movie={data.movie} />;
+  }
+
   return <DynamicMovieDetailView movie={data.movie} episodes={data.episodes} />;
 }
 
 export function MovieDetailClientRescue({ slug }: { slug: string }) {
+  if (isVietnameseSlug(slug)) {
+    return <VietnamMovieBlockedScreen slug={slug} />;
+  }
   if (isSlugHidden(slug)) {
     return <TrueNotFoundCard />;
   }
@@ -186,6 +195,10 @@ function WatchClientRescueContent({ slug }: { slug: string }) {
     return <TrueNotFoundCard onRetry={loadMovie} />;
   }
 
+  if (isVietnameseMovie(data.movie)) {
+    return <VietnamMovieBlockedScreen slug={slug} movie={data.movie} />;
+  }
+
   return (
     <div className="min-h-screen bg-cinema-bg text-white selection:bg-brand-green selection:text-cinema-bg">
       <main className="relative z-10 min-h-0 sm:min-h-screen flex flex-col w-full">
@@ -203,6 +216,9 @@ function WatchClientRescueContent({ slug }: { slug: string }) {
 }
 
 export function WatchClientRescue({ slug }: { slug: string }) {
+  if (isVietnameseSlug(slug)) {
+    return <VietnamMovieBlockedScreen slug={slug} />;
+  }
   if (isSlugHidden(slug)) {
     return <TrueNotFoundCard />;
   }

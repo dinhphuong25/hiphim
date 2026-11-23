@@ -80,16 +80,17 @@ function HomeClientComponent({
       const [spider] = unique.splice(spiderIdx, 1);
       unique.unshift(spider);
     }
-    return unique;
+    return filterHiddenMovies(unique);
   }, [featuredMovies, featuredMovie, heroMovie, displayMovies]);
 
   const displayTopicsMap = useMemo(() => {
     const map: Record<string, any[]> = {};
     initialTopicsWithMovies.forEach((item) => {
       const clientTopic = topicsData.find((t: any) => t.slug === item.slug);
-      map[item.slug] = (clientTopic?.movies && clientTopic.movies.length > 0)
+      const rawMovies = (clientTopic?.movies && clientTopic.movies.length > 0)
         ? clientTopic.movies
         : item.movies || [];
+      map[item.slug] = filterHiddenMovies(rawMovies);
     });
     return map;
   }, [initialTopicsWithMovies, topicsData]);

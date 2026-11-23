@@ -8,6 +8,9 @@ import { apiCache } from "@/lib/api-cache";
 import { instantMovieStore } from "@/lib/instant-movie-store";
 import { getCategoryDisplayName } from "@/lib/categories";
 import { getCountryDisplayName } from "@/lib/countries";
+import { openVietnamCopyrightModal } from "@/lib/vietnam-copyright";
+import { ShieldAlert } from "lucide-react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 import InfiniteMovieGrid from "@/components/movie/infinite-movie-grid";
@@ -139,6 +142,15 @@ const MovieListClient = ({
     }, 60000);
 
   const fetchMovies = async (targetKey: string, isSilent = false) => {
+    if (currentCountry === "viet-nam") {
+      setMovies([]);
+      setLoading(false);
+      setIsTransitioning(false);
+      setIsRefreshing(false);
+      openVietnamCopyrightModal();
+      return;
+    }
+
     if (isSilent) {
       setIsRefreshing(true);
     }
@@ -250,6 +262,42 @@ const MovieListClient = ({
   }
 
   if (!loading && movies.length === 0) {
+    if (currentCountry === "viet-nam") {
+      return (
+        <div className="min-h-[60vh] flex items-center justify-center pt-8 px-4">
+          <div className="w-full max-w-xl text-center p-6 sm:p-9 rounded-3xl bg-[#0B120E] border border-amber-500/35 shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_25px_rgba(245,158,11,0.15)] flex flex-col items-center">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-600/25 via-amber-500/20 to-red-600/10 border border-amber-500/40 flex items-center justify-center mb-4 shadow-[0_0_20px_rgba(245,158,11,0.25)]">
+              <ShieldAlert className="w-7 h-7 text-amber-400 stroke-[2.2]" />
+            </div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-[11px] font-extrabold uppercase tracking-wider text-amber-300 mb-2">
+              Bản Quyền Điện Ảnh Việt Nam
+            </div>
+            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight mb-2">
+              Không Chiếu Phim Việt Nam
+            </h2>
+            <p className="text-xs sm:text-sm text-white/75 leading-relaxed max-w-md mb-6">
+              Nhằm tôn trọng và tuân thủ Luật Sở hữu trí tuệ, bảo vệ sự phát triển của điện ảnh nước nhà, <strong className="text-amber-300 font-semibold">Hi Phim cam kết KHÔNG phát sóng và không lưu trữ bất kỳ tác phẩm điện ảnh nào của Việt Nam</strong>. Quý khán giả vui lòng theo dõi tại rạp chiếu phim hoặc các nền tảng có bản quyền chính thức.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+              <button
+                type="button"
+                onClick={() => openVietnamCopyrightModal()}
+                className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs sm:text-sm border border-amber-500/35 transition-colors cursor-pointer"
+              >
+                Xem Chi Tiết Chính Sách
+              </button>
+              <Link
+                href="/"
+                className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-brand-green text-black font-extrabold text-xs sm:text-sm hover:brightness-110 transition-all cursor-pointer shadow-[0_4px_16px_rgba(32,214,107,0.3)]"
+              >
+                Khám Phá Phim Quốc Tế
+              </Link>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="min-h-[60vh] flex items-center justify-center pt-8">
         <div className="text-center space-y-4 max-w-md">

@@ -7,7 +7,8 @@ import { cn } from "@/lib/utils";
 import PhimApi from "@/libs/phimapi.com";
 import { createPortal } from "react-dom";
 import { getMovieImageCandidates } from "@/lib/image-helper";
-import { isSlugHidden } from "@/lib/hidden-movies";
+import { isSlugHidden, isMovieHidden } from "@/lib/hidden-movies";
+import { isVietnameseQuery, openVietnamCopyrightModal } from "@/lib/vietnam-copyright";
 
 function AutocompleteImage({ src, title }: { src?: string; title: string }) {
   const [hasError, setHasError] = useState(false);
@@ -108,6 +109,7 @@ function SearchPanel({ open, onClose, categories = [] }: SearchPanelProps) {
 
     const cached = cacheRef.current.get(searchQuery);
     if (cached) { setSuggestions(cached); return; }
+    if (isVietnameseQuery(searchQuery)) { setSuggestions([]); setIsLoading(false); return; }
 
     abortRef.current?.abort();
     abortRef.current = new AbortController();
@@ -138,7 +140,7 @@ function SearchPanel({ open, onClose, categories = [] }: SearchPanelProps) {
         });
 
         sortedMovies
-          .filter((movie: any) => !isSlugHidden(movie?.slug))
+          .filter((movie: any) => !isSlugHidden(movie?.slug) && !isMovieHidden(movie))
           .slice(0, 6)
           .forEach((movie: any) => {
           const candidates = getMovieImageCandidates(movie, "poster");
@@ -205,6 +207,11 @@ function SearchPanel({ open, onClose, categories = [] }: SearchPanelProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (isVietnameseQuery(query.trim())) {
+      openVietnamCopyrightModal();
+      onClose();
+      return;
+    }
     if (selectedIndex >= 0 && suggestions[selectedIndex]) {
       handleSelect(suggestions[selectedIndex]);
     } else if (query.trim()) {

@@ -9,6 +9,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import MovieCardEditorial from "@/components/movie/movie-card-editorial";
 import type { FavoriteItem } from "@/lib/types";
+import { filterHiddenMovies } from "@/lib/hidden-movies";
 
 interface FavoritesClientProps {
   categories?: any[];
@@ -20,9 +21,10 @@ export default function FavoritesClient({}: FavoritesClientProps) {
   const { favorites, removeFavorite, clearFavorites, batchUpdateFavorites, hydrated } = useFavorites();
   const enrichedSlugsRef = useRef<Set<string>>(new Set());
 
-  const movies: FavoriteItem[] = hydrated
+  const rawMovies: FavoriteItem[] = hydrated
     ? favorites
     : ((user?.favorites || []) as FavoriteItem[]);
+  const movies: FavoriteItem[] = filterHiddenMovies(rawMovies);
 
   // Auto-enrich any items in favorites that miss origin_name or poster/thumb (deferred to background after smooth mount)
   useEffect(() => {

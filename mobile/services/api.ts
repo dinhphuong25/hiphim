@@ -417,12 +417,12 @@ export const CATEGORIES_LIST = [
  * 37 QUỐC GIA ĐIỆN ẢNH ĐỒNG BỘ 100% VỚI WEBSITE HI PHIM (KÈM ISO ALPHA-2 CODE CHO FLAGCDN)
  */
 export const COUNTRIES_LIST = [
+  { slug: "viet-nam", name: "Việt Nam", code: "VN", region: "asia", popular: true },
   { slug: "trung-quoc", name: "Trung Quốc", code: "CN", region: "asia", popular: true },
   { slug: "han-quoc", name: "Hàn Quốc", code: "KR", region: "asia", popular: true },
   { slug: "au-my", name: "Âu Mỹ", code: "US", region: "west", popular: true },
   { slug: "nhat-ban", name: "Nhật Bản", code: "JP", region: "asia", popular: true },
   { slug: "thai-lan", name: "Thái Lan", code: "TH", region: "asia", popular: true },
-  { slug: "viet-nam", name: "Việt Nam", code: "VN", region: "asia", popular: true },
   { slug: "hong-kong", name: "Hồng Kông", code: "HK", region: "asia", popular: true },
   { slug: "an-do", name: "Ấn Độ", code: "IN", region: "asia", popular: true },
   { slug: "dai-loan", name: "Đài Loan", code: "TW", region: "asia", popular: true },

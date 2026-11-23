@@ -10,14 +10,14 @@ export interface CountryItem {
   popular?: boolean;
 }
 
-// Danh sách các quốc gia điện ảnh hàng đầu theo thứ tự ưu tiên
+// Danh sách các quốc gia điện ảnh hàng đầu theo thứ tự ưu tiên (Việt Nam luôn được ghim lên đầu tiên)
 export const POPULAR_COUNTRIES: CountryItem[] = [
+  { name: "Việt Nam", slug: "viet-nam", code: "VN", popular: true },
   { name: "Trung Quốc", slug: "trung-quoc", code: "CN", popular: true },
   { name: "Hàn Quốc", slug: "han-quoc", code: "KR", popular: true },
   { name: "Âu Mỹ", slug: "au-my", code: "US", popular: true },
   { name: "Nhật Bản", slug: "nhat-ban", code: "JP", popular: true },
   { name: "Thái Lan", slug: "thai-lan", code: "TH", popular: true },
-  { name: "Việt Nam", slug: "viet-nam", code: "VN", popular: true },
   { name: "Hồng Kông", slug: "hong-kong", code: "HK", popular: true },
   { name: "Ấn Độ", slug: "an-do", code: "IN", popular: true },
   { name: "Đài Loan", slug: "dai-loan", code: "TW", popular: true },
@@ -244,7 +244,16 @@ export function sortCountriesByPopularity(rawCountries: { name: string; slug: st
   // Sort remaining alphabetically by Vietnamese collator
   remainingList.sort((a, b) => a.name.localeCompare(b.name, "vi"));
 
-  return [...popularList, ...remainingList];
+  const fullList = [...popularList, ...remainingList];
+
+  // Đảm bảo quốc gia Việt Nam luôn luôn được ghim ở vị trí đầu tiên
+  const vnIdx = fullList.findIndex((c) => c.slug === "viet-nam");
+  if (vnIdx > 0) {
+    const [vnItem] = fullList.splice(vnIdx, 1);
+    fullList.unshift(vnItem);
+  }
+
+  return fullList;
 }
 
 export const COUNTRY_NAMES_MAP: Record<string, string> = {

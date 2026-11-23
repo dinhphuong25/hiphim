@@ -1,8 +1,10 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useMemo } from "react";
 import { SlidersHorizontal, X, Search } from "lucide-react";
+import { sortCountriesByPopularity } from "@/lib/countries";
+import { openVietnamCopyrightModal } from "@/lib/vietnam-copyright";
 
 interface FilterProps {
   categories: { name: string; slug: string }[];
@@ -36,6 +38,7 @@ export default function AdvancedSearchFilter({ categories, countries }: FilterPr
   const [country, setCountry] = useState(searchParams.get("country") || "");
   const [year, setYear] = useState(searchParams.get("year") || "");
   const [sortField, setSortField] = useState(searchParams.get("sortField") || "modified.time");
+  const sortedCountries = useMemo(() => sortCountriesByPopularity(countries), [countries]);
 
   const hasActiveFilters = category || country || year || sortField !== "modified.time";
 
@@ -124,12 +127,21 @@ export default function AdvancedSearchFilter({ categories, countries }: FilterPr
               <p className="text-xs text-white/50 uppercase tracking-wider mb-2">Quốc gia</p>
               <select
                 value={country}
-                onChange={(e) => setCountry(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === "viet-nam") {
+                    openVietnamCopyrightModal();
+                    return;
+                  }
+                  setCountry(val);
+                }}
                 className="w-full bg-zinc-800 border border-white/10 text-white text-base sm:text-sm rounded-lg px-3 py-2 focus:outline-none focus:border-primary/50"
               >
                 <option value="">Tất cả</option>
-                {countries.map((c) => (
-                  <option key={c.slug} value={c.slug}>{c.name}</option>
+                {sortedCountries.map((c) => (
+                  <option key={c.slug} value={c.slug}>
+                    {c.slug === "viet-nam" ? `🇻🇳 ${c.name} (Bản quyền)` : c.name}
+                  </option>
                 ))}
               </select>
             </div>

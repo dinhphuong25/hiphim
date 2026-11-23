@@ -10,6 +10,7 @@ import AuthGate from "@/components/auth/auth-gate";
 import MovieCardEditorial from "@/components/movie/movie-card-editorial";
 import { normalizeImageUrl } from "@/lib/image-helper";
 import type { WatchHistoryItem } from "@/lib/types";
+import { filterHiddenMovies } from "@/lib/hidden-movies";
 
 interface RecentlyWatchedClientProps {
   categories?: any[];
@@ -21,9 +22,10 @@ export default function RecentlyWatchedClient({}: RecentlyWatchedClientProps) {
   const { history, removeFromHistory, clearHistory, batchUpdateHistory, hydrated } = useWatchHistory();
   const enrichedSlugsRef = useRef<Set<string>>(new Set());
 
-  const movies: WatchHistoryItem[] = hydrated
+  const rawMovies: WatchHistoryItem[] = hydrated
     ? history
     : ((user?.history || []) as WatchHistoryItem[]);
+  const movies: WatchHistoryItem[] = filterHiddenMovies(rawMovies);
 
   // Auto-enrich any items in history that miss origin_name or poster/thumb (deferred to background after smooth mount)
   useEffect(() => {

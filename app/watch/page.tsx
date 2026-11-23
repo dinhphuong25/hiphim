@@ -4,6 +4,8 @@ import PhimApi from "@/libs/phimapi.com";
 import Description from "@/components/movie/description";
 import { MovieStructuredData, BreadcrumbStructuredData } from "@/components/seo/structured-data";
 import { HIDDEN_MOVIE_SLUGS, isSlugHidden } from "@/lib/hidden-movies";
+import { isVietnameseSlug, isVietnameseMovie } from "@/lib/vietnam-copyright";
+import VietnamMovieBlockedScreen from "@/components/movie/vietnam-movie-blocked-screen";
 import { LoadingWatch } from "@/components/ui/page-loaders";
 import { normalizeImageUrl } from "@/lib/image-helper";
 import { WatchClientRescue, TrueNotFoundCard } from "@/components/movie/movie-client-rescue";
@@ -17,7 +19,18 @@ const getMovieData = cache(async (slug: string) => {
 
 export async function generateMetadata({ searchParams }: any) {
   const { slug, ep } = await searchParams;
-  if (!slug || isSlugHidden(slug)) {
+  if (!slug) {
+    notFound();
+  }
+
+  if (isVietnameseSlug(slug)) {
+    return {
+      title: "Thông Báo Bản Quyền Điện Ảnh Việt Nam - Hi Phim",
+      description: "Hi Phim không phát sóng phim Việt Nam nhằm tôn trọng và bảo vệ bản quyền điện ảnh nước nhà.",
+    };
+  }
+
+  if (isSlugHidden(slug)) {
     notFound();
   }
 
@@ -88,7 +101,15 @@ export async function generateMetadata({ searchParams }: any) {
 export default async function WatchPage({ searchParams }: any) {
   const { slug, ep, sv } = await searchParams;
 
-  if (!slug || isSlugHidden(slug)) {
+  if (!slug) {
+    notFound();
+  }
+
+  if (isVietnameseSlug(slug)) {
+    return <VietnamMovieBlockedScreen slug={slug} />;
+  }
+
+  if (isSlugHidden(slug)) {
     notFound();
   }
 
@@ -100,6 +121,9 @@ export default async function WatchPage({ searchParams }: any) {
 }
 
 async function WatchContent({ slug, ep, sv }: { slug: string; ep?: string; sv?: string }) {
+  if (isVietnameseSlug(slug)) {
+    return <VietnamMovieBlockedScreen slug={slug} />;
+  }
   if (isSlugHidden(slug)) {
     notFound();
   }
@@ -112,6 +136,10 @@ async function WatchContent({ slug, ep, sv }: { slug: string; ep?: string; sv?: 
     server = data?.server || [];
   } catch {
     return <WatchClientRescue slug={slug} />;
+  }
+
+  if (isVietnameseMovie(movie)) {
+    return <VietnamMovieBlockedScreen slug={slug} movie={movie} />;
   }
 
   if (!movie?.name) {

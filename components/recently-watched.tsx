@@ -3,6 +3,7 @@
 import { useWatchHistory } from "@/hooks/useLocalStorage";
 import { useUserAuth } from "@/context/user-auth-context";
 import MovieSection from "@/components/movie-section";
+import { filterHiddenMovies } from "@/lib/hidden-movies";
 
 interface RecentlyWatchedProps {
   limit?: number;
@@ -14,7 +15,10 @@ export default function RecentlyWatched({ limit }: RecentlyWatchedProps) {
 
   if (!user || !hydrated || history.length === 0) return null;
 
-  const movies = limit ? history.slice(0, limit) : history;
+  const visibleHistory = filterHiddenMovies(history);
+  if (visibleHistory.length === 0) return null;
+
+  const movies = limit ? visibleHistory.slice(0, limit) : visibleHistory;
 
   return (
     <MovieSection

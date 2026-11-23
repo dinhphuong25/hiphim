@@ -3,10 +3,11 @@ import PhimApi from "@/libs/phimapi.com";
 import { MovieCardEditorial } from "@/components/movie/movie-card-editorial";
 import AdvancedSearchFilter from "@/components/movie/advanced-search-filter";
 import Pagination from "@/components/pagination";
-import { Search, Film } from "lucide-react";
+import { Search, Film, ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { getCachedCategories, getCachedCountries } from "@/lib/data";
 import { filterHiddenMovies } from "@/lib/hidden-movies";
+import { isVietnameseQuery } from "@/lib/vietnam-copyright";
 import type { MovieListItem, Pagination as PaginationInfo } from "@/lib/types";
 
 type SearchPageProps = {
@@ -70,12 +71,18 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   let movies: MovieListItem[] = [];
   let pageInfo: PaginationInfo | null = null;
+  const isVnBlocked = country === "viet-nam" || isVietnameseQuery(query);
 
   try {
-    if (query) {
-      [movies, pageInfo] = await api.search(query, index);
+    if (isVnBlocked) {
+      movies = [];
+      pageInfo = null;
+    } else if (query) {
+      const [rawMovies, rawInfo] = await api.search(query, index);
+      movies = filterHiddenMovies(rawMovies);
+      pageInfo = rawInfo;
     } else if (category || country || typeList || year) {
-      [movies, pageInfo] = await api.getFilteredList({
+      const [rawMovies, rawInfo] = await api.getFilteredList({
         typeList: typeList || "phim-bo",
         page: index,
         category,
@@ -85,9 +92,13 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         sortType: sortType || "desc",
         limit: 20
       });
+      movies = filterHiddenMovies(rawMovies);
+      pageInfo = rawInfo;
     } else {
       // Default fallback
-      [movies, pageInfo] = await api.newAdding(index);
+      const [rawMovies, rawInfo] = await api.newAdding(index);
+      movies = filterHiddenMovies(rawMovies);
+      pageInfo = rawInfo;
     }
   } catch (err) {
     console.error("Search API fetch error:", err);
@@ -149,6 +160,37 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             {movies.map((movie) => (
               <MovieCardEditorial key={movie.slug} movie={movie} />
             ))}
+          </div>
+        ) : isVnBlocked ? (
+          <div className="flex flex-col items-center justify-center py-16 px-4">
+            <div className="w-full max-w-xl text-center p-6 sm:p-9 rounded-3xl bg-[#0B120E] border border-amber-500/35 shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_25px_rgba(245,158,11,0.15)] flex flex-col items-center">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-600/25 via-amber-500/20 to-red-600/10 border border-amber-500/40 flex items-center justify-center mb-4 shadow-[0_0_20px_rgba(245,158,11,0.25)]">
+                <ShieldAlert className="w-7 h-7 text-amber-400 stroke-[2.2]" />
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-[11px] font-extrabold uppercase tracking-wider text-amber-300 mb-2">
+                Bản Quyền Điện Ảnh Việt Nam
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight mb-2">
+                Không Chiếu Phim Việt Nam
+              </h2>
+              <p className="text-xs sm:text-sm text-white/75 leading-relaxed max-w-md mb-6">
+                Nhằm tôn trọng và tuân thủ Luật Sở hữu trí tuệ, bảo vệ sự phát triển của điện ảnh nước nhà, <strong className="text-amber-300 font-semibold">Hi Phim cam kết KHÔNG phát sóng và không lưu trữ bất kỳ tác phẩm điện ảnh nào của Việt Nam</strong>. Quý khán giả vui lòng theo dõi tại rạp chiếu phim hoặc các nền tảng có bản quyền chính thức.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+                <Link
+                  href="/"
+                  className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-brand-green text-black font-extrabold text-xs sm:text-sm hover:brightness-110 transition-all cursor-pointer shadow-[0_4px_16px_rgba(32,214,107,0.3)]"
+                >
+                  Khám Phá Phim Quốc Tế
+                </Link>
+                <Link
+                  href="/?typeList=phim-chieu-rap"
+                  className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-white/85 hover:text-white border border-white/10 font-bold text-xs sm:text-sm transition-colors cursor-pointer"
+                >
+                  Phim Chiếu Rạp Quốc Tế
+                </Link>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-24 gap-5">
