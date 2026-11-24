@@ -68,35 +68,38 @@ function VietnamCopyrightModalContent() {
     >
       <div
         className={cn(
-          "relative w-full max-w-[390px] rounded-2xl bg-[#0f1412] border border-amber-500/25 p-5 sm:p-6 text-center flex flex-col items-center gap-3.5 shadow-2xl shadow-black/80 animate-in zoom-in-95 duration-200"
+          "relative w-full max-w-[480px] rounded-3xl bg-[#0e1411] border border-amber-500/30 p-6 sm:p-8 text-center flex flex-col items-center gap-4 sm:gap-5 shadow-[0_24px_60px_rgba(0,0,0,0.85),0_0_30px_rgba(245,158,11,0.12)] animate-in zoom-in-95 duration-200"
         )}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Ambient Glow */}
+        <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-64 h-32 bg-amber-500/10 blur-3xl pointer-events-none rounded-full" />
+
         {/* Close Button X */}
         <button
           type="button"
           onClick={handleClose}
-          className="absolute top-3.5 right-3.5 p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer"
+          className="absolute top-4 right-4 p-2 rounded-xl text-white/50 hover:text-white hover:bg-white/[0.08] transition-colors cursor-pointer z-10"
           aria-label="Đóng"
         >
-          <X className="w-4 h-4" />
+          <X className="w-5 h-5" />
         </button>
 
         {/* Shield Icon */}
-        <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-400 mt-1 shadow-[0_0_20px_rgba(245,158,11,0.15)]">
-          <ShieldAlert className="w-6 h-6 stroke-[2]" />
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mt-1 shadow-[0_0_24px_rgba(245,158,11,0.2)] shrink-0 relative z-10">
+          <ShieldAlert className="w-7 h-7 sm:w-8 sm:h-8 stroke-[2.2]" />
         </div>
 
         {/* Title */}
         <h2
           id="vn-copyright-title"
-          className="text-base sm:text-lg font-bold text-white tracking-tight"
+          className="text-lg sm:text-xl font-black text-white tracking-tight relative z-10"
         >
           Thông Báo Bản Quyền
         </h2>
 
         {/* Concise Description */}
-        <p className="text-xs sm:text-[13px] text-white/70 leading-relaxed px-1">
+        <p className="text-sm sm:text-[15px] text-white/80 leading-relaxed px-1 sm:px-3 relative z-10">
           Hi Phim không phát sóng phim Việt Nam nhằm tôn trọng bản quyền điện ảnh nước nhà. Quý khán giả vui lòng theo dõi qua các nền tảng có bản quyền hoặc rạp chiếu phim.
         </p>
 
@@ -104,7 +107,7 @@ function VietnamCopyrightModalContent() {
         <button
           type="button"
           onClick={handleClose}
-          className="w-full mt-1 h-10 rounded-xl bg-brand-green hover:brightness-110 active:scale-[0.98] text-[#050807] font-extrabold text-xs sm:text-sm transition-all cursor-pointer shadow-[0_4px_16px_rgba(32,214,107,0.25)]"
+          className="w-full mt-1 h-11 sm:h-12 rounded-xl bg-gradient-to-r from-brand-green to-[#10B981] hover:brightness-110 active:scale-[0.98] text-[#050807] font-black text-sm sm:text-[15px] transition-all cursor-pointer shadow-[0_6px_20px_rgba(32,214,107,0.3)] relative z-10"
         >
           Đã Hiểu
         </button>
